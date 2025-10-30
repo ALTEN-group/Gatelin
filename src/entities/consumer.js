@@ -1,0 +1,101 @@
+// @ts-check
+import { SQLEntity } from "@dwtechs/antity-pgsql";
+
+/**
+ * Consumer entity configuration for database operations.
+ * Defines validation rules, types, and constraints for consumer data.
+ */
+const consumerEntity = new SQLEntity("consumer", [
+  {
+    key: "id",
+    type: "integer",
+    min: 0,
+    max: 999999999,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "POST"],
+    operations: ["SELECT"],
+    required: false,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+  {
+    key: "nickname",
+    type: "string",
+    min: 3,
+    max: 30,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "POST"],
+    operations: ["SELECT", "INSERT"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+  {
+    key: "accessToken",
+    type: "jwt",
+    min: 28,
+    max: 8000,
+    typeCheck: true,
+    filter: false,
+    methods: ["GET", "POST","PUT"],
+    operations: ["SELECT", "INSERT"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+  {
+    key: "refreshToken",
+    type: "jwt",
+    min: 28,
+    max: 8000,
+    typeCheck: true,
+    filter: false,
+    methods: ["GET", "POST", "PUT"],
+    operations: ["SELECT", "INSERT"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+  {
+    key: "roles",
+    type: "array",
+    min: 0,
+    max: 100,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "POST"],
+    operations: ["SELECT", "INSERT"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+]);
+
+export default consumerEntity;

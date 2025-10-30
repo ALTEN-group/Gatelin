@@ -1,0 +1,7 @@
+node_modules/*
+/.scannerwork
+.DS_Store
+Thumbs.db
+src/public/*
+package-lock.json
+tests/coverage/

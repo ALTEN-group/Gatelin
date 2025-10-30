@@ -1,0 +1,35 @@
+ARG NODE_VERSION
+FROM node:${NODE_VERSION}
+
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV}
+ARG FOLDER
+
+# change apk repos
+# RUN rm /etc/apk/repositories
+# RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true
+RUN apk update && apk add postgresql-client tzdata 
+
+ARG TZ
+ENV TZ=${TZ}
+
+# Create a new simple user 
+ARG UID
+ARG GID
+RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
+USER user
+
+ARG HOME_PATH
+RUN --mount=type=secret,id=npmrc,target=${HOME_PATH}.npmrc,required=true,uid=${UID}
+
+COPY --chown=user:usergroup common/libs/ /usr/src/libs
+
+WORKDIR /usr/src/app
+COPY --chown=user:usergroup --chmod=640 ${FOLDER}/package*.json common/jest.config.js ./
+
+RUN npm i --loglevel=error --ignore-scripts --no-fund
+
+ENTRYPOINT ["sh","/opt/docker-entrypoint/entrypoint.sh"]
+# CMD [ "node", "--run", "start" ]
+CMD [ "node", "--run", "dev" ]
+# CMD ["sleep","3600"]

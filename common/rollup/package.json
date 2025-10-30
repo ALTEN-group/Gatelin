@@ -1,0 +1,20 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "description": "",
+  "author": "lcluber",
+  "license": "ISC",
+  "scripts": {
+    "build-user": "npx rollup --input ./user/src/app.js --file ./user/dist/app.js --config rollup.config.mjs",
+    "build-notif": "npx rollup --input ./notif/src/app.js --file ./notif/dist/app.js --config rollup.config.mjs",
+    "build-event": "npx rollup --input ./event/src/app.js --file ./event/dist/app.js --config rollup.config.mjs",
+    "build-mail": "npx rollup --input ./mail/src/app.js --file ./mail/dist/app.js --config rollup.config.mjs"
+  },
+  "dependencies": {
+    "@rollup/plugin-commonjs": "25.0.7",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.17.2"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "error",
+  "version": "1.0.0",
+  "description": "errors",
+  "main": "error.js",
+  "scripts": {
+    "dev": "nodemon -e js -x \"npm run build\"",
+    "dev-poll": "nodemon -e js -x \"npm run build\" -L",
+    "prebuild": "npm run test",
+    "build": "npm pack --pack-destination ../../packs/error/",
+    "postbuild": "cd ../../../app/ && npm i error --force --nofund --no-audit",
+    "test": "echo \"Error: no test specified\""
+  },
+  "author": "lcluber",
+  "license": "ISC",
+  "files": ["error.js"],
+  "dependencies": {
+    "@dwtechs/winstan": "0.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.22"
+  }
+}
