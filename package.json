@@ -21,7 +21,7 @@
     "@dwtechs/antity-pgsql": "0.5.0",
     "@dwtechs/toker-express": "0.1.2",
     "@dwtechs/servpico-express": "0.2.0",
-    "@dwtechs/gatlin-express": "0.1.0",
+    "@dwtechs/gatelin-express": "0.1.0",
     "express": "4.20.0",
     "helmet": "7.1.0",
     "error": "file:../libs/packs/error/error-1.0.0.tgz",
