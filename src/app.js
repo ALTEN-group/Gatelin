@@ -4,17 +4,13 @@ import express from "express";
 import { log } from '@dwtechs/winstan';
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
+import { errorHandler } from "@dwtechs/errandler-express";
 import helmet from "helmet";
-// import swaggerUi from "swagger-ui-express";
-// import openapi from "./openapi.json" with { type: "json" };
 
 const app = express();
 app.use(helmet());
 app.disable("x-powered-by");
 
-// const swaggerOptions = {
-//   explorer: false,
-// };
 
 // const { CORS, METHODS } = process.env;
 // const whitelist = [CORS]
@@ -32,30 +28,24 @@ app.disable("x-powered-by");
 // app.use(cors('*',corsOptions));
 
 // Mandatory modules for any service
-import error from "error";
 import health from "health";
 import prom from "prom";
-import res from "res";
 
-import consumerSvc from "./services/consumer.js";
-import routeSvc from "./services/route.js";
+import consumerSvc from "./services/consumer";
+import routeSvc from "./services/route";
 
 // middlewares
-import checkRoute from "./middlewares/validators/check-route.js";
+import res from "./middlewares/res";
+import checkRoute from "./middlewares/validators/check-route";
 
 // Routes
-import consumer from "./routes/consumer.js";
-import proxy from "./routes/proxy.js";
-import route from "./routes/route.js";
+import consumer from "./routes/consumer";
+import proxy from "./routes/proxy";
+import route from "./routes/route";
 
 app.use(express.json());
 app.use("/metrics", prom);
 app.use("/health", health);
-// app.use(
-//   "/swagger",
-//   swaggerUi.serveFiles(openapi, swaggerOptions),
-//   swaggerUi.setup(swaggerOptions),
-// );
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route
@@ -69,7 +59,7 @@ app.use("/", proxy);
 app.use(endTimer);
 
 // Error handling
-error.use(app);
+errorHandler(app);
 
 // Init reference data
 Promise.all([

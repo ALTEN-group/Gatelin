@@ -4,20 +4,24 @@ FROM node:${NODE_VERSION}
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
+# Install system dependencies
+RUN apk update && apk add postgresql-client tzdata 
+
+ARG TZ
+ENV TZ=${TZ}
+
 # Create a new simple user 
 ARG UID
 ARG GID
 RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
 USER user
 
-ARG HOME_PATH
-RUN --mount=type=secret,id=npmrc,target=${HOME_PATH}.npmrc,required=true,uid=${UID}
+COPY --chown=user:usergroup libs/ /usr/src/libs
 
-ARG FOLDER 
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --chmod=640 ./package*.json ./
-COPY --chown=user:usergroup --chmod=640 ./rollup.config.mjs ./
+
 RUN npm i --loglevel=error --ignore-scripts --no-fund
 
-# CMD [ "node", "--run", "build" ]
-CMD ["sleep","36000"]
+# CMD [ "node", "--run", "start" ]
+CMD [ "node", "--run", "dev" ]

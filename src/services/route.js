@@ -20,10 +20,8 @@ let routes = null;
  * console.log('Route cache initialized with', routes.length, 'routes');
  */
 function init() {
-  const w = route.query.select(false);
-  const { filterClause, args } = filter(0, 0, "id", null, null);
-  const q = `${w} ${filterClause}`;
-  return execute(q, args, null).then((res) => {
+  const { query, args } = route.query.select(false, 0, 0, "id", null, null);
+  return execute(query, args, null).then((res) => {
     routes = res.rows;
   });
 }

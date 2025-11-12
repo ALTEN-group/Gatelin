@@ -1,10 +1,7 @@
 // @ts-check
 import { execute, filter } from "@dwtechs/antity-pgsql";
 import { log } from "@dwtechs/winstan";
-import err from "error";
 import consumer from "../entities/consumer.js";
-
-const { EC_UNAUTHORIZED } = err;
 
 let consumers = [];
 
@@ -23,10 +20,8 @@ let consumers = [];
  * console.log('Consumer cache initialized');
  */
 function init() {
-  const w = consumer.query.select(false);
-  const { filterClause, args } = filter(0, 0, "id", null, null);
-  const q = `${w} ${filterClause}`;
-  return execute(q, args, null).then((res) => {
+  const { query, args } = consumer.query.select(false, 0, 0, "id", null, null);
+  return execute(query, args, null).then((res) => {
     consumers = res.rows;
   });
 }

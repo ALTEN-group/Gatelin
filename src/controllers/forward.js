@@ -1,5 +1,5 @@
 // @ts-check
-import http from "httpclient";
+import http from "../services/http";
 
 const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
 

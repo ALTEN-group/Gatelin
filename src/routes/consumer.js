@@ -39,7 +39,7 @@ const del = [
 ];
 //Routes
 
-// add a consumer. Log a user
+// add a consumer. e.g. Log a user
 router.post("/", add);
 
 // Update a consumer with new tokens
