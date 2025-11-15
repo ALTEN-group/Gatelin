@@ -22,12 +22,10 @@
     "@dwtechs/toker-express": "0.1.2",
     "@dwtechs/servpico-express": "0.2.0",
     "@dwtechs/errandler-express": "0.1.0",
+    "@dwtechs/healix-express": "0.1.0",
     "express": "5.1.0",
     "helmet": "8.1.0",
-    "health": "file:../libs/packs/health/health-1.0.0.tgz",
-    "prom": "file:../libs/packs/prom/prom-1.0.0.tgz",
-    "httpclient": "file:../libs/packs/http/httpclient-1.0.0.tgz",
-    "res": "file:../libs/packs/res/res-1.0.0.tgz"
+    "prom": "file:../libs/packs/prom/prom-1.0.0.tgz"
   },
   "devDependencies": {
     "@babel/core": "7.28.4",
