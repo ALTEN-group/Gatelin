@@ -25,7 +25,7 @@ export default new SQLEntity("users", [
     validator: null
   },
   {
-    key: "pwdHash",
+    key: "pwd",
     type: "password",
     min: null,
     max: null,
