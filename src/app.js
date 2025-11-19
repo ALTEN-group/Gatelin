@@ -5,6 +5,7 @@ import { log } from '@dwtechs/winstan';
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
+import healixRouter from "@dwtechs/healix-express";
 import helmet from "helmet";
 
 const app = express();
@@ -27,10 +28,6 @@ app.disable("x-powered-by");
 
 // app.use(cors('*',corsOptions));
 
-// Mandatory modules for any service
-import health from "health";
-import prom from "prom";
-
 import consumerSvc from "./services/consumer";
 import routeSvc from "./services/route";
 
@@ -44,8 +41,7 @@ import proxy from "./routes/proxy";
 import route from "./routes/route";
 
 app.use(express.json());
-app.use("/metrics", prom);
-app.use("/health", health);
+app.use("/health", healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route

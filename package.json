@@ -24,8 +24,7 @@
     "@dwtechs/errandler-express": "0.1.0",
     "@dwtechs/healix-express": "0.1.0",
     "express": "5.1.0",
-    "helmet": "8.1.0",
-    "prom": "file:../libs/packs/prom/prom-1.0.0.tgz"
+    "helmet": "8.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.28.4",
