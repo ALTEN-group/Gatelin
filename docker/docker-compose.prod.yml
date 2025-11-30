@@ -15,6 +15,4 @@ services:
     container_name: ${GATELIN_HOST}
     # hostname: ${GATELIN_HOST}
     volumes:
-      - ${PWD}/src:/usr/src/app/src
-      - ${PWD}/tests:/usr/src/app/tests
       - gateway_node_modules:/usr/src/app/node_modules

@@ -27,14 +27,17 @@ Gatelin is an API Gateway that acts as a single entry point for microservices ar
 
 ## Environment Variables
 
-Configure the following environment variables (see `docker/conf/.env.dev` for reference):
+Configure the following environment variables :
 
 ```env
 # Application
 APP_NAME=gatelin              # Application name prefix for service discovery
 ENV_NAME=development          # Environment (development, staging, production)
 PORT=3000                     # Port the gateway listens on
-SERVER_SCHEME=http://         # Protocol for internal service communication
+TZ=Europe/Paris
+LOCALE=fr-FR
+SERVER_SCHEME=http://         # Protocol for internal 
+SERVER_URL=localhost          # Gateway address
 
 # Database (PostgreSQL)
 # Used to store routes and consumer sessions
@@ -45,11 +48,10 @@ DB_USER=gatelin_user
 DB_PASSWORD=your_password
 
 # JWT Configuration
-# These variables are used by @dwtechs/toker-express to generate and validate tokens
-JWT_ACCESS_SECRET=your_access_secret_min_32_chars    # Secret for signing access tokens
-JWT_REFRESH_SECRET=your_refresh_secret_min_32_chars  # Secret for signing refresh tokens
-JWT_ACCESS_EXPIRATION=15m                            # Access token lifetime (e.g., 15m, 1h)
-JWT_REFRESH_EXPIRATION=7d                            # Refresh token lifetime (e.g., 7d, 30d)
+# These variables are used to generate and validate tokens
+ACCESS_TOKEN_DURATION=15m
+REFRESH_TOKEN_DURATION=7d
+TOKEN_SECRET=your_token_secret_min_32_chars
 ```
 
 **JWT Token Flow:**
