@@ -24,7 +24,8 @@
     "@dwtechs/errandler-express": "0.1.0",
     "@dwtechs/healix-express": "0.1.0",
     "express": "5.1.0",
-    "helmet": "8.1.0"
+    "helmet": "8.1.0",
+    "axios": "1.13.2"
   },
   "devDependencies": {
     "@babel/core": "7.28.4",

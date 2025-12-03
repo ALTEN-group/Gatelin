@@ -18,3 +18,6 @@ services:
       - ${PWD}/src:/usr/src/app/src
       - ${PWD}/tests:/usr/src/app/tests
       - gateway_node_modules:/usr/src/app/node_modules
+
+volumes:
+  gateway_node_modules:

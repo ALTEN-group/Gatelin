@@ -14,5 +14,3 @@ services:
     image: gatelin:${NODE_ENV:-development}
     container_name: ${GATELIN_HOST}
     # hostname: ${GATELIN_HOST}
-    volumes:
-      - gateway_node_modules:/usr/src/app/node_modules

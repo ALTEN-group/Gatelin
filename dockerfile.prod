@@ -19,6 +19,8 @@ USER user
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --chmod=640 ./package*.json ./
 
-RUN npm i --loglevel=error --ignore-scripts --no-fund
+RUN npm ci --only=production --loglevel=error --ignore-scripts --no-fund
+
+COPY --chown=user:usergroup ./src ./src
 
 CMD [ "node", "--run", "start" ]

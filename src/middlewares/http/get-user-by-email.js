@@ -1,6 +1,6 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
-import http from "httpclient";
+import http from "../../services/http.js";
 
 const { MSUSER_URL } = process.env;
 const url = `${MSUSER_URL}/users/`;

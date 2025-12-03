@@ -1,5 +1,5 @@
 // @ts-check
-import http from "httpclient";
+import http from "../services/http.js";
 
 const { MSUSER_URL } = process.env;
 

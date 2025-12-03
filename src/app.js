@@ -28,17 +28,17 @@ app.disable("x-powered-by");
 
 // app.use(cors('*',corsOptions));
 
-import consumerSvc from "./services/consumer";
-import routeSvc from "./services/route";
+import consumerSvc from "./services/consumer.js";
+import routeSvc from "./services/route.js";
 
 // middlewares
-import res from "./middlewares/res";
-import checkRoute from "./middlewares/validators/check-route";
+import res from "./middlewares/res.js";
+import checkRoute from "./middlewares/validators/check-route.js";
 
 // Routes
-import consumer from "./routes/consumer";
-import proxy from "./routes/proxy";
-import route from "./routes/route";
+import consumer from "./routes/consumer.js";
+import proxy from "./routes/proxy.js";
+import route from "./routes/route.js";
 
 app.use(express.json());
 app.use("/health", healixRouter);
