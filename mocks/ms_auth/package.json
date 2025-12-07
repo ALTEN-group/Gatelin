@@ -1,0 +1,15 @@
+{
+  "name": "ms_auth_mock",
+  "version": "1.0.0",
+  "description": "Mock server for ms_auth microservice",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "dependencies": {
+    "express": "5.1.0",
+    "helmet": "8.1.0"
+  }
+}

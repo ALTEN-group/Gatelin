@@ -1,9 +1,5 @@
 name: ${APP_NAME}
 
-x-default-envs: &defaultEnvs
-  PORT: ${DEFAULT_PORT}
-  TZ: ${TZ}
-
 x-service-healthcheck: &healthcheck
   test: ["CMD", "node", "/usr/src/app/node_modules/@dwtechs/healix-express.js/dist/test.js"]
   interval: 10s
@@ -85,7 +81,8 @@ services:
     container_name: ${GATELIN_HOST}
     # hostname: ${GATELIN_HOST}
     environment:
-      <<: *defaultEnvs
+      PORT: ${DEFAULT_PORT}
+      TZ: ${TZ}
       MSAUTH_URL: ${MSAUTH_URL}
       MSUSER_URL: ${MSUSER_URL}
       DB_HOST: ${POSTGRES_HOST}
@@ -97,7 +94,6 @@ services:
       APP_NAME: ${APP_NAME}
       ENV_NAME: ${ENV_NAME}
       SERVER_SCHEME: ${SERVER_SCHEME}
-      PORT: ${DEFAULT_PORT}
       SERVICE_NAME: ${GATELIN_HOST}
       ACCESS_TOKEN_DURATION: ${GATELIN_ACCESS_TOKEN_DURATION}
       REFRESH_TOKEN_DURATION: ${GATELIN_REFRESH_TOKEN_DURATION}
@@ -111,6 +107,8 @@ services:
       - ${PWD}/src:/usr/src/app/src
       - ${PWD}/tests:/usr/src/app/tests
       - gateway_node_modules:/usr/src/app/node_modules
+    ports:
+      - "3000:${DEFAULT_PORT}"
     healthcheck: *healthcheck
   
   adminer:
@@ -145,8 +143,55 @@ services:
     ports:
       - "8081:${DEFAULT_PORT}"
 
+  ms_user_mock:
+    build:
+      context: ${PWD}/mocks/ms_user
+      dockerfile: dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        TZ: ${TZ}
+        NODE_VERSION: ${NODE_VERSION}
+        NODE_ENV: ${NODE_ENV}
+    container_name: ${MSUSER_HOST}
+    hostname: ${MSUSER_HOST}
+    environment:
+      PORT: ${DEFAULT_PORT}
+    volumes:
+      - ${PWD}/mocks/ms_user/src:/usr/src/app/src
+      - ms_user_mock_node_modules:/usr/src/app/node_modules
+    ports:
+      - "8082:${DEFAULT_PORT}"
+
+  ms_auth_mock:
+    build:
+      context: ${PWD}/mocks/ms_auth
+      dockerfile: dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        TZ: ${TZ}
+        NODE_VERSION: ${NODE_VERSION}
+        NODE_ENV: ${NODE_ENV}
+    container_name: ${MSAUTH_HOST}
+    hostname: ${MSAUTH_HOST}
+    environment:
+      PORT: ${DEFAULT_PORT}
+    volumes:
+      - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
+      - ms_auth_mock_node_modules:/usr/src/app/node_modules
+    ports:
+      - "8083:${DEFAULT_PORT}"
+
 volumes:
   postgres_data:
     driver: local
   gateway_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/node_modules
   swagger_node_modules:
+  ms_user_mock_node_modules:
+  ms_auth_mock_node_modules:

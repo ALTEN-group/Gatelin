@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8100/api/",
-      "description": "Gateway local"
+      "url": "http://localhost:3000/",
+      "description": "Gatelin local"
     }
   ],
   "components": {
