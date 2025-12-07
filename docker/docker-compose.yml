@@ -1,6 +1,76 @@
 name: ${APP_NAME}
 
+x-default-envs: &defaultEnvs
+  PORT: ${DEFAULT_PORT}
+  TZ: ${TZ}
+
+x-service-healthcheck: &healthcheck
+  test: ["CMD", "node", "/usr/src/app/node_modules/@dwtechs/healix-express.js/dist/test.js"]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+
 services:
+
+  postgres:
+    platform: linux/amd64
+    build:
+      context: ${PWD}/db/pgsql
+      dockerfile: dockerfile
+      args:
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+    container_name: ${POSTGRES_HOST}
+    hostname: ${POSTGRES_HOST}
+    environment:
+      TZ: ${TZ}
+      POSTGRES_DBS: ${POSTGRES_DBS}
+      POSTGRES_USER: ${POSTGRES_ROOT_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PWD}
+      #liquibase
+      LIQUIBASE_USER: ${LIQUIBASE_DB_USER}
+      LIQUIBASE_PWD: ${LIQUIBASE_DB_PWD}
+      # ms_gateway
+      GATELIN_USER: ${GATELIN_DB_USER}
+      GATELIN_PWD: ${GATELIN_DB_PWD}
+    stdin_open: true
+    tty: true
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_ROOT_USER}", "-d", "${GATELIN_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  gatelin_migration:
+    build:
+      context: ${PWD}/db/liquibase
+      dockerfile: dockerfile
+      args:
+        LIQUIBASE_VERSION: ${LIQUIBASE_VERSION}
+    container_name: ${GATELIN_MIGRATION_HOST}
+    hostname: ${GATELIN_MIGRATION_HOST}
+    environment:
+      TZ: ${TZ}
+      LIQUIBASE_COMMAND_USERNAME: ${LIQUIBASE_DB_USER}
+      LIQUIBASE_COMMAND_PASSWORD: ${LIQUIBASE_DB_PWD}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_NAME: ${GATELIN_DB_NAME}
+      DB_USER: ${GATELIN_DB_USER}
+      DB_PWD: ${GATELIN_DB_PWD}
+      UPDATE: ${LIQUIBASE_UPDATE}
+      ROLLBACK: ${LIQUIBASE_ROLLBACK}
+      SNAPSHOT: snapshot/snapshot${LIQUIBASE_SNAPSHOT}
+      LIQUIBASE_LOG_LEVEL: ${LIQUIBASE_LOG_LEVEL}
+      LIQUIBASE_COMMAND_CONTEXTS: ${LIQUIBASE_COMMAND_CONTEXTS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ${PWD}/db/liquibase/gateway/:/liquibase/changelog
+
+
   gatelin:
     build:
       context: ${PWD}
@@ -14,10 +84,69 @@ services:
     image: gatelin:${NODE_ENV:-development}
     container_name: ${GATELIN_HOST}
     # hostname: ${GATELIN_HOST}
+    environment:
+      <<: *defaultEnvs
+      MSAUTH_URL: ${MSAUTH_URL}
+      MSUSER_URL: ${MSUSER_URL}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_NAME: ${GATELIN_DB_NAME}
+      DB_USER: ${GATELIN_DB_USER}
+      DB_PWD: ${GATELIN_DB_PWD}
+      TOKEN_SECRET: ${MSUSER_TOKEN_SECRET}
+      PWD_SECRET: ${MSAUTH_PWD_SECRET}
+      APP_NAME: ${APP_NAME}
+      ENV_NAME: ${ENV_NAME}
+      SERVER_SCHEME: ${SERVER_SCHEME}
+      PORT: ${DEFAULT_PORT}
+      SERVICE_NAME: ${GATELIN_HOST}
+      ACCESS_TOKEN_DURATION: ${GATELIN_ACCESS_TOKEN_DURATION}
+      REFRESH_TOKEN_DURATION: ${GATELIN_REFRESH_TOKEN_DURATION}
+      PWD_MIN_LENGTH_POLICY: ${GATELIN_PWD_MIN_LENGTH_LEGACY}
+      PWD_MAX_LENGTH_POLICY: ${GATELIN_PWD_MAX_LENGTH_LEGACY}
+      PWD_NUMBERS_POLICY: ${GATELIN_PWD_NUMBERS_LEGACY}
+      PWD_UPPERCASE_POLICY: ${GATELIN_PWD_UPPERCASE_LEGACY}
+      PWD_LOWERCASE_POLICY: ${GATELIN_PWD_LOWERCASE_LEGACY}
+      PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
     volumes:
       - ${PWD}/src:/usr/src/app/src
       - ${PWD}/tests:/usr/src/app/tests
       - gateway_node_modules:/usr/src/app/node_modules
+    healthcheck: *healthcheck
+  
+  adminer:
+    image: ${ADMINER_VERSION}
+    container_name: ${ADMINER_HOST}
+    hostname:  ${ADMINER_HOST}
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: ${POSTGRES_HOST}
+      ADMINER_DEFAULT_DRIVER: pgsql
+      ADMINER_DESIGN: pappu687
+
+  swagger:
+    build:
+      context: ${PWD}/swagger
+      dockerfile: dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        TZ: ${TZ}
+        NODE_VERSION: ${NODE_VERSION}
+        NODE_ENV: ${NODE_ENV}
+    container_name: ${SWAGGER_HOST}
+    hostname: ${SWAGGER_HOST}
+    environment:
+      SERVICE_NAME: ${SWAGGER_HOST}
+      PORT: ${DEFAULT_PORT}
+    volumes:
+      - ${PWD}/swagger/src:/usr/src/app/src
+      - swagger_node_modules:/usr/src/app/node_modules
+    ports:
+      - "8081:${DEFAULT_PORT}"
 
 volumes:
+  postgres_data:
+    driver: local
   gateway_node_modules:
+  swagger_node_modules:

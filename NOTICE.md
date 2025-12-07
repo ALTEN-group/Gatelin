@@ -9,19 +9,13 @@
 To build and run the service (development):
 
 ```bash
-docker-compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev up --build
+docker-compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev up --build -d
 ```
 
 To build and run the service (production):
 
 ```bash
-docker-compose -f docker/docker-compose.prod.yml --env-file docker/conf/.env.prod up --build
-```
-
-To run in detached mode (background):
-
-```bash
-docker-compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev up --build -d
+docker-compose -f docker/docker-compose.prod.yml --env-file docker/conf/.env.prod up --build -d
 ```
 
 To rebuild without cache:

@@ -1,0 +1,1193 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Gateway service API document",
+    "description": "API Gateway service for authentication, consumer management, and request forwarding"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8100/api/",
+      "description": "Gateway local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "user email",
+            "minLength": 5,
+            "maxLength": 50
+          },
+          "pwd": {
+            "type": "string",
+            "description": "user password"
+          }
+        },
+        "required": ["email", "pwd"],
+        "examples": {
+          "user1": {
+            "summary": "Admin user",
+            "value": { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+          },
+          "user2": {
+            "summary": "Standard user",
+            "value": { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+          },
+          "user3": {
+            "summary": "Wrong user",
+            "value": { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+          }
+        }
+      },
+      "consumer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30,
+            "example": "john_doe"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [1, 2]
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this consumer",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this consumer",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this consumer",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this consumer",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the consumer was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the consumer was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": ["id", "nickname", "accessToken", "refreshToken", "roles"]
+      },
+      "route": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the service this route belongs to",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Route name identifier",
+            "example": "users-get"
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "URL pattern (can be regex if starts with ~)",
+            "example": "/api/users"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+            },
+            "example": ["GET", "POST"]
+          },
+          "jwt": {
+            "type": "boolean",
+            "description": "Whether the route requires JWT authentication"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "User management endpoints"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this route",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this route",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this route",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this route",
+            "example": "moderator_user"
+          }
+        },
+        "required": ["serviceId", "name", "pattern", "methods", "jwt"]
+      },
+      "service": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 10,
+            "description": "Service name identifier",
+            "example": "ms-user"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this service",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this service",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this service",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this service",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the service was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the service was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": ["name"]
+      },
+      "cors": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "CORS origin name",
+            "example": "http://localhost:3000"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this CORS entry",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this CORS entry",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this CORS entry",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this CORS entry",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the CORS entry was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the CORS entry was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": ["name"]
+      },
+      "historyEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tstamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the change occurred",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "schemaName": {
+            "type": "string",
+            "description": "Database schema name",
+            "example": "public"
+          },
+          "tableName": {
+            "type": "string",
+            "description": "Database table name",
+            "example": "route"
+          },
+          "operation": {
+            "type": "string",
+            "enum": ["INSERT", "UPDATE", "DELETE"],
+            "description": "Type of database operation",
+            "example": "UPDATE"
+          },
+          "dbUser": {
+            "type": "string",
+            "description": "Database user who performed the operation",
+            "example": "ms_gateway_user"
+          },
+          "consumerId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the consumer who made the change",
+            "example": 123
+          },
+          "consumerName": {
+            "type": "string",
+            "description": "Name of the consumer who made the change",
+            "example": "admin_user"
+          },
+          "record": {
+            "type": "object",
+            "description": "JSON representation of the affected record",
+            "example": {"id": 1, "name": "test-route", "pattern": "/api/test"}
+          }
+        },
+        "required": ["tstamp", "schemaName", "tableName", "operation", "consumerId", "consumerName", "record"]
+      },
+      "tokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Token expiration time in seconds"
+          }
+        }
+      },
+      "refreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Current access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token to validate"
+          }
+        },
+        "required": ["accessToken", "refreshToken"]
+      },
+      "errorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "details": {
+            "type": "string",
+            "example": "Invalid request parameters"
+          }
+        }
+      }
+    },
+    "responses": {
+      "unauthorizedError": {
+        "description": "Unauthorized. Access token is missing or invalid",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "notFoundError": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "unexpectedError": {
+        "description": "Unexpected error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "badRequestError": {
+        "description": "Missing parameter in request body or params",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/consumers": {
+      "post": {
+        "tags": ["Consumer Management"],
+        "summary": "Add new consumer during login sequence",
+        "description": "Register one consumer in the system during logging sequence. Send email and pwd in an array called rows.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/user" }
+                  }
+                },
+                "required": ["rows"]
+              },
+              "examples": {
+                "user1": {
+                  "summary": "Admin user",
+                  "value": {
+                    "rows": [
+                      { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+                    ]
+                  }
+                },
+                "user2": {
+                  "summary": "Standard user",
+                  "value": {
+                    "rows": [
+                      { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+                    ]
+                  }
+                },
+                "user3": {
+                  "summary": "Wrong user",
+                  "value": {
+                    "rows": [
+                      { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Consumer created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/consumer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Consumer Management"],
+        "summary": "Update consumer tokens",
+        "description": "Update a consumer with new access and refresh tokens (used for login with token and token refresh)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consumer updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/consumer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Consumer Management"],
+        "summary": "Remove consumer",
+        "description": "Delete a consumer from the system (used when logging out)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Consumer deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/routes/search": {
+      "post": {
+        "tags": ["Route Management"],
+        "summary": "Search registered routes",
+        "description": "Search and retrieve routes configured in the gateway based on criteria",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "serviceId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Filter by service ID"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Filter by route name"
+                  },
+                  "pattern": {
+                    "type": "string",
+                    "description": "Filter by URL pattern"
+                  },
+                  "methods": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+                    },
+                    "description": "Filter by HTTP methods"
+                  },
+                  "jwt": {
+                    "type": "boolean",
+                    "description": "Filter by JWT requirement"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 50,
+                    "maximum": 1000,
+                    "description": "Maximum number of records to return"
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of records to skip"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of routes matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/route"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of routes matching criteria"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/routes": {
+      "post": {
+        "tags": ["Route Management"],
+        "summary": "Add a new route",
+        "description": "Register a new route configuration in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/route"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Route created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/route"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/routes/{id}": {
+      "get": {
+        "tags": ["Route Management"],
+        "summary": "Get a specific route",
+        "description": "Retrieve details of a specific route by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/route"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Route Management"],
+        "summary": "Update a route",
+        "description": "Update an existing route configuration",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Route ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/route"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Route updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/route"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Route Management"],
+        "summary": "Delete a route",
+        "description": "Remove a route configuration from the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Route deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": ["Service Management"],
+        "summary": "Get all registered services",
+        "description": "Retrieve all services configured in the gateway",
+        "responses": {
+          "200": {
+            "description": "List of services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/service"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of services"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Service Management"],
+        "summary": "Register a new service",
+        "description": "Add a new service configuration to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 10
+                  },
+                  "creatorId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "creatorName": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "creatorId", "creatorName"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/service"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/cors": {
+      "get": {
+        "tags": ["CORS Management"],
+        "summary": "Get all CORS configurations",
+        "description": "Retrieve all CORS origins configured in the gateway",
+        "responses": {
+          "200": {
+            "description": "List of CORS configurations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/cors"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of CORS configurations"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "post": {
+        "tags": ["CORS Management"],
+        "summary": "Add a new CORS configuration",
+        "description": "Add a new CORS origin to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 50
+                  },
+                  "creatorId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "creatorName": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "creatorId", "creatorName"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CORS configuration created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cors"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "tags": ["History"],
+        "summary": "Get change history",
+        "description": "Retrieve history of changes made to gateway entities",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "schemaName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by schema name"
+          },
+          {
+            "name": "tableName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by table name"
+          },
+          {
+            "name": "consumerId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by consumer ID"
+          },
+          {
+            "name": "operation",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["INSERT", "UPDATE", "DELETE"]
+            },
+            "description": "Filter by operation type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 1000
+            },
+            "description": "Maximum number of records to return"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "Number of records to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "History records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/historyEntry"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of history records"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Check the health of the gateway service",
+        "description": "Health check endpoint to verify service availability",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "uptime": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "Service uptime in seconds"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Gateway service is running"
+                    },
+                    "timestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "Current timestamp"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Monitoring"],
+        "summary": "Get Prometheus metrics",
+        "description": "Retrieve performance and operational metrics in Prometheus format",
+        "responses": {
+          "200": {
+            "description": "Metrics data",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "# HELP http_requests_total Total number of HTTP requests\n# TYPE http_requests_total counter\nhttp_requests_total{method=\"GET\",status=\"200\"} 1024"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Consumer Management",
+      "description": "Consumer lifecycle management for authenticated sessions"
+    },
+    {
+      "name": "Route Management",
+      "description": "Gateway route configuration and validation"
+    },
+    {
+      "name": "Service Management",
+      "description": "Service registration and management for the gateway"
+    },
+    {
+      "name": "CORS Management",
+      "description": "Cross-Origin Resource Sharing configuration management"
+    },
+    {
+      "name": "History",
+      "description": "Change history and audit trail tracking"
+    },
+    {
+      "name": "Health",
+      "description": "Service health and status checks"
+    },
+    {
+      "name": "Monitoring",
+      "description": "Performance metrics and monitoring endpoints"
+    }
+  ]
+}

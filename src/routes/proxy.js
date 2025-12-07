@@ -7,8 +7,8 @@ import forwardToService from "../controllers/forward.js";
 import stripUrl from "../middlewares/mappers/stripUrl.js";
 import { checkRequest } from "../middlewares/validators/check-request.js";
 
-// Dispatch request
-router.all("*", 
+// Dispatch request - catch all routes using regex
+router.all(/^\/.*/, 
   ...checkRequest, 
   stripUrl,
   forwardToService
