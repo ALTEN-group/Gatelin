@@ -28,6 +28,16 @@ const mockUsers = [
     roles: ['user'],
     active: true,
     portrait: null
+  },
+  {
+    id: 'user3',
+    email: 'ludoclub@hotmail.com',
+    nickname: 'ludoclub',
+    firstName: 'Ludovic',
+    lastName: 'Club',
+    roles: ['admin', 'user'],
+    active: true,
+    portrait: null
   }
 ];
 

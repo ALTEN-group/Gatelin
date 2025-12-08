@@ -9,8 +9,25 @@ import healixRouter from "@dwtechs/healix-express";
 import helmet from "helmet";
 
 const app = express();
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false, // Disable to allow CORS
+  contentSecurityPolicy: false // Disable CSP for development/API usage
+}));
 app.disable("x-powered-by");
+
+// Enable CORS for development (allow Swagger UI on port 8081)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 
 // const { CORS, METHODS } = process.env;

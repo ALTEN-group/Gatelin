@@ -9,16 +9,31 @@ app.use(express.json());
 
 // Mock credentials database
 const validCredentials = [
-  { email: 'admin@example.com', password: 'admin123' },
-  { email: 'test@example.com', password: 'test123' },
-  { email: 'user@example.com', password: 'user123' }
+  { email: 'admin@example.com', password: 'Admin1234!' },
+  { email: 'test@example.com', password: 'Test1234!' },
+  { email: 'user@example.com', password: 'User1234!' },
+  { email: 'ludoclub@hotmail.com', password: 'admin34!U' },
+  { email: 'john_doe@supermail.com', password: 'p@s5WOrd!99' }
 ];
 
 // POST /login/ - Validate user credentials
 app.post('/login/', (req, res) => {
-  console.log('POST /login/ - Validate credentials', { email: req.body.email });
+  console.log('POST /login/ - Full request body:', JSON.stringify(req.body, null, 2));
   
-  const { email, password } = req.body;
+  // Handle both direct format and rows format
+  let email, password;
+  
+  if (req.body.rows && req.body.rows[0]) {
+    // Format: {rows: [{email, pwd}], ...}
+    email = req.body.rows[0].email;
+    password = req.body.rows[0].pwd;
+  } else {
+    // Format: {email, password}
+    email = req.body.email;
+    password = req.body.password || req.body.pwd;
+  }
+  
+  console.log('POST /login/ - Extracted credentials', { email, password: password ? '***' : undefined });
   
   if (!email || !password) {
     return res.status(400).json({ error: 'Missing email or password' });

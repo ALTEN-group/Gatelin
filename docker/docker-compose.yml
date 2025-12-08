@@ -1,7 +1,7 @@
 name: ${APP_NAME}
 
 x-service-healthcheck: &healthcheck
-  test: ["CMD", "node", "/usr/src/app/node_modules/@dwtechs/healix-express.js/dist/test.js"]
+  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
   interval: 10s
   timeout: 5s
   retries: 5
@@ -30,6 +30,8 @@ services:
       GATELIN_PWD: ${GATELIN_DB_PWD}
     stdin_open: true
     tty: true
+    networks:
+      - internal
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -37,6 +39,40 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+  traefik:
+    image: traefik:${TRAEFIK_VERSION}
+    container_name: ${TRAEFIK_HOST}
+    hostname: ${TRAEFIK_HOST}
+    command:
+      - --providers.docker=true
+      - --providers.docker.network=${APP_NAME}-internal-${ENV_NAME}
+      - --providers.docker.constraints=Label(`stack.name`,`${APP_NAME}-${ENV_NAME}`)
+      - --entryPoints.web.address=${TRAEFIK_ENTRYPOINTS_WEB_ADDRESS}
+      - --entrypoints.web.forwardedHeaders=true
+      - --entryPoints.web.forwardedHeaders.insecure=true
+      - --providers.docker.exposedByDefault=${TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT}
+      - --api.insecure=${TRAEFIK_API_INSECURE}
+      - --log.level=${TRAEFIK_LOG_LEVEL}
+      - --accesslog=${TRAEFIK_ACCESSLOG}
+      - --ping=true
+      - --api.dashboard=true
+    labels:
+      - "traefik.http.middlewares.gateway.stripprefix.prefixes=/api"     
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.dashboard.entrypoints=traefik"
+      - "traefik.http.routers.dashboard.service=api@internal"
+    restart: always
+    ports:
+      - ${TRAEFIK_PORT}:80
+      - ${TRAEFIK_DASH_PORT}:8080
+    networks:
+      - internal
+      - external
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   gatelin_migration:
     build:
@@ -63,6 +99,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - internal
     volumes:
       - ${PWD}/db/liquibase/gateway/:/liquibase/changelog
 
@@ -103,24 +141,44 @@ services:
       PWD_UPPERCASE_POLICY: ${GATELIN_PWD_UPPERCASE_LEGACY}
       PWD_LOWERCASE_POLICY: ${GATELIN_PWD_LOWERCASE_LEGACY}
       PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
+    networks:
+      - internal
     volumes:
       - ${PWD}/src:/usr/src/app/src
       - ${PWD}/tests:/usr/src/app/tests
       - gateway_node_modules:/usr/src/app/node_modules
-    ports:
-      - "3000:${DEFAULT_PORT}"
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.gateway.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.gateway.entrypoints=web"
+      - "traefik.http.routers.gateway.service=gateway"
+      - "traefik.http.routers.gateway.middlewares=strip-prefix"
+      - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
+      - "traefik.http.services.gateway.loadBalancer.server.port=${DEFAULT_PORT}"
     healthcheck: *healthcheck
   
   adminer:
     image: ${ADMINER_VERSION}
     container_name: ${ADMINER_HOST}
     hostname:  ${ADMINER_HOST}
-    ports:
-      - "8080:8080"
     environment:
       ADMINER_DEFAULT_SERVER: ${POSTGRES_HOST}
       ADMINER_DEFAULT_DRIVER: pgsql
       ADMINER_DESIGN: pappu687
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.adminer.rule=PathPrefix(`/adminer`)"
+      - "traefik.http.routers.adminer.entrypoints=web"
+      - "traefik.http.routers.adminer.service=adminer"
+      - "traefik.http.routers.adminer.middlewares=adminer"
+      - "traefik.http.services.adminer.loadbalancer.server.port=${ADMINER_PORT}"
+      - "traefik.http.middlewares.adminer.stripprefix.prefixes=/adminer"
+
 
   swagger:
     build:
@@ -142,6 +200,17 @@ services:
       - swagger_node_modules:/usr/src/app/node_modules
     ports:
       - "8081:${DEFAULT_PORT}"
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.swagger.rule=PathPrefix(`/swagger`)"
+      - "traefik.http.routers.swagger.entrypoints=web"
+      - "traefik.http.routers.swagger.service=swagger"
+      - "traefik.http.routers.swagger.middlewares=swagger"
+      - "traefik.http.services.swagger.loadbalancer.server.port=${DEFAULT_PORT}"
+      - "traefik.http.middlewares.swagger.stripprefix.prefixes=/swagger"
 
   ms_user_mock:
     build:
@@ -157,11 +226,11 @@ services:
     hostname: ${MSUSER_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
+    networks:
+      - internal
     volumes:
       - ${PWD}/mocks/ms_user/src:/usr/src/app/src
       - ms_user_mock_node_modules:/usr/src/app/node_modules
-    ports:
-      - "8082:${DEFAULT_PORT}"
 
   ms_auth_mock:
     build:
@@ -177,11 +246,20 @@ services:
     hostname: ${MSAUTH_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
+    networks:
+      - internal
     volumes:
       - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
       - ms_auth_mock_node_modules:/usr/src/app/node_modules
-    ports:
-      - "8083:${DEFAULT_PORT}"
+
+
+networks:
+  internal:
+    name: ${APP_NAME}-internal-${ENV_NAME}
+    driver: bridge 
+  external:
+    name: ${APP_NAME}-external-${ENV_NAME}
+    driver: bridge
 
 volumes:
   postgres_data:
