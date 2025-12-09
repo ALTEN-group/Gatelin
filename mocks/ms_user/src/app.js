@@ -10,7 +10,7 @@ app.use(express.json());
 // Mock users database
 const mockUsers = [
   {
-    id: 'user1',
+    id: 1,
     email: 'admin@example.com',
     nickname: 'admin',
     firstName: 'Admin',
@@ -20,7 +20,7 @@ const mockUsers = [
     portrait: null
   },
   {
-    id: 'user2',
+    id: 2,
     email: 'test@example.com',
     nickname: 'testuser',
     firstName: 'Test',
@@ -30,7 +30,7 @@ const mockUsers = [
     portrait: null
   },
   {
-    id: 'user3',
+    id: 3,
     email: 'ludoclub@hotmail.com',
     nickname: 'ludoclub',
     firstName: 'Ludovic',
