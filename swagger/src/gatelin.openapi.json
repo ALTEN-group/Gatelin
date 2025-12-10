@@ -508,6 +508,10 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/refreshTokenRequest"
+              },
+              "example": {
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJjb2NvQGV4YW1wbGUuY29tIiwicm9sZXMiOlsxLDJdLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczMzg1MzYwMH0.signature",
+                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczNDQ1NDgwMH0.signature"
               }
             }
           }
@@ -519,6 +523,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/consumer"
+                },
+                "example": {
+                  "id": 3,
+                  "nickname": "coco",
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newAccessToken.signature",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newRefreshToken.signature",
+                  "roles": [1, 2],
+                  "creatorId": 3,
+                  "creatorName": "coco",
+                  "updaterId": 3,
+                  "updaterName": "coco",
+                  "createdAt": "2025-12-10T10:30:00Z",
+                  "updatedAt": "2025-12-10T11:45:00Z"
                 }
               }
             }
@@ -540,15 +557,27 @@
       "delete": {
         "tags": ["Consumer Management"],
         "summary": "Remove consumer",
-        "description": "Delete a consumer from the system (used when logging out)",
+        "description": "Delete a consumer from the system (used when logging out). Requires JWT access token in Authorization header.",
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer token for authentication",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJjb2NvQGV4YW1wbGUuY29tIiwicm9sZXMiOlsxLDJdLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczMzg1MzYwMH0.signature"
+          }
+        ],
         "responses": {
           "204": {
-            "description": "Consumer deleted successfully"
+            "description": "Consumer deleted successfully (logout successful)"
           },
           "401": {
             "$ref": "#/components/responses/unauthorizedError"
