@@ -252,6 +252,32 @@ services:
       - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
       - ms_auth_mock_node_modules:/usr/src/app/node_modules
 
+  admin:
+    build:
+      context: ${PWD}/front/admin
+      dockerfile: dockerfile
+      <<: *secretArgs
+      args:
+        <<: *defaultArgs
+        NODE_VERSION: ${ADMIN_NODE_VERSION}
+    secrets: *secretMount
+    container_name: ${ADMIN_HOST}
+    hostname: ${ADMIN_HOST}
+    profiles: ["admin", "admin-mock"]
+    environment:
+      <<: *defaultEnvs
+    networks:
+      - internal
+    volumes:
+      - ${PWD}/front/admin:/usr/src/app
+      - admin_node_modules:/usr/src/app/node_modules
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin.entrypoints=web"
+      - "traefik.http.routers.admin.service=admin"
+      - "traefik.http.services.admin.loadbalancer.server.port=${ADMIN_PORT}"
 
 networks:
   internal:
@@ -270,6 +296,13 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/node_modules
+  admin_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/admin/node_modules
+
   swagger_node_modules:
   ms_user_mock_node_modules:
   ms_auth_mock_node_modules:
