@@ -50,20 +50,6 @@ INSERT INTO route ("serviceId", name, description, pattern, methods, jwt, "creat
 (2, 'profile', 'User manages is own profile', '/profile', ARRAY['GET', 'PUT', 'POST', 'OPTIONS']::method[], true, -1, 'system'),
 
 (2, 'users-search', 'Search users', '/users/search', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-history', 'Manage user history', '/users/(?<userId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-update', 'Update users', '/users', ARRAY['PUT', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-portrait', 'Add or update user portrait', '/users/(?<userId>\\d+)/portrait', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-add', 'Add users', '/users', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-archive', 'Archive users', '/users/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'users-delete', 'Delete users', '/users', ARRAY['DELETE', 'OPTIONS']::method[], true, -1, 'system'),
-
-(2, 'roles-conf', 'Get roles config', '/roles/conf', ARRAY['GET', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-search', 'Search roles', '/roles/search', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-history', 'Manage role history', '/roles/(?<roleId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-update', 'Update a role', '/roles/(?<roleId>\\d+)', ARRAY['PUT', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-add', 'Add a role', '/roles', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-archive', 'Archive a role', '/roles/(?<roleId>\\d+)/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, -1, 'system'),
-(2, 'roles-delete', 'Delete roles', '/roles', ARRAY['DELETE', 'OPTIONS']::method[], true, -1, 'system'),
 
 (2, 'permissions-search', 'get all permissions', '/permissions', ARRAY['GET', 'OPTIONS']::method[], true, -1, 'system')
 ;

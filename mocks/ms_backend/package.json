@@ -1,7 +1,7 @@
 {
-  "name": "ms_user_mock",
+  "name": "ms_backend_mock",
   "version": "1.0.0",
-  "description": "Mock server for ms_user microservice",
+  "description": "Mock backend service for testing Gatelin proxy functionality",
   "main": "src/app.js",
   "type": "module",
   "scripts": {

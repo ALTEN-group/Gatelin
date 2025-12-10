@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import healixRouter from '@dwtechs/healix-express';
 import { listen } from '@dwtechs/servpico-express';
+import { log } from '@dwtechs/winstan';
 import { mockUsers } from './data/users.js';
 
 const app = express();
@@ -19,20 +20,18 @@ const mockAccess = [
 
 // POST /users/ - Get user by email filter (used by Gatelin getUserByEmail middleware)
 app.post('/users/', (req, res) => {
-  console.log('POST /users/ - Get user by filters', req.body);
+  log.info('POST /users/ - Get user by filters', req.body);
   
   const { filters } = req.body;
   
-  if (!filters || !filters.email) {
+  if (!filters || !filters.email)
     return res.status(400).json({ error: 'Missing email filter' });
-  }
 
   const email = filters.email.value;
   const user = mockUsers.find(u => u.email === email);
 
-  if (!user) {
+  if (!user)
     return res.status(404).json({ error: 'User not found' });
-  }
 
   res.status(200).json({
     rows: [user],
@@ -42,7 +41,7 @@ app.post('/users/', (req, res) => {
 
 // GET /access - Get access/permissions (used by Gatelin access service)
 app.get('/access', (req, res) => {
-  console.log('GET /access - Get access permissions');
+  log.info('GET /access - Get access permissions');
   
   res.status(200).json({
     rows: mockAccess,
