@@ -9,6 +9,8 @@
     "dev": "node --watch src/app.js"
   },
   "dependencies": {
+    "@dwtechs/healix-express": "0.1.0",
+    "@dwtechs/servpico-express": "0.2.0",
     "express": "5.1.0",
     "helmet": "8.1.0"
   }
