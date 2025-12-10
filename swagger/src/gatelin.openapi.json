@@ -36,17 +36,17 @@
         },
         "required": ["email", "pwd"],
         "examples": {
-          "user1": {
-            "summary": "Admin user",
-            "value": { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+          "admin": {
+            "summary": "Admin user (valid)",
+            "value": { "email": "coco@example.com", "pwd": "admin34!U" }
           },
-          "user2": {
-            "summary": "Standard user",
-            "value": { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+          "standard": {
+            "summary": "Standard user (valid)",
+            "value": { "email": "standard@example.com", "pwd": "Test1234!" }
           },
-          "user3": {
-            "summary": "Wrong user",
-            "value": { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+          "wrong": {
+            "summary": "Wrong credentials (invalid)",
+            "value": { "email": "standard@example.com", "pwd": "WrongPassword123!" }
           }
         }
       },
@@ -451,27 +451,27 @@
                 "required": ["rows"]
               },
               "examples": {
-                "user1": {
-                  "summary": "Admin user",
+                "admin": {
+                  "summary": "Admin user (valid)",
                   "value": {
                     "rows": [
-                      { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+                      { "email": "coco@example.com", "pwd": "admin34!U" }
                     ]
                   }
                 },
-                "user2": {
-                  "summary": "Standard user",
+                "standard": {
+                  "summary": "Standard user (valid)",
                   "value": {
                     "rows": [
-                      { "email": "ludoclub@hotmail.com", "pwd": "admin34!U" }
+                      { "email": "standard@example.com", "pwd": "Test1234!" }
                     ]
                   }
                 },
-                "user3": {
-                  "summary": "Wrong user",
+                "wrong": {
+                  "summary": "Wrong credentials (invalid)",
                   "value": {
                     "rows": [
-                      { "email": "john_doe@supermail.com", "pwd": "p@s5WOrd!99" }
+                      { "email": "standard@example.com", "pwd": "WrongPassword123!" }
                     ]
                   }
                 }

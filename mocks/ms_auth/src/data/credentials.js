@@ -11,7 +11,7 @@ export const mockCredentials = [
   {
     id: 2,
     userId: 2,
-    email: 'test@example.com',
+    email: 'standard@example.com',
     pwdHash: 'Test1234!'
   },
   {
