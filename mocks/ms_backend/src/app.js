@@ -1,20 +1,18 @@
 import express from "express";
 import helmet from "helmet";
 import healixExpress from "@dwtechs/healix-express";
-import servpico from "@dwtechs/servpico-express";
+import { listen } from '@dwtechs/servpico-express';
 import { log } from "@dwtechs/winstan";
 import { mockItems } from "./data/items.js";
 
 const app = express();
-const PORT = process.env.PORT || 3003;
-const SERVICE_NAME = process.env.SERVICE_NAME || "backend-mock";
 
 // Middleware
 app.use(helmet());
 app.use(express.json());
 
 // Health check
-app.use("/health", healixExpress.router());
+app.use("/health", healixExpress);
 
 // GET /items - Get all items
 app.get("/items", (req, res) => {
@@ -141,4 +139,4 @@ app.patch("/items/:id", (req, res) => {
 });
 
 // Start server
-servpico.start(app, PORT, SERVICE_NAME);
+listen(app);

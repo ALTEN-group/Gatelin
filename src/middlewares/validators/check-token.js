@@ -64,7 +64,7 @@ export default function checkToken(req, res, next) {
       status: EC_UNAUTHORIZED,
       msg: "Access token does not match consumer access token in cache",
     });
-  if (c.refreshToken, refreshToken)
+  if (c.refreshToken !== refreshToken)
     return next({
       status: EC_UNAUTHORIZED,
       msg: "Refresh token does not match consumer refresh token in cache",

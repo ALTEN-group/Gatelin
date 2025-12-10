@@ -272,32 +272,27 @@ services:
       - ${PWD}/mocks/ms_backend/src:/usr/src/app/src
       - ms_backend_mock_node_modules:/usr/src/app/node_modules
 
-  admin:
-    build:
-      context: ${PWD}/front/admin
-      dockerfile: dockerfile
-      <<: *secretArgs
-      args:
-        <<: *defaultArgs
-        NODE_VERSION: ${ADMIN_NODE_VERSION}
-    secrets: *secretMount
-    container_name: ${ADMIN_HOST}
-    hostname: ${ADMIN_HOST}
-    profiles: ["admin", "admin-mock"]
-    environment:
-      <<: *defaultEnvs
-    networks:
-      - internal
-    volumes:
-      - ${PWD}/front/admin:/usr/src/app
-      - admin_node_modules:/usr/src/app/node_modules
-    labels:
-      - "traefik.enable=true"
-      - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
-      - "traefik.http.routers.admin.entrypoints=web"
-      - "traefik.http.routers.admin.service=admin"
-      - "traefik.http.services.admin.loadbalancer.server.port=${ADMIN_PORT}"
+  # admin:
+  #   build:
+  #     context: ${PWD}/front/admin
+  #     dockerfile: dockerfile
+  #     args:
+  #       NODE_VERSION: ${ADMIN_NODE_VERSION}
+  #   container_name: ${ADMIN_HOST}
+  #   hostname: ${ADMIN_HOST}
+  #   profiles: ["admin", "admin-mock"]
+  #   networks:
+  #     - internal
+  #   volumes:
+  #     - ${PWD}/front/admin:/usr/src/app
+  #     - admin_node_modules:/usr/src/app/node_modules
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "stack.name=${STACK_NAME}"
+  #     - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
+  #     - "traefik.http.routers.admin.entrypoints=web"
+  #     - "traefik.http.routers.admin.service=admin"
+  #     - "traefik.http.services.admin.loadbalancer.server.port=${ADMIN_PORT}"
 
 networks:
   internal:
