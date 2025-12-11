@@ -26,7 +26,7 @@ export default function getUserByEmail(req, res, next) {
       // Add user data to response rows for final response
       res.rows = u;
       // Add user id, nickname and roles to request body rows for consumer creation
-      req.body.rows[0] = { id: u.id, nickname: u.nickname, roles: u.roles };
+      req.body.rows[0] = { ...req.body.rows[0], id: u.id, nickname: u.nickname, roles: u.roles };
       // Add active to res locals for activation check
       res.locals.active = u.active;
       next();
