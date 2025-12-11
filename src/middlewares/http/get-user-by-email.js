@@ -25,11 +25,8 @@ export default function getUserByEmail(req, res, next) {
       log.debug(`ms_user response: ${u.toString()}`);
       // Add user data to response rows for final response
       res.rows = u;
-      // Add user id to request body for pwd validation and Token refresh
-      req.body.id = u.id;
-      // Add user nickname and roles for consumer creation
-      req.body.nickname = u.nickname;
-      req.body.roles = u.roles;
+      // Add user id, nickname and roles to request body rows for consumer creation
+      req.body.rows[0] = { id: u.id, nickname: u.nickname, roles: u.roles };
       // Add active to res locals for activation check
       res.locals.active = u.active;
       next();
