@@ -84,8 +84,7 @@ sequenceDiagram
     msu->>msg: return 200 ok { id, nickname, roles, active, portrait... }
     deactivate msu
     activate msg
-    msg--)msg: Add user id to req.body for pwd comparison and token refresh
-    msg--)msg: Add nickname and roles to req.body for consumer creation
+    msg--)msg: Add user id, nickname and roles to req.body.rows[0] (preserving email, pwd)
     msg--)msg: Add active to res.locals for activation sequence
     msg--)msg: Add user data to res.rows for final response
   end
