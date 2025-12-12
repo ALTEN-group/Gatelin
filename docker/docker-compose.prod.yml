@@ -11,6 +11,6 @@ services:
         TZ: ${TZ}
         NODE_VERSION: ${NODE_VERSION}
         NODE_ENV: ${NODE_ENV}
-    image: gatelin:${NODE_ENV:-development}
+    image: dwtechs/gatelin:${VERSION:-latest}
     container_name: ${GATELIN_HOST}
     # hostname: ${GATELIN_HOST}
