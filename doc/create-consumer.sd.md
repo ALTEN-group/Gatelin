@@ -24,16 +24,16 @@ sequenceDiagram
   u->>f: Enter email and password
   deactivate u
   activate f
-  f->>msg: post(consumers/) { email, pwd }
+  f->>msg: post(consumers/) { rows: [{ email, pwd }] }
   deactivate f
-  
+
   rect rgb(220, 220, 220, 0.1)
     note over f,msg: Input Validation Block
     activate msg
     rect rgb(100, 200, 100, 0.2)
       note over msg: Antity-pgsql Library Block
-      msg--)msg: User entity normalize : { email }
-      msg--)msg: User entity validate : { email, pwd }
+      msg--)msg: User entity normalize rows[0].email
+      msg--)msg: User entity validate rows[0].email, rows[0].pwd
     end
     rect rgb(150, 50, 50, 0.5)
       break when email or pwd are missing or invalid

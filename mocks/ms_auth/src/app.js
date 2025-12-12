@@ -3,7 +3,7 @@ import helmet from 'helmet';
 import healixRouter from '@dwtechs/healix-express';
 import { listen } from '@dwtechs/servpico-express';
 import { log } from '@dwtechs/winstan';
-import { isEmail, isStringOfLength } from '@dwtechs/checkard';
+import { isEmail, isStringOfLength, isArray } from '@dwtechs/checkard';
 import { mockCredentials } from './data/credentials.js';
 
 const app = express();
@@ -16,20 +16,14 @@ app.use('/health', healixRouter);
 app.post('/login/', (req, res) => {
   log.debug('POST /login/ - Full request body:', JSON.stringify(req.body, null, 2));
   
-  // Handle both direct format and rows format
-  let email, password;
+  // Validate request body format
+  if (!isArray(req.body.rows, ">=", 1))
+    return res.status(400).json({ error: 'Invalid request format: rows array required' });
   
-  if (req.body.rows && req.body.rows[0]) {
-    // Format: {rows: [{email, pwd}], ...}
-    email = req.body.rows[0].email;
-    password = req.body.rows[0].pwd;
-  } else {
-    // Format: {email, password}
-    email = req.body.email;
-    password = req.body.password || req.body.pwd;
-  }
+  const email = req.body.rows[0].email;
+  const password = req.body.rows[0].pwd;
   
-  log.info('POST /login/ - Extracted credentials', { email, password: password ? '***' : undefined });
+  log.info('POST /login/ - Extracted credentials', { email, password });
   
   // Validate email format
   if (!isEmail(email))
