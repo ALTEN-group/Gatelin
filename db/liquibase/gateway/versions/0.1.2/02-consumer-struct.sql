@@ -6,8 +6,6 @@ CREATE TABLE IF NOT EXISTS consumer (
   roles INT[] NOT NULL,
   "creatorId" INT,
   "creatorName" TEXT,
-  "updaterId" INT,
-  "updaterName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
   "updatedAt" TIMESTAMP DEFAULT NOW()
 );

@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS log.history (
   operation      text,
   "dbUser"       text DEFAULT current_user,
   -- user generating this history record
-  "consumerId"   int NOT NULL,
-  "consumerName" text NOT NULL,
+  "consumerId"   int NULL,
+  "consumerName" text DEFAULT 'system',
   record         jsonb
 );
 

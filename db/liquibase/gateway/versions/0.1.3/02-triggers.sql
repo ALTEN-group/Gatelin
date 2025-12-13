@@ -1,9 +1,18 @@
 
 --
+-- Create INSTEAD OF trigger on routes view
+--
+CREATE TRIGGER routes_iud_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON routes
+FOR EACH ROW 
+EXECUTE PROCEDURE iud_route();
+
+
+--
 -- Apply history trigger to consumer table  
 --
 CREATE TRIGGER consumer_history_trigger 
-AFTER INSERT OR UPDATE OR DELETE ON "consumer"
+AFTER INSERT OR DELETE ON "consumer"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
