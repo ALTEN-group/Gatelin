@@ -22,7 +22,9 @@ function send(req, res) {
   if (isArray(rows, ">", 0)) {
     const payload = { rows: clear(rows, unsafeProps) };
     if (res.total) payload.total = res.total;
-    res.json(payload);
+    // Send 201 for POST requests (resource created), 200 for others
+    const statusCode = req.method === 'POST' ? 201 : 200;
+    res.status(statusCode).json(payload);
   } else res.status(204).send();
 }
 

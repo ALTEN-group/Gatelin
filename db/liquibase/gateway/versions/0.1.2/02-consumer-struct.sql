@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS consumer (
   nickname varchar(30) NOT NULL,
   "accessToken" varchar(600) NOT NULL UNIQUE,
   "refreshToken" varchar(600) NOT NULL UNIQUE,
-  roles INT[] NOT NULL,
+  "rolesArrayAgg" INT[] NOT NULL,
   "creatorId" INT,
   "creatorName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),

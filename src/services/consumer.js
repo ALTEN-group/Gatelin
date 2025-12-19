@@ -87,16 +87,10 @@ function getOne(consumerId) {
 /**
  * Adds a consumer to the cache with the provided details.
  *
- * @param {number|string} cId - The consumer's unique identifier. Can be a number or a string that will be converted to a number.
- * @param {string} nickname - The nickname of the consumer.
- * @param {string} accessToken - The access token for the consumer.
- * @param {string} refreshToken - The refresh token for the consumer.
- * @param {number} maxLevel - The maximum level of access for the consumer.
- * @param {Array<string>} roles - An array of roles assigned to the consumer.
+ * @param {object} consumer - The consumer object containing all relevant details.
  */
-function addCache(cId, nickname, accessToken, refreshToken, maxLevel, roles) {
-  const id = +cId;
-  consumers.push({ id, nickname, accessToken, refreshToken, maxLevel, roles });
+function addCache(consumer) {
+  consumers.push(consumer);
 }
 
 /**
@@ -130,4 +124,7 @@ function deleteCache(consumerId) {
 export default {
   init,
   getOne,
+  addCache,
+  updateCache,
+  deleteCache,
 };

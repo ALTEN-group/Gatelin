@@ -10,11 +10,12 @@ import cEnt from "../entities/consumer.js";
 import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
 import checkToken from "../middlewares/validators/check-token.js";
+import addToCache from "../middlewares/mappers/addToCache.js";
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalize, uEnt.validate, getUserByEmail ];
 // const activate = [ activateUser, uEnt.update ];
-const addConsumer = [ refreshTokens, cEnt.validate, cEnt.add ];
+const addConsumer = [ refreshTokens, cEnt.validate, cEnt.add, addToCache ];
 const updateConsumer = [ refreshTokens, cEnt.validate, cEnt.update ];
 
 const add = [

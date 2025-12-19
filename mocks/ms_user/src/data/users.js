@@ -18,8 +18,7 @@ export const mockUsers = [
     active: true,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
-    rolesArrayAgg: ['admin', 'user'],
-    roles: ['admin', 'user'],
+    rolesArrayAgg: [1, 2],
     archived: false,
     archivedAt: null
   },
@@ -41,8 +40,7 @@ export const mockUsers = [
     active: true,
     createdAt: '2024-01-15T00:00:00Z',
     updatedAt: '2024-01-15T00:00:00Z',
-    rolesArrayAgg: ['user'],
-    roles: ['user'],
+    rolesArrayAgg: [2],
     archived: false,
     archivedAt: null
   },
@@ -64,8 +62,7 @@ export const mockUsers = [
     active: true,
     createdAt: '2024-02-01T00:00:00Z',
     updatedAt: '2024-02-01T00:00:00Z',
-    rolesArrayAgg: ['admin', 'user'],
-    roles: ['admin', 'user'],
+    rolesArrayAgg: [1, 2],
     archived: false,
     archivedAt: null
   }
