@@ -20,7 +20,7 @@ const mockAccess = [
 
 // POST /users/ - Get user by email filter (used by Gatelin getUserByEmail middleware)
 app.post('/users/', (req, res) => {
-  log.info('POST /users/ - Get user by filters', req.body);
+  log.info(`POST /users/ - Get user by filters ${JSON.stringify(req.body)}`);
   
   const { filters } = req.body;
   
@@ -33,6 +33,7 @@ app.post('/users/', (req, res) => {
   if (!user)
     return res.status(404).json({ error: 'User not found' });
 
+  log.debug(`POST /users/ - success: ${JSON.stringify(user)}`);
   res.status(200).json({
     rows: [user],
     total: 1

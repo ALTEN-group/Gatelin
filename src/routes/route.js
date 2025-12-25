@@ -20,16 +20,16 @@ const getHistory = [
 
 const add = [
   ...checkRequest,
-  entity.normalize,
-  entity.validate,
+  entity.normalizeArray,
+  entity.validateArray,
   refresh,
   entity.add,
 ];
 
 const update = [
   ...checkRequest,
-  entity.normalize,
-  entity.validate,
+  entity.normalizeArray,
+  entity.validateArray,
   refresh,
   entity.update,
 ];

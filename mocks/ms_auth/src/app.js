@@ -14,33 +14,28 @@ app.use('/health', healixRouter);
 
 // POST /login/ - Validate user credentials (used by Gatelin check-pwd middleware)
 app.post('/login/', (req, res) => {
-  log.debug('POST /login/ - Full request body:', JSON.stringify(req.body, null, 2));
+  log.debug(`POST /login/ - Full request body: ${JSON.stringify(req.body, null, 2)}`);
   
-  // Validate request body format
-  if (!isArray(req.body.rows, ">=", 1))
-    return res.status(400).json({ error: 'Invalid request format: rows array required' });
+  // Extract filters
+  const userId = req.body.filters?.userId?.value;
+  const pwd = req.body.filters?.pwd?.value;
   
-  const email = req.body.rows[0].email;
-  const password = req.body.rows[0].pwd;
-  
-  log.info('POST /login/ - Extracted credentials', { email, password });
-  
-  // Validate email format
-  if (!isEmail(email))
-    return res.status(400).json({ error: 'Invalid email format' });
+  // Validate userId format
+  if (!Number.isInteger(userId) || userId <= 0)
+    return res.status(400).json({ error: 'Invalid userId format' });
 
-  // Validate password (min 1, max 128 characters)
-  if (!isStringOfLength(password, 1, 128))
-    return res.status(400).json({ error: 'Invalid password format' });
-
+  // Validate pwd (min 1, max 255 characters)
+  if (!isStringOfLength(pwd, 1, 255))
+    return res.status(400).json({ error: 'Invalid pwd format' });
   // Check credentials
   const credential = mockCredentials.find(
-    c => c.email === email && c.pwdHash === password
+    c => c.userId === userId && c.pwd === pwd
   );
 
   if (!credential)
     return res.status(401).json({ error: 'Invalid credentials' });
 
+  log.debug(`POST /login/ - success: ${JSON.stringify(credential)}`);
   res.status(200).json({
     success: true,
     message: 'Authentication successful'

@@ -16,7 +16,7 @@ const consumerEntity = new SQLEntity("consumer", [
     methods: ["GET", "POST"],
     operations: ["SELECT"],
     required: false,
-    safe: true,
+    safe: false,
     sanitize: true,
     normalize: false,
     validate: true,

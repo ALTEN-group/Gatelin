@@ -32,8 +32,12 @@ describe('Check Password Middleware', () => {
     // Setup request object
     req = {
       body: {
-        email: 'test@example.com',
-        password: 'testpassword'
+        rows: [
+          {
+            userId: 1,
+            pwHash: 'testpassword'
+          }
+        ]
       },
       additionalHeaders: {
         'x-consumer-id': 'consumer123',
@@ -63,7 +67,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -72,9 +81,12 @@ describe('Check Password Middleware', () => {
 
     test('should handle authentication with different body data', async () => {
       req.body = {
-        email: 'admin@company.com',
-        password: 'adminpass123',
-        rememberMe: true
+        rows: [
+          {
+            userId: 2,
+            pwHash: 'adminpass123'
+          }
+        ]
       };
       mockHttpclient.query.mockResolvedValue({ token: 'jwt-token' });
 
@@ -84,7 +96,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 2, matchMode: 'equals' },
+            pwHash: { value: 'adminpass123', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -104,7 +121,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -121,7 +143,12 @@ describe('Check Password Middleware', () => {
           'POST',
           'https://auth.example.com/login/',
           null,
-          req.body,
+          {
+            filters: {
+              userId: { value: 1, matchMode: 'equals' },
+              pwHash: { value: 'testpassword', matchMode: 'equals' }
+            }
+          },
           req.additionalHeaders
         );
         expect(error).toBe(authError);
@@ -184,7 +211,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         {}
       );
       expect(next).toHaveBeenCalledWith();
@@ -200,58 +232,33 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         {}
       );
       expect(next).toHaveBeenCalledWith();
     });
 
-    test('should handle empty body', async () => {
+    test('should throw error when rows is missing', async () => {
       req.body = {};
-      mockHttpclient.query.mockResolvedValue({ success: true });
-
-      await checkPwd(req, res, next);
-
-      expect(mockHttpclient.query).toHaveBeenCalledWith(
-        'POST',
-        'https://auth.example.com/login/',
-        null,
-        {},
-        req.additionalHeaders
-      );
-      expect(next).toHaveBeenCalledWith();
+      
+      expect(() => checkPwd(req, res, next)).toThrow();
     });
 
-    test('should handle null body', async () => {
+    test('should throw error when body is null', async () => {
       req.body = null;
-      mockHttpclient.query.mockResolvedValue({ success: true });
-
-      await checkPwd(req, res, next);
-
-      expect(mockHttpclient.query).toHaveBeenCalledWith(
-        'POST',
-        'https://auth.example.com/login/',
-        null,
-        null,
-        req.additionalHeaders
-      );
-      expect(next).toHaveBeenCalledWith();
+      
+      expect(() => checkPwd(req, res, next)).toThrow();
     });
 
-    test('should handle undefined body', async () => {
+    test('should throw error when body is undefined', async () => {
       delete req.body;
-      mockHttpclient.query.mockResolvedValue({ success: true });
-
-      await checkPwd(req, res, next);
-
-      expect(mockHttpclient.query).toHaveBeenCalledWith(
-        'POST',
-        'https://auth.example.com/login/',
-        null,
-        undefined,
-        req.additionalHeaders
-      );
-      expect(next).toHaveBeenCalledWith();
+      
+      expect(() => checkPwd(req, res, next)).toThrow();
     });
   });
 
@@ -265,7 +272,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -307,21 +319,24 @@ describe('Check Password Middleware', () => {
         'POST',
         expect.stringContaining('/login/'),
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
     });
 
     test('should handle complex request body', async () => {
       req.body = {
-        email: 'user@example.com',
-        password: 'complexPassword123!',
-        metadata: {
-          clientId: 'web-app',
-          version: '1.0.0',
-          timestamp: Date.now()
-        },
-        preferences: ['notifications', 'analytics']
+        rows: [
+          {
+            userId: 5,
+            pwHash: 'complexPassword123!'
+          }
+        ]
       };
       mockHttpclient.query.mockResolvedValue({ success: true });
 
@@ -331,7 +346,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 5, matchMode: 'equals' },
+            pwHash: { value: 'complexPassword123!', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -354,7 +374,12 @@ describe('Check Password Middleware', () => {
         'POST',
         'https://auth.example.com/login/',
         null,
-        req.body,
+        {
+          filters: {
+            userId: { value: 1, matchMode: 'equals' },
+            pwHash: { value: 'testpassword', matchMode: 'equals' }
+          }
+        },
         req.additionalHeaders
       );
       expect(next).toHaveBeenCalledWith();
@@ -391,9 +416,9 @@ describe('Check Password Middleware', () => {
 
   describe('Concurrent Processing', () => {
     test('should handle concurrent requests', async () => {
-      const req1 = { ...req, body: { email: 'user1@example.com', password: 'pass1' } };
-      const req2 = { ...req, body: { email: 'user2@example.com', password: 'pass2' } };
-      const req3 = { ...req, body: { email: 'user3@example.com', password: 'pass3' } };
+      const req1 = { ...req, body: { rows: [{ userId: 1, pwHash: 'pass1' }] } };
+      const req2 = { ...req, body: { rows: [{ userId: 2, pwHash: 'pass2' }] } };
+      const req3 = { ...req, body: { rows: [{ userId: 3, pwHash: 'pass3' }] } };
 
       mockHttpclient.query.mockResolvedValue({ success: true });
 

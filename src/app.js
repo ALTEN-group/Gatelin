@@ -46,7 +46,7 @@ app.use(startTimer);
 // Validate route
 app.use(checkRoute);
 // Routes
-app.use("/consumers", consumer, res.send);
+app.use("/consumers", consumer);
 app.use("/routes", route, res.send);
 app.use("/", proxy);
 

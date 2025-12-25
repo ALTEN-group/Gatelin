@@ -454,25 +454,22 @@
                 "admin": {
                   "summary": "Admin user (valid)",
                   "value": {
-                    "rows": [
-                      { "email": "coco@example.com", "pwd": "admin34!U" }
-                    ]
+                    "email": "coco@example.com", 
+                    "pwd": "admin34!U"
                   }
                 },
                 "standard": {
                   "summary": "Standard user (valid)",
-                  "value": {
-                    "rows": [
-                      { "email": "standard@example.com", "pwd": "Test1234!" }
-                    ]
+                  "value": { 
+                    "email": "standard@example.com", 
+                    "pwd": "Test1234!"
                   }
                 },
                 "wrong": {
                   "summary": "Wrong credentials (invalid)",
-                  "value": {
-                    "rows": [
-                      { "email": "standard@example.com", "pwd": "WrongPassword123!" }
-                    ]
+                  "value": { 
+                    "email": "standard@example.com", 
+                    "pwd": "WrongPassword123!"
                   }
                 }
               }
