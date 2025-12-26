@@ -25,6 +25,24 @@ const consumerEntity = new SQLEntity("consumer", [
     validator: null
   },
   {
+    key: "userId",
+    type: "integer",
+    min: 0,
+    max: 999999999,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "POST"],
+    operations: ["SELECT"],
+    required: false,
+    safe: false,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
+  {
     key: "nickname",
     type: "string",
     min: 3,
@@ -49,7 +67,7 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 8000,
     typeCheck: true,
     filter: false,
-    methods: ["GET", "POST","PUT"],
+    methods: ["GET", "POST"],
     operations: ["SELECT", "INSERT"],
     required: true,
     safe: true,

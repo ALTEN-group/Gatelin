@@ -182,24 +182,29 @@ sequenceDiagram
     activate msg
   end
   rect rgb(220, 220, 220, 0.1)
-    note over msg,gdb: Token Creation Block
+    note over msg,gdb: Token Creation & Consumer Insertion Block
     rect rgb(100, 200, 100, 0.2)
       note over msg: Toker-express Library Block
       msg--)msg: Create accessToken and refreshToken
-      msg--)msg: Add accessToken and refreshToken to req.body for consumer creation
-      msg--)msg: Add accessToken and refreshToken to res.rows[0] for final response
-      msg->>gdb: Insert consumer in db
-      deactivate msg
-      activate gdb
-      gdb->>msg: Consumer added
+      msg--)msg: Add accessToken and refreshToken to req.body.rows[0]
     end
+    rect rgb(100, 200, 100, 0.2)
+      note over msg: Consumer Entity Block
+      msg--)msg: Validate consumer data (id, nickname, accessToken, refreshToken, roles)
+    end
+    msg->>gdb: Insert consumer in db
+    deactivate msg
+    activate gdb
+    gdb->>msg: Consumer added
     deactivate gdb
     activate msg
-    msg--)msg: Add new consumer into cache
-    msg->>f: return 201 created : { id, nickname, roles, active, portrait, ..., accessToken, refreshToken }
+    msg--)msg: Clear unsafe props from response data
+    msg->>f: return 200 ok : { id, nickname, accessToken, refreshToken, rolesArrayAgg }
     deactivate msg
     activate f
+    par Async cache operation
+      msg--)msg: Add new consumer into cache (async, non-blocking)
+    end
     f->>u: Display home page
     deactivate f
   end 
-```

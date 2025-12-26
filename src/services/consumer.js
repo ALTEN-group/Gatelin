@@ -28,20 +28,39 @@ function init() {
 
 
 /**
- * Retrieves a single consumer from the in-memory cache by their unique identifier.
- * This function searches through the cached consumers array to find a matching consumer ID.
+ * Retrieves a single consumer by their unique identifier. First searches the in-memory cache,
+ * then queries the database if not found in cache. If found in database, adds to cache.
  *
  * @param {number|string} consumerId - The unique identifier of the consumer to retrieve
- * @return {object|undefined} The consumer object if found, undefined if no consumer matches the given ID
+ * @return {Promise<object|undefined>} The consumer object if found, undefined if no consumer matches the given ID
  * @example
  * // Get consumer with ID 123
- * const consumer = getOne(123);
+ * const consumer = await getOne(123);
  * if (consumer) {
  *   console.log(`Found consumer: ${consumer.nickname}`);
  * }
  */
 function getOne(consumerId) {
-  return consumers.find((r) => r.id === +consumerId);
+  // First check cache
+  let c = consumers.find((r) => r.id === +consumerId);
+  
+  // If not in cache, query database
+  if (!c) {
+    log.debug(`Consumer ${consumerId} not found in cache, querying database`);
+    const filters = { id: { value: consumerId, matchMode: "equals" } };
+    const { query, args } = consumer.query.select(false, 0, 0, null, null, filters);
+    return execute(query, args, null).then((res) => {
+      if (res.rows.length > 0) {
+        c = res.rows[0];
+        log.debug(`Consumer found in database, adding to cache`);
+        addCache(c);
+        return c;
+      }
+      return undefined;
+    });
+  }
+  
+  return Promise.resolve(c);
 }
 
 // function addOne(id, nickname, accessToken, refreshToken, maxLevel, roles) {
@@ -105,7 +124,6 @@ function updateCache(id, accessToken, refreshToken) {
     if (c.id === +id) {
       c.accessToken = accessToken;
       c.refreshToken = refreshToken;
-      log.debug(`consumer ${id} cache updated`);
     }
     return c;
   });

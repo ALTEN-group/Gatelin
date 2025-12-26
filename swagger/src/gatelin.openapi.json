@@ -53,11 +53,6 @@
       "consumer": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32",
-            "example": 1
-          },
           "nickname": {
             "type": "string",
             "minLength": 3,
@@ -80,40 +75,6 @@
               "type": "integer"
             },
             "example": [1, 2]
-          },
-          "creatorId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the user who created this consumer",
-            "example": 123
-          },
-          "creatorName": {
-            "type": "string",
-            "description": "Name of the user who created this consumer",
-            "example": "admin_user"
-          },
-          "updaterId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the user who last updated this consumer",
-            "example": 456
-          },
-          "updaterName": {
-            "type": "string",
-            "description": "Name of the user who last updated this consumer",
-            "example": "moderator_user"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the consumer was created",
-            "example": "2025-07-22T10:30:00Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the consumer was last updated",
-            "example": "2025-07-22T15:45:00Z"
           }
         },
         "required": ["id", "nickname", "accessToken", "refreshToken", "roles"]
@@ -358,16 +319,12 @@
       "refreshTokenRequest": {
         "type": "object",
         "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "Current access token"
-          },
           "refreshToken": {
             "type": "string",
             "description": "Refresh token to validate"
           }
         },
-        "required": ["accessToken", "refreshToken"]
+        "required": ["refreshToken"]
       },
       "errorResponse": {
         "type": "object",
@@ -498,7 +455,12 @@
       "put": {
         "tags": ["Consumer Management"],
         "summary": "Update consumer tokens",
-        "description": "Update a consumer with new access and refresh tokens (used for login with token and token refresh)",
+        "description": "Update a consumer with new access and refresh tokens (used for login with token and token refresh).\n\n**IMPORTANT:** This endpoint requires valid tokens from a previous login. You must:\n1. First call POST /consumers to login and receive real tokens\n2. Copy the accessToken and refreshToken from the login response\n3. Use those exact tokens in both the Authorization header and request body\n4. The tokens are validated against the cache - fake tokens will fail with 401",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -507,8 +469,7 @@
                 "$ref": "#/components/schemas/refreshTokenRequest"
               },
               "example": {
-                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJjb2NvQGV4YW1wbGUuY29tIiwicm9sZXMiOlsxLDJdLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczMzg1MzYwMH0.signature",
-                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczNDQ1NDgwMH0.signature"
+                "refreshToken": "REPLACE_WITH_REAL_REFRESH_TOKEN_FROM_LOGIN"
               }
             }
           }
@@ -522,17 +483,8 @@
                   "$ref": "#/components/schemas/consumer"
                 },
                 "example": {
-                  "id": 3,
-                  "nickname": "coco",
                   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newAccessToken.signature",
-                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newRefreshToken.signature",
-                  "roles": [1, 2],
-                  "creatorId": 3,
-                  "creatorName": "coco",
-                  "updaterId": 3,
-                  "updaterName": "coco",
-                  "createdAt": "2025-12-10T10:30:00Z",
-                  "updatedAt": "2025-12-10T11:45:00Z"
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newRefreshToken.signature"
                 }
               }
             }

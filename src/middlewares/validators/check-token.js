@@ -25,9 +25,9 @@ import csmerSvc from "../../services/consumer.js";
 
 /**
  * Express middleware that validates JWT tokens by matching access and refresh tokens
- * against cached consumer data. This middleware ensures that the tokens provided in
- * the request body match the tokens stored in the consumer cache, preventing token
- * replay attacks and ensuring token authenticity.
+ * against stored consumer data. Checks cache first, then database if needed.
+ * This middleware ensures that the tokens provided match the tokens stored in the
+ * consumer cache/database, preventing token replay attacks and ensuring token authenticity.
  *
  * @param {import('express').Request} req - Express request object containing accessToken and refreshToken in body
  * @param {import('express').Response} res - Express response object for sending HTTP responses
@@ -42,32 +42,34 @@ import csmerSvc from "../../services/consumer.js";
  * // After successful validation, req object will have:
  * // req.consumer - complete consumer object from cache
  */
-export default function checkToken(req, res, next) {
+export default async function checkToken(req, res, next) {
   
   const { accessToken, refreshToken } = req.body;
   // @ts-ignore - Custom property added by previous middleware
   const consumerId = req.decodedRefreshToken.iss;
   log.debug(`Check token for consumer ${consumerId}`);
 
-  const c = csmerSvc.getOne(consumerId);
+  const c = await csmerSvc.getOne(consumerId);
+  
   if (!c) {
     return next({
       status: 404,
       msg: "Consumer not found",
     });
   }
-  log.debug(`Consumer found in cache : ${JSON.stringify(c)}`);
+  
+  log.debug(`Consumer found: ${JSON.stringify(c)}`);
 
-  // Validate both access and refresh tokens against cached values
+  // Validate both access and refresh tokens against stored values
   if (c.accessToken !== accessToken)
     return next({
-      status: EC_UNAUTHORIZED,
-      msg: "Access token does not match consumer access token in cache",
+      status: 401,
+      msg: "Access token does not match consumer access token",
     });
   if (c.refreshToken !== refreshToken)
     return next({
-      status: EC_UNAUTHORIZED,
-      msg: "Refresh token does not match consumer refresh token in cache",
+      status: 401,
+      msg: "Refresh token does not match consumer refresh token",
     });
   
   // Both tokens are valid, add consumer to request and continue

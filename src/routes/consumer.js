@@ -14,20 +14,17 @@ import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
 import checkToken from "../middlewares/validators/check-token.js";
 import addToCache from "../middlewares/mappers/addToCache.js";
+import updateCache from "../middlewares/mappers/updateCache.js";
 
 function clear(rows, props) {
-  if (isArray(props, ">=", 1)) {
-    log.debug(`clear unsafe props : [${props.toString()}]`);
-    return deleteProps(rows, props);
-  }
-  return rows;
+  return deleteProps(rows, props);
 }
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];
 // const activate = [ activateUser, uEnt.update ];
 const addConsumer = [ refreshTokens, cEnt.validateArray, cEnt.add, addToCache ];
-const updateConsumer = [ refreshTokens, cEnt.validateOne, cEnt.update ];
+const updateConsumer = [ refreshTokens, cEnt.validateOne, cEnt.update, updateCache ];
 
 const add = [
   checkEmail,
@@ -45,7 +42,11 @@ const refresh = [
   decodeAccess,
   decodeRefresh,
   checkToken,
-  updateConsumer
+  updateConsumer,
+  (req, res, _next) => {
+    const data = clear(req.body.rows, cEnt.unsafeProps);
+    res.status(200).json(data);
+  }
 ];
 
 const del = [

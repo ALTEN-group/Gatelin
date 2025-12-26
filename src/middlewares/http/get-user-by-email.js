@@ -50,6 +50,7 @@ export default function getUserByEmail(req, res, next) {
       const u = r.data.rows[0];
       log.debug(`ms_user response: user id=${u.id}, nickname=${u.nickname}, email=${u.email}`);
       req.body.rows = [{
+        userId: u.id,
         nickname: u.nickname,
         rolesArrayAgg: u.rolesArrayAgg
       }];
