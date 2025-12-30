@@ -49,9 +49,9 @@ export default function checkRoute(req, res, next) {
   
   // Add custom properties to request object for downstream middleware
   // @ts-ignore - Adding custom properties to Express request
-  req.isProtected = r.jwt;
+  res.locals.isProtected = r.jwt;
   // @ts-ignore - Adding custom properties to Express request
-  req.route = r;
+  res.locals.route = r;
   
   next();
 

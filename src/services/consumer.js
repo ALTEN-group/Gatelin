@@ -1,6 +1,5 @@
 // @ts-check
-import { execute, filter } from "@dwtechs/antity-pgsql";
-import { log } from "@dwtechs/winstan";
+import { execute } from "@dwtechs/antity-pgsql";
 import consumer from "../entities/consumer.js";
 
 let consumers = [];
@@ -28,57 +27,23 @@ function init() {
 
 
 /**
- * Retrieves a single consumer by their unique identifier. First searches the in-memory cache,
- * then queries the database if not found in cache. If found in database, adds to cache.
+ * Retrieves a single consumer from the in-memory cache by their access and refresh tokens.
+ * This function searches through the cached consumers array to find a matching consumer
+ * with both the provided access token and refresh token.
  *
- * @param {number|string} consumerId - The unique identifier of the consumer to retrieve
- * @return {Promise<object|undefined>} The consumer object if found, undefined if no consumer matches the given ID
+ * @param {string} accessToken - The access token of the consumer to retrieve
+ * @param {string} refreshToken - The refresh token of the consumer to retrieve
+ * @return {object|undefined} The consumer object if found, undefined if no consumer matches the given tokens
  * @example
- * // Get consumer with ID 123
- * const consumer = await getOne(123);
+ * // Get consumer with specific tokens
+ * const consumer = getOne('access-token-123', 'refresh-token-456');
  * if (consumer) {
  *   console.log(`Found consumer: ${consumer.nickname}`);
  * }
  */
-function getOne(consumerId) {
-  // First check cache
-  let c = consumers.find((r) => r.id === +consumerId);
-  
-  // If not in cache, query database
-  if (!c) {
-    log.debug(`Consumer ${consumerId} not found in cache, querying database`);
-    const filters = { id: { value: consumerId, matchMode: "equals" } };
-    const { query, args } = consumer.query.select(false, 0, 0, null, null, filters);
-    return execute(query, args, null).then((res) => {
-      if (res.rows.length > 0) {
-        c = res.rows[0];
-        log.debug(`Consumer found in database, adding to cache`);
-        addCache(c);
-        return c;
-      }
-      return undefined;
-    });
-  }
-  
-  return Promise.resolve(c);
+function getOne(accessToken, refreshToken) {
+  return consumers.find((r) => r.accessToken === accessToken && r.refreshToken === refreshToken);
 }
-
-// function addOne(id, nickname, accessToken, refreshToken, maxLevel, roles) {
-//   const args = [
-//     id,
-//     nickname,
-//     accessToken,
-//     refreshToken,
-//     maxLevel,
-//     `{${roles.toString()}}`,
-//   ];
-//   // const query = pg.generateQueryPlaceholders(6);
-//   return consumer
-//     .insert(args, "id", null)
-//     .then(() =>
-//       addCache(id, nickname, accessToken, refreshToken, maxLevel, roles),
-//     );
-// }
 
 // function updateOne(id, accessToken, refreshToken) {
 //   // const cols = consumer.getCols("update", true);

@@ -32,5 +32,5 @@ export default function updateCache(req, res, next) {
   const c = req.body.rows[0];
   log.debug(`Updating consumer ${c.id} in cache`);
   // Update consumer in cache
-  csmerSvc.updateCache(c);
+  csmerSvc.updateCache(c.id, c.accessToken, c.refreshToken);
 }

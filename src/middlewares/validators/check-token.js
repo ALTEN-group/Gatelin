@@ -44,37 +44,20 @@ import csmerSvc from "../../services/consumer.js";
  */
 export default async function checkToken(req, res, next) {
   
-  const { accessToken, refreshToken } = req.body;
-  // @ts-ignore - Custom property added by previous middleware
-  const consumerId = req.decodedRefreshToken.iss;
-  log.debug(`Check token for consumer ${consumerId}`);
-
-  const c = await csmerSvc.getOne(consumerId);
+  const at = res.locals.accessToken;
+  const rt = req.body.refreshToken;
+  log.debug(`Check token : accessToken=${at}, refreshToken=${rt}`);
+  const c = await csmerSvc.getOne(at, rt);
   
-  if (!c) {
+  if (!c)
     return next({
       status: 404,
       msg: "Consumer not found",
     });
-  }
   
-  log.debug(`Consumer found: ${JSON.stringify(c)}`);
+  log.debug(`Consumer found: ${c.id}`);
 
-  // Validate both access and refresh tokens against stored values
-  if (c.accessToken !== accessToken)
-    return next({
-      status: 401,
-      msg: "Access token does not match consumer access token",
-    });
-  if (c.refreshToken !== refreshToken)
-    return next({
-      status: 401,
-      msg: "Refresh token does not match consumer refresh token",
-    });
-  
-  // Both tokens are valid, add consumer to request and continue
-  // @ts-ignore - Adding custom property to Express request
-  req.consumer = c;
+  req.body.rows = [{id: c.id}];
   next();
 
 }

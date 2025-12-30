@@ -32,12 +32,12 @@ const url = `${MSAUTH_URL}/login/`;
  */
 export default function checkPwd(req, res, next) {
   
-  const userId = req.body.userId;
+  const id = res.locals.id;
   const pwd = req.body.pwd;
   
   const filters = {
     userId: {
-      value: userId,
+      value: id,
       matchMode: "equals"
     },
     pwd: {

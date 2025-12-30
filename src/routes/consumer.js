@@ -1,8 +1,5 @@
 // @ts-check
-import { log } from "@dwtechs/winstan";
-import { refresh as refreshTokens, decodeAccess, decodeRefresh } from "@dwtechs/toker-express";
-import { isArray } from "@dwtechs/checkard";
-import { deleteProps } from "@dwtechs/sparray";
+import { refresh as refreshTokens, parseBearerToken, decodeAccess } from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
@@ -12,41 +9,34 @@ import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
 import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
+import checkRoute from "../middlewares/validators/check-route.js";
 import checkToken from "../middlewares/validators/check-token.js";
-import addToCache from "../middlewares/mappers/addToCache.js";
-import updateCache from "../middlewares/mappers/updateCache.js";
-
-function clear(rows, props) {
-  return deleteProps(rows, props);
-}
+import addToCache from "../middlewares/cache/addConsumer.js";
+import updateCache from "../middlewares/cache/updateConsumer.js";
+import sendConsumer from "../middlewares/res/send-consumer.js";
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];
 // const activate = [ activateUser, uEnt.update ];
 const addConsumer = [ refreshTokens, cEnt.validateArray, cEnt.add, addToCache ];
-const updateConsumer = [ refreshTokens, cEnt.validateOne, cEnt.update, updateCache ];
+const updateConsumer = [ refreshTokens, cEnt.update, updateCache ];
 
 const add = [
   checkEmail,
   // when(en local res => !res.locals.active, activate),
   checkPwd,
   addConsumer,
-  (req, res, _next) => {
-    const data = clear(req.body.rows, cEnt.unsafeProps);
-    res.status(200).json(data);
-  }
+  sendConsumer
 ];
 
 const refresh = [
   cEnt.validateOne,
-  decodeAccess,
-  decodeRefresh,
+  checkRoute,
+  parseBearerToken,
   checkToken,
+  decodeAccess,
   updateConsumer,
-  (req, res, _next) => {
-    const data = clear(req.body.rows, cEnt.unsafeProps);
-    res.status(200).json(data);
-  }
+  sendConsumer
 ];
 
 const del = [
