@@ -92,6 +92,7 @@ function updateCache(id, accessToken, refreshToken) {
     }
     return c;
   });
+  console.log(consumers);
 }
 
 /**

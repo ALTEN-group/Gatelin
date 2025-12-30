@@ -30,9 +30,8 @@ INSERT INTO service_cors ("serviceId", "corsId") VALUES
 INSERT INTO route ("serviceId", name, description, pattern, methods, jwt, "creatorId", "creatorName") VALUES
 
 (1, 'consumers-search', 'Search consumers', '/consumers/search', ARRAY['POST', 'OPTIONS']::method[], true, -1, 'system'),
-(1, 'consumers-history', 'Manage consumer history', '/consumers/(?<consumerId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, -1, 'system'),
-(1, 'consumers-update', 'Refresh a token or Sign in with a refresh token', '/consumers', ARRAY['PUT', 'OPTIONS']::method[], true, -1, 'system'),
-(1, 'consumers-add', 'Sign in a user with email & password', '/consumers', ARRAY['POST', 'OPTIONS']::method[], false, -1, 'system'),
+-- (1, 'consumers-update', 'Refresh a token or Sign in with a refresh token', '/consumers', ARRAY['PUT', 'OPTIONS']::method[], true, -1, 'system'),
+-- (1, 'consumers-add', 'Sign in a user with email & password', '/consumers', ARRAY['POST', 'OPTIONS']::method[], false, -1, 'system'),
 (1, 'consumers-archive', 'Sign out a user', '/consumers/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, -1, 'system'),
 (1, 'consumers-delete', 'Delete consumers', '/consumers', ARRAY['DELETE', 'OPTIONS']::method[], true, -1, 'system'),
 

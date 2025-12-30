@@ -32,7 +32,7 @@ const url = `${MSAUTH_URL}/login/`;
  */
 export default function checkPwd(req, res, next) {
   
-  const id = res.locals.id;
+  const id = res.locals.id; // user id from previous middleware
   const pwd = req.body.pwd;
   
   const filters = {

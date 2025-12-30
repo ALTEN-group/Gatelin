@@ -28,9 +28,9 @@ import csmerSvc from "../../services/consumer.js";
  *   No changes - consumer added to cache only
  */
 export default function addToCache(req, res, next) {
-  next();
-  const c = req.body.rows[0];
-  log.debug(`Adding consumer ${c.id} to cache`);
+  const c = res.locals.rows[0];
+  log.debug(`Adding consumer to cache : ${JSON.stringify(c)}`);
   // Add consumer to cache
   csmerSvc.addCache(c);
+  next();
 }

@@ -55,7 +55,7 @@ export default async function checkToken(req, res, next) {
       msg: "Consumer not found",
     });
   
-  log.debug(`Consumer found: ${c.id}`);
+  log.debug(`Consumer found: ${JSON.stringify(c)}`);
 
   req.body.rows = [{id: c.id}];
   next();

@@ -9,7 +9,7 @@ import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
 import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
-import checkRoute from "../middlewares/validators/check-route.js";
+import protectRoute from "../middlewares/mappers/protectRoute.js";
 import checkToken from "../middlewares/validators/check-token.js";
 import addToCache from "../middlewares/cache/addConsumer.js";
 import updateCache from "../middlewares/cache/updateConsumer.js";
@@ -31,7 +31,7 @@ const add = [
 
 const refresh = [
   cEnt.validateOne,
-  checkRoute,
+  protectRoute,
   parseBearerToken,
   checkToken,
   decodeAccess,
