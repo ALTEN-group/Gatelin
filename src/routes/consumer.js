@@ -1,5 +1,5 @@
 // @ts-check
-import { refresh as refreshTokens, parseBearerToken, decodeAccess } from "@dwtechs/toker-express";
+import { refresh as refreshTokens, parseBearerToken, decodeAccess, decodeRefresh } from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
@@ -10,9 +10,7 @@ import cEnt from "../entities/consumer.js";
 import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
 import protectRoute from "../middlewares/mappers/protectRoute.js";
-import checkToken from "../middlewares/validators/check-token.js";
-import addToCache from "../middlewares/cache/addConsumer.js";
-import updateCache from "../middlewares/cache/updateConsumer.js";
+import { getFromCache, addToCache, updateCache } from "../middlewares/cache/consumer.js";
 import sendConsumer from "../middlewares/res/send-consumer.js";
 
 // middleware sub-stacks
@@ -33,14 +31,15 @@ const refresh = [
   cEnt.validateOne,
   protectRoute,
   parseBearerToken,
-  checkToken,
-  decodeAccess,
+  getFromCache, // get consumer from tokens
+  decodeAccess, // extract issuer
+  decodeRefresh, // check expiration
   updateConsumer,
   sendConsumer
 ];
 
 const del = [
-  checkToken,
+  getFromCache,
   decodeAccess,
   cEnt.delete,
 ];

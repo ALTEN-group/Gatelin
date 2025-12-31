@@ -70,11 +70,14 @@ function getOne(accessToken, refreshToken) {
 
 /**
  * Adds a consumer to the cache with the provided details.
+ * Creates a copy of the consumer object to avoid reference issues.
  *
  * @param {object} consumer - The consumer object containing all relevant details.
+ * @example
+ * addToCache({ id: 1, nickname: 'user', accessToken: '...', refreshToken: '...' });
  */
-function addCache(consumer) {
-  consumers.push(consumer);
+function addToCache(consumer) {
+  consumers.push({ ...consumer });
 }
 
 /**
@@ -83,16 +86,24 @@ function addCache(consumer) {
  * @param {number|string} id - The ID of the consumer to update. Can be a number or a string.
  * @param {string} accessToken - The new access token for the consumer.
  * @param {string} refreshToken - The new refresh token for the consumer.
+ * @return {boolean} True if a consumer was found and updated, false otherwise
+ * @example
+ * const updated = updateCache(1, 'new-access-token', 'new-refresh-token');
+ * if (!updated) {
+ *   console.log('Consumer not found in cache');
+ * }
  */
 function updateCache(id, accessToken, refreshToken) {
+  let found = false;
   consumers = consumers.map((c) => {
     if (c.id === +id) {
       c.accessToken = accessToken;
       c.refreshToken = refreshToken;
+      found = true;
     }
     return c;
   });
-  console.log(consumers);
+  return found;
 }
 
 /**
@@ -108,7 +119,7 @@ function deleteCache(consumerId) {
 export default {
   init,
   getOne,
-  addCache,
+  addToCache,
   updateCache,
   deleteCache,
 };
