@@ -41,8 +41,8 @@ function init() {
  *   console.log(`Found consumer: ${consumer.nickname}`);
  * }
  */
-function getOne(accessToken, refreshToken) {
-  return consumers.find((r) => r.accessToken === accessToken && r.refreshToken === refreshToken);
+function getOne(accessToken) {
+  return consumers.find((r) => r.accessToken === accessToken);
 }
 
 // function updateOne(id, accessToken, refreshToken) {
@@ -111,15 +111,14 @@ function updateCache(id, accessToken, refreshToken) {
  *
  * @param {string|number} consumerId - The unique identifier of the consumer to be removed from the cache.
  */
-function deleteCache(consumerId) {
+function deleteFromCache(consumerId) {
   consumers = consumers.filter((r) => r.id !== consumerId);
 }
-
 
 export default {
   init,
   getOne,
   addToCache,
   updateCache,
-  deleteCache,
+  deleteFromCache,
 };

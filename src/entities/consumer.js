@@ -67,7 +67,7 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 8000,
     typeCheck: true,
     filter: false,
-    methods: ["GET", "POST", "PUT"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     operations: ["SELECT", "INSERT", "UPDATE"],
     required: true,
     safe: true,

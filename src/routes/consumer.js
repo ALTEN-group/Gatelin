@@ -9,29 +9,28 @@ import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
 import getUserByEmail from "../middlewares/http/get-user-by-email.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
-import protectRoute from "../middlewares/mappers/protectRoute.js";
-import { getFromCache, addToCache, updateCache } from "../middlewares/cache/consumer.js";
+import checkRefreshToken from "../middlewares/validators/check-refreshToken.js";
+import { getFromCache, addToCache, updateCache, deleteFromCache } from "../middlewares/cache/consumer.js";
 import sendConsumer from "../middlewares/res/send-consumer.js";
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];
 // const activate = [ activateUser, uEnt.update ];
-const addConsumer = [ refreshTokens, cEnt.validateArray, cEnt.add, addToCache ];
+const getConsumer = [ /**protectRoute, **/parseBearerToken, getFromCache ]; // get consumer from tokens
+const addConsumer = [ checkPwd, refreshTokens, cEnt.validateArray, cEnt.add, addToCache ];
 const updateConsumer = [ refreshTokens, cEnt.update, updateCache ];
+const deleteConsumer = [ cEnt.delete, deleteFromCache ];
 
 const add = [
   checkEmail,
   // when(en local res => !res.locals.active, activate),
-  checkPwd,
   addConsumer,
   sendConsumer
 ];
 
 const refresh = [
-  cEnt.validateOne,
-  protectRoute,
-  parseBearerToken,
-  getFromCache, // get consumer from tokens
+  getConsumer,
+  checkRefreshToken,
   decodeAccess, // extract issuer
   decodeRefresh, // check expiration
   updateConsumer,
@@ -39,9 +38,11 @@ const refresh = [
 ];
 
 const del = [
-  getFromCache,
-  decodeAccess,
-  cEnt.delete,
+  getConsumer,
+  deleteConsumer,
+  (_req, res, _next) => {
+    res.status(204).send();
+  }
 ];
 //Routes
 

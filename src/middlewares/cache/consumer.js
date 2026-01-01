@@ -45,9 +45,9 @@ import csmerSvc from "../../services/consumer.js";
 export default async function getFromCache(req, res, next) {
   
   const at = res.locals.accessToken;
-  const rt = req.body.refreshToken;
-  log.debug(`get Consumer with tokens : accessToken=${at}, refreshToken=${rt}`);
-  const c = await csmerSvc.getOne(at, rt);
+  // const rt = req.body.refreshToken;
+  log.debug(`get Consumer with access token : accessToken=${at}`);
+  const c = await csmerSvc.getOne(at);
   
   if (!c)
     return next({
@@ -57,7 +57,9 @@ export default async function getFromCache(req, res, next) {
   
   log.debug(`Consumer found: ${JSON.stringify(c)}`);
 
-  req.body.rows = [{id: c.id}];
+  if (!req.body) req.body = {}; // useful for requests without body
+  // Attach consumer to request for downstream middleware
+  req.body.rows = [{id: c.id, accessToken: at, refreshToken: c.refreshToken}];
   next();
 
 }
@@ -128,8 +130,20 @@ function updateCache(req, res, next) {
   next();
 }
 
+function deleteFromCache(req, res, next) {
+  const c = req.body.rows[0];
+
+  log.debug(`Deleting consumer ${c.id} from cache`);
+
+  // Delete consumer from cache
+  csmerSvc.deleteFromCache(c.id);
+
+  next();
+}
+
 export {
   getFromCache,
   addToCache,
   updateCache,
+  deleteFromCache,
 };
