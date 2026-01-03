@@ -24,16 +24,16 @@ const url = `${MSAUTH_URL}/login/`;
  * @modifies None - validation only, no modifications to req or res
  * 
  * INPUT:
- *   req.body.rows[0] = { email: string, pwd: string, userId: number }
- *   res.locals = { nickname: string, rolesArrayAgg: array }
+ *   req.body = { email: string, pwd: string, rows: [ { nickname: string, rolesArrayAgg: number[] } ] }
+ *   res.locals.user = { id: string }
  * 
  * OUTPUT:
  *   No changes - validates credentials or throws error
  */
 export default function checkPwd(req, res, next) {
   
-  const id = res.locals.id; // user id from previous middleware
-  const pwd = req.body.pwd;
+  const id = res.locals.user.id; // user id from previous middleware
+  const pwd = req.body.pwd; // password from request body
   
   const filters = {
     userId: {
@@ -49,7 +49,7 @@ export default function checkPwd(req, res, next) {
   http
     .query("POST", url, null, { filters }, headers)
     .then(() => {
-      next();
+      next(); // Password is valid, proceed to next middleware
     })
-    .catch((err) => next(err));
+    .catch((err) => next(err)); // Password is invalid
 }

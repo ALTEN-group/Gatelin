@@ -1,5 +1,5 @@
 // @ts-check
-import { refresh } from "@dwtechs/toker-express";
+import { refreshTokens } from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
@@ -14,7 +14,7 @@ const getMany = [
 
 const getHistory = [
   ...checkRequest,
-  refresh,
+  refreshTokens,
   // history.get,
 ];
 
@@ -22,7 +22,7 @@ const add = [
   ...checkRequest,
   entity.normalizeArray,
   entity.validateArray,
-  refresh,
+  refreshTokens,
   entity.add,
 ];
 
@@ -30,7 +30,7 @@ const update = [
   ...checkRequest,
   entity.normalizeArray,
   entity.validateArray,
-  refresh,
+  refreshTokens,
   entity.update,
 ];
 

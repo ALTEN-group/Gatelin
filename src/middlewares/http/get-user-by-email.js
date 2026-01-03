@@ -20,22 +20,21 @@ const url = `${MSUSER_URL}/users/`;
  * 
  * @param {Function} next - Express next middleware
  * 
- * @modifies req.body.rows[0] - Adds userId property from ms_user response
- * @modifies res.locals - Sets nickname and rolesArrayAgg from ms_user response
+ * @modifies req.body.rows[0] - Adds nickname and rolesArrayAgg properties from ms_user response
+ * @modifies res.locals - Sets id and active from ms_user response
  * 
  * INPUT:
- *   req.body.rows[0] = { email: string, pwd: string }
+ *   req.body = { email: string, pwd: string }
  *   res.locals = {}
  * 
  * OUTPUT:
- *   req.body.rows[0] = { email: string, pwd: string, userId: number }
- *   res.locals = { nickname: string, rolesArrayAgg: array }
+ *   req.body = { rows: [{ nickname: string, rolesArrayAgg: number[] }]}
+ *   res.locals = { user: { id: string, active: boolean } }
  */
 export default function getUserByEmail(req, res, next) {
-  const { email } = req.body; // Get email from request body
   const filters = { // Create filters for the query
     email: { 
-      value: email, 
+      value: req.body.email, 
       matchMode: "equals" 
     },
     archived: { 
@@ -43,17 +42,17 @@ export default function getUserByEmail(req, res, next) {
       matchMode: "is" 
     },
   };
-  const headers = req.additionalHeaders || {};
+
   http
-    .query("POST", url, null, { filters }, headers)
+    .query("POST", url, undefined, { filters }, req.additionalHeaders)
     .then((r) => {
-      const u = r.data.rows[0];
-      log.debug(`ms_user response: user id=${u.id}, nickname=${u.nickname}, email=${u.email}`);
-      req.body.rows = [{
+      const u = r.data.rows[0]; // Expecting single user object
+      log.debug(`ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}`);
+      req.body.rows = [{ // Attach user data to request body for db update in downstream middleware
         nickname: u.nickname,
         rolesArrayAgg: u.rolesArrayAgg
       }];
-      res.locals = { id: u.id, active: u.active };
+      res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware
       next();
     })
     .catch((err) => next(err));

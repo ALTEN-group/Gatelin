@@ -6,7 +6,7 @@ create or replace view routes AS
   SELECT r.id, 
   r."serviceId",
   r.name as "route",
-  s.name as "service",
+  s.name as "serviceName",
   r.description, 
   r.pattern,
   r.methods,

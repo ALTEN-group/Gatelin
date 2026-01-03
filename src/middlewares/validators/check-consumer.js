@@ -30,7 +30,6 @@ import consumerSvc from "../../services/consumer.js";
  * app.use('/api', checkRoute);
  * 
  * // After successful validation, req object will have:
- * // req.isProtected - boolean indicating if route requires JWT authentication
  * // req.route - complete route object with configuration details
  */
 export default function checkConsumer(req, res, next) {
@@ -45,12 +44,6 @@ export default function checkConsumer(req, res, next) {
     return next({statusCode: 404, message: "Consumer not found"});
 
   log.debug(`Consumer : ${JSON.stringify(c)}`);
-  
-  // Add custom properties to request object for downstream middleware
-  // @ts-ignore - Adding custom properties to Express request
-  req.isProtected = r.jwt;
-  // @ts-ignore - Adding custom properties to Express request
-  req.route = r;
   
   next();
 

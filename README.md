@@ -295,6 +295,95 @@ Client Response
 }
 ```
 
+## Use with Front end 
+
+In a typical situation, here's how the frontend should use access tokens:
+
+Standard Flow
+1. After Login (POST /consumers)
+
+```typescript
+const response = await fetch('/consumers', {
+  method: 'POST',
+  body: JSON.stringify({ email, password })
+});
+const { accessToken, refreshToken } = await response.json();
+
+// Store tokens
+localStorage.setItem('accessToken', accessToken);
+localStorage.setItem('refreshToken', refreshToken);
+```
+
+2. Making Authenticated Requests
+
+```typescript
+const accessToken = localStorage.getItem('accessToken');
+
+fetch('/api/protected-resource', {
+  headers: {
+    'Authorization': `Bearer ${accessToken}`
+  }
+});
+```
+
+3. When Access Token Expires (401 response)
+
+```typescript
+// Intercept 401 errors
+if (response.status === 401) {
+  // Refresh tokens
+  const refreshToken = localStorage.getItem('refreshToken');
+  const refreshResponse = await fetch('/consumers', {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${accessToken}` // Old access token
+    },
+    body: JSON.stringify({ refreshToken })
+  });
+  
+  const { accessToken: newAccess, refreshToken: newRefresh } = await refreshResponse.json();
+  
+  // Store new tokens
+  localStorage.setItem('accessToken', newAccess);
+  localStorage.setItem('refreshToken', newRefresh);
+  
+  // Retry original request with new token
+  return fetch('/api/protected-resource', {
+    headers: { 'Authorization': `Bearer ${newAccess}` }
+  });
+}
+```
+
+4. Logout (DELETE /consumers)
+
+```typescript
+const accessToken = localStorage.getItem('accessToken');
+
+await fetch('/consumers', {
+  method: 'DELETE',
+  headers: {
+    'Authorization': `Bearer ${accessToken}`
+  }
+});
+
+// Clear tokens
+localStorage.removeItem('accessToken');
+localStorage.removeItem('refreshToken');
+```
+
+Key Points
+
+1. Short-lived access token (5-15 min) - Used for all API requests
+2. Long-lived refresh token (days/weeks) - Only used to get new access tokens
+3. Storage:
+  - localStorage - Simple, but vulnerable to XSS
+  - httpOnly cookies - More secure (not accessible to JavaScript)
+  - sessionStorage - Cleared when tab closes
+4. Never send refresh token except to the refresh endpoint
+5. Always check token expiration before requests (optional optimization)
+
+
+
 ## Testing
 
 ```bash

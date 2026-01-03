@@ -512,18 +512,6 @@
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Bearer token for authentication",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJjb2NvQGV4YW1wbGUuY29tIiwicm9sZXMiOlsxLDJdLCJpYXQiOjE3MzM4NTAwMDAsImV4cCI6MTczMzg1MzYwMH0.signature"
-          }
-        ],
         "responses": {
           "204": {
             "description": "Consumer deleted successfully (logout successful)"

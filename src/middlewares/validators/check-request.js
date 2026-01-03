@@ -1,14 +1,12 @@
 // @ts-check
-import { decodeAccess } from "@dwtechs/toker-express";
-
-import checkConsumer from "./check-consumer.js";
-import checkRoute from "./check-route.js";
+import { parseBearer, decodeAccess } from "@dwtechs/toker-express";
+import { getFromCache } from "../cache/consumer.js";
 
 // middleware sub-stacks
 export const checkRequest = [
-  checkRoute,
-  decodeAccess,
-  checkConsumer,
+  parseBearer,
+  decodeAccess, // check expiration
+  getFromCache,
   // checkAcl,
   // updateHeaderWithConsumer,
 ];

@@ -30,7 +30,7 @@ import accessSvc from "../../services/access.js";
  * // User with roles ['user'] would get 403 Forbidden
  */
 export default function checkAcl(req, res, next) {
-  if (!req.isProtected) return next(); // if no jwt required for this route
+  if (!res.locals.isProtected) return next(); // if no jwt required for this route
 
   if (!res.rows) return next({ statusCode: 404, message: "User not found" });
   

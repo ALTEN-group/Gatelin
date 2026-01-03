@@ -1,10 +1,10 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
 
-export default function checkRefreshToken(req, _res, next) {
+export default function checkRefreshToken(req, res, next) {
   
   const brt = req.body.refreshToken;
-  const crt = req.body.rows[0].refreshToken;
+  const crt = res.locals.consumer.refreshToken;
   log.debug(`Check refresh token: ${brt}`);
   
   if (brt!== crt)

@@ -30,8 +30,8 @@ import routeSvc from "../../services/route.js";
  * app.use('/api', checkRoute);
  * 
  * // After successful validation, req object will have:
- * // req.isProtected - boolean indicating if route requires JWT authentication
- * // req.route - complete route object with configuration details
+ * // res.locals.route.isProtected - boolean indicating if route requires JWT authentication
+ * // res.locals.route.serviceName - name of the service handling the route
  */
 export default function checkRoute(req, res, next) {
   
@@ -48,10 +48,10 @@ export default function checkRoute(req, res, next) {
   log.debug(`isProtected : ${r.jwt}`);
   
   // Add custom properties to request object for downstream middleware
-  // @ts-ignore - Adding custom properties to Express request
-  res.locals.isProtected = r.jwt;
-  // @ts-ignore - Adding custom properties to Express request
-  res.locals.route = r;
+  res.locals.route = { 
+    isProtected: r.jwt, 
+    serviceName: r.serviceName
+  };
   
   next();
 

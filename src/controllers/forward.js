@@ -2,7 +2,8 @@
 import http from "../services/http.js";
 
 const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
-
+const san = `${SERVER_SCHEME}${APP_NAME}-`;
+const ep = `-${ENV_NAME}:${PORT}`;
 /**
  * Forwards incoming HTTP requests to appropriate microservices within the application cluster.
  * This controller handles the complete request forwarding lifecycle including URL construction,
@@ -19,19 +20,16 @@ const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
  * app.use('/', forwardToService);
  */
 export default function forwardToService(req, res, next) {
-  const method = req.method;
-  // @ts-ignore - Custom property added by header middleware
-  const headers = req.additionalHeaders || {};
-  // @ts-ignore - Custom property added by route middleware
-  const serviceName = req.route.serviceName;
-  const route = req.url;
-  const body = req.body;
+  const method = req.method; // GET, POST, etc.
+  const serviceName = req.route.serviceName; // Target microservice name
+  const route = req.url; // Request URL path
+  const body = req.body; // Request body for POST/PUT requests
 
   // Construct internal service URL
-  const serviceUrl = `${SERVER_SCHEME}${APP_NAME}-${serviceName}-${ENV_NAME}:${PORT}${route}`;
+  const serviceUrl = `${san}${serviceName}${ep}${route}`;
   
   // Forward request to target microservice
-  http.query(method, serviceUrl, null, body, headers)
+  http.query(method, serviceUrl, null, body, req.additionalHeaders)
     .then((r) => res.status(r.status).send(r.data))
     .catch((e) => next(e));
 }
