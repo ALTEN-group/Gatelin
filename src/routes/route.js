@@ -3,13 +3,12 @@ import { refreshTokens } from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
-import entity from "../entities/route.js";
+import rEnt from "../entities/route.js";
 import { checkRequest } from "../middlewares/validators/check-request.js";
 
 const getMany = [
   ...checkRequest,
-  // pk.refresh,
-  // entity.get,
+  rEnt.get,
 ];
 
 const getHistory = [
@@ -20,23 +19,23 @@ const getHistory = [
 
 const add = [
   ...checkRequest,
-  entity.normalizeArray,
-  entity.validateArray,
+  rEnt.normalizeArray,
+  rEnt.validateArray,
   refreshTokens,
-  entity.add,
+  rEnt.add,
 ];
 
 const update = [
   ...checkRequest,
-  entity.normalizeArray,
-  entity.validateArray,
+  rEnt.normalizeArray,
+  rEnt.validateArray,
   refreshTokens,
-  entity.update,
+  rEnt.update,
 ];
 
 const del = [
   ...checkRequest,
-  entity.delete,
+  rEnt.delete,
 ];
 
 // Get routes

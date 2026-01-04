@@ -5,8 +5,6 @@ import { getFromCache } from "../cache/consumer.js";
 // middleware sub-stacks
 export const checkRequest = [
   parseBearer,
-  decodeAccess, // check expiration
+  decodeAccess,
   getFromCache,
-  // checkAcl,
-  // updateHeaderWithConsumer,
 ];

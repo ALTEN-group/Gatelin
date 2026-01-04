@@ -532,7 +532,7 @@
       "post": {
         "tags": ["Route Management"],
         "summary": "Search registered routes",
-        "description": "Search and retrieve routes configured in the gateway based on criteria",
+        "description": "Search and retrieve routes configured in the gateway based on criteria. Use pagination=true to get the total count of matching routes.",
         "security": [
           {
             "bearerAuth": []
@@ -545,41 +545,93 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "serviceId": {
-                    "type": "integer",
-                    "format": "int32",
-                    "description": "Filter by service ID"
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "Filter by route name"
-                  },
-                  "pattern": {
-                    "type": "string",
-                    "description": "Filter by URL pattern"
-                  },
-                  "methods": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-                    },
-                    "description": "Filter by HTTP methods"
-                  },
-                  "jwt": {
+                  "pagination": {
                     "type": "boolean",
-                    "description": "Filter by JWT requirement"
+                    "description": "Enable pagination and total count in response",
+                    "default": false
                   },
-                  "limit": {
+                  "first": {
                     "type": "integer",
-                    "default": 50,
-                    "maximum": 1000,
-                    "description": "Maximum number of records to return"
-                  },
-                  "offset": {
-                    "type": "integer",
+                    "description": "Offset - number of records to skip",
                     "default": 0,
-                    "description": "Number of records to skip"
+                    "minimum": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Limit - maximum number of records to return (null means no limit)",
+                    "default": null,
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field name to sort by",
+                    "example": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": ["ASC", "DESC"],
+                    "description": "Sort order",
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria for search",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "description": "Value to filter by"
+                        },
+                        "matchMode": {
+                          "type": "string",
+                          "enum": ["equals", "contains", "startsWith", "endsWith", "lt", "lte", "gt", "gte", "in", "is", "isNot"],
+                          "description": "Matching mode for the filter"
+                        }
+                      }
+                    },
+                    "example": {
+                      "jwt": {
+                        "value": true,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "withPagination": {
+                  "summary": "Search with pagination (recommended)",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {}
+                  }
+                },
+                "withFilters": {
+                  "summary": "Search with filters",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "jwt": {
+                        "value": true,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "withoutPagination": {
+                  "summary": "Search without pagination (no total)",
+                  "value": {
+                    "pagination": false,
+                    "filters": {}
                   }
                 }
               }
@@ -602,7 +654,7 @@
                     },
                     "total": {
                       "type": "integer",
-                      "description": "Total number of routes matching criteria"
+                      "description": "Total number of routes matching criteria (only present when pagination=true)"
                     }
                   }
                 }
