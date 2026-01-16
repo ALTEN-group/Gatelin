@@ -14,6 +14,7 @@ const swaggerOptions = {
 
 const pe = process.env;
 const PORT = pe.PORT;
+const BASE_PATH = pe.BASE_PATH || "";
 
 // Mandatory modules for any service
 // const error = require("error");
@@ -26,9 +27,9 @@ app.use(startTimer);
 app.use(express.static(`${__dirname}/public`));
 // Routes
 app.use(
-  "/",
+  BASE_PATH + "/",
   swaggerUi.serveFiles(doc, swaggerOptions),
-  swaggerUi.setup(swaggerOptions),
+  swaggerUi.setup(doc, swaggerOptions),
 );
 // Performance measurement ends
 app.use(endTimer);

@@ -175,18 +175,28 @@ services:
       - "traefik.http.routers.adminer.rule=PathPrefix(`/adminer`)"
       - "traefik.http.routers.adminer.entrypoints=web"
       - "traefik.http.routers.adminer.service=adminer"
-      - "traefik.http.routers.adminer.middlewares=adminer"
+      - "traefik.http.routers.adminer.middlewares=adminer-stripprefix"
       - "traefik.http.services.adminer.loadbalancer.server.port=${ADMINER_PORT}"
-      - "traefik.http.middlewares.adminer.stripprefix.prefixes=/adminer"
+      - "traefik.http.middlewares.adminer-stripprefix.stripprefix.prefixes=/adminer"
+      - "traefik.http.middlewares.adminer-stripprefix.stripprefix.forceSlash=false"
 
   dozzle:
     container_name: ${DOZZLE_HOST}
     hostname: ${DOZZLE_HOST}
     image: ghcr.io/amir20/dozzle:latest
-    ports:
-      - "8087:8080"
+    environment:
+      DOZZLE_BASE: /dozzle
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.dozzle.rule=PathPrefix(`/dozzle`)"
+      - "traefik.http.routers.dozzle.entrypoints=web"
+      - "traefik.http.routers.dozzle.service=dozzle"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=${DOZZLE_PORT}"
 
   swagger:
     build:
@@ -203,11 +213,10 @@ services:
     environment:
       SERVICE_NAME: ${SWAGGER_HOST}
       PORT: ${DEFAULT_PORT}
+      BASE_PATH: /swagger
     volumes:
       - ${PWD}/swagger/src:/usr/src/app/src
       - swagger_node_modules:/usr/src/app/node_modules
-    ports:
-      - "8081:${DEFAULT_PORT}"
     networks:
       - internal
     labels:
@@ -216,9 +225,7 @@ services:
       - "traefik.http.routers.swagger.rule=PathPrefix(`/swagger`)"
       - "traefik.http.routers.swagger.entrypoints=web"
       - "traefik.http.routers.swagger.service=swagger"
-      - "traefik.http.routers.swagger.middlewares=swagger"
       - "traefik.http.services.swagger.loadbalancer.server.port=${DEFAULT_PORT}"
-      - "traefik.http.middlewares.swagger.stripprefix.prefixes=/swagger"
 
   ms_user_mock:
     build:
