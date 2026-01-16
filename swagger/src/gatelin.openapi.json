@@ -611,8 +611,8 @@
                     "filters": {}
                   }
                 },
-                "withFilters": {
-                  "summary": "Search with filters",
+                "filterJwtEnabled": {
+                  "summary": "Filter: JWT enabled routes",
                   "value": {
                     "pagination": true,
                     "first": 0,
@@ -625,6 +625,138 @@
                         "matchMode": "equals"
                       }
                     }
+                  }
+                },
+                "filterJwtDisabled": {
+                  "summary": "Filter: JWT disabled routes",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "jwt": {
+                        "value": false,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterByNameContains": {
+                  "summary": "Filter: Name contains 'users'",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "name",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "name": {
+                        "value": "users",
+                        "matchMode": "contains"
+                      }
+                    }
+                  }
+                },
+                "filterByNameStartsWith": {
+                  "summary": "Filter: Name starts with 'auth'",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "name": {
+                        "value": "auth",
+                        "matchMode": "startsWith"
+                      }
+                    }
+                  }
+                },
+                "filterByServiceId": {
+                  "summary": "Filter: By service ID",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "serviceId",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "serviceId": {
+                        "value": 1,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterMultipleConditions": {
+                  "summary": "Filter: Multiple conditions (JWT + service)",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "jwt": {
+                        "value": true,
+                        "matchMode": "equals"
+                      },
+                      "serviceId": {
+                        "value": 1,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterIdGreaterThan": {
+                  "summary": "Filter: ID greater than 5",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "id": {
+                        "value": 5,
+                        "matchMode": "gt"
+                      }
+                    }
+                  }
+                },
+                "filterIdInArray": {
+                  "summary": "Filter: ID in specific set",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "id": {
+                        "value": [1, 3, 5, 7],
+                        "matchMode": "in"
+                      }
+                    }
+                  }
+                },
+                "sortByNameDesc": {
+                  "summary": "Sort: By name descending",
+                  "value": {
+                    "pagination": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "name",
+                    "sortOrder": "DESC",
+                    "filters": {}
+                  }
+                },
+                "paginationSecondPage": {
+                  "summary": "Pagination: Second page (10-20)",
+                  "value": {
+                    "pagination": true,
+                    "first": 10,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {}
                   }
                 },
                 "withoutPagination": {
