@@ -179,6 +179,14 @@ services:
       - "traefik.http.services.adminer.loadbalancer.server.port=${ADMINER_PORT}"
       - "traefik.http.middlewares.adminer.stripprefix.prefixes=/adminer"
 
+  dozzle:
+    container_name: ${DOZZLE_HOST}
+    hostname: ${DOZZLE_HOST}
+    image: ghcr.io/amir20/dozzle:latest
+    ports:
+      - "8087:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   swagger:
     build:
