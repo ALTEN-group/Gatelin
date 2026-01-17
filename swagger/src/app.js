@@ -10,6 +10,9 @@ const swaggerUi = require("swagger-ui-express");
 const doc = require("./gatelin.openapi.json");
 const swaggerOptions = {
   explorer: false,
+  swaggerOptions: {
+    persistAuthorization: true
+  }
 };
 
 const pe = process.env;
@@ -28,7 +31,7 @@ app.use(express.static(`${__dirname}/public`));
 // Routes
 app.use(
   BASE_PATH + "/",
-  swaggerUi.serveFiles(doc, swaggerOptions),
+  swaggerUi.serveFiles(doc),
   swaggerUi.setup(doc, swaggerOptions),
 );
 // Performance measurement ends

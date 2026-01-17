@@ -392,20 +392,13 @@
       "post": {
         "tags": ["Consumer Management"],
         "summary": "Add new consumer during login sequence",
-        "description": "Register one consumer in the system during logging sequence. Send email and pwd in an array called rows.",
+        "description": "Register one consumer in the system during logging sequence (login). Send email and pwd directly in the request body.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "rows": {
-                    "type": "array",
-                    "items": { "$ref": "#/components/schemas/user" }
-                  }
-                },
-                "required": ["rows"]
+                "$ref": "#/components/schemas/user"
               },
               "examples": {
                 "admin": {
