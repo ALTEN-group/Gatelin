@@ -24,7 +24,7 @@ sequenceDiagram
   u->>f: Enter email and password
   deactivate u
   activate f
-  f->>msg: post(consumers/) { rows: [{ email, pwd }] }
+  f->>msg: post(consumers/) { email, pwd }
   deactivate f
 
   rect rgb(220, 220, 220, 0.1)
@@ -32,8 +32,8 @@ sequenceDiagram
     activate msg
     rect rgb(100, 200, 100, 0.2)
       note over msg: Antity-pgsql Library Block
-      msg--)msg: User entity normalize rows[0].email
-      msg--)msg: User entity validate rows[0].email, rows[0].pwd
+      msg--)msg: User entity normalize email
+      msg--)msg: User entity validate email, pwd
     end
     rect rgb(150, 50, 50, 0.5)
       break when email or pwd are missing or invalid
@@ -81,12 +81,11 @@ sequenceDiagram
     udb->>msu: User found
     deactivate udb
     activate msu
-    msu->>msg: return 200 ok { id, nickname, roles, active, portrait... }
+    msu->>msg: return 200 ok { id, nickname, roles, active, rolesArrayAgg... }
     deactivate msu
     activate msg
-    msg--)msg: Add user id, nickname and roles to req.body.rows[0] (preserving email, pwd)
-    msg--)msg: Add active to res.locals for activation sequence
-    msg--)msg: Add user data to res.rows for final response
+    msg--)msg: Add nickname and rolesArrayAgg to req.body.rows[0]
+    msg--)msg: Add user id and active to res.locals.user
   end
 
   rect rgb(220, 220, 220, 0.1)
@@ -127,8 +126,8 @@ sequenceDiagram
   rect rgb(220, 220, 220, 0.1)
     note over msg,adb: Password Validation Block
     activate msg
-    msg--)msg: Prepare filters for pwd comparison : { userId: id }
-    msg->>msa: post(pwd/) { filters, pwd }
+    msg--)msg: Prepare filters for pwd comparison : { userId: id, pwd }
+    msg->>msa: post(login/) { filters }
     deactivate msg
     activate msa
     rect rgb(100, 200, 100, 0.2)
@@ -190,7 +189,7 @@ sequenceDiagram
     end
     rect rgb(100, 200, 100, 0.2)
       note over msg: Consumer Entity Block
-      msg--)msg: Validate consumer data (id, nickname, accessToken, refreshToken, roles)
+      msg--)msg: Validate consumer data (nickname, accessToken, refreshToken, rolesArrayAgg)
     end
     msg->>gdb: Insert consumer in db
     deactivate msg
@@ -198,13 +197,11 @@ sequenceDiagram
     gdb->>msg: Consumer added
     deactivate gdb
     activate msg
+    msg--)msg: Add consumer to cache (async)
     msg--)msg: Clear unsafe props from response data
-    msg->>f: return 200 ok : { id, nickname, accessToken, refreshToken, rolesArrayAgg }
+    msg->>f: return 201 created : { nickname, accessToken, refreshToken, rolesArrayAgg }
     deactivate msg
     activate f
-    par Async cache operation
-      msg--)msg: Add new consumer into cache (async, non-blocking)
-    end
     f->>u: Display home page
     deactivate f
   end 
