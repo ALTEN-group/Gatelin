@@ -1,0 +1,77 @@
+$navbarHeight: 36px;
+$breadcrumbHeight: 0px;
+$collapsedSidenavWidth: 60px;
+$expandedSidenavWidth: 220px;
+
+.adm-container {
+    display: flex;
+    width: 100%;
+    min-height: 100%;
+
+    .adm-navbar {
+        position: fixed;
+        display: block;
+        height: $navbarHeight;
+        top: 0;
+        margin-left: $collapsedSidenavWidth;
+        width: calc(100% - $collapsedSidenavWidth);
+        z-index: 3;
+        background-color: var(--primary-bg-color);
+    }
+
+    .adm-content {
+        background-color: var(--primary-bg-color);
+        min-height: calc(100vh - $navbarHeight - $breadcrumbHeight);
+        height: 1px;
+        margin-left: $collapsedSidenavWidth;
+        margin-top: $navbarHeight + $breadcrumbHeight - 1px;
+
+        h2 {
+            text-align: center;
+        }
+    }
+
+
+    // &.mobile {
+
+    //     .adm-content,
+    //     .adm-navbar {
+    //         margin-left: 0;
+    //     }
+    // }
+
+    &.sidenav-expanded {
+        &.sidenav-pinned {
+
+            .adm-content,
+            .adm-navbar {
+                margin-left: $expandedSidenavWidth;
+                width: calc(100% - $expandedSidenavWidth);
+            }
+        }
+    }
+
+
+    @media (max-width: 768px) {
+        $appFrameHeight: calc(100vh - 100px);
+
+        .adm-content {
+            height: $appFrameHeight;
+            position: relative;
+        }
+    }
+}
+
+// Progress indicators
+.progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    width: 100%;
+}
+
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}

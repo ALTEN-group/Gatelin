@@ -1,0 +1,10 @@
+<textarea pTextarea 
+    [formControl]="control()"
+    [placeholder]="placeholder()"
+    rows="5"
+    cols="30"
+    class="textarea-input"
+    (focus)="emitInteractionEvent('focus')"
+    (blur)="emitInteractionEvent('blur')"
+    (input)="emitInteractionEvent('keyup')"
+></textarea>

@@ -1,0 +1,107 @@
+<adm-login-background class="animated-background" />
+<p-card class="login-card">
+  <ng-template pTemplate="header">
+    <p-avatar 
+      class="user-icon"
+      icon="pi pi-user" 
+      size="xlarge" 
+      shape="circle"
+    />
+    <span class="header-title" i18n="@@logInFormTitle:Connexion">Connexion</span>
+  </ng-template>
+
+  <form
+    [formGroup]="formGroup"
+    name="formGroup"
+    (ngSubmit)="login()">
+    <div class="input-container">
+      <p-inputgroup>    
+          <p-inputGroupAddon>
+            <i class="pi pi-envelope"></i>
+          </p-inputGroupAddon>
+          <input
+            id="emailInput"
+            type="text"
+            pInputText
+            formControlName="email"
+            name="email"
+            required
+            #emailInput
+            i18n-placeholder="@@fillEmail"
+            placeholder="Email"
+            pAutofocus
+            [autofocus]="true"
+          />
+      </p-inputgroup>
+      @if (email) {
+        <div class="error-container">
+          @if (email.dirty && email.touched && email.hasError('required')) {
+            <small
+              class="p-error"
+              i18n="@@emailRequired">
+              Email obligatoire
+            </small>
+          }
+          @if (email.dirty && email.touched && email.hasError('emailInvalid')) {
+            <small
+              class="p-error"
+              i18n="@@emailInvalid">
+              Email non valide
+            </small>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="input-container">
+      <p-inputgroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-lock"></i>
+          </p-inputGroupAddon>
+          <input
+            [type]="isPasswordHidden ? 'password' : 'text'"
+            pInputText
+            formControlName="password"
+            name="password"
+            required
+            #passwordInput
+            i18n-placeholder="@@fillPassword"
+            placeholder="Mot de passe"
+            />
+            <p-inputgroup-addon (click)="isPasswordHidden = !isPasswordHidden">
+              <i class="pi pi-{{ isPasswordHidden ? 'eye-slash' : 'eye' }}"></i>
+            </p-inputgroup-addon>
+      </p-inputgroup>
+      <div class="error-container">
+        @if (
+          password?.dirty &&
+          password?.touched &&
+          password?.hasError('required')
+          ) {
+          <small
+            class="p-error"
+            i18n="@@passwordRequired">
+            Mot de passe obligatoire
+          </small>
+        }
+        @if (formGroup.hasError('incorrect')) {
+          <small
+            class="p-error"
+            i18n="@@wrongPassword">
+            Mauvais email/mot de passe
+          </small>
+        }
+      </div>
+    </div>
+
+    <div class="card-actions">
+      <p-button
+        type="submit"
+        label="Se connecter"
+        i18n-label="@@goToDashboard"
+        [disabled]="isLoading || !formGroup.valid"
+      />
+    </div>
+  </form>
+</p-card>
+

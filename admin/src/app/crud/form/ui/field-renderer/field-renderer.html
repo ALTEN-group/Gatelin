@@ -1,0 +1,126 @@
+@switch (config().controlType) {
+  @case (ControlType.AUTOCOMPLETE) {
+    <frm-autocomplete-control 
+      [config]="config()" 
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.CHECKBOX) {
+    <frm-checkbox-control
+      [config]="config()"
+      [control]="control()"     
+      [isFormReadonly]="isFormReadonly()" 
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.CUSTOM) {
+    @let component = config().controlOptions?.customComponent;
+    @if (component) {
+      <ng-container *ngComponentOutlet="
+        component;
+        inputs: { 
+          config: config(), 
+          control: control(), 
+          isFormReadonly: isFormReadonly(),
+        };
+      "
+      />
+    } @else {
+      <i class="pi pi-exclamation-triangle orange" 
+        title="You must provide a custom component">
+      </i>
+    }
+  }
+  @case (ControlType.DATE) {
+    <frm-date-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      [syncValueInc]="syncValueInc()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.FILES) {
+    <frm-file-upload-input
+      [control]="control()"
+      [config]="config()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.INPUT) {
+    @if (config().type === 'number') {
+      <frm-inputnumber-control 
+        [config]="config()"
+        [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+        (fieldInteraction)="fieldInteraction.emit($event)"
+      />
+    } @else {
+      <frm-inputtext-control 
+        [config]="config()"
+        [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+        (fieldInteraction)="fieldInteraction.emit($event)"
+      />
+    }
+  }
+  @case (ControlType.MULTISELECT) {
+    <frm-multi-select-control 
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.PICKLIST) {
+    <frm-picklist-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.RADIO) {
+    <frm-radiogroup-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.SELECT) {
+    <frm-select-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.SELECT_BUTTON) {
+    <frm-select-button-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.TABLE) {
+    <frm-table-control
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+  @case (ControlType.TEXTAREA) {
+    <frm-textarea-control 
+      [config]="config()"
+      [control]="control()"
+      [isFormReadonly]="isFormReadonly()"
+      (fieldInteraction)="fieldInteraction.emit($event)"
+    />
+  }
+}

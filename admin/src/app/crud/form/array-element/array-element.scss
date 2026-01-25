@@ -1,0 +1,28 @@
+.array-group {
+    .array-group-label {
+        margin-bottom: 1rem;
+        
+        span {
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+    }
+    .array-control-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .array-control {
+            flex: 1;
+        }
+
+        .error-message {
+            position: absolute;
+            bottom: -1.1rem;
+            left: 0.25rem;
+            color: var(--p-red-400);
+        }
+    }
+}

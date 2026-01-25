@@ -1,0 +1,11 @@
+.checkbox-container {
+    border-radius: 6px;
+    background: var(--p-inputtext-background);
+    border: 1px solid var(--p-inputtext-border-color);
+    padding-block: 1rem;
+
+    .checkbox-input {
+        padding: 0.75rem 0.75rem;
+        width: 100%;
+    }
+}

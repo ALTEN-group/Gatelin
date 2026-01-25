@@ -1,0 +1,65 @@
+@mixin hint() {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 100%;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@mixin disabled() {
+  background: var(--p-inputtext-disabled-background);
+  color: var(--p-inputtext-disabled-color);
+  opacity: 1;
+}
+
+.form-control-container {
+  position: relative;
+  padding: 0 0.25rem 1.5rem;
+
+  .p-disabled,
+  .p-disabled .p-datatable-thead > tr > th,
+  .p-disabled .p-datatable-tbody > tr > td,
+  .p-editor.p-disabled .p-editor-toolbar,
+  .p-editor.p-disabled .p-editor-content .ql-editor,
+  frm-select-button-control .p-disabled .p-togglebutton {
+    @include disabled();
+  }
+
+  .hints {
+    @include hint();
+    gap: 0.5rem;
+
+    .control-error {
+      color: var(--p-red-500);
+    }
+
+    .help-text {
+      color: var(--p-gray-600);
+    }
+
+  }
+
+  .p-select,
+  .p-textarea,
+  .p-autocomplete,
+  .p-inputtext,
+  .p-inputnumber,
+  .p-multiselect,
+  .p-iconfield,
+  .p-datepicker {
+    width: 100%;
+  }
+
+  .button-control {
+    padding-top: 15px;
+    padding-left: 10px;
+    cursor: pointer;
+  }
+
+  .textarea-input {
+    resize: none;
+  }
+}

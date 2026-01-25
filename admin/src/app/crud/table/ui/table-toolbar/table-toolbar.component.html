@@ -1,0 +1,64 @@
+<p-toolbar id="table-toolbar">
+  <ng-template pTemplate="left">
+    <span class="toolbar-title"> {{ tableTitle() }} </span>
+  </ng-template>
+
+  <ng-template pTemplate="right">
+    <p-buttonGroup class="button-group">
+      @if (features().create) {
+        <button
+          pButton
+          pRipple
+          [protectFeature]="functionalityKey()"
+          [minimalOperation]="3"
+          icon="pi pi-plus"
+          (click)="onNew()">
+        </button>
+      }
+      @if (isExportEnabled()) {
+        <button pButton pRipple
+          [protectFeature]="functionalityKey()"
+          [minimalOperation]="1"
+          title="Exporter les données"
+          [icon]="isExportingData() ? 'pi pi-spinner pi-spin' :'pi pi-download'"
+          (click)="isExportDialogVisible.set(true)"
+          [disabled]="isExportingData()">
+        </button>
+      }
+      @if (selectable() && features().archive) {
+        <button
+          pButton
+          pRipple
+          [protectFeature]="functionalityKey()"
+          [minimalOperation]="3"
+          icon="pi pi-trash"
+          (click)="onDeleteMultiple()"
+          [disabled]="!selectedEntries() || !selectedEntries().length">
+        </button>
+      }
+      @if (areColumnsConfigurable()) {
+        <button pButton pRipple
+          icon="pi pi-cog"
+          (click)="manageColumns()"
+          title="Configurer les colonnes">
+        </button>
+      }
+
+      <button pButton pRipple
+        icon="pi pi-refresh"
+        (click)="refreshDataClicked.emit()"
+        title="Rafraîchir les données">
+      </button>
+    </p-buttonGroup>
+  </ng-template>
+</p-toolbar>
+
+
+<tbl-export-dialog 
+  [visible]="isExportDialogVisible()"
+  [isExcelExportEnabled]="isExcelExportEnabled()"
+  [isCsvExportEnabled]="isCsvExportEnabled()"
+  [cols]="cols()"
+  (hide)="isExportDialogVisible.set(false)"
+  (export)="exportClicked.emit($event)"
+/>

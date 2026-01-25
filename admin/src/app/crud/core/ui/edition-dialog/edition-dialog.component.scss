@@ -1,0 +1,30 @@
+.content-container {
+    min-height: 300px;
+
+    .accordion {
+        padding: 0 1rem;
+        margin: 0.5rem 0;
+        display: block;
+
+        .flex-row {
+            display: flex;
+
+            .delete-button {
+                width: auto;
+                margin-left: auto;
+            }
+        }
+
+        ::ng-deep &.deletion-container {
+            .p-accordion-header:hover .p-accordion-header-link,
+            .p-accordion-header .p-accordion-header-link {
+                background-color: var(--error-color);
+                color: white;
+            }
+        }
+    }
+}
+
+.error {
+    color: red;
+}

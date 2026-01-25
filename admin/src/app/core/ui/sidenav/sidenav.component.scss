@@ -1,0 +1,81 @@
+@use "structure" as structure;
+
+.sidenav {
+
+  .toggle-icon {
+    cursor: pointer;
+  }
+
+  p-panel {
+    position: fixed;
+    top: 0;
+    width: structure.$expandedSidenavWidth;
+    transition: all 0.3s;
+    height: 100%;
+    z-index: 4;
+    overflow: auto;
+    border-right: 1px solid var(--primary-bg-color);
+
+    .header {
+      line-height: 60px;
+      height: 60px;
+      overflow: hidden;
+      flex: 1;
+      cursor: pointer;
+
+      .title-line {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .p-panelmenu-submenu {
+      padding: 0;
+    }
+
+
+    .p-panel-content {
+      padding: 0;
+
+      .p-panelmenu-panel {
+        border: 0;
+
+        .p-panelmenu-item-link-active {
+          background-color: var(--secondary-bg-color);
+          border-right: 4px solid var(--primary-color);
+        }
+      }
+    }
+
+
+    &.collapsed {
+      width: structure.$collapsedSidenavWidth;
+
+      .title,
+      .toggle-icon {
+        display: none !important;
+      }
+
+      .p-panel-header {
+        padding-left: 0.5rem;
+        padding-right: 0;
+      }
+
+      .sidenav {
+
+        .p-menuitem-text,
+        .p-panelmenu-icon.pi,
+        .p-menuitem-link,
+        .p-panelmenu-item-label,
+        .p-panelmenu-header-label {
+          display: none !important;
+        }
+
+        .p-menuitem-icon {
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+}

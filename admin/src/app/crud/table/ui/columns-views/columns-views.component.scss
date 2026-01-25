@@ -1,0 +1,31 @@
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.views-container-list {
+  display: flex;
+  flex-direction: column;
+
+  .flex-item {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.new-view {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.cancel-new-view {
+  margin-left: auto;
+}
+
+.add-view-button {
+  max-width: max-content;
+  margin-top: 1rem;
+}

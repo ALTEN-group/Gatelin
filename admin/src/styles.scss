@@ -1,0 +1,122 @@
+/* Custom SCSS */
+@use "structure";
+@use "variables";
+@use "error-card";
+@use "dialog";
+@use "portrait";
+@use "input-text";
+@use "chips";
+@use "spacings";
+
+/* Fonts */
+@font-face {
+  font-family: Lato;
+  src: url(./assets/fonts/Lato.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url(./assets/fonts/Quicksand/Quicksand-Regular.ttf) format('truetype');
+}
+
+$fontFamilyLato: Lato, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+$fontFamilyQuicksand: Quicksand, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+
+
+/* Main styles */
+html,
+body {
+  margin: 0;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-font-color);
+  font-family: $fontFamilyQuicksand;
+  height: 100%;
+  font-size: 14px;
+
+  /** PrimeNG overrides */
+  --p-datatable-header-cell-padding: 0 0.25rem;
+  --p-datatable-body-cell-padding: 0 0.25rem;
+  --p-paginator-padding: 0;
+  --p-breadcrumb-padding: 0.5rem;
+  --p-breadcrumb-background: transparent;
+  --sidenav-menu-item-padding: 0.25rem;
+  --p-overlay-modal-padding: 0.5rem;
+
+  .leaflet-control-attribution {
+    display: none;
+  }
+
+  .p-component {
+    font-family: $fontFamilyQuicksand;
+  }
+
+  .p-progressbar {
+    height: 0.4rem;
+  }
+
+  .green {
+    color: var(--green-500);
+  }
+
+  // .red,
+  .pi.red {
+    color: var(--error-color);
+  }
+}
+
+.cdk-overlay-container {
+  z-index: 1001; // above ng prime dialog
+}
+
+.small {
+  font-size: 12px;
+}
+
+.unavailable {
+  color: var(--disabled-text);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.p-toast.p-toast-top-right {
+  width: fit-content;
+
+  .p-toast-message-text {
+    margin: 0 !important;
+  }
+}
+
+.p-knob-range {
+  stroke: var(--bluegray-100);
+}
+
+.timepicker-overlay {
+  z-index: 9999 !important;
+}
+
+.gradient-link {
+  background: var(--pink-to-highlight-to-purple-to-blue-horizontal-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: .875rem;
+  margin-block: 0;
+  transition: background-position 1.8s ease-out;
+  background-size: 200% 100%;
+  background-position: 100% 0%;
+  position: relative;
+}
+
+.form-card {
+    display: block;
+    margin: 1rem;
+    background-color: var(--primary-bg-color-light);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+
+    h3, p.empty-form {
+      width: 100%;
+      text-align: center;
+    }
+}

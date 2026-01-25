@@ -1,0 +1,24 @@
+.p-dialog {
+  --p-dialog-border-radius: 0;
+  .p-dialog-header,
+  .p-dialog-content,
+  .p-dialog-footer {
+    background-color: var(--primary-bg-color-light);
+    color: var(--primary-font-color);
+    justify-content: space-between;
+
+    .p-dialog-header-icon {
+      color: var(--primary-font-color);
+
+      &:enabled:hover {
+        color: var(--secondary-font-color);
+      }
+    }
+  }
+
+  .p-dialog-content .actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+  }
+}

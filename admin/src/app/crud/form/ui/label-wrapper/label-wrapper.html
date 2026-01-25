@@ -1,0 +1,34 @@
+@switch (fieldLabelStrategy()) {
+    @case ("float") {
+        <p-floatLabel [variant]="labelVariant() ?? 'on'">
+            <ng-container *ngTemplateOutlet="labelContentTemplate" />
+        </p-floatLabel>
+    }
+    @case ("ifta") {
+        <p-iftalabel>
+            <ng-container *ngTemplateOutlet="labelContentTemplate" />
+        </p-iftalabel>
+    }
+    @default {
+        <ng-container *ngTemplateOutlet="labelContentTemplate" />
+    }
+}
+<ng-template #labelContentTemplate>
+    <label [for]="config().key" 
+        [class.mandatory-control]="isRequired()"
+        [class.checkbox-label]="config().controlType === 'checkbox'">
+        {{ label() }}                  
+        @if (options().tooltipLabel) {
+            <frm-field-tooltip
+                [value]="options().tooltipLabel"
+                class="floating-tooltip"
+                [class.normal-tooltip]="fieldLabelStrategy() === 'normal'"
+            />
+        }
+    </label>
+    <p-iconfield [class.has-icon]="!!inputIcon()">
+        <p-inputicon [class]="inputIcon()" />
+        <ng-content />
+    </p-iconfield>
+</ng-template>
+    

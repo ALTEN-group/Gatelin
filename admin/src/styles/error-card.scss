@@ -1,0 +1,18 @@
+.error-card {
+  width: 300px;
+  background-color: var(--primary-bg-color);
+  padding: 3rem;
+  text-align: center;
+  border-radius: 8px;
+  margin: 3rem auto;
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button {
+    margin-top: 2rem;
+  }
+}

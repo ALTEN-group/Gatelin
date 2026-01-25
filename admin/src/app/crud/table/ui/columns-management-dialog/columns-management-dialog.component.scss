@@ -1,0 +1,23 @@
+.dialog-content {
+  display: flex;
+  height: 100%;
+
+  .views-container,
+  .cols-container {
+
+    tbl-columns-views,
+    tbl-columns-management {
+      height: 100%;
+      display: block;
+    }
+  }
+
+  .views-container {
+    padding-right: 20px;
+    width: 280px;
+  }
+
+  .cols-container {
+   flex: 1;
+  }
+}

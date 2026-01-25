@@ -1,0 +1,98 @@
+<p-dialog
+  [(visible)]="isVisible"
+  [style]="{width: calculatedWidth(), height: height()}"
+  [header]="dialogTitle()"
+  [modal]="true"
+  [maximizable]="true"
+  styleClass="p-fluid"
+  (onHide)="onHide()"
+  appendTo="body">
+
+  <ng-template pTemplate="content">
+    <div class="content-container">
+      <frm-form
+        [config]="config()"
+        [model]="editedEntry()"
+        [groupValidator]="groupValidator()"
+        [isReadonly]="isReadonly() || !(functionalityKey() | hasAccess:2)"
+        [forceReload]="forceReloadTime()"
+        [columnsCount]="formColumnsCount()"
+        (modelChange)="onFormChanged($event)"
+        (validityChange)="onValidityChange($event)"
+      />
+
+      @if (features().getHistory) {
+        <p-accordion class="accordion">
+          @if (history$ | async; as historyData) {
+          <p-accordion-panel>
+            <p-accordion-header>
+                <span i18n="@@EditionDialog_HistoryHeader">
+                  Historique
+                </span>
+                &nbsp;
+                <span>({{historyData.total}})</span>
+              </p-accordion-header>
+              <p-accordion-content>
+                <shared-history
+                  [data]="historyData"
+                  [config]="config()"
+                  (selected)="onHistorySelect($event)"
+                />
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+        </p-accordion>
+      }
+
+      @if (features().archive && protectDeletion() && !isCreation()) {
+        <p-accordion class="accordion deletion-container">
+          <p-accordion-panel>
+            <p-accordion-header>
+              <span i18n="@@EditionDialog_ProtectedZoneHeader">
+                Zone protégée
+              </span>
+            </p-accordion-header>
+            <p-accordion-content>
+              <div class="flex-row">
+                <p-checkbox #archiveCheckbox 
+                  [binary]="true"
+                  label="Archiver" 
+                  i18n-label="@@EditionDialog_ArchiveLabel"
+                />
+                <button pButton
+                  pRipple
+                  label="Archiver"
+                  i18n-label="@@EditionDialog_ArchiveButton"
+                  icon="pi pi-trash"
+                  class="p-button-danger delete-button"
+                  (click)="onDelete()"
+                  [disabled]="!archiveCheckbox.checked">
+                </button>
+              </div>
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      }
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <crd-crud-button
+      type="cancel"
+      [label]="closeButtonLabel()"
+      icon="pi pi-times"
+      [disabled]="isLoading()"
+      (click)="onHide()"
+    />
+    @if (canInteract()) {
+      <crd-crud-button
+        type="validate"
+        icon="pi pi-check"
+        [protectFeature]="functionalityKey()"
+        [minimalOperation]="2"
+        [disabled]="isLoading() || invalidForm"
+        (click)="onSave()"
+      />
+    }
+  </ng-template>
+</p-dialog>

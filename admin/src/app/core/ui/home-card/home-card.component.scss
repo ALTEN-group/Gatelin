@@ -1,0 +1,25 @@
+p-card {
+    width: 200px;
+    margin: 1rem;
+    display: inline-block;
+
+    &.card-info {
+        border-left: 5px solid var(--info-color);
+    }
+    &.card-warn {
+        border-left: 5px solid var(--warn-color);
+    }
+    &.card-error {
+        border-left: 5px solid var(--error-color);
+    }
+    &.card-success {
+        border-left: 5px solid var(--success-color);
+    }
+
+    .card-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-top: 0.5rem;
+        color: var(--primary-color);
+    }
+}

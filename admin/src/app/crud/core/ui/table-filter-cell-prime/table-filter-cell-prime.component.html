@@ -1,0 +1,75 @@
+@let column = col();
+
+@switch (column.filterType) {
+  @case (ControlType.DATE) {
+    <ng-container [ngTemplateOutlet]="date"/>
+  }
+  @case (ControlType.CHECKBOX) {
+    <p-columnFilter type="boolean" [field]="column.key" display="menu" />
+  }
+  @case (ControlType.SELECT) {
+    <ng-container [ngTemplateOutlet]="select"/>
+  }
+  @case (ControlType.MULTISELECT) {
+    <ng-container [ngTemplateOutlet]="select"/>
+  }
+  @case (ControlType.INPUT) {
+    @switch (column.type) {
+      @case (InputType.TEXT) {
+        <p-columnFilter type="text" [field]="column.key" display="menu" />
+      }
+      @case (InputType.NUMBER) {
+        <p-columnFilter type="numeric" [field]="column.key" display="menu" />
+      }
+    }
+  }
+}
+
+<ng-template #select>
+  <p-columnFilter
+    [field]="column.key"
+    matchMode="in"
+    display="menu"
+    [showMenu]="true"
+    [showMatchModes]="false"
+    [showOperator]="false"
+    [showAddButton]="false"
+    [showButtons]="false">
+    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+      <p-multiSelect [ngModel]="value"
+        [options]="options()"
+        (onChange)="filter($event.value)"
+        placeholder="---"
+        filterPlaceHolder="---"
+        appendTo="body">
+        <ng-template let-option pTemplate="item">
+          <div class="flex">
+            @if (option.icon) {
+              <span [innerHtml]="option.icon" class="mr-2"></span>
+            }
+            <div>{{ option.label }}</div>
+          </div>
+        </ng-template>
+      </p-multiSelect>
+    </ng-template>
+  </p-columnFilter>
+</ng-template>
+
+<ng-template #date>
+  <p-columnFilter type="date"
+    [field]="column.key"
+    display="menu"
+    [showMenu]="true">
+    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+      <p-datepicker
+        [readonlyInput]="true"
+        [showButtonBar]="true"
+        [dateFormat]="DATE_FORMAT"
+        appendTo="body"
+        dataType="string"
+        (onSelect)="onSelectDate($event, filter)"
+        (onClearClick)="filter('', col, 'equals')"
+      />
+    </ng-template>
+  </p-columnFilter>
+</ng-template>

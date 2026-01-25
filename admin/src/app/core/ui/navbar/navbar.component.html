@@ -1,0 +1,30 @@
+<div class="navbar" id="navbar">
+  @if (isAuthenticated()) {
+    <div class="left">
+      <adm-breadcrumb lang="fr"/>
+    </div>
+    <div class="right">
+      <adm-theme-toggle-button />
+      <div class="user-button" #userButton>
+        <span>{{ userName }}</span>
+        @if (portrait()) {
+          <img
+            class="profile-picture-small"
+            [src]="portrait()"
+            alt="portrait"
+            (click)="userMenu.toggle($event)" />
+        } @else {
+          <button pButton icon="pi pi-user"
+            type="button"
+            class="p-button-rounded p-button-outlined"
+            (click)="userMenu.toggle($event)">
+          </button>
+        }
+        <p-menu #userMenu
+          [popup]="true" 
+          [model]="userMenuItems()"          
+        />
+      </div>
+    </div>
+  }
+</div>

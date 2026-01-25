@@ -1,0 +1,112 @@
+<input #fileInput
+  [id]="'file-upload' + config().key"
+  type="file"
+  [accept]="accept()"
+  [multiple]="options().multiple"
+  [disabled]="isDisabled()"
+  (change)="onFileUploaded(fileInput)"
+/>
+
+<label
+  [for]="'file-upload' + config().key"
+  class="custom-file-upload"
+  [class.p-disabled]="isDisabled()"
+  [class.dragged-over]="isDraggedOver"
+  (drop)="onDrop($event, fileInput)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (dragenter)="prevent($event)">
+  <div class="dropbox-toolbar">
+    <div class="toolbar-left">
+      <p-button
+        (onClick)="fileInput.click()"
+        icon="pi pi-cloud-upload"
+        [rounded]="true"
+        [outlined]="true"
+        [disabled]="!canAddMore()"
+        pTooltip="Choisir un fichier"
+      />
+      <p-button
+        (onClick)="clearAll(fileInput)"
+        icon="pi pi-times"
+        [rounded]="true"
+        [outlined]="true"
+        severity="danger"
+        [disabled]="!localFiles() || localFiles().length === 0"
+        pTooltip="Tout supprimer"
+      />
+    </div>
+    <div class="toolbar-right">
+      <p-button
+        icon="pi pi-lightbulb"
+        severity="help"
+        [rounded]="true"
+        [outlined]="true"
+        [pTooltip]="infoTooltip"
+        tooltipPosition="left"
+      />
+    </div>
+  </div>
+  <div class="dropbox-container">  
+    @let hasFiles = localFiles() && localFiles().length > 0;     
+    @if (!hasFiles) {
+      <i class="pi pi-cloud-upload upload-icon"></i>
+      <p i18n="@@SharedForm_DragDropFileLabel">
+        Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner
+      </p>
+    } @else {
+      <div class="uploaded-files-container">
+        <div class="container-title"
+          i18n="@@SharedForm_UploadedFilesTitle">
+          Fichiers téléchargés
+        </div>
+        @for (file of localFiles(); track file; let i = $index) {
+          <div class="file-row">
+            <p-button
+              (onClick)="clear(i, fileInput)"
+              icon="pi pi-times"
+              rounded
+              text
+              size="small"
+              severity="danger"
+              pTooltip="Supprimer"
+              class="file-button"
+            />
+            <p-button
+              (onClick)="onDownload(file)"
+              icon="pi pi-download"
+              rounded
+              text
+              size="small"
+              severity="primary"
+              pTooltip="Télécharger"
+              class="file-button"
+            />
+            <div class="file-name">{{ file | fileName }}</div>
+          </div>
+        } 
+      </div>
+    }
+  </div>
+</label>
+
+
+
+<ng-template #infoTooltip>
+  @if (options().maxFileSize; as maxFileSize) {
+    <p class="small">Taille maximum : {{maxFileSize / 1000000}} Mb</p>
+  }
+  @if (options().mediaType; as mediaType) {
+    <p class="small">
+      Type de média : 
+      {{ mediaType }}
+    </p>
+  }
+  <p class="small">
+    @if (canAddMore()) {
+      Vous pouvez ajouter plusieurs fichiers.
+    } @else {
+      Vous ne pouvez ajouter qu'un seul fichier. Veuillez supprimer le fichier actuel pour en ajouter un nouveau.
+    }
+  </p>
+</ng-template>

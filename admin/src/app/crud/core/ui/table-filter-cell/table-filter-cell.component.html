@@ -1,0 +1,139 @@
+
+@switch (col().filterType) {
+  @case (ControlType.DATE) {
+    <ng-container [ngTemplateOutlet]="dateTemplate"></ng-container>
+  }
+  @case (ControlType.CHECKBOX) {
+    <ng-container [ngTemplateOutlet]="checkboxTemplate"></ng-container>
+  }
+  @case (ControlType.SELECT) {
+    <p-columnFilter [field]="col().key" matchMode="equals" [showMenu]="false"
+      [showClearButton]="false">
+      <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+        <p-select 
+          [ngModel]="value"
+          [options]="options"
+          (onChange)="filter($event.value)"
+          placeholder="---"
+          filterPlaceholder="---"
+          [showClear]="true">
+          <ng-template let-option pTemplate="item">
+            <div class="select-option-container">
+              @if (option.icon) {
+                <i class="pi {{option.icon}}"></i>
+              }
+              <div>{{ option.label }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+      </ng-template>
+    </p-columnFilter>
+  }
+  @case (ControlType.MULTISELECT) {
+    <p-columnFilter [field]="col().key" matchMode="in" [showMenu]="false"
+      [showClearButton]="false">
+      <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+        <p-multiSelect [ngModel]="value"
+          [options]="options"
+          (onChange)="filter($event.value)"
+          placeholder="---"
+          filterPlaceHolder="---"
+          appendTo="body">
+          <ng-template let-option pTemplate="item">
+            <div class="select-option-container">
+              @if (option.icon) {
+                <i class="pi {{option.icon}}"></i>
+              }
+              <div>{{ option.label }}</div>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+      </ng-template>
+    </p-columnFilter>
+  }
+  @case (ControlType.FILES) {
+    <!-- TODO -->
+  }
+  @case (ControlType.INPUT) {
+    @if (col().type === 'text' && filterLevel() === "basic") {
+      <ng-container [ngTemplateOutlet]="basicInputTemplate"></ng-container>
+    }
+
+    @if (col().type === 'text' && filterLevel() === "intermediate") {
+      <ng-container [ngTemplateOutlet]="intermediateInputTemplate"></ng-container>
+    }
+
+    @if (col().type === 'number') {
+      <p-columnFilter [field]="col().key"
+        matchMode="between"
+        display="menu"
+        [showMatchModes]="false"
+        [showOperator]="false"
+        [showAddButton]="false"
+        [showClearButton]="false"
+        [showApplyButton]="false">
+        <ng-template pTemplate="filter" let-filter="filterCallback">
+            <p-slider [ngModel]="numberRange" [range]="true" [max]="200" [step]="1" (onSlideEnd)="filter($event.values)"></p-slider>
+            <div class="flex-space">
+                <span>{{ numberRange[0] }}</span>
+                <span>{{ numberRange[1] }}</span>
+            </div>
+        </ng-template>
+      </p-columnFilter>
+    }
+  }
+  @default {
+    <ng-container [ngTemplateOutlet]="basicInputTemplate"></ng-container>
+  }
+}
+
+<ng-template #basicInputTemplate>
+  <p-columnFilter type="text" 
+    [field]="col().key" 
+    matchMode="contains" 
+    [showClearButton]="false" 
+    [showMenu]="false">
+    <ng-template pTemplate="filter" let-filter="filterCallback">
+      <input type="text" 
+        pInputText
+        (keyup)="filter($any($event.target).value)" 
+      />
+    </ng-template>
+  </p-columnFilter>
+</ng-template>
+
+<ng-template #intermediateInputTemplate>
+  <p-columnFilter type="text" [field]="col().key">
+    <ng-template pTemplate="filter" let-filter="filterCallback">
+      <input type="text" 
+        pInputText 
+        (keyup)="filter($any($event.target).value)" 
+      />
+    </ng-template>
+  </p-columnFilter>
+</ng-template>
+
+<ng-template #checkboxTemplate>
+  <p-columnFilter
+    type="boolean"
+    [field]="col().key"
+    [showMenu]="false">
+  </p-columnFilter>
+</ng-template>
+
+<ng-template #dateTemplate>
+  <p-columnFilter matchMode="dateRange" [field]="col().key" [showMenu]="false">
+    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+      <p-datepicker
+        [(ngModel)]="dateRange"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [showButtonBar]="true"
+        [dateFormat]="DATE_FORMAT"
+        appendTo="body"
+        (onSelect)="filter(dateRange)"
+        (onClearClick)="filter('', col(), 'equals')"
+      />
+    </ng-template>
+  </p-columnFilter>
+</ng-template>

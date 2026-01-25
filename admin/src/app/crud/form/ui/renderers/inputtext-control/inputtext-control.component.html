@@ -1,0 +1,11 @@
+<input
+    type="text"
+    pInputText
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+    [minlength]="minLength()"
+    [maxlength]="maxLength()"
+    (input)="emitInteractionEvent('keyup')"
+    (focus)="emitInteractionEvent('focus')"
+    (blur)="emitInteractionEvent('blur')"
+/>

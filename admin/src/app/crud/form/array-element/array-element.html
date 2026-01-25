@@ -1,0 +1,40 @@
+<div class="array-group" [class.p-disabled]="isDisabled()">
+    <div class="array-group-label">
+      <span>{{config().label}}</span>
+      <p-button 
+        type="button" 
+        outlined
+        [label]="arrayControlOptions().addButtonLabel" 
+        icon="pi pi-plus" 
+        [disabled]="cannotAdd()"
+        (click)="addControl()"
+      />
+    </div>
+    @for (control of controls(); track control) {   
+      <div class="array-control-container">
+        <frm-field-renderer
+          #formFieldControl
+          class="array-control"
+          [config]="config()"
+          [control]="control"
+          [isFormReadonly]="isFormReadonly()"
+          [syncValueInc]="syncValueInc()"
+        />
+        @if (formFieldControl.control().invalid) {
+          <frm-error-message
+            class="error-message"
+            [controlErrors]="control.errors" 
+          />
+        }
+        <p-button 
+          type="button" 
+          pButtonIcon
+          text
+          icon="pi pi-trash"
+          title="Supprimer"
+          [disabled]="cannotDelete()"
+          (click)="removeControl($index)"
+        />
+      </div>       
+    }
+</div>

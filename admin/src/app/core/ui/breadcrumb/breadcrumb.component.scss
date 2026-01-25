@@ -1,0 +1,12 @@
+p-breadcrumb {
+    margin: 0 10px;
+    display: block;
+    
+    .p-breadcrumb {
+        border-radius: 4px; 
+    }
+}
+
+.p-menuitem-link {
+    color: var(--primary-font-color);
+}
