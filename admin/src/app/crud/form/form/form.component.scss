@@ -1,0 +1,42 @@
+.form-container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+
+  .display-none {
+    display: none;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: var(--primary-bg-color);
+    margin: 10px 0;
+
+    .p-panel-header {
+      width: 100%;
+    }
+
+    .p-panel-content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+
+  }
+}
+
+.actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}

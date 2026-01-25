@@ -1,0 +1,30 @@
+  p-card {
+    border-radius: 4px;
+    overflow: auto;
+    display: block;
+    margin: 10px;
+
+    .p-card-header {
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
+
+      span {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+
+    .p-card-body {
+      padding: 0.5rem;
+
+      .card-content {
+        text-align: center;
+
+        .shortcut-button {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+  }

@@ -1,0 +1,51 @@
+:root {
+  --primary-color: #2251b1;
+  --primary-color-hover: rgba(31, 81, 177, 0.9);
+  --primary-bg-color: #F5F5F5;
+  --primary-bg-color-light: #FFF;
+  --secondary-bg-color: #f0f0f0;
+  --tertiary-bg-color: #ececec;
+  --primary-font-color: #606060;
+  --secondary-font-color: #828282;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --warn-color: #ffc107;
+  --error-color: #dc3545;
+  --disabled-text: #808080;
+  --primary-nav-color: #1f2937;
+  --secondary-nav-color: #181d21;
+  --text-nav-color: #c3c3c3;
+  --breadcrumb-color: #fff;
+  --login-bg-color: 255, 255, 255;
+
+  /** gradients **/
+  --vivid-pink: #ff00ff;
+  --electric-violet: #8f00ff;
+  --orange-red: #ff0000;
+  --bright-blue: #00ffff;
+  --pink-to-highlight-to-purple-to-blue-horizontal-gradient: linear-gradient(
+    140deg,
+    var(--vivid-pink) 0%,
+    var(--vivid-pink) 15%,
+    color-mix(in srgb, var(--vivid-pink), var(--electric-violet) 50%) 25%,
+    color-mix(in srgb, var(--vivid-pink), var(--electric-violet) 10%) 35%,
+    color-mix(in srgb, var(--vivid-pink), var(--orange-red) 50%) 42%,  
+    color-mix(in srgb, var(--vivid-pink), var(--orange-red) 50%) 44%,
+    color-mix(in srgb, var(--vivid-pink), var(--primary-bg-color) 70%) 47%,
+    var(--electric-violet) 48%,
+    var(--bright-blue) 60%
+  );
+}
+
+html.dark {
+  --primary-color: #4476db;
+  --primary-color-hover: rgba(68, 118, 219, 0.9);
+  --primary-bg-color: #181d21;
+  --primary-bg-color-light: #202225;
+  --secondary-bg-color: #3a4149;
+  --tertiary-bg-color: #303337;
+  --primary-font-color: #cfcfcf;
+  --secondary-font-color: whitesmoke;
+  --breadcrumb-color: #1f2937;
+  --login-bg-color: 30, 30, 30;
+}

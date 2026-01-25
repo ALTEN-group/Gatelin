@@ -1,0 +1,58 @@
+<div class="view-header">
+  <h3 i18n="@@Table_ColumnsManagementDialogViewsTitle">Vues</h3>
+  <p-button
+    label="Ajouter"
+    i18n-label="@@Table_ColumnsViewsAddViewButton"
+    icon="pi pi-plus"
+    [disabled]="isNewFieldDisplayed"
+    (click)="showNewViewField()"
+  />
+</div>
+
+<div class="views-container-list">
+  <p-listbox [options]="views()" 
+    optionLabel="name" 
+    optionValue="id" 
+    [disabled]="isNewFieldDisplayed"
+    [ngModel]="activeViewId()" 
+    (onChange)="onSelectView($event.value)">
+    <ng-template #item let-view>      
+      @let isDefaultView = view.id === null;
+        <div class="flex-item">
+            <div>{{ view.name }}</div>
+            @if (!isDefaultView) {
+              <p-button
+                  icon="pi pi-trash"
+                  title="Supprimer"
+                  [text]="true"
+                  (click)="onDeleteView($event, view.id)"
+              />
+            }
+        </div>
+    </ng-template>
+  </p-listbox>
+    @if (isNewFieldDisplayed) {
+      <div class="new-view">
+        <input #name
+          type="text"
+          pInputText
+          (keyup.enter)="submitNewView(name.value)"
+          autofocus
+        />
+        <p-button
+            class="validate-view-button"
+            icon="pi pi-check"
+            title="Valider"
+            [text]="true"
+            (click)="submitNewView(name.value)"
+        />
+        <p-button
+            class="delete-view-button"
+            icon="pi pi-times"
+            title="Annuler"
+            [text]="true"
+            (click)="hideNewViewField()"
+        />
+      </div>
+    }
+  </div>

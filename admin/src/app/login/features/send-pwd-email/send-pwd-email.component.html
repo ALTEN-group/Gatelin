@@ -1,0 +1,62 @@
+<p-card>
+
+  <ng-template pTemplate="header">
+    <i class="pi pi-user" title="Enter your email then press Enter"></i>
+    <h2>
+      Réinitialisation du mot de passe
+    </h2>
+  </ng-template>
+
+  <form [formGroup]="emailFormGroup" name="emailFormGroup" (ngSubmit)="send()">
+    <i class="pi pi-envelope" disabled></i>
+    <span> &nbsp;</span>
+    <input
+      matInput
+      type="email"
+      placeholder="Enter your Email"
+      formControlName="emailFormControl"
+      autofocus
+      required
+      #emailInput/>
+    @if (email) {
+      <div class="error-container">
+        @if (email.status === 'PENDING') {
+          <small
+            >Vérification...
+          </small>
+        }
+        @if (email.dirty && email.touched && email.hasError('required')) {
+          <small class="p-error"
+            >Email requis
+          </small>
+        }
+        @if (email.touched && email.hasError('emailInvalid')) {
+          <small class="p-error"
+            >Email invalide
+          </small>
+        }
+        @if (email.hasError('emailNotFound')) {
+          <small class="p-error"
+            >Email non trouvé
+          </small>
+        }
+      </div>
+    }
+  </form>
+
+  <button
+    type="button"
+    color="basic"
+    (click)="cancel()">
+    <i class="pi pi-arrow-left"></i>
+    Annuler
+  </button>
+
+  <button
+    type="button"
+    color="basic"
+    (click)="cancel()">
+    <i class="pi pi-check"></i>
+    Valider
+  </button>
+</p-card>

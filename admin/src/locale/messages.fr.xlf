@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="logInForm" datatype="html">
+        <source>Log in</source>
+        <target>s'identifier</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Login Form</note>
+      </trans-unit>
+      <trans-unit id="emailPlaceholder" datatype="html">
+        <source>Email</source>
+        <target>Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Email placeholder</note>
+      </trans-unit>
+      <trans-unit id="emailRequired" datatype="html">
+        <source>
+            Email is required !
+          </source>
+          <target>L'email est requis !</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Email required</note>
+      </trans-unit>
+      <trans-unit id="emailInvalid" datatype="html">
+        <source>
+            Email is not valid !
+          </source>
+          <target>L'email n'est pas valide !</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Email invalid</note>
+      </trans-unit>
+      <trans-unit id="emailValidation" datatype="html">
+        <source>
+            Email does not exist !
+          </source>
+          <target>L'email n'existe pas!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Email validation</note>
+      </trans-unit>
+      <trans-unit id="goToLoginSecondStep" datatype="html">
+        <source>
+              Next
+            </source>
+            <target>Prochain</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Go to login second step</note>
+      </trans-unit>
+      <trans-unit id="passwordPlaceholder" datatype="html">
+        <source>Password</source>
+        <target>Mot de passe</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Password placeholder</note>
+      </trans-unit>
+      <trans-unit id="passwordRequired" datatype="html">
+        <source>
+            Password is required !
+          </source>
+          <target>Mot de passe requis !</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Password required</note>
+      </trans-unit>
+      <trans-unit id="passwordValidation" datatype="html">
+        <source>
+            Email and password does not match !
+          </source>
+          <target>L'email et le mot de passe ne correspondent pas!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Password validation</note>
+      </trans-unit>
+      <trans-unit id="goToLoginFirstStep" datatype="html">
+        <source>
+              Back
+            </source>
+        <target>Retour</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Go to login first step</note>
+      </trans-unit>
+      <trans-unit id="goToDashboard" datatype="html">
+        <source>
+              Connect
+            </source>
+            <target>Relier</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Go to dashboard</note>
+      </trans-unit>
+      <trans-unit id="welcomeAddress" datatype="html">
+        <source>
+    Welcome to Dashboard!
+  </source>
+  <target>Bienvenue dans Dashboard!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Addressing the user</note>
+      </trans-unit>
+      <trans-unit id="logoText" datatype="html">
+        <source>Logo</source>
+        <target>Logo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/header/header.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Logo text</note>
+      </trans-unit>
+      <trans-unit id="loginRouteText" datatype="html">
+        <source>Log out</source>
+        <target>Connectez - Out</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/header/header.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Login route text</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

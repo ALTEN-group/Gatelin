@@ -1,0 +1,9 @@
+<p-selectButton
+    [id]="config().key"
+    class="control"
+    [options]="selectOptions()"
+    [formControl]="control()"
+    [multiple]="options().multipleSelectButton ?? false"
+    [unselectable]="unselectable()"
+    [class.p-disabled]="isDisabled()"
+/>   

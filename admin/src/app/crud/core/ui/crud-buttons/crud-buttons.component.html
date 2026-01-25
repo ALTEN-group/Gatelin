@@ -1,0 +1,70 @@
+@switch (type()) {
+    @case ("validate") {
+        <p-button
+            [label]="label() ? label() : 'Valider'"
+            [icon]="icon() ? icon() : ''"
+            [severity]="severity() ? severity() : 'primary'"
+            [disabled]="disabled()"
+            [loading]="loading()"
+            (onClick)="clicked.emit()"
+            [protectFeature]="functionalityKey()"
+            [minimalOperation]="3"
+            data-testid="validate-button"
+        />
+    }
+    @case ("cancel") {
+        <p-button pRipple    
+            [label]="label() ? label() : 'Annuler'"
+            [disabled]="disabled()"
+            [loading]="loading()"
+            [icon]="icon() ? icon() : 'pi pi-times'"
+            [severity]="severity() ? severity() : 'primary'"
+            icon="pi pi-times"
+            iconPos="left"
+            text
+            outlined
+            (onClick)="clicked.emit()"
+            data-testid="cancel-button"
+        />
+    }
+    @case ("delete") {
+        <p-button pRipple
+            outlined
+            [protectFeature]="functionalityKey()"
+            [label]="label() ? label() : 'Supprimer'"
+            [disabled]="disabled()"
+            [severity]="severity() ? severity() : 'primary'"
+            [loading]="loading()"
+            [icon]="icon() ? icon() : ''"
+            [minimalOperation]="3"
+            (onClick)="clicked.emit()"
+            data-testid="delete-button"
+        />
+    }
+    @case ("edit") {
+        <p-button pRipple
+            [outlined]="true"
+            [protectFeature]="functionalityKey()"
+            [minimalOperation]="2"
+            [label]="label() ? label() : 'Modifier'"
+            [severity]="severity() ? severity() : 'primary'"
+            [disabled]="disabled()"
+            [loading]="loading()"
+            [icon]="icon() ? icon() : ''"
+            (onClick)="clicked.emit()"
+            data-testid="edit-button"
+        />
+    }
+    @case ("simple-icon") {
+        <p-button pRipple
+            pButtonIcon
+            text
+            [protectFeature]="functionalityKey()"
+            [icon]="icon()"
+            [severity]="severity() ? severity() : 'primary'"
+            [disabled]="disabled()"
+            (onClick)="clicked.emit()"
+            data-testid="simple-icon-button"
+        />
+    }
+}

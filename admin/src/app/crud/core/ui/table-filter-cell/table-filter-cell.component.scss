@@ -1,0 +1,33 @@
+:host {
+    display: block;
+    padding: 2px;
+}
+
+::ng-deep p-columnfilter {
+    p-datepicker .p-datepicker .p-inputtext,
+    p-columnfilterformelement,
+    .p-inputtext,
+    .p-multiselect {
+        width: 100% !important;
+    }
+}
+
+.select-option-container {
+    display: flex;
+    align-items: center;
+
+    i {
+        margin-right: 5px;
+    }
+}
+
+p-slider {
+    margin-top: 1rem;
+    display: block;
+}
+
+.flex-space {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}

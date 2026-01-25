@@ -1,0 +1,62 @@
+<p-datepicker #calendar
+  [(ngModel)]="dateValue"
+  appendTo="body"
+  [dateFormat]="dateFormat()"
+  [selectionMode]="dateSelectionMode()"
+  [showTime]="dateShowTime()"
+  [timeOnly]="options().dateTimeOnly"
+  [showSeconds]="options().dateShowSeconds"
+  [stepHour]="options().dateStepHours ?? 1"
+  [stepMinute]="options().dateStepMinutes ?? 1"
+  [panelStyle]="{width: dateOverlayWidth() }"
+  [hideOnDateTimeSelect]="options().dateHideOverlayOnSelect ?? false"
+  [firstDayOfWeek]="1"
+  [minDate]="options().dateMin"
+  [maxDate]="options().dateMax"
+  [maxDateCount]="options().dateMaxCount"
+  [disabledDates]="options().dateDisabledDates ?? []"
+  [disabledDays]="options().dateDisabledDays ?? []"
+  [numberOfMonths]="options().dateNumberOfMonths ?? 1"
+  [view]="options().dateViewMode ?? 'date'"
+  [readonlyInput]="options().dateReadonlyInput ?? false"
+  [disabled]="isDisabled()"
+  (onInput)="onDateTyped($event)"
+  (onSelect)="onDateSelected()"
+  (onClearClick)="onDateCleared()"
+  (onShow)="emitInteractionEvent('panelOpen')"
+  (onClose)="emitInteractionEvent('panelClose')">
+
+    <ng-template #footer>
+        <div class="calendar-footer">  
+            <div>          
+                <p-button 
+                    label="Fermer" 
+                    [text]="true"
+                    (click)="calendar.hideOverlay()"
+                />
+                @if (!options().dateTimeOnly) {
+                    <p-button 
+                        label="Effacer"
+                        [text]="true"
+                        severity="warn"
+                        (click)="calendar.clear()"
+                    />
+                }
+            </div>
+            <div>
+                @if (!options().dateTimeOnly) {
+                    <p-button 
+                        label="Aujourd'hui" 
+                        [outlined]="true"
+                        (click)="selectToday()"
+                    />
+                }
+                <p-button 
+                    label="Valider" 
+                    (click)="calendar.hideOverlay()"
+                />
+            </div>
+        </div>
+    </ng-template>
+
+</p-datepicker>

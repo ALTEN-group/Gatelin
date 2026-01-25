@@ -1,0 +1,64 @@
+.animated-background {
+  width: 100%;
+  height: calc(100vh - 3px);
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.login-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+
+  &.p-card {
+    .p-card-header {
+      text-align: center;
+      padding-top: 1rem;
+
+      .header-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 1rem;
+        display: block;
+      }
+
+      .user-icon {
+        .p-avatar {
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .input-container {
+      position: relative;
+      margin-bottom: 2rem;
+
+      .error-container {
+        position: absolute;
+        bottom: -1.25rem;
+        left: 10px;
+        color: var(--p-red-500);
+      }
+    }
+
+    .card-actions {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+
+      p-button,
+      button {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      .p-disabled {
+        opacity: 0.7;
+      }
+    }
+  }
+}

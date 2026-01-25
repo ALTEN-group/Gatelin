@@ -1,0 +1,39 @@
+.table-control {
+
+    .p-datatable-header {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    th,
+    td {
+        text-align: center;
+
+        &.pointer {
+            cursor: pointer;
+        }
+    }
+
+    tr {
+        height: 40px;
+    }
+
+    .p-dropdown-label,
+    .p-inputtext {
+        padding: 0.5rem;
+    }
+
+    .multiselect-footer {
+        text-align: right;
+        margin: 0.5rem;
+    }
+
+    .edit-buttons-container {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100px;
+    }
+}

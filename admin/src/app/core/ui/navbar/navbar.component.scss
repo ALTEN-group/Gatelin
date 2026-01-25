@@ -1,0 +1,57 @@
+.navbar {
+  display: flex;
+  position: relative;
+  align-items: center;
+  height: 100%;
+
+  .right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .user-button {
+      margin: 0 5px;
+      display: flex;
+      align-items: center;
+
+      img,
+      button {
+        margin-right: 10px;
+        margin-left: 1rem;
+        height: 2.5rem;
+        width: 2.5rem;
+      }
+      
+    
+    .online-status {
+      .p-menuitem-link, .p-menuitem-icon, .p-menuitem-text {
+        color: green;
+        cursor: auto;
+        cursor: auto;
+        background: transparent;
+      }
+    }
+
+    .offline-status {
+      .p-menuitem-link, .p-menuitem-icon, .p-menuitem-text {
+        color: red;
+        cursor: auto;
+        cursor: auto;
+        background: transparent;
+      }
+    } 
+    }
+
+  }
+
+  .user-button {
+    position: relative;
+    height: 40px;
+  }
+}
+
+.p-menu {
+  top: 50px !important;
+  left: -80px !important;
+}

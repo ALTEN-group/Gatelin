@@ -1,0 +1,5 @@
+  @if (code$ | async; as code) {
+    <p-card [header]="'Erreur ' + code">
+      <h4>{{code | errorTranslate}}</h4>
+    </p-card>
+  }

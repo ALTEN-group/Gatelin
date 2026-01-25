@@ -1,0 +1,27 @@
+<p-panel
+  (mouseover)="sidenavService.setExpanded(true)"
+  (mouseleave)="sidenavService.setExpanded(false)"
+  [class.collapsed]="!sidenavService.getExpanded()">
+
+  <ng-template pTemplate="header">
+    <div [routerLink]="'/'" class="header">
+      @if (!sidenavService.getExpanded()) {
+        <img src="assets/logo_admin_mini.png" alt="logo" width="40"/>
+      } @else {
+        <img src="assets/logo_admin_small.png" alt="logo" width="140"/>
+      }
+    </div>
+    <i class="pi pi-angle-double-{{sidenavService.getExpanded() ? 'left' : 'right'}} toggle-icon"
+      (click)="sidenavService.togglePinned()">
+    </i>
+  </ng-template>
+
+    @if (sideNavItems()) {
+      <p-panelMenu #panelMenu
+        [model]="sideNavItems()"
+        [multiple]="false"
+        styleClass="sidenav"
+        [style]="{'width':'100%'}"
+      />
+    }
+</p-panel>
