@@ -635,30 +635,30 @@
                   }
                 },
                 "filterByNameContains": {
-                  "summary": "Filter: Name contains 'users'",
+                  "summary": "Filter: Service contains 'gatelin'",
                   "value": {
                     "pagination": true,
                     "first": 0,
                     "rows": 10,
-                    "sortField": "name",
+                    "sortField": "service",
                     "sortOrder": "ASC",
                     "filters": {
-                      "name": {
-                        "value": "users",
+                      "service": {
+                        "value": "gatelin",
                         "matchMode": "contains"
                       }
                     }
                   }
                 },
-                "filterByNameStartsWith": {
-                  "summary": "Filter: Name starts with 'auth'",
+                "filterByServiceStartsWith": {
+                  "summary": "Filter: Service starts with 'gate'",
                   "value": {
                     "pagination": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
-                      "name": {
-                        "value": "auth",
+                      "service": {
+                        "value": "gate",
                         "matchMode": "startsWith"
                       }
                     }
@@ -673,7 +673,7 @@
                     "sortField": "serviceId",
                     "sortOrder": "ASC",
                     "filters": {
-                      "serviceId": {
+                      "id": {
                         "value": 1,
                         "matchMode": "equals"
                       }
@@ -693,7 +693,7 @@
                         "value": true,
                         "matchMode": "equals"
                       },
-                      "serviceId": {
+                      "id": {
                         "value": 1,
                         "matchMode": "equals"
                       }
@@ -730,13 +730,13 @@
                     }
                   }
                 },
-                "sortByNameDesc": {
-                  "summary": "Sort: By name descending",
+                "sortByServiceDesc": {
+                  "summary": "Sort: By service descending",
                   "value": {
                     "pagination": true,
                     "first": 0,
                     "rows": 10,
-                    "sortField": "name",
+                    "sortField": "service",
                     "sortOrder": "DESC",
                     "filters": {}
                   }

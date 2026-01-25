@@ -7,22 +7,15 @@ sequenceDiagram
   autonumber
   actor c as Client
   participant gw as ms_gateway
-  participant rs as route_service
-  participant cs as consumer_service
   participant ms as target_microservice
-  participant db as target_db
   
   c->>gw: HTTP Request (Method + URL + Headers + Body)
   activate gw
   
-  gw--)gw: Extract originalUrl and method
-  
   rect rgb(100, 150, 200, 0.3)
-    note over gw,rs: checkRoute middleware
-    gw->>rs: getOne(originalUrl, method)
-    activate rs
-    rs-->>gw: Route found or null
-    deactivate rs
+    note over gw: checkRoute middleware (global)
+    gw--)gw: Extract originalUrl and method
+    gw--)gw: routeSvc.getOne(originalUrl, method) - check route exists in cache
     
     rect rgb(150, 50, 50, 0.5)
       break when route not found
@@ -31,55 +24,44 @@ sequenceDiagram
       end
     end
     
-    gw--)gw: Add route info to req object
-    gw--)gw: Set req.isProtected = route.jwt
+    gw--)gw: Set res.locals.route = { isProtected: route.jwt, serviceName: route.serviceName }
   end
   
   rect rgb(100, 200, 150, 0.3)
-    note over gw: decodeAccess middleware
-    gw--)gw: Extract JWT token from headers
-    gw--)gw: Decode access token (if present)
-    gw--)gw: Add decoded token to req object
-  end
-  
-  rect rgb(200, 150, 100, 0.3)
-    note over gw,cs: checkConsumer middleware
-    gw->>cs: getOne(originalUrl, method)
-    activate cs
-    cs-->>gw: Consumer found or null
-    deactivate cs
+    note over gw: checkRequest middleware stack
+    gw--)gw: parseBearer - extract Bearer token from Authorization header
+    gw--)gw: decodeAccess - decode and validate access token
+    gw--)gw: getFromCache - retrieve consumer from cache by access token
     
     rect rgb(150, 50, 50, 0.5)
-      break when consumer not found
+      break when consumer not found in cache
         gw--)gw: log 404 consumer not found
         gw->>c: return 404 consumer not found
       end
     end
     
-    gw--)gw: Add consumer info to req object
+    gw--)gw: Set res.locals.consumer = consumer from cache
   end
   
   rect rgb(150, 100, 200, 0.3)
     note over gw: stripUrl middleware
-    gw--)gw: Extract route pattern from req.route
-    gw--)gw: Strip pattern from originalUrl
+    gw--)gw: Extract pattern from req.route.pattern
+    gw--)gw: If pattern starts with ~, strip regex pattern from URL
     gw--)gw: Update req.url with stripped URL
   end
   
   rect rgb(200, 200, 100, 0.3)
     note over gw,ms: forwardToService controller
-    gw--)gw: Extract method, headers, serviceName, route, body
+    gw--)gw: Extract method from req.method
+    gw--)gw: Extract serviceName from req.route.serviceName
+    gw--)gw: Extract route from req.url, body from req.body
     gw--)gw: Construct service URL
-    note right of gw: serviceUrl = SERVER_SCHEME + APP_NAME + serviceName + ENV_NAME + PORT + route
+    note right of gw: serviceUrl = SERVER_SCHEME + APP_NAME + "-" + serviceName + "-" + ENV_NAME + ":" + PORT + route
     
-    gw->>ms: HTTP Request (method, serviceUrl, body, headers)
+    gw->>ms: HTTP Request (method, serviceUrl, body, additionalHeaders)
     activate ms
     
-    ms--)ms: Process business logic
-    ms->>db: Database operations (if needed)
-    activate db
-    db-->>ms: Database response
-    deactivate db
+    ms--)ms: Process request and return response
     
     ms-->>gw: HTTP Response (status, data)
     deactivate ms
