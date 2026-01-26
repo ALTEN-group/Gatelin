@@ -596,7 +596,7 @@
                 "withPagination": {
                   "summary": "Search with pagination (recommended)",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "id",
@@ -607,7 +607,7 @@
                 "filterJwtEnabled": {
                   "summary": "Filter: JWT enabled routes",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "id",
@@ -623,7 +623,7 @@
                 "filterJwtDisabled": {
                   "summary": "Filter: JWT disabled routes",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
@@ -637,7 +637,7 @@
                 "filterByNameContains": {
                   "summary": "Filter: Service contains 'gatelin'",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "service",
@@ -653,7 +653,7 @@
                 "filterByServiceStartsWith": {
                   "summary": "Filter: Service starts with 'gate'",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
@@ -667,7 +667,7 @@
                 "filterByServiceId": {
                   "summary": "Filter: By service ID",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "serviceId",
@@ -683,7 +683,7 @@
                 "filterMultipleConditions": {
                   "summary": "Filter: Multiple conditions (JWT + service)",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "id",
@@ -703,7 +703,7 @@
                 "filterIdGreaterThan": {
                   "summary": "Filter: ID greater than 5",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "id",
@@ -719,7 +719,7 @@
                 "filterIdInArray": {
                   "summary": "Filter: ID in specific set",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
@@ -733,7 +733,7 @@
                 "sortByServiceDesc": {
                   "summary": "Sort: By service descending",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "sortField": "service",
@@ -744,7 +744,7 @@
                 "paginationSecondPage": {
                   "summary": "Pagination: Second page (10-20)",
                   "value": {
-                    "pagination": true,
+                    "paginate": true,
                     "first": 10,
                     "rows": 10,
                     "sortField": "id",
@@ -753,9 +753,9 @@
                   }
                 },
                 "withoutPagination": {
-                  "summary": "Search without pagination (no total)",
+                  "summary": "Search without pagination",
                   "value": {
-                    "pagination": false,
+                    "paginate": false,
                     "filters": {}
                   }
                 }
