@@ -12,6 +12,6 @@
  * // Use as final middleware in route
  * router.delete('/resource', deleteResource, send204);
  */
-export default function send204(_req, res, _next) {
+export function send204(_req, res, _next) {
   res.status(204).send();
 }

@@ -19,7 +19,7 @@ const ep = `-${ENV_NAME}:${PORT}`;
  * import forwardToService from './controllers/proxy.js';
  * app.use('/', forwardToService);
  */
-export default function forwardToService(req, res, next) {
+export function forwardToService(req, res, next) {
   const method = req.method; // GET, POST, etc.
   const serviceName = req.route.serviceName; // Target microservice name
   const route = req.url; // Request URL path

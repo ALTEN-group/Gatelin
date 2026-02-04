@@ -7,14 +7,14 @@ const router = express.Router();
 
 import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
-import getUserByEmail from "../middlewares/http/get-user.js";
-import checkPwd from "../middlewares/http/check-pwd.js";
-import checkRefreshToken from "../middlewares/validators/check-refreshToken.js";
-import ignoreExpiration from "../middlewares/mappers/ignore-expiration.js";
+import { getUserByEmail } from "../middlewares/http/get-user.js";
+import { checkPwd } from "../middlewares/http/check-pwd.js";
+import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
+import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
 import { getFromCache, addToCache, updateCache, deleteFromCache } from "../middlewares/cache/consumer.js";
-import sendConsumer from "../middlewares/res/send-consumer.js";
-import createRow from "../middlewares/mappers/consumer/createRow.js";
-import send204 from "../middlewares/res/send-204.js";
+import { sendConsumer } from "../middlewares/res/send-consumer.js";
+import { createRow } from "../middlewares/mappers/consumer/createRow.js";
+import { send204 } from "../middlewares/res/send-204.js";
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];

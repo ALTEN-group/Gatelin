@@ -1,6 +1,6 @@
 // @ts-check
 
-export default function createRow(req, res, next) {
+export function createRow(req, res, next) {
   
   // Ensure req.body exists (DELETE requests may not have a body)
   if (!req.body) req.body = {};

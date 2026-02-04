@@ -31,7 +31,7 @@ const url = `${MSUSER_URL}/users/`;
  *   req.body = { rows: [{ nickname: string, rolesArrayAgg: number[] }]}
  *   res.locals = { user: { id: string, active: boolean } }
  */
-export default function getUserByEmail(req, res, next) {
+export function getUserByEmail(req, res, next) {
   const filters = { // Create filters for the query
     email: { 
       value: req.body.email, 

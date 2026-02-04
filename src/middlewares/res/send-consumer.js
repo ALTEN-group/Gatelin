@@ -14,7 +14,7 @@ import cEnt from "../../entities/consumer.js";
  * // Use as final middleware in route
  * router.post('/consumers', addConsumer, sendConsumer);
  */
-export default function sendConsumer(req, res, _next) {
+export function sendConsumer(req, res, _next) {
   const data = deleteProps(req.body.rows, cEnt.unsafeProps);
   res.status(200).json(data[0]);
 }

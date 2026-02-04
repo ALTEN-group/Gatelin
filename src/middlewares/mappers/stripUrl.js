@@ -22,7 +22,7 @@ import { log } from "@dwtechs/winstan";
  * // Original URL: "/api/auth/login" 
  * // After stripping: "/api/auth/login" (no change for non-regex patterns)
  */
-export default function stripUrl(req, res, next) {
+export function stripUrl(req, res, next) {
   const u = req.originalUrl;
   const p = req.route.pattern;
   log.debug(`stripUrl(originalUrl=${u}, pattern=${p})`);

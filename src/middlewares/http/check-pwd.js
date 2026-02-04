@@ -30,7 +30,7 @@ const url = `${MSAUTH_URL}/login/`;
  * OUTPUT:
  *   No changes - validates credentials or throws error
  */
-export default function checkPwd(req, res, next) {
+export function checkPwd(req, res, next) {
   
   const id = res.locals.user.id; // user id from previous middleware
   const pwd = req.body.pwd; // password from request body
