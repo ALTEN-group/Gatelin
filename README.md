@@ -52,6 +52,11 @@ DB_PASSWORD=your_password
 ACCESS_TOKEN_DURATION=15m
 REFRESH_TOKEN_DURATION=7d
 TOKEN_SECRET=your_token_secret_min_32_chars
+
+# Microservices URLs (Required)
+# Gatelin requires these URLs to communicate with internal microservices
+MSAUTH_URL=http://gatelin-ms-auth-mock-local:3000    # Authentication microservice URL
+MSUSER_URL=http://gatelin-ms-user-mock-local:3000    # User management microservice URL
 ```
 
 **JWT Token Flow:**
@@ -405,17 +410,3 @@ npm run test:coverage
 - Security headers are automatically applied via Helmet.js
 - Role-based access control (RBAC) is enforced via ACL validation
 
-## Dependencies
-
-- **express** - Web framework
-- **helmet** - Security headers
-- **@dwtechs/toker-express** - JWT token management
-- **@dwtechs/antity-pgsql** - PostgreSQL entity management
-- **@dwtechs/winstan** - Logging
-- **@dwtechs/servpico-express** - Server utilities
-- **@dwtechs/errandler-express** - Error handling
-- **@dwtechs/healix-express** - Health check endpoints
-
-## License
-
-ISC
