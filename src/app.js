@@ -47,8 +47,8 @@ app.use(startTimer);
 // Validate route
 app.use(checkRoute);
 // Routes
-app.use("/consumers", consumer);
-app.use("/routes", ...checkRequest, route, send);
+app.use("/gatelin/consumers", consumer);
+app.use("/gatelin/routes", ...checkRequest, route, send);
 app.use("/", proxy);
 
 // Performance measurement ends
