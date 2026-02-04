@@ -7,7 +7,7 @@ const router = express.Router();
 
 import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
-import getUserByEmail from "../middlewares/http/get-user-by-email.js";
+import getUserByEmail from "../middlewares/http/get-user.js";
 import checkPwd from "../middlewares/http/check-pwd.js";
 import checkRefreshToken from "../middlewares/validators/check-refreshToken.js";
 import ignoreExpiration from "../middlewares/mappers/ignore-expiration.js";
