@@ -43,7 +43,6 @@ services:
   traefik:
     image: traefik:${TRAEFIK_VERSION}
     container_name: ${TRAEFIK_HOST}
-    hostname: ${TRAEFIK_HOST}
     command:
       - --providers.docker=true
       - --providers.docker.network=${APP_NAME}-internal-${ENV_NAME}
@@ -81,7 +80,6 @@ services:
       args:
         LIQUIBASE_VERSION: ${LIQUIBASE_VERSION}
     container_name: ${GATELIN_MIGRATION_HOST}
-    hostname: ${GATELIN_MIGRATION_HOST}
     environment:
       TZ: ${TZ}
       LIQUIBASE_COMMAND_USERNAME: ${LIQUIBASE_DB_USER}
@@ -116,7 +114,6 @@ services:
         NODE_ENV: ${NODE_ENV}
     image: dwtechs/gatelin:${NODE_ENV:-development}
     container_name: ${GATELIN_HOST}
-    # hostname: ${GATELIN_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
@@ -169,7 +166,6 @@ services:
         NODE_VERSION: ${NODE_VERSION}
         NODE_ENV: ${NODE_ENV}
     container_name: ${ADMIN_HOST}
-    # hostname: ${ADMIN_HOST}
     networks:
       - internal
     volumes:
@@ -186,7 +182,6 @@ services:
   adminer:
     image: ${ADMINER_VERSION}
     container_name: ${ADMINER_HOST}
-    hostname:  ${ADMINER_HOST}
     environment:
       ADMINER_DEFAULT_SERVER: ${POSTGRES_HOST}
       ADMINER_DEFAULT_DRIVER: pgsql
@@ -206,7 +201,6 @@ services:
 
   dozzle:
     container_name: ${DOZZLE_HOST}
-    hostname: ${DOZZLE_HOST}
     image: ghcr.io/amir20/dozzle:latest
     environment:
       DOZZLE_BASE: /dozzle
@@ -233,7 +227,6 @@ services:
         NODE_VERSION: ${NODE_VERSION}
         NODE_ENV: ${NODE_ENV}
     container_name: ${SWAGGER_HOST}
-    hostname: ${SWAGGER_HOST}
     environment:
       SERVICE_NAME: ${SWAGGER_HOST}
       PORT: ${DEFAULT_PORT}
