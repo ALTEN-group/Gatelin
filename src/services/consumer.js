@@ -45,29 +45,6 @@ function getOne(accessToken) {
   return consumers.find((r) => r.accessToken === accessToken);
 }
 
-// function updateOne(id, accessToken, refreshToken) {
-//   // const cols = consumer.getCols("update", true);
-//   // const query = [`${cols} WHERE id = $${cols.length + 1}`];
-//   const args = [accessToken, refreshToken];
-//   const filters = { id: { value: id } };
-//   return consumer
-//     .update(filters, args, null)
-//     .then(() => updateCache(id, accessToken, refreshToken));
-// }
-
-/**
- * Deletes a single consumer from the database based on the provided id.
- * As a result it will log him out and remove it from the cache
- *
- * @param {number} consumerId - The consumer id to delete
- * @return {Promise<void>}
- */
-// function deleteOne(consumerId) {
-//   return consumer
-//     .deleteOne(consumerId)
-//     .then(() => deleteCache(consumerId));
-// }
-
 /**
  * Adds a consumer to the cache with the provided details.
  * Creates a copy of the consumer object to avoid reference issues.

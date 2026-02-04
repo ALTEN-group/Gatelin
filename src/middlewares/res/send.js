@@ -14,6 +14,6 @@ function send(_req, res) {
   
 }
 
-export default {
+export {
   send,
 };

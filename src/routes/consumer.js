@@ -43,6 +43,7 @@ const del = [
   getConsumer,
   deleteConsumer
 ];
+
 //Routes
 
 // add a consumer. e.g. Log a user

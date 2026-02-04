@@ -47,7 +47,7 @@ export default function checkRoute(req, res, next) {
   log.debug(`Route : ${JSON.stringify(r)}`);
   log.debug(`isProtected : ${r.jwt}`);
   
-  // Add custom properties to request object for downstream middleware
+  // Add custom properties to locals object for downstream middleware
   res.locals.route = { 
     isProtected: r.jwt, 
     serviceName: r.serviceName

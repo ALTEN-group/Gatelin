@@ -4,7 +4,7 @@ import { getFromCache } from "../cache/consumer.js";
 
 // middleware sub-stacks
 export const checkRequest = [
-  parseBearer,
-  decodeAccess,
-  getFromCache,
+  parseBearer,   // Extracts Bearer token from Authorization header
+  decodeAccess,  // Decodes and verifies JWT access token
+  getFromCache,  // Retrieves consumer session from cache
 ];

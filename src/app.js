@@ -31,8 +31,9 @@ import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 
 // middlewares
-import res from "./middlewares/res.js";
+import { send } from "./middlewares/res/send.js";
 import checkRoute from "./middlewares/validators/check-route.js";
+import { checkRequest } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
 
 // Routes
 import consumer from "./routes/consumer.js";
@@ -47,7 +48,7 @@ app.use(startTimer);
 app.use(checkRoute);
 // Routes
 app.use("/consumers", consumer);
-app.use("/routes", route, res.send);
+app.use("/routes", ...checkRequest, route, send);
 app.use("/", proxy);
 
 // Performance measurement ends

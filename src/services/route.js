@@ -1,8 +1,16 @@
 // @ts-check
 
-import { execute, filter } from "@dwtechs/antity-pgsql";
+import { execute } from "@dwtechs/antity-pgsql";
 import route from "../entities/route.js";
+import { stripTrailingSlash } from "../utils/url.js";
 
+/**
+ * @typedef {Object} RouteConfig
+ * @property {string} pattern - The URL pattern to match (prefix with ~ for regex)
+ * @property {string[]} methods - Array of allowed HTTP methods
+ */
+
+/** @type {RouteConfig[]|null} */
 let routes = null;
 
 /**
@@ -26,6 +34,20 @@ function init() {
   });
 }
 
+/**
+ * Finds a route configuration that matches the given URL and HTTP method.
+ * Routes are matched using regex patterns - if a route pattern starts with '~',
+ * it's treated as a regex pattern (with the '~' stripped), otherwise it's used as-is.
+ * The URL is normalized by removing trailing slashes before matching.
+ *
+ * @param {string} requestUrl - The incoming request URL to match against route patterns
+ * @param {string} requestMethod - The HTTP method (GET, POST, PUT, DELETE, etc.)
+ * @return {Object|undefined} The matching route object with pattern, methods, and other config, or undefined if no match
+ * @example
+ * // Route with pattern: "~/api/users/[0-9]+" and methods: ["GET"]
+ * getOne('/api/users/123', 'GET') // returns the matching route
+ * getOne('/api/users/abc', 'GET') // returns undefined (no match)
+ */
 function getOne(requestUrl, requestMethod) {
   const actualUrl = stripTrailingSlash(requestUrl);
   return routes.find(
@@ -34,10 +56,6 @@ function getOne(requestUrl, requestMethod) {
         r.pattern.startsWith("~") ? r.pattern.slice(1) : r.pattern,
       ).test(actualUrl) && r.methods.includes(requestMethod),
   );
-}
-
-function stripTrailingSlash(url) {
-  return url.replace(/\/$/, "");
 }
 
 export default {
