@@ -10,7 +10,6 @@ import { checkRequest } from "../middlewares/validators/check-request.js";
 // Dispatch request - catch all routes using regex
 router.all(/^\/.*/, 
   ...checkRequest, 
-  stripUrl,
   forwardToService
 );
 

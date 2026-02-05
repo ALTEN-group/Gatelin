@@ -7,13 +7,11 @@ export default function updateHeaderWithConsumer(req, res, next) {
   const decodedAccessToken = req.decodedAccessToken;
   const consumer = res.rows[0];
   const nickname = consumer.nickname;
-  log.debug(
-    `updateHeaders(decodedAccessToken=${JSON.stringify(decodedAccessToken)})`,
-  );
   if (!decodedAccessToken.iss) return next();
   req.additionalHeaders = {
     "x-consumer-id": decodedAccessToken.iss,
     "x-consumer-name": nickname,
   };
+  log.debug(`updateHeaders(${JSON.stringify(req.additionalHeaders)})`);
   next();
 }

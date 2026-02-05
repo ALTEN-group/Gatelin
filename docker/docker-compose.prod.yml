@@ -13,4 +13,3 @@ services:
         NODE_ENV: ${NODE_ENV}
     image: dwtechs/gatelin:${VERSION:-latest}
     container_name: ${GATELIN_HOST}
-    # hostname: ${GATELIN_HOST}

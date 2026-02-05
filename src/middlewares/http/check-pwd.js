@@ -47,7 +47,7 @@ export function checkPwd(req, res, next) {
   };
   const headers = req.additionalHeaders || {};
   http
-    .query("POST", url, null, { filters }, headers)
+    .query("POST", url, undefined, { filters }, headers)
     .then(() => {
       next(); // Password is valid, proceed to next middleware
     })

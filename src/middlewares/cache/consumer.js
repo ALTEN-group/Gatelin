@@ -55,9 +55,7 @@ export default async function getFromCache(req, res, next) {
     });
   
   log.debug(`Consumer found: ${JSON.stringify(c)}`);
-
   res.locals.consumer = c;
-
   next();
 
 }
@@ -113,12 +111,9 @@ function addToCache(req, res, next) {
  */
 function updateCache(req, res, next) {
   const c = req.body.rows[0];
-
   log.debug(`Updating consumer ${c.id} in cache`);
-
   // Update consumer in cache
   const updatedC = csmerSvc.updateCache(c.id, c.accessToken, c.refreshToken);
-  
   if (!updatedC)
     return next({
       status: 404,
@@ -130,11 +125,8 @@ function updateCache(req, res, next) {
 
 function deleteFromCache(req, res, next) {
   const c = req.body.rows[0];
-
   log.debug(`Deleting consumer ${c.id} from cache`);
-
   csmerSvc.deleteFromCache(c.id);
-
   next();
 }
 

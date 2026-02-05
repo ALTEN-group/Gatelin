@@ -29,7 +29,7 @@ export function forwardToService(req, res, next) {
   const serviceUrl = `${san}${serviceName}${ep}${route}`;
   
   // Forward request to target microservice
-  http.query(method, serviceUrl, null, body, req.additionalHeaders)
+  http.query(method, serviceUrl, undefined, body, req.additionalHeaders)
     .then((r) => res.status(r.status).send(r.data))
     .catch((e) => next(e));
 }

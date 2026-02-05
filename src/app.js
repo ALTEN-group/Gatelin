@@ -1,5 +1,6 @@
 // @ts-check
 import express from "express";
+import cors from "cors";
 import { log } from '@dwtechs/winstan';
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
@@ -12,23 +13,9 @@ const app = express();
 app.use(helmet(helmetConfig));
 app.disable("x-powered-by");
 
-// const { CORS, METHODS } = process.env;
-// const whitelist = [CORS]
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (whitelist.indexOf(origin) !== -1)
-//       callback(null, true)
-//     else
-//       callback(new Error('Not allowed by CORS'))
-//   },
-//   methods: METHODS, // Allowed methods
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-// };
-
-// app.use(cors('*',corsOptions));
-
 import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
+import corsSvc from "./services/cors.js";
 
 // middlewares
 import { send } from "./middlewares/res/send.js";
@@ -39,6 +26,8 @@ import { checkRequest } from "./middlewares/validators/check-request.js"; // Aut
 import consumer from "./routes/consumer.js";
 import proxy from "./routes/proxy.js";
 import route from "./routes/route.js";
+import service from "./routes/service.js";
+import corsRoutes from "./routes/cors.js";
 
 app.use(express.json());
 app.use("/health", healixRouter);
@@ -49,6 +38,8 @@ app.use(checkRoute);
 // Routes
 app.use("/gatelin/consumers", consumer);
 app.use("/gatelin/routes", ...checkRequest, route, send);
+app.use("/gatelin/services", ...checkRequest, service, send);
+app.use("/gatelin/cors", ...checkRequest, corsRoutes, send);
 app.use("/", proxy);
 
 // Performance measurement ends
@@ -61,6 +52,28 @@ errorHandler(app);
 Promise.all([
     routeSvc.init(), 
     consumerSvc.init(),
+    corsSvc.init(),
   ])
-  .then(() => listen(app))
-  .catch((err) => log.error(`App cannot start: ${err.msg}`));
+  .then(() => { 
+    const corsOptions = {
+      origin: (origin, callback) => {
+        // Allow requests with no origin (e.g., mobile apps, Postman)
+        if (!origin) return callback(null, true);
+        
+        // Get fresh whitelist from cache on each request (dynamic updates)
+        const currentWhitelist = corsSvc.getAll();
+        
+        if (currentWhitelist.indexOf(origin) !== -1)
+          callback(null, true);
+        else
+          callback(new Error(`Origin ${origin} not allowed by CORS`));
+      },
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true
+    };
+    
+    app.use(cors(corsOptions));
+    listen(app);
+  })
+  .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));

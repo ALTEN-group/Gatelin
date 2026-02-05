@@ -1,7 +1,17 @@
 // @ts-check
 import { execute } from "@dwtechs/antity-pgsql";
-import consumer from "../entities/consumer.js";
+import cEnt from "../entities/consumer.js";
 
+/**
+ * @typedef {Object} ConsumerCache
+ * @property {number} id - Consumer ID
+ * @property {string} accessToken - JWT access token
+ * @property {string} refreshToken - JWT refresh token
+ * @property {string} nickname - Consumer nickname
+ * @property {number[]} rolesArrayAgg - Array of role IDs
+ */
+
+/** @type {ConsumerCache[]} */
 let consumers = [];
 
 
@@ -19,10 +29,8 @@ let consumers = [];
  * console.log('Consumer cache initialized');
  */
 function init() {
-  const { query, args } = consumer.query.select(false, 0, 0, "id", null, null);
-  return execute(query, args, null).then((res) => {
-    consumers = res.rows;
-  });
+  const { query, args } = cEnt.query.select(false, 0, 0, "id", null, null);
+  return execute(query, args, null).then((r) => consumers = r.rows );
 }
 
 
@@ -32,7 +40,6 @@ function init() {
  * with both the provided access token and refresh token.
  *
  * @param {string} accessToken - The access token of the consumer to retrieve
- * @param {string} refreshToken - The refresh token of the consumer to retrieve
  * @return {object|undefined} The consumer object if found, undefined if no consumer matches the given tokens
  * @example
  * // Get consumer with specific tokens
@@ -49,9 +56,9 @@ function getOne(accessToken) {
  * Adds a consumer to the cache with the provided details.
  * Creates a copy of the consumer object to avoid reference issues.
  *
- * @param {object} consumer - The consumer object containing all relevant details.
+ * @param {ConsumerCache} consumer - The consumer object containing all relevant details.
  * @example
- * addToCache({ id: 1, nickname: 'user', accessToken: '...', refreshToken: '...' });
+ * addToCache({ id: 1, nickname: 'user', accessToken: '...', refreshToken: '...', rolesArrayAgg: [1, 2] });
  */
 function addToCache(consumer) {
   consumers.push({ ...consumer });
@@ -86,10 +93,10 @@ function updateCache(id, accessToken, refreshToken) {
 /**
  * Deletes a consumer from the cache by their ID.
  *
- * @param {string|number} consumerId - The unique identifier of the consumer to be removed from the cache.
+ * @param {string|number} id - The unique identifier of the consumer to be removed from the cache.
  */
-function deleteFromCache(consumerId) {
-  consumers = consumers.filter((r) => r.id !== consumerId);
+function deleteFromCache(id) {
+  consumers = consumers.filter((r) => r.id !== +id);
 }
 
 export default {
