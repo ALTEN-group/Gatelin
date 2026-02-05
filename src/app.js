@@ -8,6 +8,7 @@ import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
 import helmet from "helmet";
 import { helmetConfig } from "./config/helmet.js";
+import { corsOptions } from "./config/cors.js";
 
 const app = express();
 app.use(helmet(helmetConfig));
@@ -48,31 +49,13 @@ app.use(endTimer);
 // Error handling
 errorHandler(app);
 
-// Init reference data
+// Init cached reference data
 Promise.all([
     routeSvc.init(), 
     consumerSvc.init(),
     corsSvc.init(),
   ])
   .then(() => { 
-    const corsOptions = {
-      origin: (origin, callback) => {
-        // Allow requests with no origin (e.g., mobile apps, Postman)
-        if (!origin) return callback(null, true);
-        
-        // Get fresh whitelist from cache on each request (dynamic updates)
-        const currentWhitelist = corsSvc.getAll();
-        
-        if (currentWhitelist.indexOf(origin) !== -1)
-          callback(null, true);
-        else
-          callback(new Error(`Origin ${origin} not allowed by CORS`));
-      },
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true
-    };
-    
     app.use(cors(corsOptions));
     listen(app);
   })

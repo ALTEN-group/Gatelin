@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS service_cors (
 CREATE TABLE IF NOT EXISTS route (
 	id SERIAL PRIMARY KEY,
   "serviceId" INT NOT NULL,
-	name varchar(20) NOT NULL,
+	api varchar(20) NOT NULL,
+  action varchar(20) NOT NULL,
   description varchar(100) NULL,
   pattern varchar(40) NOT NULL,
   methods method[] NOT NULL,

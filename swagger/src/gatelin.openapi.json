@@ -92,11 +92,17 @@
             "description": "ID of the service this route belongs to",
             "example": 1
           },
-          "name": {
+          "api": {
             "type": "string",
             "maxLength": 20,
-            "description": "Route name identifier",
-            "example": "users-get"
+            "description": "API name identifier",
+            "example": "users"
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Action identifier",
+            "example": "get"
           },
           "pattern": {
             "type": "string",
@@ -144,7 +150,7 @@
             "example": "moderator_user"
           }
         },
-        "required": ["serviceId", "name", "pattern", "methods", "jwt"]
+        "required": ["serviceId", "api", "action", "pattern", "methods", "jwt"]
       },
       "service": {
         "type": "object",
@@ -967,11 +973,52 @@
         }
       }
     },
-    "/services": {
-      "get": {
+    "/gatelin/services/search": {
+      "post": {
         "tags": ["Service Management"],
-        "summary": "Get all registered services",
+        "summary": "Search registered services",
         "description": "Retrieve all services configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Number of rows to return",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field to sort by",
+                    "default": "id"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "List of services",
@@ -995,11 +1042,16 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
           }
         }
-      },
+      }
+    },
+    "/gatelin/services": {
       "post": {
         "tags": ["Service Management"],
         "summary": "Register a new service",
@@ -1018,17 +1070,11 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "maxLength": 10
-                  },
-                  "creatorId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "creatorName": {
-                    "type": "string"
+                    "maxLength": 10,
+                    "example": "ms-user-mock"
                   }
                 },
-                "required": ["name", "creatorId", "creatorName"]
+                "required": ["name"]
               }
             }
           }
@@ -1054,13 +1100,150 @@
             "$ref": "#/components/responses/unexpectedError"
           }
         }
+      },
+      "put": {
+        "tags": ["Service Management"],
+        "summary": "Update a service",
+        "description": "Update an existing service configuration",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 10
+                  }
+                },
+                "required": ["id", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/service"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Service Management"],
+        "summary": "Delete a service",
+        "description": "Remove a service configuration from the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Service deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
       }
     },
-    "/cors": {
-      "get": {
+    "/gatelin/cors/search": {
+      "post": {
         "tags": ["CORS Management"],
-        "summary": "Get all CORS configurations",
+        "summary": "Search CORS configurations",
         "description": "Retrieve all CORS origins configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Number of rows to return",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field to sort by",
+                    "default": "id"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "List of CORS configurations",
@@ -1084,15 +1267,20 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
           }
         }
-      },
+      }
+    },
+    "/gatelin/cors": {
       "post": {
         "tags": ["CORS Management"],
         "summary": "Add a new CORS configuration",
-        "description": "Add a new CORS origin to the gateway",
+        "description": "Add a new CORS origin to the gateway whitelist",
         "security": [
           {
             "bearerAuth": []
@@ -1107,17 +1295,11 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "maxLength": 50
-                  },
-                  "creatorId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "creatorName": {
-                    "type": "string"
+                    "maxLength": 50,
+                    "example": "http://localhost:4200"
                   }
                 },
-                "required": ["name", "creatorId", "creatorName"]
+                "required": ["name"]
               }
             }
           }
@@ -1138,6 +1320,102 @@
           },
           "401": {
             "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": ["CORS Management"],
+        "summary": "Update a CORS configuration",
+        "description": "Update an existing CORS origin",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 50
+                  }
+                },
+                "required": ["id", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CORS configuration updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cors"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CORS Management"],
+        "summary": "Delete a CORS configuration",
+        "description": "Remove a CORS origin from the gateway whitelist",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "CORS configuration deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
