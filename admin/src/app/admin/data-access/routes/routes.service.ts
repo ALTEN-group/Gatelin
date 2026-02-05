@@ -10,17 +10,20 @@ const routesApi: string = "routes";
  * Service to manage gateway routes
  */
 @Injectable({
-  providedIn: "root",
+	providedIn: "root",
 })
 export class RoutesService {
-  private readonly crud = new CrudRepository<Route>().with({
-    endpoint: routesApi,
-  });
+	private readonly crud = new CrudRepository<Route>().with({
+		endpoint: routesApi,
+	});
 
-  public readonly httpCalls: Calls<Route> = {
-    get: this.crud.get,
-  };
+	public readonly httpCalls: Calls<Route> = {
+		get: this.crud.get,
+		create: this.crud.create,
+		update: this.crud.update,
+		archive: this.crud.archive,
+	};
 
-  public readonly config = ROUTE_COLUMNS;
-  public readonly entityFactory = routeFactory;
+	public readonly config = ROUTE_COLUMNS;
+	public readonly entityFactory = routeFactory;
 }
