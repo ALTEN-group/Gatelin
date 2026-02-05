@@ -146,4 +146,22 @@ export default new SQLEntity("routes", [
     normalizer: null,
     validator: null
   },
+  {
+    key: "protected",
+    type: "boolean",
+    min: null,
+    max: null,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET"],
+    operations: ["SELECT"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
 ]);

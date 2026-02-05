@@ -3,6 +3,7 @@ import express from "express";
 const router = express.Router();
 
 import rEnt from "../entities/route.js";
+import checkProtectedRoute from "../middlewares/validators/check-protected-route.js";
 
 const getMany = [
   rEnt.get,
@@ -19,12 +20,14 @@ const add = [
 ];
 
 const update = [
+  checkProtectedRoute,
   rEnt.normalizeArray,
   rEnt.validateArray,
   rEnt.update,
 ];
 
 const del = [
+  checkProtectedRoute,
   rEnt.delete,
 ];
 
