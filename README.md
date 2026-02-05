@@ -156,67 +156,218 @@ Authorization: Bearer <access_token>
 
 **Response (204 No Content)**
 
-### Route Management
+### Service Management
 
-#### Create Route
+Services represent the backend microservices that routes can forward requests to.
 
-```
-POST /routes
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "route": "/api/users",
-  "service": "user",
-  "description": "User management service",
-  "pattern": "/api/users",
-  "methods": ["GET", "POST", "PUT", "DELETE"],
-  "jwt": true
-}
-```
-
-#### Update Route
+#### Search Services
 
 ```
-PUT /routes
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "id": 1,
-  "route": "/api/users",
-  "service": "user",
-  "description": "Updated description",
-  "pattern": "/api/users",
-  "methods": ["GET", "POST"],
-  "jwt": true
-}
-```
-
-#### Delete Route
-
-```
-DELETE /routes?id=1
-Authorization: Bearer <access_token>
-```
-
-#### Search Routes
-
-```
-POST /routes/search
+POST /gatelin/services/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
   "filters": {
-    "service": "user"
+    "name": "user"
+  },
+  "pagination": {
+    "limit": 10,
+    "offset": 0
   }
 }
 ```
 
+#### Create Service
+
+```
+POST /gatelin/services
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "name": "user",
+  "creatorId": 1,
+  "creatorName": "admin"
+}
+```
+
+#### Update Service
+
+```
+PUT /gatelin/services
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "id": 1,
+  "name": "user-service",
+  "updaterId": 1,
+  "updaterName": "admin"
+}
+```
+
+#### Delete Service
+
+```
+DELETE /gatelin/services?id=1,2,3
+Authorization: Bearer <access_token>
+```
+
+### CORS Management
+
+CORS origins are stored in the database and dynamically applied without requiring a service restart.
+
+#### Search CORS Origins
+
+```
+POST /gatelin/cors/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "filters": {
+    "name": "https://app.example.com"
+  },
+  "pagination": {
+    "limit": 10,
+    "offset": 0
+  }
+}
+```
+
+#### Add CORS Origin
+
+```
+POST /gatelin/cors
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "name": "https://app.example.com",
+  "creatorId": 1,
+  "creatorName": "admin"
+}
+```
+
+**Response (201 Created):** The new origin is immediately added to the CORS whitelist.
+
+#### Update CORS Origin
+
+```
+PUT /gatelin/cors
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "id": 1,
+  "name": "https://updated.example.com",
+  "updaterId": 1,
+  "updaterName": "admin"
+}
+```
+
+**Response (200 OK):** The CORS whitelist is automatically updated.
+
+#### Delete CORS Origin
+
+```
+DELETE /gatelin/cors?id=1,2,3
+Authorization: Bearer <access_token>
+```
+
+**Response (204 No Content):** Origins are removed from the CORS whitelist immediately.
+
+### Route Management
+
+Routes define how incoming requests are matched and forwarded to services.
+
+#### Search Routes
+
+```
+POST /gatelin/routes/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "filters": {
+    "serviceId": 1,
+    "api": "users"
+  },
+  "pagination": {
+    "limit": 10,
+    "offset": 0
+  }
+}
+```
+
+#### Create Route
+
+```
+POST /gatelin/routes
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "serviceId": 2,
+  "api": "users",
+  "action": "search",
+  "description": "Search users",
+  "pattern": "/users/search",
+  "methods": ["POST", "OPTIONS"],
+  "jwt": true,
+  "creatorId": 1,
+  "creatorName": "admin"
+}
+```
+
+**Response (201 Created):** The route is cached and immediately available.
+
+**Route Fields:**
+- `serviceId`: ID of the target service
+- `api`: API name (e.g., "users", "products")
+- `action`: Action performed (e.g., "search", "add", "update", "delete")
+- `description`: Human-readable description
+- `pattern`: URL pattern to match (regex supported)
+- `methods`: Array of HTTP methods (GET, POST, PUT, PATCH, DELETE, OPTIONS)
+- `jwt`: Whether JWT authentication is required (true/false)
+
+#### Update Route
+
+```
+PUT /gatelin/routes
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "id": 1,
+  "serviceId": 2,
+  "api": "users",
+  "action": "list",
+  "description": "Updated description",
+  "pattern": "/users",
+  "methods": ["GET", "OPTIONS"],
+  "jwt": true,
+  "updaterId": 1,
+  "updaterName": "admin"
+}
+```
+
+**Response (200 OK):** The route cache is automatically updated.
+
+#### Delete Route
+
+```
+DELETE /gatelin/routes?id=1,2,3
+Authorization: Bearer <access_token>
+```
+
+**Response (204 No Content):** Routes are removed from cache immediately
+```
+
 ### Proxy (Request Forwarding)
 
-All requests not matching `/health`, `/consumers`, or `/routes` are treated as proxy requests and forwarded to the appropriate microservice based on route configuration.
+All requests not matching `/health`, `/gatelin/*` (admin endpoints), or `/consumers` are treated as proxy requests and forwarded to the appropriate microservice based on route configuration.
 
 **Example:**
 
@@ -268,23 +419,61 @@ Client Response
 
 ### Services
 
-- **routeSvc**: Manages route configuration and caching
+- **routeSvc**: Manages route configuration and caching (auto-updates on add/update/delete)
 - **consumerSvc**: Manages consumer sessions and authentication
+- **corsSvc**: Manages CORS origins whitelist (auto-updates on add/update/delete)
 - **http**: HTTP client for forwarding requests to microservices
 
 ## Data Models
+
+### Service
+
+```javascript
+{
+  id: integer,
+  name: string,            // Service name (max 10 chars, e.g., "user", "auth")
+  creatorId: integer,      // ID of user who created the service
+  creatorName: string,     // Name of user who created the service
+  updaterId: integer,      // ID of user who last updated (optional)
+  updaterName: string,     // Name of user who last updated (optional)
+  createdAt: timestamp,    // Creation timestamp
+  updatedAt: timestamp     // Last update timestamp
+}
+```
+
+### CORS
+
+```javascript
+{
+  id: integer,
+  name: string,            // Origin URL (max 50 chars, e.g., "https://app.example.com")
+  creatorId: integer,      // ID of user who created the origin
+  creatorName: string,     // Name of user who created the origin
+  updaterId: integer,      // ID of user who last updated (optional)
+  updaterName: string,     // Name of user who last updated (optional)
+  createdAt: timestamp,    // Creation timestamp
+  updatedAt: timestamp     // Last update timestamp
+}
+```
 
 ### Route
 
 ```javascript
 {
   id: integer,
-  route: string,           // URL pattern (e.g., "/api/users")
-  service: string,         // Target service name (e.g., "user")
+  serviceId: integer,      // Foreign key to service table
+  api: string,             // API name (max 20 chars, e.g., "users", "products")
+  action: string,          // Action name (max 20 chars, e.g., "search", "add", "update")
   description: string,     // Route description
-  pattern: string,         // Pattern to strip from URL
-  methods: array,          // Allowed HTTP methods
-  jwt: boolean            // Requires authentication
+  pattern: string,         // URL pattern with optional regex (e.g., "/users/(?<userId>\\d+)")
+  methods: array,          // Allowed HTTP methods (e.g., ["GET", "POST", "OPTIONS"])
+  jwt: boolean,            // Requires JWT authentication
+  creatorId: integer,      // ID of user who created the route
+  creatorName: string,     // Name of user who created the route
+  updaterId: integer,      // ID of user who last updated (optional)
+  updaterName: string,     // Name of user who last updated (optional)
+  createdAt: timestamp,    // Creation timestamp
+  updatedAt: timestamp     // Last update timestamp
 }
 ```
 
