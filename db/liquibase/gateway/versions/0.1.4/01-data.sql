@@ -29,8 +29,6 @@ INSERT INTO api ("serviceId", name, protected, "creatorId", "creatorName") VALUE
 ;
 
 
-
-
 -- INSERT INTO service_cors ("serviceId", "corsId") VALUES
 -- (1, 1),
 -- (1, 2),

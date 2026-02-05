@@ -28,6 +28,7 @@ import consumer from "./routes/consumer.js";
 import proxy from "./routes/proxy.js";
 import route from "./routes/route.js";
 import service from "./routes/service.js";
+import api from "./routes/api.js";
 import corsRoutes from "./routes/cors.js";
 
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use(checkRoute);
 app.use("/gatelin/consumers", consumer);
 app.use("/gatelin/routes", ...checkRequest, route, send);
 app.use("/gatelin/services", ...checkRequest, service, send);
+app.use("/gatelin/apis", ...checkRequest, api, send);
 app.use("/gatelin/cors", ...checkRequest, corsRoutes, send);
 app.use("/", proxy);
 
