@@ -1,6 +1,6 @@
 import { FilterLevel } from "@crud/core/utils/table/filter-level.model";
 
-const tableKeys = ["routes", "consumers", "services", "apis"] as const; // Extend as needed
+const tableKeys = ["routes", "consumers", "services", "apis", "cors"] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
 
@@ -26,7 +26,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		functionalityKey: "routes",
 		selectable: true,
 		isExcelExportEnabled: true,
-		lazy: false,
+		lazy: true,
 		clickableRows: false,
 		protectDeletion: false,
 		canAccessItemFromUrl: false,
@@ -39,7 +39,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		functionalityKey: "consumers",
 		selectable: true,
 		isExcelExportEnabled: true,
-		lazy: false,
+		lazy: true,
 		clickableRows: false,
 		protectDeletion: false,
 		canAccessItemFromUrl: false,
@@ -52,7 +52,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		functionalityKey: "services",
 		selectable: true,
 		isExcelExportEnabled: true,
-		lazy: false,
+		lazy: true,
 		clickableRows: false,
 		protectDeletion: false,
 		canAccessItemFromUrl: false,
@@ -65,7 +65,20 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		functionalityKey: "apis",
 		selectable: true,
 		isExcelExportEnabled: true,
-		lazy: false,
+		lazy: true,
+		clickableRows: false,
+		protectDeletion: false,
+		canAccessItemFromUrl: false,
+		filterLevel: "advanced",
+	},
+	cors: {
+		label: $localize`:@@TableLabels_Cors:CORS`,
+		title: $localize`:@@TableLabels_CorsPlural:CORS`,
+		key: "cors",
+		functionalityKey: "cors",
+		selectable: true,
+		isExcelExportEnabled: true,
+		lazy: true,
 		clickableRows: false,
 		protectDeletion: false,
 		canAccessItemFromUrl: false,

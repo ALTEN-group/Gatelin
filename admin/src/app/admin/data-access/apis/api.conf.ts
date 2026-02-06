@@ -35,51 +35,5 @@ export const API_COLUMNS: (
 			validators: [required, minlength(2), maxlength(20)],
 		},
 	},
-	{
-		key: "createdAt",
-		label: "Créé le",
-		controlType: CONTROL_TYPES.DATE,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "creatorName",
-		label: "Créé par",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "updatedAt",
-		label: "Modifié le",
-		controlType: CONTROL_TYPES.DATE,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "updaterName",
-		label: "Modifié par",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
 	...ARCHIVED_CONFIG,
 ];

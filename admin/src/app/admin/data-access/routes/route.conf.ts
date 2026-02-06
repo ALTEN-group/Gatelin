@@ -82,52 +82,5 @@ export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 		label: "Protégé",
 		controlType: CONTROL_TYPES.CHECKBOX,
 	},
-	{
-		key: "createdAt",
-		label: "Créé le",
-		controlType: CONTROL_TYPES.DATE,
-
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "creatorName",
-		label: "Créé par",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "updatedAt",
-		label: "Modifié le",
-		controlType: CONTROL_TYPES.DATE,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
-	{
-		key: "updaterName",
-		label: "Modifié par",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			hidden: true,
-		},
-		columnOptions: {
-			isSoftHidden: true,
-		},
-	},
 	...ARCHIVED_CONFIG,
 ];

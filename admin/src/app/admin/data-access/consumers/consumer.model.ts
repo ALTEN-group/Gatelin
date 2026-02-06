@@ -5,19 +5,10 @@ import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
  * Maps to the consumer entity in src/entities/consumer.js
  */
 export interface Consumer extends ArchiveInfo {
-	/** Unique identifier */
 	id: number | null;
-
-	/** User's display name/nickname (3-30 characters) */
 	nickname: string;
-
-	/** JWT access token for authentication */
 	accessToken: string;
-
-	/** JWT refresh token for renewing access */
 	refreshToken: string;
-
-	/** Array of role IDs assigned to this consumer */
 	rolesArrayAgg: number[];
 }
 
@@ -33,12 +24,5 @@ export const consumerFactory = (): Consumer => ({
 	accessToken: "",
 	refreshToken: "",
 	rolesArrayAgg: [],
-	creatorId: null,
-	creatorName: null,
-	createdAt: null,
-	updaterId: null,
-	updaterName: null,
-	updatedAt: null,
-	archivedAt: null,
-	archived: false,
+	...new ArchiveInfo(),
 });

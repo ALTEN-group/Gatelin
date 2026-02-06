@@ -1,14 +1,12 @@
 import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
 
-export interface Api extends ArchiveInfo {
+export interface Cors extends ArchiveInfo {
 	id: number | null;
-	serviceId: number | null;
 	name: string;
 }
 
-export const apiFactory = (): Api => ({
+export const corsFactory = (): Cors => ({
 	id: null,
-	serviceId: null,
 	name: "",
 	...new ArchiveInfo(),
 });

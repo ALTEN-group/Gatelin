@@ -8,9 +8,9 @@ import {
 	minlength,
 	required,
 } from "@crud/form/utils/common.validators";
-import { Service } from "app/admin/data-access/services/service.model";
+import { Cors } from "app/admin/data-access/cors/cors.model";
 
-export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
+export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
 	ID_CONFIG,
 	{
 		key: "name",
@@ -18,7 +18,7 @@ export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
 		controlOptions: {
-			validators: [required, minlength(1), maxlength(10)],
+			validators: [required, minlength(1), maxlength(50)],
 		},
 	},
 	...ARCHIVED_CONFIG,

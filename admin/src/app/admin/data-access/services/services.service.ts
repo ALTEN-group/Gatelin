@@ -6,6 +6,7 @@ import {
 	Service,
 	serviceFactory,
 } from "app/admin/data-access/services/service.model";
+import { map, Observable } from "rxjs";
 
 const servicesApi: string = "services";
 
@@ -26,4 +27,8 @@ export class ServicesService {
 
 	public readonly config = SERVICE_COLUMNS;
 	public readonly entityFactory = serviceFactory;
+
+	public getAndCacheAll(): Observable<Service[]> {
+		return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+	}
 }

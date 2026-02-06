@@ -1,7 +1,9 @@
+import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
+
 /**
  * Represents a gateway route
  */
-export interface Route {
+export interface Route extends ArchiveInfo {
 	id: number | null;
 	api: string;
 	action: string;
@@ -11,16 +13,6 @@ export interface Route {
 	methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
 	jwt: boolean;
 	protected: boolean;
-
-	// History fields
-	updatedAt: Date | null;
-	updaterId: number | null;
-	updaterName: string | null;
-	createdAt: Date | null;
-	creatorId: number | null;
-	creatorName: string | null;
-	archived: boolean;
-	archivedAt: Date | null;
 }
 
 /**
@@ -39,12 +31,5 @@ export const routeFactory = (): Route => ({
 	methods: [],
 	jwt: false,
 	protected: false,
-	updatedAt: null,
-	updaterId: null,
-	updaterName: null,
-	createdAt: null,
-	creatorId: null,
-	creatorName: null,
-	archived: false,
-	archivedAt: null,
+	...new ArchiveInfo(),
 });
