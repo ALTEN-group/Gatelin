@@ -5,14 +5,16 @@
 CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO route ("serviceId", name, description, pattern, methods, jwt, "creatorId", "creatorName")
+      INSERT INTO route ("serviceId", "apiId", action, description, pattern, methods, jwt, protected, "creatorId", "creatorName")
       VALUES (
         NEW."serviceId",
-        NEW."route",
+        NEW."apiId",
+        NEW.action,
         NEW.description,
         NEW.pattern,
         NEW.methods,
         NEW.jwt,
+        NEW.protected,
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -23,11 +25,13 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
       UPDATE route 
       SET 
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
-        name = COALESCE(NEW."route", name),
+        "apiId" = COALESCE(NEW."apiId", "apiId"),
+        action = COALESCE(NEW.action, action),
         description = COALESCE(NEW.description, description),
         pattern = COALESCE(NEW.pattern, pattern),
         methods = COALESCE(NEW.methods, methods),
-        jwt = COALESCE(NEW.jwt, jwt)
+        jwt = COALESCE(NEW.jwt, jwt),
+        protected = COALESCE(NEW.protected, protected)
       WHERE id = NEW.id;
       RETURN NEW;
       

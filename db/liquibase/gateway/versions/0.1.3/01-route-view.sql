@@ -8,7 +8,7 @@ create or replace view routes AS
   r."apiId",
   a.name as "apiName",
   s.name as "serviceName",
-  r.action as "route",
+  r.action,
   r.description, 
   r.pattern,
   r.methods,
