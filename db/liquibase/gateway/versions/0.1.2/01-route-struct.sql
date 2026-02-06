@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS route (
   "apiId" INT NOT NULL,
   action varchar(20) NOT NULL,
   description varchar(100) NULL,
-  pattern varchar(40) NOT NULL,
+  pattern varchar(50) NOT NULL,
   methods method[] NOT NULL,
   jwt BOOLEAN DEFAULT FALSE,
   protected BOOLEAN DEFAULT FALSE,
