@@ -24,10 +24,8 @@ export class AuthenticationService {
 
 	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
-	private readonly loginApi: string = `${this.apiPrefix}tokens/`;
+	private readonly consumerApi: string = `${this.apiPrefix}/gatelin/consumers/`;
 	private readonly accountApi: string = `${this.apiPrefix}account/`;
-	private readonly refreshApi: string = `${this.apiPrefix}consumers/tokens/`;
-	private readonly logoutApi: string = `${this.apiPrefix}consumers/`;
 
 	private readonly _isAuthenticated = signal(false);
 	public readonly isAuthenticated = this._isAuthenticated.asReadonly();
@@ -37,8 +35,8 @@ export class AuthenticationService {
 
 	public login(email: string, pwd: string): Observable<boolean> {
 		if (!email || !pwd) return of(false);
-		const payload = { rows: [{ email, pwd }] };
-		return this.http.post<Rows<LoginResponse>>(this.loginApi, payload).pipe(
+		const payload = { email, pwd };
+		return this.http.post<Rows<LoginResponse>>(this.consumerApi, payload).pipe(
 			map((res) => res.rows[0]),
 			tap((res) => {
 				if (res) {
@@ -57,7 +55,7 @@ export class AuthenticationService {
 	}
 
 	public logout(): Observable<string> {
-		return this.http.delete(this.logoutApi, { responseType: "text" }).pipe(
+		return this.http.delete(this.consumerApi, { responseType: "text" }).pipe(
 			tap(() => {
 				this.tokenService.deleteAccessToken();
 				this.tokenService.deleteRefreshToken();
@@ -91,7 +89,7 @@ export class AuthenticationService {
 		if (accessToken && refreshToken) {
 			return this.http
 				.patch<Rows<{ accessToken: string; refreshToken: string }>>(
-					this.refreshApi,
+					this.consumerApi,
 					{ accessToken, refreshToken },
 				)
 				.pipe(
