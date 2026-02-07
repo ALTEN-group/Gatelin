@@ -37,11 +37,9 @@ export class AuthenticationService {
 		const payload = { email, pwd };
 		return this.http.post<LoginResponse>(this.consumerApi, payload).pipe(
 			tap((res) => {
-				// if (res) {
-					const { nickname, accessToken, refreshToken, rolesArrayAgg } = res;
-					this.saveTokens(accessToken, refreshToken);
-					this.updateUser(nickname, rolesArrayAgg);
-				// }
+				const { nickname, accessToken, refreshToken, rolesArrayAgg } = res;
+				this.saveTokens(accessToken, refreshToken);
+				this.updateUser(nickname, rolesArrayAgg);
         this.authenticate();
 			}),
 			this.storeAccessLevels(),
@@ -99,13 +97,13 @@ export class AuthenticationService {
 		return pipe(
 			switchMap(() => this.rolesService.getAll()),
 			tap(() => {
-				const payload = {
-					roles: this.rolesService.roles,
-					userRoleIds: this.user()?.rolesArrayAgg || [],
-					functionalities: this.rolesService.functionalities,
-				};
-				this.accessLevelsService.storeAccessLevels(payload);
+				this.accessLevelsService.storeAccessLevels(
+          this.rolesService.roles,
+					this.user()?.rolesArrayAgg || [],
+					this.rolesService.functionalities,
+        );
 			}),
+			map(() => true),
 		);
 	}
 

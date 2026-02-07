@@ -36,15 +36,13 @@ export class AccessLevelsService {
     return Boolean(hasSufficientRight);
   }
 
-  public storeAccessLevels(payload: {
-    roles: Role[];
-    userRoleIds: number[];
-    functionalities: Functionality[];
-  }): void {
-    if (this._accessLevels().size) {
+  public storeAccessLevels(
+    roles: Role[],
+    userRoleIds: number[],
+    functionalities: Functionality[],
+  ): void {
+    if (this._accessLevels().size)
       return;
-    }
-    const { roles, userRoleIds, functionalities } = payload;
     const userPermissions = roles
       .filter(
         (role) => typeof role.id === "number" && userRoleIds.includes(role.id),
