@@ -21,7 +21,7 @@ const ep = `-${ENV_NAME}:${PORT}`;
  */
 export function forwardToService(req, res, next) {
   const method = req.method; // GET, POST, etc.
-  const serviceName = req.route.serviceName; // Target microservice name
+  const serviceName = res.locals.route?.serviceName; // Target microservice name
   const route = req.url; // Request URL path
   const body = req.body; // Request body for POST/PUT requests
 

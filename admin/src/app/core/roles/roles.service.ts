@@ -39,7 +39,8 @@ export class RolesService {
 	private readonly http = inject(HttpClient);
 	private readonly snackbarService = inject(SnackbarService);
 
-	private readonly endPoint: string = `${inject(APP_CONFIG).apiPrefix}roles/`;
+	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
+	private readonly endPoint: string = `${this.apiPrefix}users/roles/`;
 	private readonly archiveSuffix: string = "archive";
 
 	// Roles cache
@@ -60,7 +61,7 @@ export class RolesService {
 		return this._operations ?? [];
 	}
 
-	private readonly httpSearch = (payload: TableLazyLoadEvent) =>
+	private readonly httpSearch = (payload?: TableLazyLoadEvent) =>
 		this.http.post<RowsAndCount<Role>>(`${this.endPoint}search`, payload);
 
 	private storeRoles(roles: Role[]): void {
@@ -77,10 +78,9 @@ export class RolesService {
 	}
 
 	public getAll(): Observable<Role[]> {
-		if (this._roles) {
+		if (this._roles)
 			return of(this._roles);
-		}
-		return this.httpSearch({}).pipe(
+		return this.httpSearch().pipe(
 			map((res: RolesPayload) => res.rows),
 			tap((roles) => this.storeRoles(roles)),
 			catchError(() => of([])),

@@ -4,6 +4,7 @@ import healixRouter from '@dwtechs/healix-express';
 import { listen } from '@dwtechs/servpico-express';
 import { log } from '@dwtechs/winstan';
 import { mockUsers } from './data/users.js';
+import { mockRoles } from './data/roles.js';
 
 const app = express();
 
@@ -47,6 +48,16 @@ app.get('/access', (req, res) => {
   res.status(200).json({
     rows: mockAccess,
     total: mockAccess.length
+  });
+});
+
+// GET /roles - Get all roles
+app.post('/roles/search/', (req, res) => {
+  log.info('POST /roles/search/ - Get all roles');
+  
+  res.status(200).json({
+    rows: mockRoles,
+    total: mockRoles.length
   });
 });
 

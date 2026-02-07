@@ -15,6 +15,21 @@ AFTER INSERT OR UPDATE OR DELETE ON "route"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
+--
+-- Create INSTEAD OF trigger on apis view
+--
+CREATE TRIGGER apis_iud_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON apis
+FOR EACH ROW 
+EXECUTE PROCEDURE iud_api();
+
+--
+-- Apply history trigger to api table
+--
+CREATE TRIGGER api_history_trigger 
+AFTER INSERT OR UPDATE OR DELETE ON "api"
+FOR EACH ROW 
+EXECUTE PROCEDURE change_trigger();
 
 --
 -- Apply history trigger to service table

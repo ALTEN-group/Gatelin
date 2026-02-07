@@ -23,9 +23,7 @@ INSERT INTO api ("serviceId", name, protected, "creatorId", "creatorName") VALUE
 (1, 'services', true, -1, 'system'),
 (1, 'cors', true, -1, 'system'),
 (3, 'users', false, -1, 'system'),
-(3, 'user', false, -1, 'system'),
-(3, 'profile', false, -1, 'system'),
-(3, 'permissions', false, -1, 'system')
+(3, 'roles', false, -1, 'system')
 ;
 
 
@@ -68,15 +66,19 @@ INSERT INTO route ("serviceId", "apiId", action, description, pattern, methods, 
 (1, 4, 'archive', 'Archive cors', 'gatelin/cors/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
 (1, 4, 'delete', 'Delete cors', 'gatelin/cors', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
 
-(2, 5, 'register', 'Sign up a new user', '/users/account', ARRAY['POST', 'OPTIONS']::method[], false, false, -1, 'system'),
-(2, 5, 'account-get', 'get account', '/users/account', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'search', 'Search users', 'users/users/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'history', 'Manage users history', 'users/users/(?<userId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'update', 'Update users', 'users/users', ARRAY['PUT', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'add', 'Add users', 'users/users', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'archive', 'Archive users', 'users/users/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 5, 'delete', 'Delete users', 'users/users', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system'),
 
-(2, 6, 'assets', 'Get user assets', '/user/', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
-(2, 7, 'manage', 'User manages is own profile', '/profile', ARRAY['GET', 'PUT', 'POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(2, 5, 'search', 'Search users', '/users/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-
-(2, 8, 'search', 'get all permissions', '/permissions', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system')
+(3, 6, 'search', 'Search roles', 'users/roles/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 6, 'history', 'Manage roles history', 'users/roles/(?<roleId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 6, 'update', 'Update roles', 'users/roles', ARRAY['PUT', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 6, 'add', 'Add roles', 'users/roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 6, 'archive', 'Archive roles', 'users/roles/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
+(3, 6, 'delete', 'Delete roles', 'users/roles', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system')
 ;
-
 
 ANALYZE;

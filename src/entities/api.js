@@ -1,7 +1,7 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
-export default new SQLEntity("api", [
+export default new SQLEntity("apis", [
   {
     key: "id",
     type: "integer",

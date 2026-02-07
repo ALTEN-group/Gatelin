@@ -7,7 +7,6 @@ import { LoginResponse } from "@core/auth/auth.dto";
 import { TokenService } from "@core/auth/token.service";
 import { RolesService } from "@core/roles/roles.service";
 import { User } from "@core/user/user.class";
-import { Rows } from "@crud/core/utils/crud-service/dto.model";
 import { Observable, of, pipe } from "rxjs";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
 
@@ -24,7 +23,7 @@ export class AuthenticationService {
 
 	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
-	private readonly consumerApi: string = `${this.apiPrefix}/gatelin/consumers/`;
+	private readonly consumerApi: string = `${this.apiPrefix}gatelin/consumers/`;
 
 	private readonly _isAuthenticated = signal(false);
 	public readonly isAuthenticated = this._isAuthenticated.asReadonly();
@@ -66,15 +65,14 @@ export class AuthenticationService {
 		const refreshToken = this.tokenService.getRefreshToken();
 		if (accessToken && refreshToken) {
 			return this.http
-				.patch<Rows<{ accessToken: string; refreshToken: string }>>(
+				.put<{ accessToken: string; refreshToken: string }>(
 					this.consumerApi,
 					{ accessToken, refreshToken },
 				)
 				.pipe(
 					tap((res) => {
-						const { accessToken, refreshToken } = res.rows[0] ?? {};
+						const { accessToken, refreshToken } = res ?? {};
 						if (!accessToken || !refreshToken) return;
-
 						this.saveTokens(accessToken, refreshToken);
 						this.authenticate();
 					}),
