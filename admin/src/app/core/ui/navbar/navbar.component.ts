@@ -78,7 +78,7 @@ export class NavbarComponent {
 	});
 
 	public readonly isAuthenticated = this.authenticationService.isAuthenticated;
-	public readonly currentUser = this.authenticationService.currentUser;
+	public readonly currentUser = this.authenticationService.user;
 
 	get userName(): string {
 		if (this.isAuthenticated() && this.currentUser()) {

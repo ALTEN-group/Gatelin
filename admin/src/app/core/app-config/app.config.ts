@@ -14,7 +14,7 @@ import {
 	FormTokenData,
 } from "@form/utils/form.injection-token";
 import { environment } from "environments/environment";
-import { filter, switchMap, tap } from "rxjs";
+import { filter, tap } from "rxjs";
 
 /**
  * Main Config
@@ -65,7 +65,7 @@ function checkToken(authService: AuthenticationService) {
 			}
 		}),
 		filter(Boolean),
-		switchMap(() => authService.getAccount()),
+		// switchMap(() => authService.getAccount()),
 		authService.storeAccessLevels(),
 	);
 }

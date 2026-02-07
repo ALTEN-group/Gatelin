@@ -39,7 +39,7 @@ export class ResetPwdComponent implements OnInit {
   ngOnInit() {
     this.passwordFormGroup = new FormGroup(
       {
-        email: new FormControl(this.authService.currentUser()?.email),
+        email: new FormControl(this.authService.user()?.email),
         password: new FormControl("", [
           Validators.required,
           PasswordStrengthValidator,

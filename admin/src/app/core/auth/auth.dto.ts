@@ -4,6 +4,8 @@ export interface LoginDtoIn {
 }
 
 export interface LoginResponse {
+  nickname: string;
   accessToken: string;
   refreshToken: string;
+  rolesArrayAgg: number[];
 }

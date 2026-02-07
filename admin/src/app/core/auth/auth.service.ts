@@ -25,31 +25,26 @@ export class AuthenticationService {
 	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
 	private readonly consumerApi: string = `${this.apiPrefix}/gatelin/consumers/`;
-	private readonly accountApi: string = `${this.apiPrefix}account/`;
 
 	private readonly _isAuthenticated = signal(false);
 	public readonly isAuthenticated = this._isAuthenticated.asReadonly();
 
-	private readonly _currentUser = signal<User | undefined>(undefined);
-	public readonly currentUser = this._currentUser.asReadonly();
+	private readonly _user = signal<User | undefined>(undefined);
+	public readonly user = this._user.asReadonly();
 
 	public login(email: string, pwd: string): Observable<boolean> {
 		if (!email || !pwd) return of(false);
 		const payload = { email, pwd };
-		return this.http.post<Rows<LoginResponse>>(this.consumerApi, payload).pipe(
-			map((res) => res.rows[0]),
+		return this.http.post<LoginResponse>(this.consumerApi, payload).pipe(
 			tap((res) => {
-				if (res) {
-					const { accessToken, refreshToken } = res;
+				// if (res) {
+					const { nickname, accessToken, refreshToken, rolesArrayAgg } = res;
 					this.saveTokens(accessToken, refreshToken);
-				}
+					this.updateUser(nickname, rolesArrayAgg);
+				// }
+        this.authenticate();
 			}),
-			switchMap(() => this.getAccount()),
 			this.storeAccessLevels(),
-			map((res) => !!res),
-			tap(() => {
-				this.authenticate();
-			}),
 			catchError(() => of(false)),
 		);
 	}
@@ -67,21 +62,6 @@ export class AuthenticationService {
 		);
 	}
 
-	public getAccount(): Observable<User | null> {
-		const token = this.tokenService.getAccessToken();
-		if (!token) {
-			return of(null);
-		}
-		return this.http.get<Rows<User>>(this.accountApi).pipe(
-			map((res) => res.rows[0]),
-			tap((res) => {
-				if (res) {
-					this.updateCurrentUser(res);
-				}
-			}),
-			catchError(() => of(null)),
-		);
-	}
 
 	public refreshToken(): Observable<boolean> {
 		const accessToken = this.tokenService.getAccessToken();
@@ -109,9 +89,9 @@ export class AuthenticationService {
 		return of(false);
 	}
 
-	public updateCurrentUser(user: Partial<User>): void {
-		this._currentUser.update(
-			(currentUser) => ({ ...currentUser, ...user }) as User,
+	public updateUser(nickname: string, rolesArrayAgg: number[]): void {
+		this._user.update(
+			(user) => ({ ...user, nickname, rolesArrayAgg }) as User,
 		);
 	}
 
@@ -121,7 +101,7 @@ export class AuthenticationService {
 			tap(() => {
 				const payload = {
 					roles: this.rolesService.roles,
-					userRoleIds: this.currentUser()?.rolesArrayAgg || [],
+					userRoleIds: this.user()?.rolesArrayAgg || [],
 					functionalities: this.rolesService.functionalities,
 				};
 				this.accessLevelsService.storeAccessLevels(payload);
@@ -146,15 +126,15 @@ export class AuthenticationService {
 
 	private resetCurrentUser(): void {
 		this._isAuthenticated.set(false);
-		this._currentUser.set(undefined);
+		this._user.set(undefined);
 		this.accessLevelsService.resetAccessLevels();
 	}
 
 	private saveTokens(accessToken: string, refreshToken: string) {
-		if (accessToken && refreshToken) {
+		// if (accessToken && refreshToken) {
 			this.tokenService.saveAccessToken(accessToken);
 			this.tokenService.saveRefreshToken(refreshToken);
-		}
+		// }
 	}
 
 	private authenticate() {

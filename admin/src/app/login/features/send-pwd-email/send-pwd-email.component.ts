@@ -30,7 +30,7 @@ export class SendPwdEmailComponent implements OnInit {
   ngOnInit() {
     this.emailFormGroup = new FormGroup({
       emailFormControl: new FormControl(
-        this.authService.currentUser()?.email || "",
+        this.authService.user()?.email || "",
         [Validators.required, EmailValidator],
       ),
     });

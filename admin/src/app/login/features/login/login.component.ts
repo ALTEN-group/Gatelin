@@ -91,7 +91,7 @@ export class LoginComponent implements AfterViewInit {
           if (res) {
             this.authService.redirectToApp();
             const { firstName, lastName } =
-              this.authService.currentUser() || {};
+              this.authService.user() || {};
             this.snackbarService.displayInfo(
               `Bienvenue ${firstName} ${lastName}`,
             );

@@ -183,8 +183,9 @@ sequenceDiagram
   rect rgb(220, 220, 220, 0.1)
     note over msg,gdb: Token Creation & Consumer Insertion Block
     rect rgb(100, 200, 100, 0.2)
-      note over msg: Toker-express Library Block
-      msg--)msg: Create accessToken and refreshToken
+      note over msg: Toker-express Lib Block<br/>from :<br/>- res.locals.user: { id, active }<br/>- req.body.rows[0]: { nickname, rolesArrayAgg }
+      msg--)msg: Create accessToken with payload : { id, nickname, roles }
+      msg--)msg: Create refreshToken
       msg--)msg: Add accessToken and refreshToken to req.body.rows[0]
     end
     rect rgb(100, 200, 100, 0.2)

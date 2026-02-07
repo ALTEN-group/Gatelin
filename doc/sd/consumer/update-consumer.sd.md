@@ -48,9 +48,9 @@ sequenceDiagram
   
   par decode access token
     rect rgb(100, 200, 100, 0.2)
-      note over msg: Toker-express Library Block
-      msg--)msg: Decode access token (validates signature)
-      msg--)msg: Extract issuer from access token
+      note over msg: Toker-express Library Block<br/>Inputs:<br/>- accessToken from Authorization header<br/>- TOKEN_SECRET (env)<br/>- ignoreExpiration flag = true<br/>Validates JWT signature and extracts payload<br/>(expiration check skipped due to flag)
+      msg--)msg: Decode access token (validates signature with TOKEN_SECRET)
+      msg--)msg: Extract issuer (user id) from access token payload
     end
     rect rgb(150, 50, 50, 0.5)
       break when access token is invalid
@@ -66,7 +66,7 @@ sequenceDiagram
 
   and decode refresh token
     rect rgb(100, 200, 100, 0.2)
-      note over msg: Toker-express Library Block
+      note over msg: Toker-express Library Block<br/>Inputs:<br/>- refreshToken from req.body<br/>- TOKEN_SECRET (env)<br/>Validates JWT signature AND expiration<br/>(no ignoreExpiration flag for refresh token)
       msg--)msg: Decode refresh token (validates signature and expiration)
     end
     rect rgb(150, 50, 50, 0.5)
@@ -84,8 +84,9 @@ sequenceDiagram
   end 
   
   rect rgb(100, 200, 100, 0.2)
-    note over msg: Toker-express Library Block
-    msg--)msg: Refresh both tokens (generate new accessToken and refreshToken)
+    note over msg: Toker-express Library Block<br/>Inputs:<br/>- issuer (user id) from decoded accessToken<br/>- consumer data: { nickname, rolesArrayAgg }<br/>- TOKEN_SECRET (env)<br/>- ACCESS_TOKEN_DURATION (env)<br/>- REFRESH_TOKEN_DURATION (env)<br/>Generates new JWT tokens with updated expiration
+    msg--)msg: Generate new accessToken (JWT with user payload)
+    msg--)msg: Generate new refreshToken (JWT with user id)
   end
   rect rgb(100, 200, 100, 0.2)
     note over msg: Antity-pgsql Library Block
