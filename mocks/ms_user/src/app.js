@@ -19,6 +19,16 @@ const mockAccess = [
   { id: 3, routeId: 3, roleId: 2, roleName: 'user', routePattern: '/profile', method: 'GET' }
 ];
 
+// GET /roles - Get all roles
+app.post('/users/roles/search/', (req, res) => {
+  log.info('POST /users/roles/search/ - Get all roles');
+  
+  res.status(200).json({
+    rows: mockRoles,
+    total: mockRoles.length
+  });
+});
+
 // POST /users/ - Get user by email filter (used by Gatelin getUserByEmail middleware)
 app.post('/users/', (req, res) => {
   log.info(`POST /users/ - Get user by filters ${JSON.stringify(req.body)}`);
@@ -51,14 +61,5 @@ app.get('/access', (req, res) => {
   });
 });
 
-// GET /roles - Get all roles
-app.post('users/roles/search', (req, res) => {
-  log.info('POST /roles/search/ - Get all roles');
-  
-  res.status(200).json({
-    rows: mockRoles,
-    total: mockRoles.length
-  });
-});
 
 listen(app);
