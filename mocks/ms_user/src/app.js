@@ -52,7 +52,7 @@ app.get('/access', (req, res) => {
 });
 
 // GET /roles - Get all roles
-app.post('/roles/search/', (req, res) => {
+app.post('users/roles/search', (req, res) => {
   log.info('POST /roles/search/ - Get all roles');
   
   res.status(200).json({

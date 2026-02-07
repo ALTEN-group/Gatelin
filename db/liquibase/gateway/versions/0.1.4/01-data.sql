@@ -12,8 +12,8 @@ INSERT INTO cors (name, "creatorId", "creatorName") VALUES
 
 INSERT INTO "service" (name, protected, "creatorId", "creatorName") VALUES 
 ('gatelin', true, -1, 'system'),
-('ms-auth', false, -1, 'system'),
-('ms-user', false, -1, 'system')
+('ms-auth-mock', false, -1, 'system'),
+('ms-user-mock', false, -1, 'system')
 ;
 
 
