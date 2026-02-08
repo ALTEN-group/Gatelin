@@ -4,7 +4,7 @@ import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { CORS_COLUMNS } from "app/admin/data-access/cors/cors.conf";
 import { Cors, corsFactory } from "app/admin/data-access/cors/cors.model";
 
-const corsEndpoint: string = "cors";
+const corsEndpoint: string = "gatelin/cors";
 
 @Injectable({
 	providedIn: "root",

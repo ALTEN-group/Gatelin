@@ -4,7 +4,7 @@ import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
 import { Route, routeFactory } from "app/admin/data-access/routes/route.model";
 
-const routesApi: string = "routes";
+const routesApi: string = "gatelin/routes";
 
 /**
  * Service to manage gateway routes

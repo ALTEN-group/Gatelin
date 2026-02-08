@@ -8,7 +8,7 @@ import {
 	consumerFactory,
 } from "app/admin/data-access/consumers/consumer.model";
 
-const consumersApi: string = "consumers";
+const consumersApi: string = "gatelin/consumers";
 
 /**
  * Service to manage API consumers

@@ -30,6 +30,10 @@ const add = [
   addConsumer
 ];
 
+const getMany = [
+  cEnt.get,
+];
+
 const update = [
   getConsumer,
   checkRefreshToken,
@@ -46,6 +50,8 @@ const del = [
 
 //Routes
 
+// Get routes
+router.post("/search", getMany);
 // add a consumer. e.g. Log a user
 router.post("/", add);
 

@@ -5,7 +5,7 @@ import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { API_COLUMNS } from "app/admin/data-access/apis/api.conf";
 import { Api, apiFactory } from "app/admin/data-access/apis/api.model";
 
-const apisEndpoint: string = "apis";
+const apisEndpoint: string = "gatelin/apis";
 
 @Injectable({
 	providedIn: "root",

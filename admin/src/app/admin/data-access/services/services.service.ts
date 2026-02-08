@@ -8,7 +8,7 @@ import {
 } from "app/admin/data-access/services/service.model";
 import { map, Observable } from "rxjs";
 
-const servicesApi: string = "services";
+const servicesApi: string = "gatelin/services";
 
 @Injectable({
 	providedIn: "root",

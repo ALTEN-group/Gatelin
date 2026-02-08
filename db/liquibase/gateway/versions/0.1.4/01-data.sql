@@ -59,6 +59,13 @@ INSERT INTO route ("serviceId", "apiId", action, description, pattern, methods, 
 (1, 3, 'archive', 'Archive services', 'gatelin/services/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
 (1, 3, 'delete', 'Delete services', 'gatelin/services', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
 
+(1, 4, 'search', 'Search apis', 'gatelin/apis/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(1, 4, 'history', 'Manage apis history', 'gatelin/apis/(?<apiId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(1, 4, 'update', 'Update apis', 'gatelin/apis', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
+(1, 4, 'add', 'Add apis', 'gatelin/apis', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(1, 4, 'archive', 'Archive apis', 'gatelin/apis/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
+(1, 4, 'delete', 'Delete apis', 'gatelin/apis', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
+
 (1, 4, 'search', 'Search cors', 'gatelin/cors/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (1, 4, 'history', 'Manage cors history', 'gatelin/cors/(?<corsId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
 (1, 4, 'update', 'Update cors', 'gatelin/cors', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
