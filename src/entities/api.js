@@ -38,6 +38,24 @@ export default new SQLEntity("apis", [
     normalizer: null,
     validator: null
   },
+    {
+    key: "serviceName",
+    type: "string",
+    min: 2,
+    max: 20,
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "POST", "PUT"],
+    operations: ["SELECT", "INSERT", "UPDATE"],
+    required: true,
+    safe: true,
+    sanitize: true,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null
+  },
   {
     key: "name",
     type: "string",

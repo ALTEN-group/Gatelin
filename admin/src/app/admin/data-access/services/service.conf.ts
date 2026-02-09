@@ -4,9 +4,9 @@ import { INPUT_TYPES } from "@crud/core/models/input-type.model";
 import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
 import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
-	maxlength,
-	minlength,
-	required,
+  maxlength,
+  minlength,
+  required,
 } from "@crud/form/utils/common.validators";
 import { Service } from "app/admin/data-access/services/service.model";
 
@@ -20,6 +20,11 @@ export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
 		controlOptions: {
 			validators: [required, minlength(1), maxlength(10)],
 		},
+	},
+  {
+		key: "protected",
+		label: "Protégé",
+		controlType: CONTROL_TYPES.CHECKBOX,
 	},
 	...ARCHIVED_CONFIG,
 ];

@@ -4,21 +4,30 @@ import { INPUT_TYPES } from "@crud/core/models/input-type.model";
 import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
 import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
-	maxlength,
-	minlength,
-	required,
+  maxlength,
+  minlength,
+  required,
 } from "@crud/form/utils/common.validators";
 import { Route } from "app/admin/data-access/routes/route.model";
 
 export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 	ID_CONFIG,
 	{
-		key: "api",
+		key: "apiName",
 		label: "API",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
 		controlOptions: {
 			validators: [required, minlength(2), maxlength(20)],
+		},
+	},
+  {
+		key: "serviceName",
+		label: "Service",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		controlOptions: {
+			validators: [required, minlength(2), maxlength(10)],
 		},
 	},
 	{
@@ -28,15 +37,6 @@ export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 		type: INPUT_TYPES.TEXT,
 		controlOptions: {
 			validators: [required, minlength(2), maxlength(20)],
-		},
-	},
-	{
-		key: "service",
-		label: "Service",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			validators: [required, minlength(2), maxlength(10)],
 		},
 	},
 	{
