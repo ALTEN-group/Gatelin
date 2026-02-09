@@ -6,9 +6,16 @@
   <ng-template pTemplate="header">
     <div [routerLink]="'/'" class="header">
       @if (!sidenavService.getExpanded()) {
-        <img src="assets/logo_admin_mini.png" alt="logo" width="40"/>
+        <svg width="40" height="40" viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="13" y="29" font-family="Montserrat, Arial, sans-serif" font-weight="bold" font-size="30" fill="white">G</text>
+        </svg>
       } @else {
-        <img src="assets/logo_admin_small.png" alt="logo" width="140"/>
+        <svg width="140" height="40" viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="13" y="29" font-family="Montserrat, Arial, sans-serif" font-weight="bold" font-size="30" fill="white">G</text>
+          <text x="41" y="28" font-family="Montserrat, Arial, sans-serif" font-weight="bold" font-size="30" fill="#10B981">atelin</text>
+        </svg>
       }
     </div>
     <i class="pi pi-angle-double-{{sidenavService.getExpanded() ? 'left' : 'right'}} toggle-icon"
