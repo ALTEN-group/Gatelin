@@ -1,6 +1,6 @@
 # Gatelin
 
-API Gateway service for routing and forwarding HTTP requests to internal microservices with JWT-based authentication and consumer management.
+API Gateway service for routing and forwarding HTTP requests to internal microservices with JWT-based authentication and management for consumer, service, API, route, and CORS configurations.
 
 ## Overview
 
@@ -67,35 +67,12 @@ MSUSER_URL=http://gatelin-ms-user-mock-local:3000    # User management microserv
 5. When access token expires, client uses `PUT /consumers` with both tokens to get new ones
 6. Gateway validates and refreshes tokens automatically
 
-## Usage
-
-### Development
-
-```bash
-npm run dev
-```
-
-Starts the server with hot-reload using Node's `--watch` flag.
-
-### Production
-
-```bash
-npm start
-```
-
-### Docker
-
-```bash
-cd docker
-docker-compose up
-```
-
 ## API Endpoints
 
 ### Health Check
 
 ```
-GET /health
+GET /gatelin/health
 ```
 
 Returns service health status.
@@ -105,7 +82,7 @@ Returns service health status.
 #### Login / Create Consumer Session
 
 ```
-POST /consumers
+POST /gatelin/consumers
 Content-Type: application/json
 
 {
@@ -119,8 +96,7 @@ Content-Type: application/json
 {
   "id": 1,
   "nickname": "username",
-  "roles": ["user", "admin"],
-  "active": true,
+  "rolesArrayAgg": [1, 2],
   "accessToken": "eyJhbGc...",
   "refreshToken": "eyJhbGc..."
 }
@@ -129,12 +105,11 @@ Content-Type: application/json
 #### Refresh Tokens
 
 ```
-PUT /consumers
+PUT /gatelin/consumers
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "accessToken": "eyJhbGc...",
   "refreshToken": "eyJhbGc..."
 }
 ```
@@ -150,7 +125,7 @@ Authorization: Bearer <access_token>
 #### Logout / Delete Consumer Session
 
 ```
-DELETE /consumers
+DELETE /gatelin/consumers
 Authorization: Bearer <access_token>
 ```
 
@@ -168,12 +143,15 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "id",
   "filters": {
-    "name": "user"
-  },
-  "pagination": {
-    "limit": 10,
-    "offset": 0
+    "name": {
+      "value": "user",
+      "matchMode": "contains"
+    }
   }
 }
 ```
@@ -226,12 +204,15 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "id",
   "filters": {
-    "name": "https://app.example.com"
-  },
-  "pagination": {
-    "limit": 10,
-    "offset": 0
+    "name": {
+      "value": "app.example.com",
+      "matchMode": "contains"
+    }
   }
 }
 ```
@@ -290,13 +271,16 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "id",
+  "sortOrder": "ASC",
   "filters": {
-    "serviceId": 1,
-    "api": "users"
-  },
-  "pagination": {
-    "limit": 10,
-    "offset": 0
+    "api": {
+      "value": "users",
+      "matchMode": "contains"
+    }
   }
 }
 ```
@@ -363,7 +347,6 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content):** Routes are removed from cache immediately
-```
 
 ### Proxy (Request Forwarding)
 
@@ -417,87 +400,16 @@ Client Response
 - **stripUrl**: Removes route pattern prefix before forwarding
 - **additionalHeaders**: Adds gateway-specific headers to forwarded requests
 
-### Services
-
-- **routeSvc**: Manages route configuration and caching (auto-updates on add/update/delete)
-- **consumerSvc**: Manages consumer sessions and authentication
-- **corsSvc**: Manages CORS origins whitelist (auto-updates on add/update/delete)
-- **http**: HTTP client for forwarding requests to microservices
-
-## Data Models
-
-### Service
-
-```javascript
-{
-  id: integer,
-  name: string,            // Service name (max 10 chars, e.g., "user", "auth")
-  creatorId: integer,      // ID of user who created the service
-  creatorName: string,     // Name of user who created the service
-  updaterId: integer,      // ID of user who last updated (optional)
-  updaterName: string,     // Name of user who last updated (optional)
-  createdAt: timestamp,    // Creation timestamp
-  updatedAt: timestamp     // Last update timestamp
-}
-```
-
-### CORS
-
-```javascript
-{
-  id: integer,
-  name: string,            // Origin URL (max 50 chars, e.g., "https://app.example.com")
-  creatorId: integer,      // ID of user who created the origin
-  creatorName: string,     // Name of user who created the origin
-  updaterId: integer,      // ID of user who last updated (optional)
-  updaterName: string,     // Name of user who last updated (optional)
-  createdAt: timestamp,    // Creation timestamp
-  updatedAt: timestamp     // Last update timestamp
-}
-```
-
-### Route
-
-```javascript
-{
-  id: integer,
-  serviceId: integer,      // Foreign key to service table
-  api: string,             // API name (max 20 chars, e.g., "users", "products")
-  action: string,          // Action name (max 20 chars, e.g., "search", "add", "update")
-  description: string,     // Route description
-  pattern: string,         // URL pattern with optional regex (e.g., "/users/(?<userId>\\d+)")
-  methods: array,          // Allowed HTTP methods (e.g., ["GET", "POST", "OPTIONS"])
-  jwt: boolean,            // Requires JWT authentication
-  creatorId: integer,      // ID of user who created the route
-  creatorName: string,     // Name of user who created the route
-  updaterId: integer,      // ID of user who last updated (optional)
-  updaterName: string,     // Name of user who last updated (optional)
-  createdAt: timestamp,    // Creation timestamp
-  updatedAt: timestamp     // Last update timestamp
-}
-```
-
-### Consumer
-
-```javascript
-{
-  id: integer,
-  nickname: string,        // Username
-  accessToken: string,     // JWT access token
-  refreshToken: string,    // JWT refresh token
-  roles: array            // User roles for RBAC
-}
-```
 
 ## Use with Front end 
 
 In a typical situation, here's how the frontend should use access tokens:
 
 Standard Flow
-1. After Login (POST /consumers)
+1. After Login (POST /gatelin/consumers)
 
 ```typescript
-const response = await fetch('/consumers', {
+const response = await fetch('/gatelin/consumers', {
   method: 'POST',
   body: JSON.stringify({ email, password })
 });
@@ -527,7 +439,7 @@ fetch('/api/protected-resource', {
 if (response.status === 401) {
   // Refresh tokens
   const refreshToken = localStorage.getItem('refreshToken');
-  const refreshResponse = await fetch('/consumers', {
+  const refreshResponse = await fetch('/gatelin/consumers', {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${accessToken}` // Old access token
@@ -553,7 +465,7 @@ if (response.status === 401) {
 ```typescript
 const accessToken = localStorage.getItem('accessToken');
 
-await fetch('/consumers', {
+await fetch('/gatelin/consumers', {
   method: 'DELETE',
   headers: {
     'Authorization': `Bearer ${accessToken}`
@@ -567,29 +479,13 @@ localStorage.removeItem('refreshToken');
 
 Key Points
 
-1. Short-lived access token (5-15 min) - Used for all API requests
+1. Short-lived access token (15 min) - Used for all API requests
 2. Long-lived refresh token (days/weeks) - Only used to get new access tokens
 3. Storage:
   - localStorage - Simple, but vulnerable to XSS
   - httpOnly cookies - More secure (not accessible to JavaScript)
   - sessionStorage - Cleared when tab closes
 4. Never send refresh token except to the refresh endpoint
-5. Always check token expiration before requests (optional optimization)
-
-
-
-## Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
-```
 
 ## Security
 

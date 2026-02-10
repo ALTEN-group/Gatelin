@@ -32,7 +32,7 @@ import api from "./routes/api.js";
 import corsRoutes from "./routes/cors.js";
 
 app.use(express.json());
-app.use("/health", healixRouter);
+app.use("/gatelin/health", healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route
