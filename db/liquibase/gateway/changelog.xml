@@ -44,11 +44,23 @@
   <!-- Updates for version 0.1.2 : functions -->
   <changeSet id="0.1.2-01" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/0.1.2/01-route-struct.sql" splitStatements="false"/>
+    <sqlFile path="versions/0.1.2/01-cors-struct.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="0.1.2-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/0.1.2/02-consumer-struct.sql" splitStatements="false"/>
+    <sqlFile path="versions/0.1.2/02-service-struct.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.2-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.2/03-api-struct.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.2-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.2/04-route-struct.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.2-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.2/05-consumer-struct.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- Updates for version 0.1.3 : functions -->

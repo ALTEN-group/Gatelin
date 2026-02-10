@@ -1,0 +1,15 @@
+name: ${APP_NAME}
+
+services:
+  gatelin:
+    build:
+      context: ${PWD}
+      dockerfile: dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        TZ: ${TZ}
+        NODE_VERSION: ${NODE_VERSION}
+        NODE_ENV: ${NODE_ENV}
+    image: dwtechs/gatelin:${VERSION:-latest}
+    container_name: ${GATELIN_HOST}

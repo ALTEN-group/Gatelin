@@ -291,26 +291,6 @@ services:
       - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
       - ms_auth_mock_node_modules:/usr/src/app/node_modules
 
-  ms_backend_mock:
-    build:
-      context: ${PWD}/mocks/ms_backend
-      dockerfile: dockerfile
-      args:
-        UID: ${UID}
-        GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NODE_ENV: ${NODE_ENV}
-    container_name: ${MSBACK_HOST}
-    hostname: ${MSBACK_HOST}
-    environment:
-      PORT: ${DEFAULT_PORT}
-    networks:
-      - internal
-    volumes:
-      - ${PWD}/mocks/ms_backend/src:/usr/src/app/src
-      - ms_backend_mock_node_modules:/usr/src/app/node_modules
-
 networks:
   internal:
     name: ${APP_NAME}-internal-${ENV_NAME}
