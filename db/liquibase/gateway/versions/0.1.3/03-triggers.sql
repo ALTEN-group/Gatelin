@@ -16,18 +16,18 @@ FOR EACH ROW
 EXECUTE PROCEDURE change_trigger();
 
 --
--- Create INSTEAD OF trigger on apis view
+-- Create INSTEAD OF trigger on resources view
 --
-CREATE TRIGGER apis_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON apis
+CREATE TRIGGER resources_iud_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON resources
 FOR EACH ROW 
-EXECUTE PROCEDURE iud_api();
+EXECUTE PROCEDURE iud_resource();
 
 --
--- Apply history trigger to api table
+-- Apply history trigger to resource table
 --
-CREATE TRIGGER api_history_trigger 
-AFTER INSERT OR UPDATE OR DELETE ON "api"
+CREATE TRIGGER resource_history_trigger 
+AFTER INSERT OR UPDATE OR DELETE ON "resource"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
@@ -47,4 +47,13 @@ CREATE TRIGGER cors_history_trigger
 AFTER INSERT OR UPDATE OR DELETE ON "cors"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
+
+--
+-- Apply history trigger to operation table
+--
+CREATE TRIGGER operation_history_trigger 
+AFTER INSERT OR UPDATE OR DELETE ON "operation"
+FOR EACH ROW 
+EXECUTE PROCEDURE change_trigger();
+
 

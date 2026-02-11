@@ -17,8 +17,8 @@ create or replace view resources AS
   LEFT OUTER JOIN "service" as s ON r."serviceId" = s.id 
   LEFT JOIN history h ON (h.id, h.operation) = (r.id, 'UPDATE')
   LEFT JOIN history h2 ON (h2.id, h2.operation) = (r.id, 'INSERT')
-  GROUP BY a.id, s.name,
+  GROUP BY r.id, s.name,
   h.tstamp, h."consumerId", h."consumerName", 
   h2.tstamp, h2."consumerId", h2."consumerName"
-  ORDER BY a.id ASC
+  ORDER BY r.id ASC
 ;

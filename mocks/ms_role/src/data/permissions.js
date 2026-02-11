@@ -1,10 +1,10 @@
 // Mock permissions database
 export const mockPermissions = [
-  // User permissions
+  // User permissions (ms-user service)
   {
     id: 1,
-    name: 'user.read',
     description: 'Read user information',
+    service: 'ms-user',
     resource: 'user',
     action: 'read',
     createdAt: '2024-01-01T00:00:00Z',
@@ -12,8 +12,8 @@ export const mockPermissions = [
   },
   {
     id: 2,
-    name: 'user.write',
     description: 'Create new users',
+    service: 'ms-user',
     resource: 'user',
     action: 'write',
     createdAt: '2024-01-01T00:00:00Z',
@@ -21,8 +21,8 @@ export const mockPermissions = [
   },
   {
     id: 3,
-    name: 'user.update',
     description: 'Update user information',
+    service: 'ms-user',
     resource: 'user',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
@@ -30,8 +30,8 @@ export const mockPermissions = [
   },
   {
     id: 4,
-    name: 'user.delete',
     description: 'Delete users',
+    service: 'ms-user',
     resource: 'user',
     action: 'delete',
     createdAt: '2024-01-01T00:00:00Z',
@@ -39,8 +39,8 @@ export const mockPermissions = [
   },
   {
     id: 5,
-    name: 'user.list',
     description: 'List all users',
+    service: 'ms-user',
     resource: 'user',
     action: 'list',
     createdAt: '2024-01-01T00:00:00Z',
@@ -48,18 +48,18 @@ export const mockPermissions = [
   },
   {
     id: 6,
-    name: 'user.pwd.update',
     description: 'Update user password',
+    service: 'ms-user',
     resource: 'user.pwd',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
-  // Role permissions
+  // Role permissions (ms-role service)
   {
     id: 7,
-    name: 'role.read',
     description: 'Read role information',
+    service: 'ms-role',
     resource: 'role',
     action: 'read',
     createdAt: '2024-01-01T00:00:00Z',
@@ -67,8 +67,8 @@ export const mockPermissions = [
   },
   {
     id: 8,
-    name: 'role.write',
     description: 'Create new roles',
+    service: 'ms-role',
     resource: 'role',
     action: 'write',
     createdAt: '2024-01-01T00:00:00Z',
@@ -76,8 +76,8 @@ export const mockPermissions = [
   },
   {
     id: 9,
-    name: 'role.update',
     description: 'Update role information',
+    service: 'ms-role',
     resource: 'role',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
@@ -85,8 +85,8 @@ export const mockPermissions = [
   },
   {
     id: 10,
-    name: 'role.delete',
     description: 'Delete roles',
+    service: 'ms-role',
     resource: 'role',
     action: 'delete',
     createdAt: '2024-01-01T00:00:00Z',
@@ -94,18 +94,18 @@ export const mockPermissions = [
   },
   {
     id: 11,
-    name: 'role.list',
     description: 'List all roles',
+    service: 'ms-role',
     resource: 'role',
     action: 'list',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
-  // Route permissions
+  // Route permissions (gatelin service)
   {
     id: 12,
-    name: 'route.read',
     description: 'Read route information',
+    service: 'gatelin',
     resource: 'route',
     action: 'read',
     createdAt: '2024-01-01T00:00:00Z',
@@ -113,8 +113,8 @@ export const mockPermissions = [
   },
   {
     id: 13,
-    name: 'route.write',
     description: 'Create new routes',
+    service: 'gatelin',
     resource: 'route',
     action: 'write',
     createdAt: '2024-01-01T00:00:00Z',
@@ -122,8 +122,8 @@ export const mockPermissions = [
   },
   {
     id: 14,
-    name: 'route.update',
     description: 'Update route information',
+    service: 'gatelin',
     resource: 'route',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
@@ -131,8 +131,8 @@ export const mockPermissions = [
   },
   {
     id: 15,
-    name: 'route.delete',
     description: 'Delete routes',
+    service: 'gatelin',
     resource: 'route',
     action: 'delete',
     createdAt: '2024-01-01T00:00:00Z',
@@ -140,18 +140,18 @@ export const mockPermissions = [
   },
   {
     id: 16,
-    name: 'route.list',
     description: 'List all routes',
+    service: 'gatelin',
     resource: 'route',
     action: 'list',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
-  // Admin permissions
+  // Admin permissions (gatelin service)
   {
     id: 17,
-    name: 'admin.access',
     description: 'Access admin panel',
+    service: 'gatelin',
     resource: 'admin',
     action: 'access',
     createdAt: '2024-01-01T00:00:00Z',
@@ -159,18 +159,18 @@ export const mockPermissions = [
   },
   {
     id: 18,
-    name: 'admin.system.config',
     description: 'Configure system settings',
+    service: 'gatelin',
     resource: 'admin.system',
     action: 'config',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
-  // API permissions
+  // API permissions (gatelin service)
   {
     id: 19,
-    name: 'api.read',
     description: 'Read API information',
+    service: 'gatelin',
     resource: 'api',
     action: 'read',
     createdAt: '2024-01-01T00:00:00Z',
@@ -178,8 +178,8 @@ export const mockPermissions = [
   },
   {
     id: 20,
-    name: 'api.write',
     description: 'Create new APIs',
+    service: 'gatelin',
     resource: 'api',
     action: 'write',
     createdAt: '2024-01-01T00:00:00Z',
@@ -187,8 +187,8 @@ export const mockPermissions = [
   },
   {
     id: 21,
-    name: 'api.update',
     description: 'Update API information',
+    service: 'gatelin',
     resource: 'api',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
@@ -196,18 +196,18 @@ export const mockPermissions = [
   },
   {
     id: 22,
-    name: 'api.delete',
     description: 'Delete APIs',
+    service: 'gatelin',
     resource: 'api',
     action: 'delete',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
-  // Consumer permissions
+  // Consumer permissions (gatelin service)
   {
     id: 23,
-    name: 'consumer.read',
     description: 'Read consumer information',
+    service: 'gatelin',
     resource: 'consumer',
     action: 'read',
     createdAt: '2024-01-01T00:00:00Z',
@@ -215,8 +215,8 @@ export const mockPermissions = [
   },
   {
     id: 24,
-    name: 'consumer.write',
     description: 'Create new consumers',
+    service: 'gatelin',
     resource: 'consumer',
     action: 'write',
     createdAt: '2024-01-01T00:00:00Z',
@@ -224,8 +224,8 @@ export const mockPermissions = [
   },
   {
     id: 25,
-    name: 'consumer.update',
     description: 'Update consumer information',
+    service: 'gatelin',
     resource: 'consumer',
     action: 'update',
     createdAt: '2024-01-01T00:00:00Z',
@@ -233,11 +233,16 @@ export const mockPermissions = [
   },
   {
     id: 26,
-    name: 'consumer.delete',
     description: 'Delete consumers',
+    service: 'gatelin',
     resource: 'consumer',
     action: 'delete',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
 ];
+
+// Helper function to compute permission name
+export function getPermissionName(permission) {
+  return `${permission.service}.${permission.resource}.${permission.action}`;
+}
