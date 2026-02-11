@@ -20,7 +20,6 @@ export default new SQLEntity("routes", [
     normalizer: null,
     validator: null
   },
-
   {
     key: "serviceId",
     type: "integer",

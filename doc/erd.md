@@ -7,10 +7,10 @@ caption: Entity Relationship Diagram
 
 erDiagram
   
-  route }o--|| resource : "belongs to"
-  resource }o--|| service : "belongs to"
-  route }o--|| operation : "performs"
-  attribute }o--|| resource : "belongs to"
+  route }o--|| resource : ""
+  resource }o--|| service : ""
+  route }o--|| operation : ""
+  attribute }o--|| resource : ""
   consumer {
     int id PK
     varchar nickname
