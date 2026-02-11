@@ -1,6 +1,13 @@
 import { FilterLevel } from "@crud/core/utils/table/filter-level.model";
 
-const tableKeys = ["routes", "consumers", "services", "apis", "cors"] as const; // Extend as needed
+const tableKeys = [
+	"routes",
+	"consumers",
+	"services",
+	"apis",
+	"cors",
+	"operations",
+] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
 
@@ -79,6 +86,19 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		selectable: true,
 		isExcelExportEnabled: true,
 		lazy: true,
+		clickableRows: false,
+		protectDeletion: false,
+		canAccessItemFromUrl: false,
+		filterLevel: "advanced",
+	},
+	operations: {
+		label: $localize`:@@TableLabels_Operation:Opération`,
+		title: $localize`:@@TableLabels_Operations:Opérations`,
+		key: "operations",
+		functionalityKey: "operations",
+		selectable: true,
+		isExcelExportEnabled: true,
+		lazy: false,
 		clickableRows: false,
 		protectDeletion: false,
 		canAccessItemFromUrl: false,
