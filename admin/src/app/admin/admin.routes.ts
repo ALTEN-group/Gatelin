@@ -3,6 +3,7 @@ import { serviceResolver } from "app/admin/data-access/services/service.resolver
 import { ApisComponent } from "app/admin/features/apis/apis.component";
 import { ConsumersComponent } from "app/admin/features/consumers/consumers.component";
 import { CorsComponent } from "app/admin/features/cors/cors.component";
+import { OperationsComponent } from "app/admin/features/operations/operations.component";
 import { RoutesComponent } from "app/admin/features/routes/routes.component";
 import { ServicesComponent } from "app/admin/features/services/services.component";
 
@@ -43,6 +44,13 @@ export const ADMIN_ROUTES: Routes = [
 		component: CorsComponent,
 		data: {
 			breadcrumb: $localize`:@@Cors_corsNav:CORS`,
+		},
+	},
+	{
+		path: "operations",
+		component: OperationsComponent,
+		data: {
+			breadcrumb: $localize`:@@Operations_operationsNav:Opérations`,
 		},
 	},
 	{
