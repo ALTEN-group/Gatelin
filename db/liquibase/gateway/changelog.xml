@@ -90,5 +90,9 @@
     <comment></comment>
     <sqlFile path="versions/0.1.4/01-data.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="0.1.4-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.4/02-route-data.sql" splitStatements="false"/>
+  </changeSet>
 
 </databaseChangeLog>

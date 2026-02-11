@@ -10,6 +10,7 @@ erDiagram
   route }o--|| resource : "belongs to"
   resource }o--|| service : "belongs to"
   route }o--|| operation : "performs"
+  attribute }o--|| resource : "belongs to"
   consumer {
     int id PK
     varchar nickname
@@ -46,7 +47,7 @@ erDiagram
   resource {
     int id PK
     int serviceId FK
-    varchar name "e.g. user, user.pwd"
+    varchar name "e.g. user, role, route"
     boolean protected
     int creatorId
     text creatorName
@@ -58,7 +59,6 @@ erDiagram
     int id PK
     int resourceId FK
     int operationId FK
-    varchar description
     varchar description
     varchar pattern
     method[] methods "array of HTTP methods"
@@ -74,6 +74,18 @@ erDiagram
     int id PK
     varchar name UK "e.g. read, write, update, delete, list, execute"
     text description
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  attribute {
+    int id PK
+    int resourceId FK
+    varchar name "e.g. password, email, firstName"
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
     timestamp createdAt
     timestamp updatedAt
   }

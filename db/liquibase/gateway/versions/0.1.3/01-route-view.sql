@@ -4,7 +4,7 @@ create or replace view routes AS
     SELECT * FROM get_history('public', 'route')
   )
   SELECT r.id, 
-  a."serviceId",
+  b."serviceId",
   s.name as "serviceName",
   r."resourceId",
   b.name as "resourceName",
@@ -27,7 +27,7 @@ create or replace view routes AS
   LEFT OUTER JOIN "operation" as o ON r."operationId" = o.id 
   LEFT JOIN history h ON (h.id, h.operation) = (r.id, 'UPDATE')
   LEFT JOIN history h2 ON (h2.id, h2.operation) = (r.id, 'INSERT')
-  GROUP BY r.id, a.name, s.name,
+  GROUP BY r.id, b."serviceId", b.name, s.name, r."resourceId", r."operationId", o.name, r.description, r.pattern, r.methods, r.jwt, r.protected,
   h.tstamp, h."consumerId", h."consumerName", 
   h2.tstamp, h2."consumerId", h2."consumerName"
   ORDER BY r.id ASC

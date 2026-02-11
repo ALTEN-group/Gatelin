@@ -2,10 +2,10 @@
 import express from "express";
 const router = express.Router();
 
-import aEnt from "../entities/action.js";
+import oEnt from "../entities/operation.js";
 
 const getMany = [
-  aEnt.get,
+  oEnt.get,
 ];
 
 // const getHistory = [
@@ -13,19 +13,19 @@ const getMany = [
 // ];
 
 const add = [
-  aEnt.normalizeArray,
-  aEnt.validateArray,
-  aEnt.add,
+  oEnt.normalizeArray,
+  oEnt.validateArray,
+  oEnt.add,
 ];
 
 const update = [
-  aEnt.normalizeArray,
-  aEnt.validateArray,
-  aEnt.update,
+  oEnt.normalizeArray,
+  oEnt.validateArray,
+  oEnt.update,
 ];
 
 const del = [
-  aEnt.delete,
+  oEnt.delete,
 ];
 
 // Get routes
