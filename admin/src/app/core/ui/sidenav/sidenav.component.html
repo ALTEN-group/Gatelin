@@ -18,7 +18,7 @@
         </svg>
       }
     </div>
-    <i class="pi pi-angle-double-{{sidenavService.getExpanded() ? 'left' : 'right'}} toggle-icon"
+    <i class="pi pi-angle-double-{{sidenavService.getPinned() ? 'left' : 'right'}} toggle-icon"
       (click)="sidenavService.togglePinned()">
     </i>
   </ng-template>

@@ -39,7 +39,7 @@ export class AuthenticationService {
 				const { nickname, accessToken, refreshToken, rolesArrayAgg } = res;
 				this.saveTokens(accessToken, refreshToken);
 				this.updateUser(nickname, rolesArrayAgg);
-        this.authenticate();
+				this.authenticate();
 			}),
 			this.storeAccessLevels(),
 			catchError(() => of(false)),
@@ -59,16 +59,15 @@ export class AuthenticationService {
 		);
 	}
 
-
 	public refreshToken(): Observable<boolean> {
 		const accessToken = this.tokenService.getAccessToken();
 		const refreshToken = this.tokenService.getRefreshToken();
 		if (accessToken && refreshToken) {
 			return this.http
-				.put<{ accessToken: string; refreshToken: string }>(
-					this.consumerApi,
-					{ accessToken, refreshToken },
-				)
+				.put<{ accessToken: string; refreshToken: string }>(this.consumerApi, {
+					accessToken,
+					refreshToken,
+				})
 				.pipe(
 					tap((res) => {
 						const { accessToken, refreshToken } = res ?? {};
@@ -86,9 +85,7 @@ export class AuthenticationService {
 	}
 
 	public updateUser(nickname: string, rolesArrayAgg: number[]): void {
-		this._user.update(
-			(user) => ({ ...user, nickname, rolesArrayAgg }) as User,
-		);
+		this._user.update((user) => ({ ...user, nickname, rolesArrayAgg }) as User);
 	}
 
 	public storeAccessLevels() {
@@ -96,10 +93,10 @@ export class AuthenticationService {
 			switchMap(() => this.rolesService.getAll()),
 			tap(() => {
 				this.accessLevelsService.storeAccessLevels(
-          this.rolesService.roles,
+					this.rolesService.roles,
 					this.user()?.rolesArrayAgg || [],
 					this.rolesService.functionalities,
-        );
+				);
 			}),
 			map(() => true),
 		);
@@ -128,8 +125,8 @@ export class AuthenticationService {
 
 	private saveTokens(accessToken: string, refreshToken: string) {
 		// if (accessToken && refreshToken) {
-			this.tokenService.saveAccessToken(accessToken);
-			this.tokenService.saveRefreshToken(refreshToken);
+		this.tokenService.saveAccessToken(accessToken);
+		this.tokenService.saveRefreshToken(refreshToken);
 		// }
 	}
 
