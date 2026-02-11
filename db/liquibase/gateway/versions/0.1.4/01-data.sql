@@ -13,22 +13,23 @@ INSERT INTO cors (name, "creatorId", "creatorName") VALUES
 INSERT INTO "service" (name, protected, "creatorId", "creatorName") VALUES 
 ('gatelin', true, -1, 'system'),
 ('ms-auth-mock', false, -1, 'system'),
-('ms-user-mock', false, -1, 'system')
+('ms-user-mock', false, -1, 'system'),
+('ms-roles-mock', false, -1, 'system')
 ;
 
 
-INSERT INTO operation (name, description) VALUES
-('read', 'Retrieve a single resource'),
-('list', 'Search multiple resources'),
-('create', 'Create a new resource'),
-('bulk create', 'Create multiple new resources'),
-('update', 'Update an existing resource'),
-('bulk update', 'Update multiple existing resources'),
-('archive', 'Archive a resource'),
-('bulk archive', 'Archive multiple resources'),
-('delete', 'Delete a resource'),
-('bulk delete', 'Delete multiple resources'),
-('execute', 'Execute a specific operation or command')
+INSERT INTO operation (name, description, "creatorId", "creatorName") VALUES
+('read', 'Retrieve a single resource', -1, 'system'),
+('list', 'Search multiple resources', -1, 'system'),
+('create', 'Create a new resource', -1, 'system'),
+('bulk create', 'Create multiple new resources', -1, 'system'),
+('update', 'Update an existing resource', -1, 'system'),
+('bulk update', 'Update multiple existing resources', -1, 'system'),
+('archive', 'Archive a resource', -1, 'system'),
+('bulk archive', 'Archive multiple resources', -1, 'system'),
+('delete', 'Delete a resource', -1, 'system'),
+('bulk delete', 'Delete multiple resources', -1, 'system'),
+('execute', 'Execute a specific operation or command', -1, 'system')
 ;
 
 

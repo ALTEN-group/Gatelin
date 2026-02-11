@@ -11,11 +11,11 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use('/health', healixRouter);
+app.use('/roles/health', healixRouter);
 
 // POST /roles/search/ - Search for roles
-app.post('/roles/search/', (req, res) => {
-  log.info('POST /roles/search/ - Search roles');
+app.post('/roles/roles/search/', (req, res) => {
+  log.info('POST /roles/roles/search/ - Search roles');
   
   res.status(200).json({
     rows: mockRoles,
@@ -24,8 +24,8 @@ app.post('/roles/search/', (req, res) => {
 });
 
 // POST /permissions/search/ - Search for permissions
-app.post('/permissions/search/', (req, res) => {
-  log.info('POST /permissions/search/ - Search permissions');
+app.post('/roles/permissions/search/', (req, res) => {
+  log.info('POST /roles/permissions/search/ - Search permissions');
   
   // Compute permission names dynamically
   const permissionsWithNames = mockPermissions.map(permission => ({
@@ -56,8 +56,8 @@ app.post('/permissions/search/', (req, res) => {
 // });
 
 // POST /role-permissions/search/ - Search role-permission mappings
-app.post('/role-permissions/search/', (req, res) => {
-  log.info('POST /role-permissions/search/ - Search role permissions');
+app.post('/roles/role-permissions/search/', (req, res) => {
+  log.info('POST /roles/role-permissions/search/ - Search role permissions');
   
   res.status(200).json({
     rows: mockRolePermissions,

@@ -49,12 +49,12 @@ INSERT INTO route ("resourceId", "operationId", description, pattern, methods, j
 (7, 8, 'Archive users', 'users/users/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
 (7, 10, 'Delete users', 'users/users', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system'),
 
-(8, 2, 'Search roles', 'users/roles/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 2, 'Manage roles history', 'users/roles/(?<roleId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 5, 'Update roles', 'users/roles', ARRAY['PUT', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 4, 'Add roles', 'users/roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 8, 'Archive roles', 'users/roles/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 10, 'Delete roles', 'users/roles', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system')
+(8, 2, 'Search roles', 'roles/roles/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(8, 2, 'Manage roles history', 'roles/roles/(?<roleId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
+(8, 5, 'Update roles', 'roles/roles', ARRAY['PUT', 'OPTIONS']::method[], true, false, -1, 'system'),
+(8, 4, 'Add roles', 'roles/roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(8, 8, 'Archive roles', 'roles/roles/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
+(8, 10, 'Delete roles', 'roles/roles', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system')
 ;
 
 ANALYZE;

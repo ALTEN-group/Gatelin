@@ -13,15 +13,6 @@ import { Route } from "app/admin/data-access/routes/route.model";
 export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 	ID_CONFIG,
 	{
-		key: "apiName",
-		label: "API",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			validators: [required, minlength(2), maxlength(20)],
-		},
-	},
-  {
 		key: "serviceName",
 		label: "Service",
 		controlType: CONTROL_TYPES.INPUT,
@@ -30,9 +21,18 @@ export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 			validators: [required, minlength(2), maxlength(10)],
 		},
 	},
+  {
+		key: "resourceName",
+		label: "Resource",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		controlOptions: {
+			validators: [required, minlength(2), maxlength(20)],
+		},
+	},
 	{
-		key: "action",
-		label: "Action",
+		key: "operationName",
+		label: "Operation",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
 		controlOptions: {

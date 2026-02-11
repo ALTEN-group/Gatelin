@@ -28,8 +28,8 @@ export const SIDENAV: MenuItem[] = [
 	},
 	{
 		id: "apis",
-		label: $localize`:@@Admin_ApisNav:APIs`,
-		routerLink: `/${AppPaths.ADMIN}/apis`,
+		label: $localize`:@@Admin_ApisNav:resources`,
+		routerLink: `/${AppPaths.ADMIN}/resources`,
 		icon: "pi pi-directions",
 	},
 	{

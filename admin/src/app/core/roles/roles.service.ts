@@ -40,7 +40,7 @@ export class RolesService {
 	private readonly snackbarService = inject(SnackbarService);
 
 	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
-	private readonly endPoint: string = `${this.apiPrefix}users/roles/`;
+	private readonly endPoint: string = `${this.apiPrefix}roles/roles/`;
 	private readonly archiveSuffix: string = "archive";
 
 	// Roles cache

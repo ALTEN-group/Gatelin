@@ -5,9 +5,9 @@ import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
  */
 export interface Route extends ArchiveInfo {
 	id: number | null;
-	apiName: string;
 	serviceName: string;
-	action: string;
+	resourceName: string;
+	operationName: string;
 	description: string;
 	pattern: string;
 	methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
@@ -23,9 +23,9 @@ export interface Route extends ArchiveInfo {
  */
 export const routeFactory = (): Route => ({
 	id: null,
-	apiName: "",
 	serviceName: "",
-	action: "",
+	resourceName: "",
+	operationName: "",
 	description: "",
 	pattern: "",
 	methods: [],
