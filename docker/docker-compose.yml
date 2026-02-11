@@ -140,6 +140,9 @@ services:
       PWD_UPPERCASE_POLICY: ${GATELIN_PWD_UPPERCASE_LEGACY}
       PWD_LOWERCASE_POLICY: ${GATELIN_PWD_LOWERCASE_LEGACY}
       PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
+    # depends_on:
+    #   ms_role_mock:
+    #     condition: service_healthy
     networks:
       - internal
     volumes:
@@ -271,6 +274,26 @@ services:
       - ${PWD}/mocks/ms_user/src:/usr/src/app/src
       - ms_user_mock_node_modules:/usr/src/app/node_modules
 
+  ms_role_mock:
+    build:
+      context: ${PWD}/mocks/ms_role
+      dockerfile: dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        TZ: ${TZ}
+        NODE_VERSION: ${NODE_VERSION}
+        NODE_ENV: ${NODE_ENV}
+    container_name: ${MSROLE_HOST}
+    hostname: ${MSROLE_HOST}
+    environment:
+      PORT: ${DEFAULT_PORT}
+    networks:
+      - internal
+    volumes:
+      - ${PWD}/mocks/ms_role/src:/usr/src/app/src
+      - ms_role_mock_node_modules:/usr/src/app/node_modules
+
   ms_auth_mock:
     build:
       context: ${PWD}/mocks/ms_auth
@@ -317,4 +340,4 @@ volumes:
   swagger_node_modules:
   ms_user_mock_node_modules:
   ms_auth_mock_node_modules:
-  ms_backend_mock_node_modules:
+  ms_role_mock_node_modules:

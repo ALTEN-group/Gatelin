@@ -1,10 +1,10 @@
 -- Create INSTEAD OF trigger function for apis view
--- This function handles INSERT, UPDATE, DELETE operations on the apis view
--- by converting them to operations on the underlying api table
-CREATE OR REPLACE FUNCTION iud_api() RETURNS trigger AS '
+-- This function handles INSERT, UPDATE, DELETE operations on the resources view
+-- by converting them to operations on the underlying resource table
+CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO api ("serviceId", name, protected, "creatorId", "creatorName")
+      INSERT INTO resource ("serviceId", name, protected, "creatorId", "creatorName")
       VALUES (
         NEW."serviceId",
         NEW.name,
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION iud_api() RETURNS trigger AS '
       RETURN NEW;
       
     ELSIF TG_OP = ''UPDATE'' THEN
-      UPDATE api 
+      UPDATE resource
       SET 
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
         name = COALESCE(NEW.name, name),
@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION iud_api() RETURNS trigger AS '
       RETURN NEW;
       
     ELSIF TG_OP = ''DELETE'' THEN
-      DELETE FROM api WHERE id = OLD.id;
+      DELETE FROM resource WHERE id = OLD.id;
       RETURN OLD;
     END IF;
   END;

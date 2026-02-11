@@ -5,8 +5,8 @@ create or replace view routes AS
   )
   SELECT r.id, 
   r."serviceId",
-  r."apiId",
-  a.name as "apiName",
+  r."resourceId",
+  a.name as "resourceName",
   s.name as "serviceName",
   r.action,
   r.description, 
@@ -14,6 +14,7 @@ create or replace view routes AS
   r.methods,
   r.jwt,
   r.protected,
+  array_agg(DISTINCT p."permissionName" ORDER BY p."permissionName" ASC) FILTER (WHERE p."permissionName" IS NOT NULL) AS "permissionsArrayAgg",
   h.tstamp AS "updatedAt",
   h."consumerId" AS "updaterId",
   h."consumerName" AS "updaterName",
@@ -24,7 +25,8 @@ create or replace view routes AS
   FROM "route" AS r
   -- LEFT OUTER JOIN "access" as a ON a."routeId" = r.id 
   LEFT OUTER JOIN "service" as s ON r."serviceId" = s.id 
-  LEFT OUTER JOIN "api" as a ON r."apiId" = a.id 
+  LEFT OUTER JOIN "resource" as a ON r."resourceId" = a.id 
+  LEFT OUTER JOIN "policy" as p ON p."routeId" = r.id
   -- LEFT OUTER JOIN "permission" as p ON p."functionalityId" = r."functionalityId" AND p."operationId" = a."operationId" 
   LEFT JOIN history h ON (h.id, h.operation) = (r.id, 'UPDATE')
   LEFT JOIN history h2 ON (h2.id, h2.operation) = (r.id, 'INSERT')

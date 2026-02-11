@@ -19,5 +19,25 @@ export const mockRoles = [
     permissions: { 1: 1 },
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
+  },
+  {
+    id: 3,
+    name: 'User',
+    description: 'Standard user role with basic permissions',
+    color: '#4CAF50',
+    level: 2,
+    permissions: { 2: 1 },
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+  },
+  {
+    id: 4,
+    name: 'Guest',
+    description: 'Guest user role with limited permissions',
+    color: '#9E9E9E',
+    level: 3,
+    permissions: { 3: 1 },
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
   }
 ];

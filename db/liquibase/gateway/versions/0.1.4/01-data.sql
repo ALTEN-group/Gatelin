@@ -28,16 +28,6 @@ INSERT INTO api ("serviceId", name, protected, "creatorId", "creatorName") VALUE
 ;
 
 
--- INSERT INTO service_cors ("serviceId", "corsId") VALUES
--- (1, 1),
--- (1, 2),
--- (1, 3),
--- (2, 1),
--- (2, 2),
--- (2, 3)
--- ;
-
-
 INSERT INTO route ("serviceId", "apiId", action, description, pattern, methods, jwt, protected, "creatorId", "creatorName") VALUES
 
 (1, 1, 'search', 'Search consumers', 'gatelin/consumers/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
