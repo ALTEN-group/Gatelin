@@ -1,9 +1,9 @@
 import { Routes } from "@angular/router";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
-import { ApisComponent } from "app/admin/features/apis/apis.component";
 import { ConsumersComponent } from "app/admin/features/consumers/consumers.component";
 import { CorsComponent } from "app/admin/features/cors/cors.component";
 import { OperationsComponent } from "app/admin/features/operations/operations.component";
+import { ResourcesComponent } from "app/admin/features/resources/resources.component";
 import { RoutesComponent } from "app/admin/features/routes/routes.component";
 import { ServicesComponent } from "app/admin/features/services/services.component";
 
@@ -33,8 +33,8 @@ export const ADMIN_ROUTES: Routes = [
 		},
 	},
 	{
-		path: "apis",
-		component: ApisComponent,
+		path: "resources",
+		component: ResourcesComponent,
 		data: {
 			breadcrumb: $localize`:@@Apis_apisNav:APIs`,
 		},

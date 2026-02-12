@@ -7,7 +7,7 @@ import {
 	operationFactory,
 } from "app/admin/data-access/operations/operation.model";
 
-const operationsEndpoint: string = "operations";
+const operationsEndpoint: string = "gatelin/operations";
 
 @Injectable({
 	providedIn: "root",

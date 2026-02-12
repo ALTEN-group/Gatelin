@@ -15,6 +15,7 @@ import { getFromCache, addToCache, updateCache, deleteFromCache } from "../middl
 import { sendConsumer } from "../middlewares/res/send-consumer.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { send204 } from "../middlewares/res/send-204.js";
+import { send } from "../middlewares/res/send.js";
 
 // middleware sub-stacks
 const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];
@@ -32,6 +33,7 @@ const add = [
 
 const getMany = [
   cEnt.get,
+  send,
 ];
 
 const update = [

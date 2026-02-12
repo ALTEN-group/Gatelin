@@ -2,20 +2,20 @@ import { Injectable } from "@angular/core";
 import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
-import { API_COLUMNS } from "app/admin/data-access/apis/api.conf";
-import { Api, apiFactory } from "app/admin/data-access/apis/api.model";
+import { RESOURCE_COLUMNS } from "app/admin/data-access/resources/resource.conf";
+import { Resource, resourceFactory } from "app/admin/data-access/resources/resource.model";
 
-const apisEndpoint: string = "gatelin/apis";
+const resourcesEndpoint: string = "gatelin/resources";
 
 @Injectable({
 	providedIn: "root",
 })
-export class ApisService {
-	private readonly crud = new CrudRepository<Api>().with({
-		endpoint: apisEndpoint,
+export class ResourcesService {
+	private readonly crud = new CrudRepository<Resource>().with({
+		endpoint: resourcesEndpoint,
 	});
 
-	public readonly httpCalls: Calls<Api> = {
+	public readonly httpCalls: Calls<Resource> = {
 		get: this.crud.get,
 		create: this.crud.create,
 		update: this.crud.update,
@@ -23,6 +23,6 @@ export class ApisService {
 	};
 
 	public readonly config = (payload: ConfBuilderPayload) =>
-		API_COLUMNS(payload);
-	public readonly entityFactory = apiFactory;
+		RESOURCE_COLUMNS(payload);
+	public readonly entityFactory = resourceFactory;
 }

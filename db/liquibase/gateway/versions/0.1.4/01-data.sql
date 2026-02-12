@@ -41,5 +41,5 @@ INSERT INTO resource ("serviceId", name, protected, "creatorId", "creatorName") 
 (1, 'actions', true, -1, 'system'),
 (1, 'cors', true, -1, 'system'),
 (3, 'users', false, -1, 'system'),
-(3, 'roles', false, -1, 'system')
+(4, 'roles', false, -1, 'system')
 ;

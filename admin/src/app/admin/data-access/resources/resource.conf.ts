@@ -5,15 +5,15 @@ import { INPUT_TYPES } from "@crud/core/models/input-type.model";
 import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
 import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
-  maxlength,
-  minlength,
-  required,
+	maxlength,
+	minlength,
+	required,
 } from "@crud/form/utils/common.validators";
-import { Api } from "app/admin/data-access/apis/api.model";
+import { Resource } from "app/admin/data-access/resources/resource.model";
 
-export const API_COLUMNS: (
+export const RESOURCE_COLUMNS: (
 	payload: ConfBuilderPayload,
-) => StrictCrudItemOptions<Api>[] = ({ data }) => [
+) => StrictCrudItemOptions<Resource>[] = ({ data }) => [
 	ID_CONFIG,
 	{
 		key: "serviceName",

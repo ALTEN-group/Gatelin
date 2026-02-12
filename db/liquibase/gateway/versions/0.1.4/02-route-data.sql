@@ -28,12 +28,12 @@ INSERT INTO route ("resourceId", "operationId", description, pattern, methods, j
 (4, 8, 'Archive resources', 'gatelin/resources/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
 (4, 10, 'Delete resources', 'gatelin/resources', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
 
-(5, 2, 'Search actions', 'gatelin/actions/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
-(5, 2, 'Manage actions history', 'gatelin/actions/(?<actionId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(5, 5, 'Update actions', 'gatelin/actions', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
-(5, 4, 'Add actions', 'gatelin/actions', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
-(5, 8, 'Archive actions', 'gatelin/actions/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
-(5, 10, 'Delete actions', 'gatelin/actions', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 2, 'Search operations', 'gatelin/operations/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 2, 'Manage operations history', 'gatelin/operations/(?<actionId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 5, 'Update operations', 'gatelin/operations', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 4, 'Add operations', 'gatelin/operations', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 8, 'Archive operations', 'gatelin/operations/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
+(5, 10, 'Delete operations', 'gatelin/operations', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
 
 (6, 2, 'Search cors', 'gatelin/cors/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (6, 2, 'Manage cors history', 'gatelin/cors/(?<corsId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),

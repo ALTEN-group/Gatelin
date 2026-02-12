@@ -4,7 +4,7 @@ const tableKeys = [
 	"routes",
 	"consumers",
 	"services",
-	"apis",
+	"resources",
 	"cors",
 	"operations",
 ] as const; // Extend as needed
@@ -65,11 +65,11 @@ export const TABLES: Record<AppTable, TableInfo> = {
 		canAccessItemFromUrl: false,
 		filterLevel: "advanced",
 	},
-	apis: {
-		label: $localize`:@@TableLabels_Api:API`,
-		title: $localize`:@@TableLabels_Apis:APIs`,
-		key: "apis",
-		functionalityKey: "apis",
+	resources: {
+		label: $localize`:@@TableLabels_Resource:Resource`,
+		title: $localize`:@@TableLabels_Resources:Resources`,
+		key: "resources",
+		functionalityKey: "resources",
 		selectable: true,
 		isExcelExportEnabled: true,
 		lazy: true,
