@@ -9,11 +9,11 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use('/health', healixRouter);
+app.use('/users/health', healixRouter);
 
-// POST /users/ - Get user by email filter (used by Gatelin getUserByEmail middleware)
-app.post('/users/', (req, res) => {
-  log.info(`POST /users/ - Get user by filters ${JSON.stringify(req.body)}`);
+// POST /users/search - Get user by filter (used by Gatelin getUserByEmail middleware)
+app.post('/users/users/search/', (req, res) => {
+  log.info(`POST /users/users/search/ - Get user by filters ${JSON.stringify(req.body)}`);
   
   const { filters } = req.body;
   
@@ -26,12 +26,53 @@ app.post('/users/', (req, res) => {
   if (!user)
     return res.status(404).json({ error: 'User not found' });
 
-  log.debug(`POST /users/ - success: ${JSON.stringify(user)}`);
+  log.debug(`POST /users/users/search/ - success: ${JSON.stringify(user)}`);
   res.status(200).json({
     rows: [user],
     total: 1
   });
 });
+
+// GET /users/me - Get authenticated user's essential info (for login/navbar)
+app.get('/users/me/', (req, res) => {
+  log.info('GET /users/me/ - Get authenticated user essentials from x-consumer-id header');
+
+  // Gatelin adds x-consumer-id header (userId from JWT's iss claim)
+  const userId = req.headers['x-consumer-id'];
+  log.debug(`Extracted userId from x-consumer-id header: ${userId}`);
+  const user = mockUsers.find(u => u.id === +userId);
+
+  // Return only essential fields for login/session
+  const essentials = {
+    nickname: user.nickname,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    rolesArrayAgg: user.rolesArrayAgg
+  };
+
+  log.debug(`GET /users/me/ - success: ${user.nickname}`);
+  res.status(200).json(essentials);
+});
+
+// // GET /users/:id - Get user account by ID (used after login)
+// app.get('/users/users/:id', (req, res) => {
+//   const userId = parseInt(req.params.id, 10);
+//   log.info(`GET /users/users/${userId} - Get user account`);
+
+//   if (isNaN(userId) || userId <= 0)
+//     return res.status(400).json({ error: 'Invalid user ID' });
+
+//   const user = mockUsers.find(u => u.id === userId);
+
+//   if (!user)
+//     return res.status(404).json({ error: 'User not found' });
+
+//   if (user.archived)
+//     return res.status(404).json({ error: 'User archived' });
+
+//   log.debug(`GET /users/users/${userId} - success: ${user.nickname}`);
+//   res.status(200).json(user);
+// });
 
 
 listen(app);

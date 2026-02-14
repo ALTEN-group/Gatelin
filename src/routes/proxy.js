@@ -3,12 +3,11 @@ import express from "express";
 const router = express.Router();
 
 import { forwardToService } from "../controllers/forward.js";
-
-import { checkRequest } from "../middlewares/validators/check-request.js";
+import updateHeaderWithConsumer from "../middlewares/mappers/additionalHeaders.js";
 
 // Dispatch request - catch all routes using regex
-router.all(/^\/.*/, 
-  ...checkRequest, 
+router.all(/^\/.*/,
+  updateHeaderWithConsumer,
   forwardToService
 );
 

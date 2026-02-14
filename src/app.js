@@ -45,7 +45,7 @@ app.use("/gatelin/services", ...checkRequest, service, send);
 app.use("/gatelin/resources", ...checkRequest, resource, send);
 app.use("/gatelin/operations", ...checkRequest, operation, send);
 app.use("/gatelin/cors", ...checkRequest, corsRoutes, send);
-app.use("/", proxy);
+app.use("/", ...checkRequest, proxy);
 
 // Performance measurement ends
 app.use(endTimer);

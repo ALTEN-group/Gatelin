@@ -5,6 +5,7 @@ import cEnt from "../entities/consumer.js";
 /**
  * @typedef {Object} ConsumerCache
  * @property {number} id - Consumer ID
+ * @property {number} userId - User ID from ms_user service
  * @property {string} accessToken - JWT access token
  * @property {string} refreshToken - JWT refresh token
  * @property {string} nickname - Consumer nickname
@@ -58,7 +59,7 @@ function getOne(accessToken) {
  *
  * @param {ConsumerCache} consumer - The consumer object containing all relevant details.
  * @example
- * addToCache({ id: 1, nickname: 'user', accessToken: '...', refreshToken: '...', rolesArrayAgg: [1, 2] });
+ * addToCache({ id: 1, userId: 123, nickname: 'user', accessToken: '...', refreshToken: '...', rolesArrayAgg: [1, 2] });
  */
 function addToCache(consumer) {
   consumers.push({ ...consumer });

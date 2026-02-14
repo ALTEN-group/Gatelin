@@ -12,6 +12,7 @@ INSERT INTO cors (name, "creatorId", "creatorName") VALUES
 
 INSERT INTO "service" (name, protected, "creatorId", "creatorName") VALUES 
 ('gatelin', true, -1, 'system'),
+('ms-user-mock', false, -1, 'system'),
 ('ms-role-mock', false, -1, 'system')
 ;
 
@@ -38,5 +39,6 @@ INSERT INTO resource ("serviceId", name, protected, "creatorId", "creatorName") 
 (1, 'resources', true, -1, 'system'),
 (1, 'actions', true, -1, 'system'),
 (1, 'cors', true, -1, 'system'),
-(2, 'roles', false, -1, 'system')
+(2, 'users', true, -1, 'system'),
+(3, 'roles', false, -1, 'system')
 ;

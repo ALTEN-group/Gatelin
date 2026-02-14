@@ -24,6 +24,7 @@ export class AuthenticationService {
 	private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
 	private readonly consumerApi: string = `${this.apiPrefix}gatelin/consumers/`;
+	private readonly meApi: string = `${this.apiPrefix}users/me/`;
 
 	private readonly _isAuthenticated = signal(false);
 	public readonly isAuthenticated = this._isAuthenticated.asReadonly();
@@ -36,13 +37,23 @@ export class AuthenticationService {
 		const payload = { email, pwd };
 		return this.http.post<LoginResponse>(this.consumerApi, payload).pipe(
 			tap((res) => {
-				const { nickname, firstName, lastName, accessToken, refreshToken, rolesArrayAgg } = res;
+				const { accessToken, refreshToken } = res;
 				this.saveTokens(accessToken, refreshToken);
-				this.updateUser(nickname, firstName, lastName, rolesArrayAgg);
 				this.authenticate();
 			}),
+      switchMap(() => this.getAccount()),
 			this.storeAccessLevels(),
 			catchError(() => of(false)),
+		);
+	}
+
+  public getAccount(): Observable<User | null> {
+		return this.http.get<User>(this.meApi).pipe(
+			tap((res) => {
+        const { nickname, firstName, lastName, rolesArrayAgg } = res;
+				this.updateUser(nickname, firstName, lastName, rolesArrayAgg);
+			}),
+			catchError(() => of(null)),
 		);
 	}
 

@@ -3,7 +3,7 @@ import { log } from "@dwtechs/winstan";
 import http from "../../services/http.js";
 
 const { MSUSER_URL } = process.env;
-const url = `${MSUSER_URL}/users/`;
+const url = `${MSUSER_URL}/users/users/search/`;
 
 /**
  * Fetches user details from ms_user service by email
@@ -28,7 +28,7 @@ const url = `${MSUSER_URL}/users/`;
  *   res.locals = {}
  * 
  * OUTPUT:
- *   req.body = { rows: [{ nickname: string, rolesArrayAgg: number[] }]}
+ *   req.body = { rows: [{ userId: number, nickname: string, rolesArrayAgg: number[] }]}
  *   res.locals = { user: { id: string, active: boolean } }
  */
 export function getUserByEmail(req, res, next) {
@@ -49,9 +49,8 @@ export function getUserByEmail(req, res, next) {
       const u = r.data.rows[0]; // Expecting single user object
       log.debug(`ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}`);
       req.body.rows = [{ // Attach user data to request body for db update in downstream middleware
+        userId: u.id,
         nickname: u.nickname,
-        firstName: u.firstName,
-        lastName: u.lastName,
         rolesArrayAgg: u.rolesArrayAgg
       }];
       res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware
