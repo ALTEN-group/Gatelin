@@ -12,9 +12,9 @@ import {
 } from "@crud/form/utils/common.validators";
 import { Operation } from "app/admin/data-access/operations/operation.model";
 import { Resource } from "app/admin/data-access/resources/resource.model";
+import { METHODS } from "app/admin/data-access/routes/methods";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { Service } from "app/admin/data-access/services/service.model";
-import { METHODS } from "http";
 
 export const ROUTE_COLUMNS: (
 	payload: ConfBuilderPayload,
