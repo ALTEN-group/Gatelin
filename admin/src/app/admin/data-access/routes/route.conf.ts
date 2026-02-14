@@ -14,6 +14,7 @@ import { Operation } from "app/admin/data-access/operations/operation.model";
 import { Resource } from "app/admin/data-access/resources/resource.model";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { Service } from "app/admin/data-access/services/service.model";
+import { METHODS } from "http";
 
 export const ROUTE_COLUMNS: (
 	payload: ConfBuilderPayload,
@@ -124,14 +125,10 @@ export const ROUTE_COLUMNS: (
 		key: "methods",
 		label: "Méthodes",
 		controlType: CONTROL_TYPES.MULTISELECT,
-		options: [
-			{ label: "GET", value: "GET" },
-			{ label: "POST", value: "POST" },
-			{ label: "PUT", value: "PUT" },
-			{ label: "PATCH", value: "PATCH" },
-			{ label: "DELETE", value: "DELETE" },
-			{ label: "OPTIONS", value: "OPTIONS" },
-		],
+		options: METHODS.map((m) => ({
+			label: m,
+			value: m,
+		})),
 		controlOptions: {
 			validators: [required],
 		},
