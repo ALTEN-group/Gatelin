@@ -1,3 +1,4 @@
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
@@ -10,6 +11,7 @@ import {
 	required,
 } from "@crud/form/utils/common.validators";
 import { Resource } from "app/admin/data-access/resources/resource.model";
+import { Service } from "app/admin/data-access/services/service.model";
 
 export const RESOURCE_COLUMNS: (
 	payload: ConfBuilderPayload,
@@ -18,10 +20,10 @@ export const RESOURCE_COLUMNS: (
 	{
 		key: "serviceName",
 		label: "Service",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
+		controlType: CONTROL_TYPES.MULTISELECT,
+		options: toSelectItems<Service>(data.services, "name"),
 		controlOptions: {
-			validators: [required, minlength(2), maxlength(20)],
+			validators: [required],
 		},
 	},
 	{
