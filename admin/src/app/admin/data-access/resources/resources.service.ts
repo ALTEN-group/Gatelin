@@ -3,7 +3,11 @@ import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { RESOURCE_COLUMNS } from "app/admin/data-access/resources/resource.conf";
-import { Resource, resourceFactory } from "app/admin/data-access/resources/resource.model";
+import {
+	Resource,
+	resourceFactory,
+} from "app/admin/data-access/resources/resource.model";
+import { map, Observable } from "rxjs";
 
 const resourcesEndpoint: string = "gatelin/resources";
 
@@ -25,4 +29,8 @@ export class ResourcesService {
 	public readonly config = (payload: ConfBuilderPayload) =>
 		RESOURCE_COLUMNS(payload);
 	public readonly entityFactory = resourceFactory;
+
+	public getAndCacheAll(): Observable<Resource[]> {
+		return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+	}
 }

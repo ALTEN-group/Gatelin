@@ -11,7 +11,9 @@ import {
 	required,
 } from "@crud/form/utils/common.validators";
 import { Operation } from "app/admin/data-access/operations/operation.model";
+import { Resource } from "app/admin/data-access/resources/resource.model";
 import { Route } from "app/admin/data-access/routes/route.model";
+import { Service } from "app/admin/data-access/services/service.model";
 
 export const ROUTE_COLUMNS: (
 	payload: ConfBuilderPayload,
@@ -20,28 +22,37 @@ export const ROUTE_COLUMNS: (
 	{
 		key: "serviceName",
 		label: "Service",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
+		controlType: CONTROL_TYPES.SELECT,
+		options: toSelectItems<Service>(data.services, "name"),
 		controlOptions: {
 			validators: [required, minlength(2), maxlength(10)],
+		},
+		columnOptions: {
+			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{
 		key: "resourceName",
 		label: "Resource",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
+		controlType: CONTROL_TYPES.SELECT,
+		options: toSelectItems<Resource>(data.resources, "name"),
 		controlOptions: {
-			validators: [required, minlength(2), maxlength(20)],
+			validators: [required],
+		},
+		columnOptions: {
+			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{
 		key: "operationName",
 		label: "Operation",
-		controlType: CONTROL_TYPES.MULTISELECT,
+		controlType: CONTROL_TYPES.SELECT,
 		options: toSelectItems<Operation>(data.operations, "name"),
 		controlOptions: {
-			validators: [required, minlength(2), maxlength(20)],
+			validators: [required],
+		},
+		columnOptions: {
+			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{

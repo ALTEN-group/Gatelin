@@ -18,7 +18,7 @@ export class RoutesComponent {
 	private readonly route = inject(ActivatedRoute);
 
 	public readonly config = this.routesService.config({
-		data: { operations: this.route.snapshot.data.operations },
+		data: this.route.snapshot.data,
 	});
 
 	public readonly entityFactory = this.routesService.entityFactory;

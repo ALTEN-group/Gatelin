@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
@@ -24,6 +25,7 @@ export class RoutesService {
 		archive: this.crud.archive,
 	};
 
-	public readonly config = ROUTE_COLUMNS;
+	public readonly config = (payload: ConfBuilderPayload) =>
+		ROUTE_COLUMNS(payload);
 	public readonly entityFactory = routeFactory;
 }

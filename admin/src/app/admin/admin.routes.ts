@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
+import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 import { ConsumersComponent } from "app/admin/features/consumers/consumers.component";
 import { CorsComponent } from "app/admin/features/cors/cors.component";
@@ -17,6 +18,8 @@ export const ADMIN_ROUTES: Routes = [
 		},
 		resolve: {
 			operations: operationsResolver,
+			services: serviceResolver,
+			resources: resourcesResolver,
 		},
 	},
 	{
