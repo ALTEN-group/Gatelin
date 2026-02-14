@@ -1,3 +1,5 @@
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
@@ -8,9 +10,12 @@ import {
 	minlength,
 	required,
 } from "@crud/form/utils/common.validators";
+import { Operation } from "app/admin/data-access/operations/operation.model";
 import { Route } from "app/admin/data-access/routes/route.model";
 
-export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
+export const ROUTE_COLUMNS: (
+	payload: ConfBuilderPayload,
+) => StrictCrudItemOptions<Route>[] = ({ data }) => [
 	ID_CONFIG,
 	{
 		key: "serviceName",
@@ -21,7 +26,7 @@ export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 			validators: [required, minlength(2), maxlength(10)],
 		},
 	},
-  {
+	{
 		key: "resourceName",
 		label: "Resource",
 		controlType: CONTROL_TYPES.INPUT,
@@ -34,7 +39,7 @@ export const ROUTE_COLUMNS: StrictCrudItemOptions<Route>[] = [
 		key: "operationName",
 		label: "Operation",
 		controlType: CONTROL_TYPES.MULTISELECT,
-		options: [],
+		options: toSelectItems<Operation>(data.operations, "name"),
 		controlOptions: {
 			validators: [required, minlength(2), maxlength(20)],
 		},

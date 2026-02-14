@@ -6,6 +6,7 @@ import {
 	Operation,
 	operationFactory,
 } from "app/admin/data-access/operations/operation.model";
+import { map, Observable } from "rxjs";
 
 const operationsEndpoint: string = "gatelin/operations";
 
@@ -26,4 +27,8 @@ export class OperationsService {
 
 	public readonly config = OPERATION_COLUMNS;
 	public readonly entityFactory = operationFactory;
+
+	public getAndCacheAll(): Observable<Operation[]> {
+		return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+	}
 }

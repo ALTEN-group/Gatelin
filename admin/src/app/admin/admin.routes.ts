@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 import { ConsumersComponent } from "app/admin/features/consumers/consumers.component";
 import { CorsComponent } from "app/admin/features/cors/cors.component";
@@ -13,6 +14,9 @@ export const ADMIN_ROUTES: Routes = [
 		component: RoutesComponent,
 		data: {
 			breadcrumb: $localize`:@@Routes_routesNav:Routes`,
+		},
+		resolve: {
+			operations: operationsResolver,
 		},
 	},
 	{
