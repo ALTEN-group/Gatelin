@@ -35,15 +35,15 @@ export const ADMIN_ROUTES: Routes = [
 		data: {
 			breadcrumb: $localize`:@@Services_servicesNav:Services`,
 		},
-		resolve: {
-			services: serviceResolver,
-		},
 	},
 	{
 		path: "resources",
 		component: ResourcesComponent,
 		data: {
 			breadcrumb: $localize`:@@Apis_apisNav:APIs`,
+		},
+		resolve: {
+			services: serviceResolver,
 		},
 	},
 	{
