@@ -50,6 +50,8 @@ export function getUserByEmail(req, res, next) {
       log.debug(`ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}`);
       req.body.rows = [{ // Attach user data to request body for db update in downstream middleware
         nickname: u.nickname,
+        firstName: u.firstName,
+        lastName: u.lastName,
         rolesArrayAgg: u.rolesArrayAgg
       }];
       res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware

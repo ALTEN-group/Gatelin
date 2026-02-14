@@ -87,9 +87,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (!offlineService.isOnline()) {
           return handleOfflineMode();
         }
-        if (isUnauthorized(err)) {
-          return refreshToken(err);
-        }
+        // if (isUnauthorized(err)) {
+        //   return refreshToken(err);
+        // }
         return returnError(err);
       }
       snackbarService.displayError();

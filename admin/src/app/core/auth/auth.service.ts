@@ -36,9 +36,9 @@ export class AuthenticationService {
 		const payload = { email, pwd };
 		return this.http.post<LoginResponse>(this.consumerApi, payload).pipe(
 			tap((res) => {
-				const { nickname, accessToken, refreshToken, rolesArrayAgg } = res;
+				const { nickname, firstName, lastName, accessToken, refreshToken, rolesArrayAgg } = res;
 				this.saveTokens(accessToken, refreshToken);
-				this.updateUser(nickname, rolesArrayAgg);
+				this.updateUser(nickname, firstName, lastName, rolesArrayAgg);
 				this.authenticate();
 			}),
 			this.storeAccessLevels(),
@@ -84,8 +84,8 @@ export class AuthenticationService {
 		return of(false);
 	}
 
-	public updateUser(nickname: string, rolesArrayAgg: number[]): void {
-		this._user.update((user) => ({ ...user, nickname, rolesArrayAgg }) as User);
+	public updateUser(nickname: string, firstName: string, lastName: string, rolesArrayAgg: number[]): void {
+		this._user.update((user) => ({ ...user, nickname, firstName, lastName, rolesArrayAgg }) as User);
 	}
 
 	public storeAccessLevels() {

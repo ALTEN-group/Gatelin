@@ -12,7 +12,7 @@ create or replace view routes AS
   o.name as "operationName",
   r.description, 
   r.pattern,
-  r.methods,
+  array_to_json(r.methods) as methods,
   r.jwt,
   r.protected,
   h.tstamp AS "updatedAt",
