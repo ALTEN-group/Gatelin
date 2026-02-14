@@ -36,7 +36,10 @@ export const ROUTE_COLUMNS: (
 		label: "Service",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
-		options: toSelectItems<Service>(data.services, "name"),
+		options: data.services.map((s: Service) => ({
+			label: s.name,
+			value: s.name,
+		})),
 		controlOptions: {
 			hidden: true,
 		},
@@ -61,7 +64,10 @@ export const ROUTE_COLUMNS: (
 		label: "Resource",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
-		options: toSelectItems<Resource>(data.resources, "name"),
+		options: data.resources.map((r: Resource) => ({
+			label: r.name,
+			value: r.name,
+		})),
 		controlOptions: {
 			hidden: true,
 		},
@@ -86,7 +92,10 @@ export const ROUTE_COLUMNS: (
 		label: "Operation",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
-		options: toSelectItems<Operation>(data.operations, "name"),
+		options: data.operations.map((o: Operation) => ({
+			label: o.name,
+			value: o.name,
+		})),
 		controlOptions: {
 			hidden: true,
 		},

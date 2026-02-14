@@ -34,7 +34,10 @@ export const RESOURCE_COLUMNS: (
 		label: "Service",
 		controlType: CONTROL_TYPES.INPUT,
 		type: INPUT_TYPES.TEXT,
-		options: toSelectItems<Service>(data.services, "name"),
+		options: data.services.map((s: Service) => ({
+			label: s.name,
+			value: s.name,
+		})),
 		controlOptions: {
 			hidden: true,
 		},
