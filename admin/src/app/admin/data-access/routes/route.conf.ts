@@ -20,19 +20,32 @@ export const ROUTE_COLUMNS: (
 ) => StrictCrudItemOptions<Route>[] = ({ data }) => [
 	ID_CONFIG,
 	{
-		key: "serviceName",
+		key: "serviceId",
 		label: "Service",
 		controlType: CONTROL_TYPES.SELECT,
 		options: toSelectItems<Service>(data.services, "name"),
 		controlOptions: {
-			validators: [required, minlength(2), maxlength(10)],
+			validators: [required],
+		},
+		columnOptions: {
+			isHardHidden: true,
+		},
+	},
+	{
+		key: "serviceName",
+		label: "Service",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		options: toSelectItems<Service>(data.services, "name"),
+		controlOptions: {
+			hidden: true,
 		},
 		columnOptions: {
 			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{
-		key: "resourceName",
+		key: "resourceId",
 		label: "Resource",
 		controlType: CONTROL_TYPES.SELECT,
 		options: toSelectItems<Resource>(data.resources, "name"),
@@ -40,16 +53,42 @@ export const ROUTE_COLUMNS: (
 			validators: [required],
 		},
 		columnOptions: {
+			isHardHidden: true,
+		},
+	},
+	{
+		key: "resourceName",
+		label: "Resource",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		options: toSelectItems<Resource>(data.resources, "name"),
+		controlOptions: {
+			hidden: true,
+		},
+		columnOptions: {
 			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{
-		key: "operationName",
+		key: "operationId",
 		label: "Operation",
 		controlType: CONTROL_TYPES.SELECT,
 		options: toSelectItems<Operation>(data.operations, "name"),
 		controlOptions: {
 			validators: [required],
+		},
+		columnOptions: {
+			isHardHidden: true,
+		},
+	},
+	{
+		key: "operationName",
+		label: "Operation",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		options: toSelectItems<Operation>(data.operations, "name"),
+		controlOptions: {
+			hidden: true,
 		},
 		columnOptions: {
 			filterType: CONTROL_TYPES.MULTISELECT,

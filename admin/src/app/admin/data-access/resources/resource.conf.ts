@@ -18,12 +18,28 @@ export const RESOURCE_COLUMNS: (
 ) => StrictCrudItemOptions<Resource>[] = ({ data }) => [
 	ID_CONFIG,
 	{
-		key: "serviceName",
+		key: "serviceId",
 		label: "Service",
-		controlType: CONTROL_TYPES.MULTISELECT,
+		controlType: CONTROL_TYPES.SELECT,
 		options: toSelectItems<Service>(data.services, "name"),
 		controlOptions: {
 			validators: [required],
+		},
+		columnOptions: {
+			isHardHidden: true,
+		},
+	},
+	{
+		key: "serviceName",
+		label: "Service",
+		controlType: CONTROL_TYPES.INPUT,
+		type: INPUT_TYPES.TEXT,
+		options: toSelectItems<Service>(data.services, "name"),
+		controlOptions: {
+			hidden: true,
+		},
+		columnOptions: {
+			filterType: CONTROL_TYPES.MULTISELECT,
 		},
 	},
 	{
@@ -35,7 +51,7 @@ export const RESOURCE_COLUMNS: (
 			validators: [required, minlength(2), maxlength(20)],
 		},
 	},
-  {
+	{
 		key: "protected",
 		label: "Protégé",
 		controlType: CONTROL_TYPES.CHECKBOX,
