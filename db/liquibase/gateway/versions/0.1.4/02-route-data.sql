@@ -1,5 +1,5 @@
 
-INSERT INTO route ("resourceId", "operationId", description, pattern, methods, jwt, protected, "creatorId", "creatorName") VALUES
+INSERT INTO route ("resourceId", "operationId", description, pattern, methods, jwt, locked, "creatorId", "creatorName") VALUES
 
 (1, 2, 'Search consumers', 'gatelin/consumers/search', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (1, 5, 'Refresh a token or Sign in with a refresh token', 'gatelin/consumers', ARRAY['PUT', 'OPTIONS']::method[], true, true,-1, 'system'),

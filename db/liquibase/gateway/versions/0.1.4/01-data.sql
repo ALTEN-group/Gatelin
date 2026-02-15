@@ -10,7 +10,7 @@ INSERT INTO cors (name, "creatorId", "creatorName") VALUES
 ;
 
 
-INSERT INTO "service" (name, protected, "creatorId", "creatorName") VALUES 
+INSERT INTO "service" (name, locked, "creatorId", "creatorName") VALUES 
 ('gatelin', true, -1, 'system'),
 ('ms-user-mock', false, -1, 'system'),
 ('ms-role-mock', false, -1, 'system')
@@ -32,7 +32,7 @@ INSERT INTO operation (name, description, "creatorId", "creatorName") VALUES
 ;
 
 
-INSERT INTO resource ("serviceId", name, protected, "creatorId", "creatorName") VALUES
+INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VALUES
 (1, 'consumers', true, -1, 'system'),
 (1, 'routes', true, -1, 'system'),
 (1, 'services', true, -1, 'system'),

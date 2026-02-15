@@ -60,5 +60,6 @@
     {
       "text": "Keep subject line under 50 characters"
     }
-  ]
+  ],
+  "editor.indentSize": 2
 }

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS resource (
 	id SERIAL PRIMARY KEY,
   "serviceId" INT NOT NULL,
 	name varchar(20) NOT NULL,
-  protected BOOLEAN DEFAULT FALSE,
+  locked BOOLEAN DEFAULT FALSE,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS route (
   pattern varchar(50) NOT NULL,
   methods method[] NOT NULL,
   jwt BOOLEAN DEFAULT FALSE,
-  protected BOOLEAN DEFAULT FALSE,
+  locked BOOLEAN DEFAULT FALSE,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

@@ -1,5 +1,5 @@
 import { Component, input, output } from "@angular/core";
-import { ProtectFeatureDirective } from "@core/access/protect-feature.directive";
+import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { CrudFeatures } from "@crud/core/utils/table/crud-loader.class";
 import { ButtonModule } from "primeng/button";
 import { TooltipModule } from "primeng/tooltip";

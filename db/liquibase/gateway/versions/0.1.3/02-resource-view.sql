@@ -6,7 +6,7 @@ create or replace view resources AS
   r."serviceId",
   s.name as "serviceName",
   r.name,
-  r.protected,
+  r.locked,
   h.tstamp AS "updatedAt",
   h."consumerId" AS "updaterId",
   h."consumerName" AS "updaterName",

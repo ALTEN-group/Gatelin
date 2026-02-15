@@ -9,8 +9,8 @@ import {
 } from "@angular/core";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { ValidatorFn } from "@angular/forms";
-import { ProtectFeatureDirective } from "@core/access/protect-feature.directive";
-import { ProtectFeaturePipe } from "@core/access/protect-feature.pipe";
+import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
+import { ProtectFeaturePipe } from "@core/acl/protect-feature.pipe";
 import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
 import { CrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { CrudButtonComponent } from "@crud/core/ui/crud-buttons/crud-buttons.component";

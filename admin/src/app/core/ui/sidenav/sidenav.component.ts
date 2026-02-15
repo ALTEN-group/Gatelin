@@ -1,12 +1,12 @@
 import {
   Component,
-  ViewEncapsulation,
   computed,
   inject,
   viewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { AccessLevelsService } from "@core/access/access-levels.service";
+import { AclService } from "@core/acl/acl.service";
 import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { MenuItem } from "primeng/api";
 import { PanelModule } from "primeng/panel";
@@ -21,7 +21,7 @@ import { PanelMenu, PanelMenuModule } from "primeng/panelmenu";
   host: { class: "sidenav" },
 })
 export class SidenavComponent {
-  private readonly accessLevelsService = inject(AccessLevelsService);
+  private readonly aclService = inject(AclService);
   public readonly sidenavService = inject(SidenavService);
 
   public readonly panelMenu = viewChild("panelMenu", { read: PanelMenu });
@@ -88,6 +88,6 @@ export class SidenavComponent {
   }
 
   private hasAccess(functionality: string | undefined) {
-    return this.accessLevelsService.userHasAccess(functionality);
+    return this.aclService.resolveAccess(functionality);
   }
 }

@@ -1,19 +1,19 @@
 import {
-  Directive,
-  ElementRef,
   computed,
+  Directive,
   effect,
+  ElementRef,
   inject,
   input,
 } from "@angular/core";
-import { AccessLevelsService } from "@core/access/access-levels.service";
+import { AclService } from "@core/acl/acl.service";
 
 @Directive({
   selector: "[protectFeature]",
 })
 export class ProtectFeatureDirective {
   private readonly elementRef = inject(ElementRef);
-  private readonly accessControl = inject(AccessLevelsService);
+  private readonly aclService = inject(AclService);
 
   /** Represents the feature to be accessed (users, cities, blogs...) */
   public readonly protectFeature = input.required<string | undefined>();
@@ -22,7 +22,7 @@ export class ProtectFeatureDirective {
   public readonly minimalOperation = input<number | undefined>(undefined);
 
   protected readonly hasAccess = computed(() => {
-    return this.accessControl.userHasAccess(
+    return this.aclService.resolveAccess(
       this.protectFeature(),
       this.minimalOperation(),
       // this.acAttribute(),
@@ -54,19 +54,13 @@ export class ProtectFeatureDirective {
    */
   readonly hideEffect = effect(() => {
     const hasAccess = this.hasAccess();
-    if (!hasAccess) {
-      // Hide the element if the user does not have access
-      this.elementRef.nativeElement.style.display = "none";
-    } else {
-      // Show the element if the user has access
-      this.elementRef.nativeElement.style.display = this.initialDisplayStyle;
-    }
+    // Hide the element if the user does not have access
+    if (!hasAccess) this.elementRef.nativeElement.style.display = "none";
+    else this.elementRef.nativeElement.style.display = this.initialDisplayStyle;
   });
 
   private storeInitialDisplayStyle() {
-    if (this.initialDisplayStyle !== undefined) {
-      return;
-    }
+    if (this.initialDisplayStyle !== undefined) return;
     this.initialDisplayStyle =
       this.elementRef.nativeElement.style.display ?? "";
   }

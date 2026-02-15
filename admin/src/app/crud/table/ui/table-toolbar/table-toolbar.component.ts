@@ -1,5 +1,5 @@
 import { Component, computed, input, model, output } from "@angular/core";
-import { ProtectFeatureDirective } from "@core/access/protect-feature.directive";
+import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
 import { CrudFeatures } from "@crud/core/utils/table/crud-loader.class";
 import { TableColumn } from "@crud/core/utils/table/table-column.model";

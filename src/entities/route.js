@@ -18,7 +18,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "serviceId",
@@ -36,7 +36,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "serviceName",
@@ -54,7 +54,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "resourceId",
@@ -72,7 +72,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "resourceName",
@@ -90,7 +90,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "operationId",
@@ -108,7 +108,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "operationName",
@@ -126,7 +126,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "description",
@@ -144,7 +144,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "pattern",
@@ -162,7 +162,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "methods",
@@ -180,7 +180,7 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "jwt",
@@ -198,10 +198,10 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
-    key: "protected",
+    key: "locked",
     type: "boolean",
     min: null,
     max: null,
@@ -216,6 +216,6 @@ export default new SQLEntity("routes", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
-  }
+    validator: null,
+  },
 ]);

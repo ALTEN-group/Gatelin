@@ -1,15 +1,14 @@
 import { Component, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { AppPaths } from "app/app.routes";
 import { MenuItem } from "primeng/api";
 import { BreadcrumbModule } from "primeng/breadcrumb";
 import { distinctUntilChanged, filter, map } from "rxjs/operators";
 
-const HOME: MenuItem = {
-  label: $localize`:@@Home_homeNav:Accueil`,
-  routerLink: `${AppPaths.HOME}`,
-};
+// const HOME: MenuItem = {
+//   label: $localize`:@@Home_homeNav:Accueil`,
+//   routerLink: `${AppPaths.HOME}`,
+// };
 
 @Component({
   selector: "adm-breadcrumb",
@@ -28,11 +27,11 @@ export class BreadcrumbComponent {
 
   private readonly breadcrumbs$ = this.events$.pipe(
     map(() => this.buildBreadCrumb(this.activatedRoute.root)),
-    map((breadcrumbs) => [HOME, ...breadcrumbs]),
+    // map((breadcrumbs) => [HOME, ...breadcrumbs]),
   );
 
   public readonly breadcrumbs = toSignal(this.breadcrumbs$, {
-    initialValue: [HOME],
+    initialValue: [],
   });
 
   /**

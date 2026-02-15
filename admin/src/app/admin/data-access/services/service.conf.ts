@@ -11,20 +11,20 @@ import {
 import { Service } from "app/admin/data-access/services/service.model";
 
 export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
-	ID_CONFIG,
-	{
-		key: "name",
-		label: "Nom",
-		controlType: CONTROL_TYPES.INPUT,
-		type: INPUT_TYPES.TEXT,
-		controlOptions: {
-			validators: [required, minlength(1), maxlength(10)],
-		},
-	},
+  ID_CONFIG,
   {
-		key: "protected",
-		label: "Protégé",
-		controlType: CONTROL_TYPES.CHECKBOX,
-	},
-	...ARCHIVED_CONFIG,
+    key: "name",
+    label: "Nom",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [required, minlength(1), maxlength(10)],
+    },
+  },
+  {
+    key: "locked",
+    label: "Vérouillé",
+    controlType: CONTROL_TYPES.CHECKBOX,
+  },
+  ...ARCHIVED_CONFIG,
 ];

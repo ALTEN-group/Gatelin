@@ -7,29 +7,23 @@ type AccessLevels = Map<string, number>;
 const initialAccessLevels: AccessLevels = new Map<string, number>();
 
 @Injectable({ providedIn: "root" })
-export class AccessLevelsService {
+export class AclService {
   private _accessLevels = signal<AccessLevels>(initialAccessLevels);
   public readonly accessLevels = this._accessLevels.asReadonly();
 
   private readonly _areAclResolved = signal(false);
   public readonly areAclResolved = this._areAclResolved.asReadonly();
 
-  public userHasAccess(
+  public resolveAccess(
     functionality: string | undefined,
     operation?: OperationLevel,
   ): boolean {
-    if (!functionality) {
-      return true;
-    }
-    if (!this._accessLevels().size) {
-      return false;
-    }
+    if (!functionality) return true;
+    if (!this._accessLevels().size) return false;
     const accessLevel = this._accessLevels().get(functionality);
     const hasFunctionality = accessLevel !== undefined;
     // If no operation is provided, user has access to the functionality.
-    if (!operation) {
-      return hasFunctionality;
-    }
+    if (!operation) return hasFunctionality;
     // If operation is provided, we must check that user has a superior access.
     const hasSufficientRight = accessLevel && accessLevel >= operation;
 
@@ -37,12 +31,11 @@ export class AccessLevelsService {
   }
 
   public storeAccessLevels(
-    roles: Role[],
     userRoleIds: number[],
+    roles: Role[],
     functionalities: Functionality[],
   ): void {
-    if (this._accessLevels().size)
-      return;
+    if (this._accessLevels().size) return;
     const userPermissions = roles
       .filter(
         (role) => typeof role.id === "number" && userRoleIds.includes(role.id),

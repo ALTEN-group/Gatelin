@@ -4,18 +4,18 @@ import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
  * Represents a gateway route
  */
 export interface Route extends ArchiveInfo {
-	id: number | null;
-	serviceId: number | null;
-	serviceName: string;
-	resourceId: number | null;
-	resourceName: string;
-	operationId: number | null;
-	operationName: string;
-	description: string;
-	pattern: string;
-	methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
-	jwt: boolean;
-	protected: boolean;
+  id: number | null;
+  serviceId: number | null;
+  serviceName: string;
+  resourceId: number | null;
+  resourceName: string;
+  operationId: number | null;
+  operationName: string;
+  description: string;
+  pattern: string;
+  methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
+  jwt: boolean;
+  locked: boolean;
 }
 
 /**
@@ -25,17 +25,17 @@ export interface Route extends ArchiveInfo {
  * const newRoute = routeFactory();
  */
 export const routeFactory = (): Route => ({
-	id: null,
-	serviceId: null,
-	serviceName: "",
-	resourceId: null,
-	resourceName: "",
-	operationId: null,
-	operationName: "",
-	description: "",
-	pattern: "",
-	methods: [],
-	jwt: false,
-	protected: false,
-	...new ArchiveInfo(),
+  id: null,
+  serviceId: null,
+  serviceName: "",
+  resourceId: null,
+  resourceName: "",
+  operationId: null,
+  operationName: "",
+  description: "",
+  pattern: "",
+  methods: [],
+  jwt: false,
+  locked: false,
+  ...new ArchiveInfo(),
 });

@@ -1,5 +1,5 @@
 import { Component, input, output } from "@angular/core";
-import { ProtectFeatureDirective } from "@core/access/protect-feature.directive";
+import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { ButtonModule, ButtonSeverity } from "primeng/button";
 
 export type ButtonType =

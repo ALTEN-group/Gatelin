@@ -18,7 +18,7 @@ export default new SQLEntity("resources", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "serviceId",
@@ -36,9 +36,9 @@ export default new SQLEntity("resources", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
-    {
+  {
     key: "serviceName",
     type: "string",
     min: 2,
@@ -54,7 +54,7 @@ export default new SQLEntity("resources", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "name",
@@ -72,10 +72,10 @@ export default new SQLEntity("resources", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
-    key: "protected",
+    key: "locked",
     type: "boolean",
     min: null,
     max: null,
@@ -90,6 +90,6 @@ export default new SQLEntity("resources", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
-  }
+    validator: null,
+  },
 ]);

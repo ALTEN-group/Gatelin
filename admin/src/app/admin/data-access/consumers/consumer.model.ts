@@ -5,11 +5,12 @@ import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
  * Maps to the consumer entity in src/entities/consumer.js
  */
 export interface Consumer extends ArchiveInfo {
-	id: number | null;
-	nickname: string;
-	accessToken: string;
-	refreshToken: string;
-	rolesArrayAgg: number[];
+  id: number | null;
+  userId: number;
+  nickname: string;
+  accessToken: string;
+  refreshToken: string;
+  rolesArrayAgg: number[];
 }
 
 /**
@@ -19,10 +20,11 @@ export interface Consumer extends ArchiveInfo {
  * const newConsumer = consumerFactory();
  */
 export const consumerFactory = (): Consumer => ({
-	id: null,
-	nickname: "",
-	accessToken: "",
-	refreshToken: "",
-	rolesArrayAgg: [],
-	...new ArchiveInfo(),
+  id: null,
+  userId: 0,
+  nickname: "",
+  accessToken: "",
+  refreshToken: "",
+  rolesArrayAgg: [],
+  ...new ArchiveInfo(),
 });

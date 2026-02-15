@@ -18,7 +18,7 @@ export default new SQLEntity("service", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "name",
@@ -36,10 +36,10 @@ export default new SQLEntity("service", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
-    key: "protected",
+    key: "locked",
     type: "boolean",
     min: null,
     max: null,
@@ -54,6 +54,6 @@ export default new SQLEntity("service", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
-  }
+    validator: null,
+  },
 ]);
