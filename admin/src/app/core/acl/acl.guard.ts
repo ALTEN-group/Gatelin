@@ -22,5 +22,5 @@ function resolveAccess(
 }
 
 function redirectsToHome(router: Router): void {
-  router.navigate([`/${AppPaths.ADMIN}`]);
+  router.navigate([`/${AppPaths.ROUTES}`]);
 }

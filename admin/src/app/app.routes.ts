@@ -1,7 +1,5 @@
 import { Routes } from "@angular/router";
 import { accessGuard } from "@core/acl/acl.guard";
-import { ErrorComponent } from "@core/pages/error/error.component";
-import { MaintenanceComponent } from "@core/pages/maintenance/maintenance.component";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 
 /**
@@ -9,74 +7,107 @@ import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
  */
 export const AppPaths = {
   LOGIN: "login",
-  ADMIN: "",
-  USER: "user",
-  MAINTENANCE: "maintenance",
-  ERROR: "error",
+  ROUTES: "",
+  CONSUMERS: "user",
+  SERVICES: "maintenance",
+  RESOURCES: "error",
+  CORS: "cors",
+  OPERATIONS: "operations",
   NOT_FOUND: "not-found",
 } as const;
 
 export const ROUTES: Routes = [
-  //   {
-  //     path: AppPaths.HOME,
-  //     component: HomeComponent,
-  //     title: "Accueil",
-  //   },
   {
     path: AppPaths.LOGIN,
     loadChildren: () =>
       import("./login/login.routes").then((m) => m.AUTH_ROUTES),
     title: "Connexion",
   },
-  // Protected routes
   {
-    path: "",
-    canActivateChild: [accessGuard()],
-    children: [
-      {
-        path: AppPaths.ADMIN,
-        loadChildren: () =>
-          import("./admin/admin.routes").then((m) => m.ADMIN_ROUTES),
-        title: "Administration",
-        data: {
-          breadcrumb: $localize`:@@Admin_adminNav:Administration`,
-        },
-      },
-      {
-        path: AppPaths.MAINTENANCE,
-        component: MaintenanceComponent,
-        title: "Maintenance",
-        data: {
-          breadcrumb: $localize`:@@Maintenance_maintenanceNav:Maintenance`,
-        },
-      },
-      {
-        path: `${AppPaths.ERROR}/:code`,
-        component: ErrorComponent,
-        title: "Erreur",
-        data: {
-          breadcrumb: $localize`:@@Error_errorNav:Erreur`,
-        },
-      },
-      {
-        path: AppPaths.NOT_FOUND,
-        component: NotFoundComponent,
-        title: "Non trouvé",
-        data: {
-          breadcrumb: $localize`:@@NotFound_notFoundNav:Non trouvé`,
-        },
-      },
-      {
-        path: "",
-        pathMatch: "full",
-        redirectTo: `/${AppPaths.ADMIN}`,
-      },
-    ],
+    path: AppPaths.ROUTES,
+    loadComponent: () =>
+      import("./admin/features/routes/routes.component").then(
+        (m) => m.RoutesComponent,
+      ),
+    title: "Routes",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_RoutesNav:Routes`,
+    },
+  },
+  {
+    path: AppPaths.CONSUMERS,
+    loadComponent: () =>
+      import("./admin/features/consumers/consumers.component").then(
+        (m) => m.ConsumersComponent,
+      ),
+    title: "Consumers",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ConsumersNav:Consumers`,
+    },
+  },
+  {
+    path: AppPaths.SERVICES,
+    loadComponent: () =>
+      import("./admin/features/services/services.component").then(
+        (m) => m.ServicesComponent,
+      ),
+    title: "Services",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ServicesNav:Services`,
+    },
+  },
+  {
+    path: AppPaths.RESOURCES,
+    loadComponent: () =>
+      import("./admin/features/resources/resources.component").then(
+        (m) => m.ResourcesComponent,
+      ),
+    title: "Resources",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ResourcesNav:Resources`,
+    },
+  },
+  {
+    path: AppPaths.CORS,
+    loadComponent: () =>
+      import("./admin/features/cors/cors.component").then(
+        (m) => m.CorsComponent,
+      ),
+    title: "CORS",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_CorsNav:CORS`,
+    },
+  },
+  {
+    path: AppPaths.OPERATIONS,
+    loadComponent: () =>
+      import("./admin/features/operations/operations.component").then(
+        (m) => m.OperationsComponent,
+      ),
+    title: "Operations",
+    canActivate: [accessGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
+    },
+  },
+
+  {
+    path: AppPaths.NOT_FOUND,
+    component: NotFoundComponent,
+    title: "Non trouvé",
+    data: {
+      breadcrumb: $localize`:@@NotFound_notFoundNav:Non trouvé`,
+    },
   },
   {
     path: "",
+    redirectTo: `/${AppPaths.ROUTES}`,
     pathMatch: "full",
-    redirectTo: `/${AppPaths.ADMIN}`,
   },
   {
     path: "**",
