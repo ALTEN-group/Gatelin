@@ -1,6 +1,9 @@
 import { Routes } from "@angular/router";
 import { accessGuard } from "@core/acl/acl.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
+import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
+import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
+import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 
 /**
  * Application Paths
@@ -33,6 +36,11 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_RoutesNav:Routes`,
+    },
+    resolve: {
+      operations: operationsResolver,
+      services: serviceResolver,
+      resources: resourcesResolver,
     },
   },
   {
@@ -69,6 +77,9 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ResourcesNav:Resources`,
+    },
+    resolve: {
+      services: serviceResolver,
     },
   },
   {
