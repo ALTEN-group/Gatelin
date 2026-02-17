@@ -18,7 +18,16 @@ export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
-      validators: [required, minlength(1), maxlength(10)],
+      validators: [required, minlength(1), maxlength(30)],
+    },
+  },
+  {
+    key: "pattern",
+    label: "Pattern",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [required, minlength(1), maxlength(20)],
     },
   },
   {

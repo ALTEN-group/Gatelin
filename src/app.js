@@ -1,7 +1,7 @@
 // @ts-check
 import express from "express";
 import cors from "cors";
-import { log } from '@dwtechs/winstan';
+import { log } from "@dwtechs/winstan";
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
@@ -33,18 +33,18 @@ import operation from "./routes/operation.js";
 import corsRoutes from "./routes/cors.js";
 
 app.use(express.json());
-app.use("/gatelin/health", healixRouter);
+app.use("/gateway/health", healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route
 app.use(checkRoute);
 // Routes
-app.use("/gatelin/consumers", consumer);
-app.use("/gatelin/routes", ...checkRequest, route, send);
-app.use("/gatelin/services", ...checkRequest, service, send);
-app.use("/gatelin/resources", ...checkRequest, resource, send);
-app.use("/gatelin/operations", ...checkRequest, operation, send);
-app.use("/gatelin/cors", ...checkRequest, corsRoutes, send);
+app.use("/gateway/consumers", consumer);
+app.use("/gateway/routes", ...checkRequest, route, send);
+app.use("/gateway/services", ...checkRequest, service, send);
+app.use("/gateway/resources", ...checkRequest, resource, send);
+app.use("/gateway/operations", ...checkRequest, operation, send);
+app.use("/gateway/cors", ...checkRequest, corsRoutes, send);
 app.use("/", ...checkRequest, proxy);
 
 // Performance measurement ends
@@ -54,12 +54,8 @@ app.use(endTimer);
 errorHandler(app);
 
 // Init cached reference data
-Promise.all([
-    routeSvc.init(), 
-    consumerSvc.init(),
-    corsSvc.init(),
-  ])
-  .then(() => { 
+Promise.all([routeSvc.init(), consumerSvc.init(), corsSvc.init()])
+  .then(() => {
     app.use(cors(corsOptions));
     listen(app);
   })

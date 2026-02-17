@@ -13,6 +13,7 @@ erDiagram
   attribute }o--|| resource : ""
   consumer {
     int id PK
+    int userId
     varchar nickname
     varchar accessToken UK
     varchar refreshToken UK
@@ -24,7 +25,8 @@ erDiagram
   service {
     int id PK
     varchar name "e.g. gateway, ms-user, ms-auth"
-    boolean protected
+    text pattern
+    boolean locked
     int creatorId
     text creatorName
     int updaterId
@@ -48,7 +50,7 @@ erDiagram
     int id PK
     int serviceId FK
     varchar name "e.g. user, role, route"
-    boolean protected
+    boolean locked
     int creatorId
     text creatorName
     int updaterId
@@ -63,7 +65,7 @@ erDiagram
     varchar pattern
     method[] methods "array of HTTP methods"
     boolean jwt
-    boolean protected
+    boolean locked
     int creatorId
     text creatorName
     int updaterId

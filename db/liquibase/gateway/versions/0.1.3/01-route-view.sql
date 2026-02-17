@@ -12,6 +12,7 @@ create or replace view routes AS
   o.name as "operationName",
   r.description, 
   r.pattern,
+  COALESCE(s.pattern, '') || '/' || b.name || r.pattern as "url",
   array_to_json(r.methods) as methods,
   r.jwt,
   r.locked,
@@ -27,7 +28,7 @@ create or replace view routes AS
   LEFT OUTER JOIN "operation" as o ON r."operationId" = o.id 
   LEFT JOIN history h ON (h.id, h.operation) = (r.id, 'UPDATE')
   LEFT JOIN history h2 ON (h2.id, h2.operation) = (r.id, 'INSERT')
-  GROUP BY r.id, b."serviceId", b.name, s.name, r."resourceId", r."operationId", o.name, r.description, r.pattern, r.methods, r.jwt, r.locked,
+  GROUP BY r.id, b."serviceId", s.name, b.name, s.pattern, r."resourceId", r."operationId", o.name, r.description, r.pattern, r.methods, r.jwt, r.locked,
   h.tstamp, h."consumerId", h."consumerName", 
   h2.tstamp, h2."consumerId", h2."consumerName"
   ORDER BY r.id ASC

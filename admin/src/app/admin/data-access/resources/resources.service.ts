@@ -4,33 +4,33 @@ import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { RESOURCE_COLUMNS } from "app/admin/data-access/resources/resource.conf";
 import {
-	Resource,
-	resourceFactory,
+  Resource,
+  resourceFactory,
 } from "app/admin/data-access/resources/resource.model";
 import { map, Observable } from "rxjs";
 
-const resourcesEndpoint: string = "gatelin/resources";
+const resourcesEndpoint: string = "gateway/resources";
 
 @Injectable({
-	providedIn: "root",
+  providedIn: "root",
 })
 export class ResourcesService {
-	private readonly crud = new CrudRepository<Resource>().with({
-		endpoint: resourcesEndpoint,
-	});
+  private readonly crud = new CrudRepository<Resource>().with({
+    endpoint: resourcesEndpoint,
+  });
 
-	public readonly httpCalls: Calls<Resource> = {
-		get: this.crud.get,
-		create: this.crud.create,
-		update: this.crud.update,
-		archive: this.crud.archive,
-	};
+  public readonly httpCalls: Calls<Resource> = {
+    get: this.crud.get,
+    create: this.crud.create,
+    update: this.crud.update,
+    archive: this.crud.archive,
+  };
 
-	public readonly config = (payload: ConfBuilderPayload) =>
-		RESOURCE_COLUMNS(payload);
-	public readonly entityFactory = resourceFactory;
+  public readonly config = (payload: ConfBuilderPayload) =>
+    RESOURCE_COLUMNS(payload);
+  public readonly entityFactory = resourceFactory;
 
-	public getAndCacheAll(): Observable<Resource[]> {
-		return this.crud.getAll().pipe(map((res) => res.rows ?? []));
-	}
+  public getAndCacheAll(): Observable<Resource[]> {
+    return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+  }
 }

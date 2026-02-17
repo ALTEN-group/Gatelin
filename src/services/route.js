@@ -6,7 +6,7 @@ import { stripTrailingSlash } from "../utils/url.js";
 
 /**
  * @typedef {Object} RouteConfig
- * @property {string} pattern - The URL pattern to match (prefix with ~ for regex)
+ * @property {string} url - The URL pattern to match (prefix with ~ for regex)
  * @property {string[]} methods - Array of allowed HTTP methods
  */
 
@@ -29,7 +29,7 @@ let routes = null;
  */
 function init() {
   const { query, args } = route.query.select(false, 0, 0, "id", null, null);
-  return execute(query, args, null).then((r) => routes = r.rows );
+  return execute(query, args, null).then((r) => (routes = r.rows));
 }
 
 /**
@@ -40,9 +40,9 @@ function init() {
  *
  * @param {string} requestUrl - The incoming request URL to match against route patterns
  * @param {string} requestMethod - The HTTP method (GET, POST, PUT, DELETE, etc.)
- * @return {RouteConfig|undefined} The matching route object with pattern, methods, and other config, or undefined if no match
+ * @return {RouteConfig|undefined} The matching route object with url, methods, and other config, or undefined if no match
  * @example
- * // Route with pattern: "~/api/users/[0-9]+" and methods: ["GET"]
+ * // Route with url: "~/api/users/[0-9]+" and methods: ["GET"]
  * getOne('/api/users/123', 'GET') // returns the matching route
  * getOne('/api/users/abc', 'GET') // returns undefined (no match)
  */
@@ -52,7 +52,8 @@ function getOne(requestUrl, requestMethod) {
   const actualUrl = stripTrailingSlash(requestUrl);
   // Find the first route that matches the URL and method
   return routes.find(
-    (r) => new RegExp(r.pattern).test(actualUrl) && r.methods.includes(requestMethod)
+    (r) =>
+      new RegExp(r.url).test(actualUrl) && r.methods.includes(requestMethod),
   );
 }
 

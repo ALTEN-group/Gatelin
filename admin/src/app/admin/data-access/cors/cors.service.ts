@@ -4,23 +4,23 @@ import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { CORS_COLUMNS } from "app/admin/data-access/cors/cors.conf";
 import { Cors, corsFactory } from "app/admin/data-access/cors/cors.model";
 
-const corsEndpoint: string = "gatelin/cors";
+const corsEndpoint: string = "gateway/cors";
 
 @Injectable({
-	providedIn: "root",
+  providedIn: "root",
 })
 export class CorsService {
-	private readonly crud = new CrudRepository<Cors>().with({
-		endpoint: corsEndpoint,
-	});
+  private readonly crud = new CrudRepository<Cors>().with({
+    endpoint: corsEndpoint,
+  });
 
-	public readonly httpCalls: Calls<Cors> = {
-		get: this.crud.get,
-		create: this.crud.create,
-		update: this.crud.update,
-		archive: this.crud.archive,
-	};
+  public readonly httpCalls: Calls<Cors> = {
+    get: this.crud.get,
+    create: this.crud.create,
+    update: this.crud.update,
+    archive: this.crud.archive,
+  };
 
-	public readonly config = CORS_COLUMNS;
-	public readonly entityFactory = corsFactory;
+  public readonly config = CORS_COLUMNS;
+  public readonly entityFactory = corsFactory;
 }

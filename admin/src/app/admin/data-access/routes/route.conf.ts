@@ -77,6 +77,15 @@ export const ROUTE_COLUMNS: (
     },
   },
   {
+    key: "pattern",
+    label: "Pattern",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [required, minlength(1), maxlength(40)],
+    },
+  },
+  {
     key: "operationId",
     label: "Operation",
     controlType: CONTROL_TYPES.SELECT,
@@ -110,15 +119,6 @@ export const ROUTE_COLUMNS: (
     controlType: CONTROL_TYPES.TEXTAREA,
     controlOptions: {
       validators: [required, maxlength(100)],
-    },
-  },
-  {
-    key: "pattern",
-    label: "Pattern",
-    controlType: CONTROL_TYPES.INPUT,
-    type: INPUT_TYPES.TEXT,
-    controlOptions: {
-      validators: [required, minlength(1), maxlength(40)],
     },
   },
   {

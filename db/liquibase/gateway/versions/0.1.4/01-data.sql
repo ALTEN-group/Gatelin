@@ -10,10 +10,10 @@ INSERT INTO cors (name, "creatorId", "creatorName") VALUES
 ;
 
 
-INSERT INTO "service" (name, locked, "creatorId", "creatorName") VALUES 
-('gatelin', true, -1, 'system'),
-('ms-user-mock', false, -1, 'system'),
-('ms-role-mock', false, -1, 'system')
+INSERT INTO "service" (name, pattern, locked, "creatorId", "creatorName") VALUES 
+('gatelin', 'gateway', true, -1, 'system'),
+('ms-user-mock', 'users', false, -1, 'system'),
+('ms-role-mock', 'roles', false, -1, 'system')
 ;
 
 

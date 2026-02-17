@@ -3,12 +3,14 @@ import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
 export interface Service extends ArchiveInfo {
   id: number | null;
   name: string;
+  pattern: string;
   locked: boolean;
 }
 
 export const serviceFactory = (): Service => ({
   id: null,
   name: "",
+  pattern: "",
   locked: false,
   ...new ArchiveInfo(),
 });
