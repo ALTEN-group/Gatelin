@@ -23,8 +23,8 @@ export class AuthenticationService {
 
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
-  private readonly consumerApi: string = `${this.apiPrefix}gateway/consumers/`;
-  private readonly meApi: string = `${this.apiPrefix}users/me/`;
+  private readonly consumerApi: string = `${this.apiPrefix}gateway/consumers`;
+  private readonly meApi: string = `${this.apiPrefix}users/me`;
 
   private readonly _isAuthenticated = signal(false);
   public readonly isAuthenticated = this._isAuthenticated.asReadonly();

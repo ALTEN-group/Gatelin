@@ -42,7 +42,7 @@ INSERT INTO route ("resourceId", "operationId", description, pattern, methods, j
 (6, 8, 'Archive cors', '/archive', ARRAY['PATCH', 'OPTIONS']::method[], true, true, -1, 'system'),
 (6, 10, 'Delete cors', '', ARRAY['DELETE', 'OPTIONS']::method[], true, true, -1, 'system'),
 
-(7, 1, 'Get basic user info at login', 'users/me', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
+(7, 1, 'Get basic user info at login', 'me', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
 
 (8, 2, 'Search roles', '/search', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
 (8, 2, 'Manage roles history', '/(?<roleId>\\d+)/history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
