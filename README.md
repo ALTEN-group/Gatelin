@@ -6,23 +6,14 @@ API Gateway service for routing and forwarding HTTP requests to internal microse
 
 Gatelin is an API Gateway that acts as a single entry point for microservices architecture. It handles:
 
-- **Request routing** - Dynamic route matching and forwarding to target microservices
-- **Authentication** - JWT token validation and consumer session management
-- **Authorization** - Role-based access control (ACL) validation
-- **Request transformation** - URL pattern stripping and header manipulation
-- **Health monitoring** - Built-in health check endpoints
-- **Performance tracking** - Request/response timing and metrics
-
-## Features
-
-- 🔐 JWT-based authentication with access and refresh tokens
-- 🛣️ Dynamic route configuration and management
-- 👤 Consumer (session) management with automatic token refresh
-- 🔄 Request forwarding to internal microservices
-- 🛡️ Role-based access control (RBAC)
-- 📊 Performance monitoring and logging
-- 🏥 Health check endpoints
-- 🔒 Security headers with Helmet.js
+- 🛣️ Requests routing - Dynamic route matching and forwarding to target microservices
+- 👤 Consumer management - With automatic token refresh
+- 🔐 Authentication - JWT token validation and consumer session management
+- 🛡️ Authorization - Role-based access control (ACL) validation
+- 🗺️ Routes management - Organize and control available API endpoints
+- 🛎️ Services management - Register, update, and monitor backend services
+- 🌐 Cors management - Configure and enforce Cross-Origin Resource Sharing policies
+- 🎛️ Front-end admin - Manage the gateway via a user-friendly web interface
 
 
 ## Environment Variables
