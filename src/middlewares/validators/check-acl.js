@@ -37,8 +37,8 @@ export default function checkAcl(req, res, next) {
   const o = r.operationId;
   log.debug(`checkAcl(consumer: ${c.id}, operation: ${o}, route: ${r.url}`);
 
-  // Check if route and operation combination exists in permissions
-  const hasAccess = permissions.some(
+  // Check if route and operation combination exists in consumer permissions
+  const hasAccess = c.permissions.some(
     p => p.route === r.id && p.operations.includes(r.operationId)
   );
   
