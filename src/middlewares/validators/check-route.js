@@ -37,15 +37,14 @@ export default function checkRoute(req, res, next) {
   
   const u = req.originalUrl;
   const m = req.method;
-
-  log.debug(`checkRoute() : Check route for url ${m}:${u}`);
+  log.debug(`checkRoute(url: ${u}, method: ${m})`);
   
   const r = routeSvc.getOne(u, m);
   if (!r)
     return next({statusCode: 404, message: "Route not found"});
 
-  log.debug(`checkRoute() : Route : ${JSON.stringify(r)}, jwt : ${r.jwt}`);
-  
+  log.debug(`checkRoute(Route: ${JSON.stringify(r)})`);
+
   // Add custom properties to locals object for downstream middleware
   res.locals.route = r;
   

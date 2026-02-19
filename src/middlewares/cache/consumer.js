@@ -13,54 +13,6 @@ import csmerSvc from "../../services/consumer.js";
  */
 
 /**
- * @typedef {object} ExtendedRequest
- * @property {object} body - Request body containing tokens
- * @property {string} body.accessToken - The access token to validate
- * @property {string} body.refreshToken - The refresh token to validate
- * @property {object} decodedRefreshToken - Previously decoded refresh token
- * @property {string} decodedRefreshToken.iss - The issuer (consumer ID) from decoded token
- * @property {Consumer} consumer - Consumer object added by this middleware
- */
-
-/**
- * Express middleware that validates JWT tokens by matching access and refresh tokens
- * against stored consumer data. Checks cache first, then database if needed.
- * This middleware ensures that the tokens provided match the tokens stored in the
- * consumer cache/database, preventing token replay attacks and ensuring token authenticity.
- *
- * @param {import('express').Request} req - Express request object containing accessToken and refreshToken in body
- * @param {import('express').Response} res - Express response object for sending HTTP responses
- * @param {import('express').NextFunction} next - Express next function to pass control to the next middleware
- * @return {void} Calls next() on success or next(error) on validation failure
- * @throws {object} Returns 404 error if consumer not found, or 401 error if tokens don't match
- * @example
- * // Use as Express middleware after JWT decoding
- * import { checkToken } from './middlewares/validators/check-token.js';
- * app.post('/refresh', decodeRefreshToken, checkToken, refreshTokens);
- * 
- * // After successful validation, req object will have:
- * // req.consumer - complete consumer object from cache
- */
-export default async function getFromCache(req, res, next) {
-  
-  const at = res.locals.tokens.access;
-  log.debug(`get Consumer with access token : accessToken=${at}`);
-  const c = csmerSvc.getOne(at);
-  
-  if (!c)
-    return next({
-      status: 404,
-      msg: "Consumer not found",
-    });
-  
-  log.debug(`Consumer found: ${JSON.stringify(c)}`);
-  res.locals.consumer = c;
-  next();
-
-}
-
-
-/**
  * Adds newly created consumer to cache after successful database insertion.
  * This middleware runs after cEnt.add completes the INSERT operation.
  * The database auto-generates the consumer id and the library adds it back to the rows array.
@@ -122,6 +74,11 @@ function updateCache(req, res, next) {
   next();
 }
 
+/**
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ * @param {import('express').NextFunction} next - Express next function
+ */
 function deleteFromCache(req, res, next) {
   const c = req.body.rows[0];
   log.debug(`Deleting consumer ${c.id} from cache`);
@@ -130,7 +87,6 @@ function deleteFromCache(req, res, next) {
 }
 
 export {
-  getFromCache,
   addToCache,
   updateCache,
   deleteFromCache,

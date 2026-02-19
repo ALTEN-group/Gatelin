@@ -1,50 +1,46 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
-
-import consumerSvc from "../../services/consumer.js";
+import csmerSvc from "../../services/consumer.js";
 
 /**
- * @typedef {object} Route
- * @property {number} id - The unique identifier of the route
- * @property {string} url - The URL pattern of the route
- * @property {string} method - The HTTP method (GET, POST, etc.)
- * @property {boolean} jwt - Whether the route requires JWT authentication
- * @property {string} description - Description of the route
- * @property {object} [config] - Additional route configuration
+ * @typedef {object} Consumer
+ * @property {number} id - The unique identifier of the consumer
+ * @property {number} userId - The user ID from ms_user service
+ * @property {string} accessToken - The consumer's access token
+ * @property {string} refreshToken - The consumer's refresh token
+ * @property {Array<string>} roles - Array of roles assigned to the consumer
  */
 
 /**
- * Express middleware that validates incoming HTTP requests by checking if the requested
- * route exists in the system and determining its protection level. This middleware
- * enriches the request object with route information and protection status for
- * downstream middleware to use.
+ * Express middleware that validates JWT tokens by matching access and refresh tokens
+ * against stored consumer data. Checks cache first, then database if needed.
+ * This middleware ensures that the tokens provided match the tokens stored in the
+ * consumer cache/database, preventing token replay attacks and ensuring token authenticity.
  *
- * @param {import('express').Request} req - Express request object containing the HTTP request data
+ * @param {import('express').Request} req - Express request object containing accessToken and refreshToken in body
  * @param {import('express').Response} res - Express response object for sending HTTP responses
  * @param {import('express').NextFunction} next - Express next function to pass control to the next middleware
- * @return {void} Calls next() to continue middleware chain or next(error) on route not found
- * @throws {object} Returns 404 error object if no matching route is found
+ * @return {void} Calls next() on success or next(error) on validation failure
+ * @throws {object} Returns 404 error if consumer not found, or 401 error if tokens don't match
  * @example
- * // Use as Express middleware
- * import checkRoute from './middlewares/validators/check-route.js';
- * app.use('/api', checkRoute);
+ * // Use as Express middleware after JWT decoding
+ * import { checkToken } from './middlewares/validators/check-token.js';
+ * app.post('/refresh', decodeRefreshToken, checkToken, refreshTokens);
  * 
  * // After successful validation, req object will have:
- * // req.route - complete route object with configuration details
+ * // req.consumer - complete consumer object from cache
  */
-export default function checkConsumer(req, res, next) {
+export default async function checkConsumer(req, res, next) {
   
-  const u = req.originalUrl;
-  const m = req.method;
-
-  log.debug(`Check consumer for url ${m}:${u}`);
-
-  const c = consumerSvc.getOne(u, m);
+  const at = res.locals.tokens.access;
+  log.debug(`checkConsumer(accessToken=${at})`);
+  const c = csmerSvc.getOne(at);
+  
   if (!c)
-    return next({statusCode: 404, message: "Consumer not found"});
-
-  log.debug(`Consumer : ${JSON.stringify(c)}`);
+    return next({status: 404, msg: "Consumer not found"});
   
+  log.debug(`checkConsumer(Consumer: ${JSON.stringify(c)})`);
+  res.locals.consumer = c;
   next();
 
 }

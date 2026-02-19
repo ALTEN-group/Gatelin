@@ -14,11 +14,10 @@ export const corsOptions = {
     // Get fresh whitelist from cache on each request (dynamic updates)
     const currentWhitelist = corsSvc.getAll();
     
-    if (currentWhitelist.indexOf(origin) !== -1) {
+    if (currentWhitelist.indexOf(origin) !== -1)
       callback(null, true);
-    } else {
+    else
       callback(new Error(`Origin ${origin} not allowed by CORS`));
-    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
