@@ -173,6 +173,9 @@ services:
         NODE_ENV: ${NODE_ENV}
     container_name: ${ADMIN_HOST}
     hostname: ${ADMIN_HOST}
+    environment:
+      LOGIN_URL: ${ADMIN_LOGIN_URL}
+      ME_URL: ${ADMIN_ME_URL}
     networks:
       - internal
     volumes:

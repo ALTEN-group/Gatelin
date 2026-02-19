@@ -24,7 +24,7 @@ const url = `${MSAUTH_URL}/login/`;
  * @modifies None - validation only, no modifications to req or res
  * 
  * INPUT:
- *   req.body = { email: string, pwd: string, rows: [ { nickname: string, rolesArrayAgg: number[] } ] }
+ *   req.body = { email: string, pwd: string, rows: [ { nickname: string, roles: number[] } ] }
  *   res.locals.user = { id: string }
  * 
  * OUTPUT:

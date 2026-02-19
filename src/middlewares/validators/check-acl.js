@@ -8,7 +8,7 @@ import accessSvc from "../../services/access.js";
  * Checks if the authenticated user has the required roles to access the requested route.
  * 
  * @param {import('express').Request} req - Express request object containing the HTTP request data
- * @param {Object} req.isProtected - Flag indicating if route requires authentication
+ * @param {Object} req.jwt - Flag indicating if route requires authentication
  * @param {Object} req.route - Route information object
  * @param {number} req.route.id - Unique identifier for the route
  * @param {import('express').Response} res - Express response object for sending HTTP responses
@@ -30,26 +30,21 @@ import accessSvc from "../../services/access.js";
  * // User with roles ['user'] would get 403 Forbidden
  */
 export default function checkAcl(req, res, next) {
-  if (!res.locals.isProtected) return next(); // if no jwt required for this route
+  const r = res.locals.routes;
+  if (!res.locals.routes.jwt) return next(); // if no jwt required for this route
 
-  if (!res.rows) return next({ statusCode: 404, message: "User not found" });
-  
-  const consumer = res.rows[0];
-  if (!consumer)
-    return next({ statusCode: 404, message: "User not found" });
-  
-  const routeId = req.route.id;
-  const consumerRoles = consumer.roles;
-  const accessRoles = accessSvc.getOne(routeId)?.rolesArrayAgg;
-  log.debug(
-    `checkAcl(routeId=${routeId}, consumerRoles=[${consumerRoles?.toString()}], accessRoles=[${accessRoles?.toString()}])`,
+  const c = res.locals.consumer;
+  const o = r.operationId;
+  log.debug(`Checking ACL for consumer ${c.id} on operation ${o} for route ${r.url}`);
+
+  // Check if route and operation combination exists in permissions
+  const hasAccess = permissions.some(
+    p => p.route === r.id && p.operations.includes(r.operationId)
   );
-
-  if (accessRoles) {
-    const commonRoles = getCommonValues(consumerRoles, accessRoles);
-    if (!commonRoles.length)
-      return next({ statusCode: 403, message: "Forbidden" });
-  }
+  
+  if (!hasAccess)
+    return next({ statusCode: 403, message: "Forbidden" });
+  
   next();
 }
 

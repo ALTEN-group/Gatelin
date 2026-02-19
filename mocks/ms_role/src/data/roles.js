@@ -5,8 +5,20 @@ export const mockRoles = [
     name: 'Super admin',
     description: 'Administrator role with full permissions',
     color: '#FF5722',
-    level: 1,
-    permissions: { 1: 1 },
+    permissions: [
+      {
+        route: 1,
+        operations: [2,3,4]
+      },
+      {
+        route: 2,
+        operations: [2,3,4]
+      },
+      {
+        route: 3,
+        operations: [2,3,4]
+      }
+    ],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
@@ -16,7 +28,20 @@ export const mockRoles = [
     description: 'Administrator role with full permissions',
     color: '#2196F3',
     level: 1,
-    permissions: { 1: 1 },
+    permissions: [
+      {
+        route: 1,
+        operations: [2,3,4]
+      },
+      {
+        route: 2,
+        operations: [2,3,4]
+      },
+      {
+        route: 3,
+        operations: [2,3,4]
+      }
+    ],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
@@ -26,7 +51,20 @@ export const mockRoles = [
     description: 'Standard user role with basic permissions',
     color: '#4CAF50',
     level: 2,
-    permissions: { 2: 1 },
+    permissions: [
+      {
+        route: 1,
+        operations: [2,3,4]
+      },
+      {
+        route: 2,
+        operations: [2,3,4]
+      },
+      {
+        route: 3,
+        operations: [2,3,4]
+      }
+    ],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
@@ -36,7 +74,20 @@ export const mockRoles = [
     description: 'Guest user role with limited permissions',
     color: '#9E9E9E',
     level: 3,
-    permissions: { 3: 1 },
+    permissions: [
+      {
+        route: 1,
+        operations: [2,3,4]
+      },
+      {
+        route: 2,
+        operations: [2,3,4]
+      },
+      {
+        route: 3,
+        operations: [2,3,4]
+      }
+    ],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   }

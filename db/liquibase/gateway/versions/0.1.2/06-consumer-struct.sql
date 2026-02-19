@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS consumer (
   -- "lastName" varchar(50) NOT NULL,
   "accessToken" varchar(600) NOT NULL UNIQUE,
   "refreshToken" varchar(600) NOT NULL UNIQUE,
-  "rolesArrayAgg" INT[] NOT NULL,
+  "roles" INT[] NOT NULL,
   "createdAt" TIMESTAMP DEFAULT NOW(),
   "updatedAt" TIMESTAMP DEFAULT NOW()
 );

@@ -61,8 +61,9 @@ erDiagram
     int id PK
     int resourceId FK
     int operationId FK
-    varchar description
     varchar pattern
+    varchar name
+    varchar description
     method[] methods "array of HTTP methods"
     boolean jwt
     boolean locked
@@ -70,6 +71,28 @@ erDiagram
     text creatorName
     int updaterId
     text updaterName
+  }
+
+  routes["routes VIEW"] {
+    int id
+    int serviceId
+    varchar serviceName
+    int resourceId
+    varchar resourceName
+    int operationId
+    varchar operationName
+    varchar pattern "route pattern"
+    varchar description
+    text url "COMPUTED: /service.pattern/resource.name/route.pattern"
+    json methods "array of HTTP methods"
+    boolean jwt
+    boolean locked
+    timestamp createdAt
+    int creatorId
+    varchar creatorName
+    timestamp updatedAt
+    int updaterId
+    varchar updaterName
   }
 
   operation {

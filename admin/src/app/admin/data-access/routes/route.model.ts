@@ -11,6 +11,7 @@ export interface Route extends ArchiveInfo {
   resourceName: string;
   operationId: number | null;
   operationName: string;
+  name: string;
   description: string;
   pattern: string;
   methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
@@ -32,6 +33,7 @@ export const routeFactory = (): Route => ({
   resourceName: "",
   operationId: null,
   operationName: "",
+  name: "",
   description: "",
   pattern: "",
   methods: [],

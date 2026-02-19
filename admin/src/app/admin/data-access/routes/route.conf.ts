@@ -114,6 +114,15 @@ export const ROUTE_COLUMNS: (
     },
   },
   {
+    key: "name",
+    label: "Name",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [required, maxlength(50)],
+    },
+  },
+  {
     key: "description",
     label: "Description",
     controlType: CONTROL_TYPES.TEXTAREA,

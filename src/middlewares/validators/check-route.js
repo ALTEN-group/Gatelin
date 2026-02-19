@@ -30,7 +30,7 @@ import routeSvc from "../../services/route.js";
  * app.use('/api', checkRoute);
  * 
  * // After successful validation, req object will have:
- * // res.locals.route.isProtected - boolean indicating if route requires JWT authentication
+ * // res.locals.route.jwt - boolean indicating if route requires JWT authentication
  * // res.locals.route.serviceName - name of the service handling the route
  */
 export default function checkRoute(req, res, next) {
@@ -38,20 +38,16 @@ export default function checkRoute(req, res, next) {
   const u = req.originalUrl;
   const m = req.method;
 
-  log.debug(`Check route for url ${m}:${u}`);
+  log.debug(`checkRoute() : Check route for url ${m}:${u}`);
   
   const r = routeSvc.getOne(u, m);
   if (!r)
     return next({statusCode: 404, message: "Route not found"});
 
-  log.debug(`Route : ${JSON.stringify(r)}`);
-  log.debug(`isProtected : ${r.jwt}`);
+  log.debug(`checkRoute() : Route : ${JSON.stringify(r)}, jwt : ${r.jwt}`);
   
   // Add custom properties to locals object for downstream middleware
-  res.locals.route = { 
-    isProtected: r.jwt, 
-    serviceName: r.serviceName
-  };
+  res.locals.route = r;
   
   next();
 

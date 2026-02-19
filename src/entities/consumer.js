@@ -133,7 +133,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validator: null
   },
   {
-    key: "rolesArrayAgg",
+    key: "roles",
     type: "array",
     min: 0,
     max: 100,

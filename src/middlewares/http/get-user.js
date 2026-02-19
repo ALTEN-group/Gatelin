@@ -20,7 +20,7 @@ const url = `${MSUSER_URL}/users/users/search/`;
  *
  * @param {Function} next - Express next middleware
  *
- * @modifies req.body.rows[0] - Adds nickname and rolesArrayAgg properties from ms_user response
+ * @modifies req.body.rows[0] - Adds nickname and roles properties from ms_user response
  * @modifies res.locals - Sets id and active from ms_user response
  *
  * INPUT:
@@ -28,7 +28,7 @@ const url = `${MSUSER_URL}/users/users/search/`;
  *   res.locals = {}
  *
  * OUTPUT:
- *   req.body = { rows: [{ userId: number, nickname: string, rolesArrayAgg: number[] }]}
+ *   req.body = { rows: [{ userId: number, nickname: string, roles: number[] }]}
  *   res.locals = { user: { id: string, active: boolean } }
  */
 export function getUserByEmail(req, res, next) {
@@ -56,7 +56,7 @@ export function getUserByEmail(req, res, next) {
           // Attach user data to request body for db update in downstream middleware
           userId: u.id,
           nickname: u.nickname,
-          rolesArrayAgg: u.rolesArrayAgg,
+          roles: u.roles,
         },
       ];
       res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware
