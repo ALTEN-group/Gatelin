@@ -15,7 +15,7 @@ export interface Route extends ArchiveInfo {
   description: string;
   pattern: string;
   methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
-  jwt: boolean;
+  isProtected: boolean;
   locked: boolean;
 }
 
@@ -37,7 +37,7 @@ export const routeFactory = (): Route => ({
   description: "",
   pattern: "",
   methods: [],
-  jwt: false,
+  isProtected: false,
   locked: false,
   ...new ArchiveInfo(),
 });

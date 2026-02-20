@@ -49,7 +49,7 @@ export function getUserByEmail(req, res, next) {
     .then((r) => {
       const u = r.data.rows[0]; // Expecting single user object
       log.debug(
-        `ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}`,
+        `ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
       );
       req.body.rows = [
         {

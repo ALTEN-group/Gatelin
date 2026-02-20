@@ -143,7 +143,7 @@ export const ROUTE_COLUMNS: (
     },
   },
   {
-    key: "jwt",
+    key: "isProtected",
     label: "JWT",
     controlType: CONTROL_TYPES.CHECKBOX,
   },

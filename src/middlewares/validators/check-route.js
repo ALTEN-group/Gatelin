@@ -28,26 +28,23 @@ import routeSvc from "../../services/route.js";
  * // Use as Express middleware
  * import checkRoute from './middlewares/validators/check-route.js';
  * app.use('/api', checkRoute);
- * 
+ *
  * // After successful validation, req object will have:
- * // res.locals.route.jwt - boolean indicating if route requires JWT authentication
+ * // res.locals.route.isProtected - boolean indicating if route requires JWT authentication
  * // res.locals.route.serviceName - name of the service handling the route
  */
 export default function checkRoute(req, res, next) {
-  
   const u = req.originalUrl;
   const m = req.method;
   log.debug(`checkRoute(url: ${u}, method: ${m})`);
-  
+
   const r = routeSvc.getOne(u, m);
-  if (!r)
-    return next({statusCode: 404, message: "Route not found"});
+  if (!r) return next({ statusCode: 404, message: "Route not found" });
 
   log.debug(`checkRoute(Route: ${JSON.stringify(r)})`);
 
   // Add custom properties to locals object for downstream middleware
   res.locals.route = r;
-  
-  next();
 
+  next();
 }

@@ -5,7 +5,7 @@ import { log } from "@dwtechs/winstan";
  * Checks if the authenticated user has the required roles to access the requested route.
  *
  * @param {import('express').Request} req - Express request object containing the HTTP request data
- * @param {Object} req.jwt - Flag indicating if route requires authentication
+ * @param {Object} req.isProtected - Flag indicating if route requires authentication
  * @param {Object} req.route - Route information object
  * @param {number} req.route.id - Unique identifier for the route
  * @param {import('express').Response} res - Express response object for sending HTTP responses
@@ -27,8 +27,8 @@ import { log } from "@dwtechs/winstan";
  * // User with roles ['user'] would get 403 Forbidden
  */
 export default function checkAcl(req, res, next) {
-  const r = res.locals.routes;
-  if (!res.locals.routes.jwt) return next(); // if no jwt required for this route
+  const r = res.locals.route;
+  if (!r.isProtected) return next(); // if no jwt required for this route
 
   const c = res.locals.consumer;
   const o = r.operationId;

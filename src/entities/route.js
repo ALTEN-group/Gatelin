@@ -219,7 +219,7 @@ export default new SQLEntity("routes", [
     validator: null,
   },
   {
-    key: "jwt",
+    key: "isProtected",
     type: "boolean",
     min: null,
     max: null,

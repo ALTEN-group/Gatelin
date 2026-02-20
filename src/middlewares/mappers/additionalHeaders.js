@@ -2,12 +2,14 @@
 import { log } from "@dwtechs/winstan";
 
 export default function updateHeaderWithConsumer(req, res, next) {
-  if (!res.locals.route.jwt) return next(); // if no jwt protection for this route
-  
+  if (!res.locals.route.isProtected) return next(); // if no jwt protection for this route
+
   const dat = res.locals.tokens.decodedAccess;
-  log.debug(`updateHeaderWithConsumer(decodedAccessToken=${JSON.stringify(dat)})`);
+  log.debug(
+    `updateHeaderWithConsumer(decodedAccessToken=${JSON.stringify(dat)})`,
+  );
   const c = res.locals.consumer;
-  
+
   req.additionalHeaders = {
     "x-consumer-id": dat.iss,
     "x-consumer-name": c.nickname,
