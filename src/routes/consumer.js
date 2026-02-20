@@ -1,5 +1,10 @@
 // @ts-check
-import { createTokens, refreshTokens, parseBearer, decodeAccess, decodeRefresh } from "@dwtechs/toker-express";
+import {
+  createTokens,
+  decodeAccess,
+  decodeRefresh,
+  refreshTokens,
+} from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
@@ -11,30 +16,39 @@ import { getUserByEmail } from "../middlewares/http/get-user.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
 import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
-import { getFromCache, addToCache, updateCache, deleteFromCache } from "../middlewares/cache/consumer.js";
+import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
+import {
+  addToCache,
+  updateCache,
+  deleteFromCache,
+} from "../middlewares/cache/consumer.js";
 import { sendConsumer } from "../middlewares/res/send-consumer.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { send204 } from "../middlewares/res/send-204.js";
 import { send } from "../middlewares/res/send.js";
 
 // middleware sub-stacks
-const checkEmail = [ uEnt.normalizeOne, uEnt.validateOne, getUserByEmail ];
+const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
 // const activate = [ activateUser, uEnt.update ];
-const getConsumer = [ parseBearer, getFromCache, createRow ]; // get consumer from tokens
-const addConsumer = [ checkPwd, createTokens, cEnt.validateArray, cEnt.add, addToCache, sendConsumer ];
-const updateConsumer = [ refreshTokens, cEnt.update, updateCache, sendConsumer ];
-const deleteConsumer = [ cEnt.delete, deleteFromCache, send204 ];
+const getConsumer = [...checkRequest, createRow]; // get consumer from tokens
+const addConsumer = [
+  checkPwd,
+  createTokens,
+  cEnt.validateArray,
+  cEnt.add,
+  addToCache,
+  sendConsumer,
+];
+const updateConsumer = [refreshTokens, cEnt.update, updateCache, sendConsumer];
+const deleteConsumer = [cEnt.delete, deleteFromCache, send204];
 
 const add = [
   checkEmail,
   // when(en local res => !res.locals.active, activate),
-  addConsumer
+  addConsumer,
 ];
 
-const getMany = [
-  cEnt.get,
-  send,
-];
+const getMany = [cEnt.get, send];
 
 const update = [
   getConsumer,
@@ -42,13 +56,10 @@ const update = [
   ignoreExpiration,
   decodeAccess, // extract issuer
   decodeRefresh, // check expiration
-  updateConsumer
+  updateConsumer,
 ];
 
-const del = [
-  getConsumer,
-  deleteConsumer
-];
+const del = [getConsumer, deleteConsumer];
 
 //Routes
 

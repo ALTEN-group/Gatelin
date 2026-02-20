@@ -1,12 +1,9 @@
-import { getCommonValues } from "@dwtechs/sparray";
 import { log } from "@dwtechs/winstan";
-
-import accessSvc from "../../services/access.js";
 
 /**
  * Express middleware that validates user access control permissions for protected routes.
  * Checks if the authenticated user has the required roles to access the requested route.
- * 
+ *
  * @param {import('express').Request} req - Express request object containing the HTTP request data
  * @param {Object} req.jwt - Flag indicating if route requires authentication
  * @param {Object} req.route - Route information object
@@ -23,7 +20,7 @@ import accessSvc from "../../services/access.js";
  * app.get('/protected-route', authenticateJWT, checkAcl, (req, res) => {
  *   res.json({ message: 'Access granted' });
  * });
- * 
+ *
  * // Route configuration with roles
  * // Route ID 123 requires 'admin' or 'moderator' roles
  * // User with roles ['user', 'admin'] would pass
@@ -39,13 +36,10 @@ export default function checkAcl(req, res, next) {
 
   // Check if route and operation combination exists in consumer permissions
   const hasAccess = c.permissions.some(
-    p => p.route === r.id && p.operations.includes(r.operationId)
+    (p) => p.route === r.id && p.operations.includes(r.operationId),
   );
-  
-  if (!hasAccess)
-    return next({ statusCode: 403, message: "Forbidden" });
-  
+
+  if (!hasAccess) return next({ statusCode: 403, message: "Forbidden" });
+
   next();
 }
-
-
