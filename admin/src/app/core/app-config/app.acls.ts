@@ -1,17 +1,4 @@
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-
-type RoutesMapping = {
-  [key in keyof Calls<unknown>]: number;
-};
-
-export type AclsMapping = { [key: string]: RoutesMapping };
-
-/** mapped type to have boolean instead of number in RoutesMapping */
-export type Acls = {
-  [key: string]: {
-    [key in keyof RoutesMapping]: boolean;
-  };
-};
+import { AclsMapping } from "@crud/core/utils/acls/acls.model";
 
 /**
  * Base ACLs for the application, defining mapping between routes and their id in the database.
@@ -21,38 +8,38 @@ export const BASE_ACLS: AclsMapping = {
     get: 1,
   },
   routes: {
-    get: 6,
-    create: 9,
-    update: 8,
-    archive: 10,
-    getHistory: 7,
+    get: 7,
+    create: 10,
+    update: 9,
+    archive: 11,
+    getHistory: 8,
   },
   services: {
-    get: 11,
-    create: 14,
-    update: 13,
-    archive: 15,
-    getHistory: 12,
+    get: 13,
+    create: 16,
+    update: 15,
+    archive: 17,
+    getHistory: 14,
   },
   resources: {
-    get: 16,
-    create: 19,
-    update: 18,
-    archive: 20,
-    getHistory: 17,
+    get: 19,
+    create: 22,
+    update: 21,
+    archive: 23,
+    getHistory: 20,
   },
   operations: {
-    get: 21,
-    create: 24,
-    update: 23,
-    archive: 25,
-    getHistory: 22,
+    get: 25,
+    create: 28,
+    update: 27,
+    archive: 29,
+    getHistory: 26,
   },
   cors: {
-    get: 26,
-    create: 29,
-    update: 28,
-    archive: 30,
-    getHistory: 27,
+    get: 31,
+    create: 34,
+    update: 33,
+    archive: 35,
+    getHistory: 32,
   },
 };

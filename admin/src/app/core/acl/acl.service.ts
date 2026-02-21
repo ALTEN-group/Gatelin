@@ -1,6 +1,7 @@
 import { Injectable, signal } from "@angular/core";
-import { Acls, BASE_ACLS } from "@core/app-config/app.acls";
+import { BASE_ACLS } from "@core/app-config/app.acls";
 import { Permission, Role } from "@core/roles/role.class";
+import { Acls } from "@crud/core/utils/acls/acls.model";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
 @Injectable({ providedIn: "root" })
