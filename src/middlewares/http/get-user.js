@@ -33,7 +33,6 @@ const url = MSUSER_SEARCH_URL;
  */
 export function getUserByEmail(req, res, next) {
   const filters = {
-    // Create filters for the query
     email: {
       value: req.body.email,
       matchMode: "equals",
@@ -52,14 +51,46 @@ export function getUserByEmail(req, res, next) {
         `ms_user response: id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
       );
       req.body.rows = [
+        // Attach user data to request body for db update in downstream middleware
         {
-          // Attach user data to request body for db update in downstream middleware
           userId: u.id,
           nickname: u.nickname,
           roles: u.roles,
         },
       ];
       res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware
+      next();
+    })
+    .catch((err) => next(err));
+}
+
+export function getUserById(req, res, next) {
+  const filters = {
+    id: {
+      value: res.locals.consumer.userId,
+      matchMode: "equals",
+    },
+    archived: {
+      value: false,
+      matchMode: "is",
+    },
+    active: {
+      value: true,
+      matchMode: "is",
+    },
+  };
+
+  http
+    .query("POST", url, undefined, { filters }, undefined)
+    .then((r) => {
+      const u = r.data.rows[0]; // Expecting single user object
+      log.debug(
+        `ms_user response: id=${u?.id}, nickname=${u?.nickname}, roles=${u?.roles}`,
+      );
+      // Attach user data to request body for db update in downstream middleware
+      req.body.rows[0].nickname = u.nickname;
+      req.body.rows[0].roles = u.roles;
+      // res.locals.user = { id: u.id, active: u.active }; // Attach user id and active for downstream middleware
       next();
     })
     .catch((err) => next(err));

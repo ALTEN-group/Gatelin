@@ -12,7 +12,7 @@ const router = express.Router();
 
 import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
-import { getUserByEmail } from "../middlewares/http/get-user.js";
+import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
 import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
@@ -39,7 +39,13 @@ const addConsumer = [
   addToCache,
   sendConsumer,
 ];
-const updateConsumer = [refreshTokens, cEnt.update, updateCache, sendConsumer];
+const updateConsumer = [
+  refreshTokens,
+  getUserById,
+  cEnt.update,
+  updateCache,
+  sendConsumer,
+];
 const deleteConsumer = [cEnt.archive, deleteFromCache, send204];
 
 const add = [
