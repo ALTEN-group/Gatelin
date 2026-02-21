@@ -9,7 +9,6 @@ export const mockRoles = [
       // Consumers - all operations
       { route: 1, operations: [2] }, // getConsumers
       { route: 2, operations: [3] }, // refreshToken
-      { route: 3, operations: [5] }, // signIn
       { route: 4, operations: [7] }, // signOut
       { route: 5, operations: [8] }, // archiveConsumers
       { route: 6, operations: [10] }, // deleteConsumers
@@ -72,7 +71,6 @@ export const mockRoles = [
       // Consumers - no delete
       { route: 1, operations: [2] }, // getConsumers
       { route: 2, operations: [3] }, // refreshToken
-      { route: 3, operations: [5] }, // signIn
       { route: 4, operations: [7] }, // signOut
       { route: 5, operations: [8] }, // archiveConsumers
 
@@ -128,7 +126,6 @@ export const mockRoles = [
     permissions: [
       // Consumers - own account only
       { route: 2, operations: [3] }, // refreshToken
-      { route: 3, operations: [5] }, // signIn
       { route: 4, operations: [7] }, // signOut
 
       // Routes - read only

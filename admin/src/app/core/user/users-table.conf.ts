@@ -73,7 +73,7 @@ export const USERS_TABLE_CONF: (
     },
   },
   {
-    key: "rolesArrayAgg",
+    key: "roles",
     controlType: CONTROL_TYPES.MULTISELECT,
     label: "Rôles",
     options: getRolesOptions(payload.data.roles),

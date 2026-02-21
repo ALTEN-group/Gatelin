@@ -58,7 +58,7 @@ export const CONSUMER_COLUMNS: (
     },
   },
   {
-    key: "rolesArrayAgg",
+    key: "roles",
     label: "Rôles",
     controlType: CONTROL_TYPES.MULTISELECT,
     options: toSelectItems<Role>(data.roles, "name"),

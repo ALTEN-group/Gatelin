@@ -89,11 +89,10 @@ export class AuthenticationService {
     nickname: string,
     firstName: string,
     lastName: string,
-    rolesArrayAgg: number[],
+    roles: number[],
   ): void {
     this._user.update(
-      (user) =>
-        ({ ...user, nickname, firstName, lastName, rolesArrayAgg }) as User,
+      (user) => ({ ...user, nickname, firstName, lastName, roles }) as User,
     );
   }
 
@@ -105,8 +104,8 @@ export class AuthenticationService {
   public getAccount(): Observable<User | null> {
     return this.http.get<User>(this.meApi).pipe(
       tap((res) => {
-        const { nickname, firstName, lastName, rolesArrayAgg } = res;
-        this.updateUser(nickname, firstName, lastName, rolesArrayAgg);
+        const { nickname, firstName, lastName, roles } = res;
+        this.updateUser(nickname, firstName, lastName, roles);
       }),
       catchError(() => of(null)),
     );
@@ -117,7 +116,7 @@ export class AuthenticationService {
       switchMap(() => this.rolesService.getAll()),
       tap(() => {
         this.aclService.storeAccessLevels(
-          this.user()?.rolesArrayAgg || [],
+          this.user()?.roles || [],
           this.rolesService.roles,
         );
       }),

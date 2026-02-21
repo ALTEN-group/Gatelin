@@ -9,5 +9,5 @@ export interface LoginResponse {
   lastName: string;
   accessToken: string;
   refreshToken: string;
-  rolesArrayAgg: number[];
+  roles: number[];
 }

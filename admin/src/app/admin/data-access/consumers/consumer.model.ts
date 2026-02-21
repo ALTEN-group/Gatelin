@@ -10,7 +10,7 @@ export interface Consumer extends ArchiveInfo {
   nickname: string;
   accessToken: string;
   refreshToken: string;
-  rolesArrayAgg: number[];
+  roles: number[];
 }
 
 /**
@@ -25,6 +25,6 @@ export const consumerFactory = (): Consumer => ({
   nickname: "",
   accessToken: "",
   refreshToken: "",
-  rolesArrayAgg: [],
+  roles: [],
   ...new ArchiveInfo(),
 });

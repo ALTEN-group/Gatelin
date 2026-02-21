@@ -12,7 +12,7 @@ export class User extends CrudItemBase implements GeoCoordinates {
   email = "";
   phone = "";
   token = "";
-  rolesArrayAgg: number[] = [];
+  roles: number[] = [];
   active = true;
   updatedAt: number | null = null;
   updatedBy: { firstName: string; lastName: string } | null = null;
