@@ -10,10 +10,10 @@ import { serviceResolver } from "app/admin/data-access/services/service.resolver
  */
 export const AppPaths = {
   LOGIN: "login",
-  ROUTES: "",
-  CONSUMERS: "user",
-  SERVICES: "maintenance",
-  RESOURCES: "error",
+  ROUTES: "routes",
+  CONSUMERS: "consumers",
+  SERVICES: "services",
+  RESOURCES: "resources",
   CORS: "cors",
   OPERATIONS: "operations",
   NOT_FOUND: "not-found",
