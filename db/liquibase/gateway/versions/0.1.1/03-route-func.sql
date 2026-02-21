@@ -5,14 +5,14 @@
 CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO route ("resourceId", description, pattern, methods, jwt, protected, "creatorId", "creatorName")
+      INSERT INTO route ("resourceId", description, pattern, methods, "isProtected", "locked", "creatorId", "creatorName")
       VALUES (
         NEW."resourceId",
         NEW.description,
         NEW.pattern,
         NEW.methods,
-        NEW.jwt,
-        NEW.protected,
+        NEW."isProtected",
+        NEW.locked,
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -26,8 +26,8 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         description = COALESCE(NEW.description, description),
         pattern = COALESCE(NEW.pattern, pattern),
         methods = COALESCE(NEW.methods, methods),
-        jwt = COALESCE(NEW.jwt, jwt),
-        protected = COALESCE(NEW.protected, protected)
+        "isProtected" = COALESCE(NEW."isProtected", "isProtected"),
+        locked = COALESCE(NEW.locked, locked)
       WHERE id = NEW.id;
       RETURN NEW;
       

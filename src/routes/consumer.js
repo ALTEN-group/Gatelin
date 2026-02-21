@@ -40,7 +40,7 @@ const addConsumer = [
   sendConsumer,
 ];
 const updateConsumer = [refreshTokens, cEnt.update, updateCache, sendConsumer];
-const deleteConsumer = [cEnt.delete, deleteFromCache, send204];
+const deleteConsumer = [cEnt.archive, deleteFromCache, send204];
 
 const add = [
   checkEmail,
@@ -72,7 +72,10 @@ router.post("/", add);
 // Used for automatic login and refresh tokens
 router.put("/", update);
 
-// delete a consumer. Used when logging out
-router.delete("/", del);
+// sign-out a user. Used when logging out
+router.patch("/sign-out", del);
+
+// Bulk archive consumers.
+router.patch("/archive", del);
 
 export default router;

@@ -22,7 +22,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "userId",
@@ -40,7 +40,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "nickname",
@@ -58,7 +58,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   // {
   //   key: "firstName",
@@ -112,7 +112,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "refreshToken",
@@ -130,7 +130,7 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
   },
   {
     key: "roles",
@@ -148,7 +148,23 @@ const consumerEntity = new SQLEntity("consumer", [
     validate: true,
     sanitizer: null,
     normalizer: null,
-    validator: null
+    validator: null,
+  },
+  {
+    key: "archived",
+    type: "boolean",
+    typeCheck: true,
+    filter: true,
+    methods: ["GET", "PATCH"],
+    operations: ["SELECT", "UPDATE"],
+    required: true,
+    safe: true,
+    sanitize: false,
+    normalize: false,
+    validate: true,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
   },
 ]);
 

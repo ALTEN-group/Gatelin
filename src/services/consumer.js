@@ -15,7 +15,6 @@ import cEnt from "../entities/consumer.js";
 /** @type {ConsumerCache[]} */
 let consumers = [];
 
-
 /**
  * Initializes the consumer cache by loading all consumer records from the database.
  * This function should be called once when the application starts to populate the
@@ -30,10 +29,15 @@ let consumers = [];
  * console.log('Consumer cache initialized');
  */
 function init() {
-  const { query, args } = cEnt.query.select(false, 0, 0, "id", null, null);
-  return execute(query, args, null).then((r) => consumers = r.rows );
+  const filters = {
+    archived: {
+      value: false,
+      matchMode: "equals",
+    },
+  };
+  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
+  return execute(query, args, null).then((r) => (consumers = r.rows));
 }
-
 
 /**
  * Retrieves a single consumer from the in-memory cache by their access and refresh tokens.
