@@ -120,9 +120,9 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
-      MSAUTH_URL: ${MSAUTH_URL}
-      MSUSER_URL: ${MSUSER_URL}
-      MSROLE_URL: ${MSROLE_URL}
+      MSAUTH_VERIFY_URL: ${MSAUTH_VERIFY_URL}
+      MSUSER_SEARCH_URL: ${MSUSER_SEARCH_URL}
+      MSROLE_SEARCH_URL: ${MSROLE_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
       DB_USER: ${GATELIN_DB_USER}
@@ -141,9 +141,9 @@ services:
       PWD_UPPERCASE_POLICY: ${GATELIN_PWD_UPPERCASE_LEGACY}
       PWD_LOWERCASE_POLICY: ${GATELIN_PWD_LOWERCASE_LEGACY}
       PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
-    # depends_on:
-    #   ms_role_mock:
-    #     condition: service_healthy
+    depends_on:
+      ms_role_mock:
+        condition: service_healthy
     networks:
       - internal
     volumes:
@@ -297,6 +297,11 @@ services:
     volumes:
       - ${PWD}/mocks/ms_role/src:/usr/src/app/src
       - ms_role_mock_node_modules:/usr/src/app/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/roles/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   ms_auth_mock:
     build:

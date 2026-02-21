@@ -18,16 +18,17 @@ export class AclService {
     functionality: string | undefined,
     operation?: OperationLevel,
   ): boolean {
-    if (!functionality) return true;
-    if (!this._accessLevels().size) return false;
-    const accessLevel = this._accessLevels().get(functionality);
-    const hasFunctionality = accessLevel !== undefined;
-    // If no operation is provided, user has access to the functionality.
-    if (!operation) return hasFunctionality;
-    // If operation is provided, we must check that user has a superior access.
-    const hasSufficientRight = accessLevel && accessLevel >= operation;
+    // if (!functionality)
+    return true;
+    // if (!this._accessLevels().size) return false;
+    // const accessLevel = this._accessLevels().get(functionality);
+    // const hasFunctionality = accessLevel !== undefined;
+    // // If no operation is provided, user has access to the functionality.
+    // if (!operation) return hasFunctionality;
+    // // If operation is provided, we must check that user has a superior access.
+    // const hasSufficientRight = accessLevel && accessLevel >= operation;
 
-    return Boolean(hasSufficientRight);
+    // return Boolean(hasSufficientRight);
   }
 
   public storeAccessLevels(

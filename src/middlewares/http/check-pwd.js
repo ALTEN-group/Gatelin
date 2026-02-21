@@ -1,8 +1,8 @@
 // @ts-check
 import http from "../../utils/http.js";
 
-const { MSAUTH_URL } = process.env;
-const url = `${MSAUTH_URL}/login/`;
+const { MSAUTH_VERIFY_URL } = process.env;
+const url = MSAUTH_VERIFY_URL;
 
 /**
  * Validates user credentials against ms_auth service

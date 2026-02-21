@@ -5,7 +5,7 @@ export class Role extends CrudItemBase {
   description = "";
   color = "";
   level = 0;
-  permissions!: { [key: number]: number };
+  permissions!: { [key: string]: number };
   createdAt = "";
   updatedAt = "";
 }

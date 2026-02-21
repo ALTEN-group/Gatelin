@@ -1,8 +1,8 @@
 // @ts-check
 import http from "../utils/http.js";
 
-const { MSROLE_URL } = process.env;
-const url = `${MSROLE_URL}/roles/roles/search/`;
+const { MSROLE_SEARCH_URL } = process.env;
+const url = MSROLE_SEARCH_URL;
 
 /**
  * @typedef {Object} roleCache
