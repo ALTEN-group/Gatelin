@@ -65,6 +65,7 @@ const del = [getConsumer, deleteConsumer];
 
 // Get routes
 router.post("/search", getMany);
+
 // add a consumer. e.g. Log a user
 router.post("/", add);
 

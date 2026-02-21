@@ -19,6 +19,9 @@ import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
 
+// Cron jobs
+import { startDeleteArchivedConsumersJob } from "./jobs/delete-archived-consumers.js";
+
 // middlewares
 import { send } from "./middlewares/res/send.js";
 import checkRoute from "./middlewares/validators/check-route.js";
@@ -63,6 +66,8 @@ Promise.all([
 ])
   .then(() => {
     app.use(cors(corsOptions));
+    // Start cron jobs
+    startDeleteArchivedConsumersJob();
     listen(app);
   })
   .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));

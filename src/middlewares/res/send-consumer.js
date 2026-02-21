@@ -5,7 +5,7 @@ import cEnt from "../../entities/consumer.js";
 /**
  * Express middleware that sends a single consumer object as JSON response.
  * Removes unsafe properties from the consumer data before sending.
- * 
+ *
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} _next - Express next function (unused)
@@ -16,5 +16,10 @@ import cEnt from "../../entities/consumer.js";
  */
 export function sendConsumer(req, res, _next) {
   const data = deleteProps(req.body.rows, cEnt.unsafeProps);
+
+  delete data[0].userId;
+  delete data[0].nickname;
+  delete data[0].roles;
+
   res.status(200).json(data[0]);
 }

@@ -50,7 +50,7 @@ app.get("/users/users/me/", (req, res) => {
     nickname: user.nickname,
     firstName: user.firstName,
     lastName: user.lastName,
-    rolesArrayAgg: user.rolesArrayAgg,
+    roles: user.roles,
   };
 
   log.debug(`GET /users/users/me/ - success: ${user.nickname}`);
