@@ -17,6 +17,7 @@ app.disable("x-powered-by");
 import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
+import roleSvc from "./services/role.js";
 
 // middlewares
 import { send } from "./middlewares/res/send.js";
@@ -54,7 +55,12 @@ app.use(endTimer);
 errorHandler(app);
 
 // Init cached reference data
-Promise.all([routeSvc.init(), consumerSvc.init(), corsSvc.init()])
+Promise.all([
+  routeSvc.init(),
+  consumerSvc.init(),
+  corsSvc.init(),
+  roleSvc.init(),
+])
   .then(() => {
     app.use(cors(corsOptions));
     listen(app);

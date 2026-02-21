@@ -1,5 +1,5 @@
 // @ts-check
-import http from "../services/http.js";
+import http from "../utils/http.js";
 
 const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
 const san = `${SERVER_SCHEME}${APP_NAME}-`;
@@ -10,7 +10,7 @@ const ep = `-${ENV_NAME}:${PORT}`;
  * header management, and response handling.
  *
  * @param {import('express').Request} req - Express request object
- * @param {import('express').Response} res - Express response object  
+ * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} next - Express next function
  * @return {void} Sends response or passes error to next middleware
  * @throws {Error} Network errors or service unavailability
@@ -27,9 +27,10 @@ export function forwardToService(req, res, next) {
 
   // Construct internal service URL
   const url = `${san}${serviceName}${ep}${route}`;
-  
+
   // Forward request to target microservice
-  http.query(method, url, undefined, body, req.additionalHeaders)
+  http
+    .query(method, url, undefined, body, req.additionalHeaders)
     .then((r) => res.status(r.status).send(r.data))
     .catch((e) => next(e));
 }

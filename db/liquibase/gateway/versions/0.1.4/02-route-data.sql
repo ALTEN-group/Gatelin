@@ -44,12 +44,7 @@ INSERT INTO route ("resourceId", "operationId", pattern, name, description, meth
 
 (7, 1, '/me', 'getBasicUserInfo', 'Get basic user info at login', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
 
-(8, 2, '/search', 'searchRoles', 'Search roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 2, '/(?<roleId>\\d+)/history', 'getRolesHistory', 'Manage roles history', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 5, '', 'updateRoles', 'Update roles', ARRAY['PUT', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 4, '', 'addRoles', 'Add roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 8, '/archive', 'archiveRoles', 'Archive roles', ARRAY['PATCH', 'OPTIONS']::method[], true, false, -1, 'system'),
-(8, 10, '', 'deleteRoles', 'Delete roles', ARRAY['DELETE', 'OPTIONS']::method[], true, false, -1, 'system')
+(8, 2, '/search', 'searchRoles', 'Search roles', ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system')
 ;
 
 ANALYZE;

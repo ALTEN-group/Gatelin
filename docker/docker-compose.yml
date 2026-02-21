@@ -122,6 +122,7 @@ services:
       TZ: ${TZ}
       MSAUTH_URL: ${MSAUTH_URL}
       MSUSER_URL: ${MSUSER_URL}
+      MSROLE_URL: ${MSROLE_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
       DB_USER: ${GATELIN_DB_USER}

@@ -1,4 +1,5 @@
 import { log } from "@dwtechs/winstan";
+import roleService from "../../services/role.js";
 
 /**
  * Express middleware that validates user access control permissions for protected routes.
@@ -34,10 +35,16 @@ export default function checkAcl(req, res, next) {
   const o = r.operationId;
   log.debug(`checkAcl(consumer: ${c.id}, operation: ${o}, route: ${r.url}`);
 
-  // Check if route and operation combination exists in consumer permissions
-  const hasAccess = c.permissions.some(
-    (p) => p.route === r.id && p.operations.includes(r.operationId),
-  );
+  // Get all roles for this consumer and check their permissions
+  const hasAccess = c.roles.some((id) => {
+    const role = roleService.getOne(id);
+    if (!role) return false;
+
+    // Check if this role has permission for the route and operation
+    return role.permissions.some(
+      (p) => p.route === r.id && p.operations.includes(r.operationId),
+    );
+  });
 
   if (!hasAccess) return next({ statusCode: 403, message: "Forbidden" });
 

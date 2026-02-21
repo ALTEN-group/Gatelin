@@ -1,6 +1,6 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
-import http from "../../services/http.js";
+import http from "../../utils/http.js";
 
 const { MSUSER_URL } = process.env;
 const url = `${MSUSER_URL}/users/users/search/`;
@@ -45,11 +45,11 @@ export function getUserByEmail(req, res, next) {
   };
 
   http
-    .query("POST", url, undefined, { filters }, req.additionalHeaders)
+    .query("POST", url, undefined, { filters }, undefined)
     .then((r) => {
       const u = r.data.rows[0]; // Expecting single user object
       log.debug(
-        `ms_user response: user id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
+        `ms_user response: id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
       );
       req.body.rows = [
         {

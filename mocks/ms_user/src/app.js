@@ -1,56 +1,59 @@
-import express from 'express';
-import helmet from 'helmet';
-import healixRouter from '@dwtechs/healix-express';
-import { listen } from '@dwtechs/servpico-express';
-import { log } from '@dwtechs/winstan';
-import { mockUsers } from './data/users.js';
+import express from "express";
+import helmet from "helmet";
+import healixRouter from "@dwtechs/healix-express";
+import { listen } from "@dwtechs/servpico-express";
+import { log } from "@dwtechs/winstan";
+import { mockUsers } from "./data/users.js";
 
 const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use('/users/health', healixRouter);
+app.use("/users/health", healixRouter);
 
 // POST /users/search - Get user by filter (used by Gatelin getUserByEmail middleware)
-app.post('/users/users/search/', (req, res) => {
-  log.info(`POST /users/users/search/ - Get user by filters ${JSON.stringify(req.body)}`);
-  
+app.post("/users/users/search/", (req, res) => {
+  log.info(
+    `POST /users/users/search/ - Get user by filters ${JSON.stringify(req.body)}`,
+  );
+
   const { filters } = req.body;
-  
+
   if (!filters || !filters.email)
-    return res.status(400).json({ error: 'Missing email filter' });
+    return res.status(400).json({ error: "Missing email filter" });
 
   const email = filters.email.value;
-  const user = mockUsers.find(u => u.email === email);
+  const user = mockUsers.find((u) => u.email === email);
 
-  if (!user)
-    return res.status(404).json({ error: 'User not found' });
+  if (!user) return res.status(404).json({ error: "User not found" });
 
   log.debug(`POST /users/users/search/ - success: ${JSON.stringify(user)}`);
   res.status(200).json({
     rows: [user],
-    total: 1
+    total: 1,
   });
 });
 
 // GET /users/me - Get authenticated user's essential info (for login/navbar)
-app.get('/users/me/', (req, res) => {
-  log.info('GET /users/me/ - Get authenticated user essentials from x-consumer-id header');
+app.get("/users/users/me/", (req, res) => {
+  log.info(
+    "GET /users/users/me/ - Get authenticated user essentials from x-consumer-id header",
+  );
 
   // Gatelin adds x-consumer-id header (userId from JWT's iss claim)
-  const userId = req.headers['x-consumer-id'];
+  const userId = req.headers["x-consumer-id"];
   log.debug(`Extracted userId from x-consumer-id header: ${userId}`);
-  const user = mockUsers.find(u => u.id === +userId);
+  const user = mockUsers.find((u) => u.id === +userId);
 
   // Return only essential fields for login/session
   const essentials = {
     nickname: user.nickname,
     firstName: user.firstName,
     lastName: user.lastName,
-    rolesArrayAgg: user.rolesArrayAgg
+    rolesArrayAgg: user.rolesArrayAgg,
   };
 
-  log.debug(`GET /users/me/ - success: ${user.nickname}`);
+  log.debug(`GET /users/users/me/ - success: ${user.nickname}`);
   res.status(200).json(essentials);
 });
 
@@ -73,6 +76,5 @@ app.get('/users/me/', (req, res) => {
 //   log.debug(`GET /users/users/${userId} - success: ${user.nickname}`);
 //   res.status(200).json(user);
 // });
-
 
 listen(app);
