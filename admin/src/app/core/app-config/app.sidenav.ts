@@ -22,7 +22,7 @@ export const SIDENAV: MenuItem[] = [
   },
   {
     id: "apis",
-    label: $localize`:@@Admin_ApisNav:resources`,
+    label: $localize`:@@Admin_ApisNav:Resources`,
     routerLink: `/${AppPaths.RESOURCES}`,
     icon: "pi pi-directions",
   },

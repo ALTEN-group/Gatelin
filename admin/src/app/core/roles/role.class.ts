@@ -1,11 +1,17 @@
 import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
 
+export interface Permission {
+  route: number;
+  operation: number[];
+}
+
 export class Role extends CrudItemBase {
   name = "";
   description = "";
   color = "";
   level = 0;
-  permissions!: { [key: string]: number };
+  permissions_old!: { [key: string]: number };
+  permissions: Permission[] = [];
   createdAt = "";
   updatedAt = "";
 }

@@ -1,5 +1,6 @@
 import { inject, Pipe, PipeTransform } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
+import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
 @Pipe({
   name: "hasAccess",
@@ -9,8 +10,8 @@ export class ProtectFeaturePipe implements PipeTransform {
 
   transform(
     functionalityKey: string | undefined,
-    operation: number | undefined,
+    operation: keyof Calls<unknown> | undefined,
   ): boolean {
-    return this.aclService.resolveAccess(functionalityKey, operation);
+    return this.aclService.hasAccess(functionalityKey, operation);
   }
 }

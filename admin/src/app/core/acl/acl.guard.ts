@@ -18,7 +18,7 @@ function resolveAccess(
   aclService: AclService,
 ): boolean {
   const requiredFunctionality: string | undefined = route.data.functionality;
-  return aclService.resolveAccess(requiredFunctionality);
+  return aclService.hasAccess(requiredFunctionality, "get");
 }
 
 function redirectsToHome(router: Router): void {

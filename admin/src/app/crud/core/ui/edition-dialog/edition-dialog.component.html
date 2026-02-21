@@ -14,7 +14,7 @@
         [config]="config()"
         [model]="editedEntry()"
         [groupValidator]="groupValidator()"
-        [isReadonly]="isReadonly() || !(functionalityKey() | hasAccess:2)"
+        [isReadonly]="isReadonly() || !(functionalityKey() | hasAccess:'update')"
         [forceReload]="forceReloadTime()"
         [columnsCount]="formColumnsCount()"
         (modelChange)="onFormChanged($event)"
@@ -89,7 +89,7 @@
         type="validate"
         icon="pi pi-check"
         [protectFeature]="functionalityKey()"
-        [minimalOperation]="2"
+        operation="update"
         [disabled]="isLoading() || invalidForm"
         (click)="onSave()"
       />

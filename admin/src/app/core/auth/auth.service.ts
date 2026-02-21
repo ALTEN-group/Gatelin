@@ -119,7 +119,6 @@ export class AuthenticationService {
         this.aclService.storeAccessLevels(
           this.user()?.rolesArrayAgg || [],
           this.rolesService.roles,
-          this.rolesService.functionalities,
         );
       }),
       map(() => true),

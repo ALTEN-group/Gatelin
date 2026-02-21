@@ -3,7 +3,7 @@
     pButton
     pRipple
     [protectFeature]="functionalityKey()"
-    [minimalOperation]="2"
+    operation="update"
     icon="pi pi-pencil"
     class="p-button-sm p-button-rounded p-button-text"
     title="Editer"
@@ -15,7 +15,7 @@
     pButton
     pRipple icon="pi pi-trash"
     [protectFeature]="functionalityKey()"
-    [minimalOperation]="3"
+    operation="archive"
     class="p-button-sm p-button-rounded p-button-text p-button-danger"
     title="Supprimer"
     (click)="onDelete()">

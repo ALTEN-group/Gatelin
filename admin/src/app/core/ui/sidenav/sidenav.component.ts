@@ -88,6 +88,6 @@ export class SidenavComponent {
   }
 
   private hasAccess(functionality: string | undefined) {
-    return this.aclService.resolveAccess(functionality);
+    return this.aclService.hasAccess(functionality, "get");
   }
 }

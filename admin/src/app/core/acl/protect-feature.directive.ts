@@ -7,6 +7,7 @@ import {
   input,
 } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
+import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
 @Directive({
   selector: "[protectFeature]",
@@ -15,18 +16,16 @@ export class ProtectFeatureDirective {
   private readonly elementRef = inject(ElementRef);
   private readonly aclService = inject(AclService);
 
-  /** Represents the feature to be accessed (users, cities, blogs...) */
+  /** Represents the functionality to access, "routes" for instance */
   public readonly protectFeature = input.required<string | undefined>();
 
   /** Represents the id of access level necessary to see the feature (1: read, 2: write...) */
-  public readonly minimalOperation = input<number | undefined>(undefined);
+  public readonly operation = input<keyof Calls<unknown> | undefined>(
+    undefined,
+  );
 
   protected readonly hasAccess = computed(() => {
-    return this.aclService.resolveAccess(
-      this.protectFeature(),
-      this.minimalOperation(),
-      // this.acAttribute(),
-    );
+    return this.aclService.hasAccess(this.protectFeature(), this.operation());
   });
 
   /**

@@ -36,6 +36,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_RoutesNav:Routes`,
+      functionality: "routes",
     },
     resolve: {
       operations: operationsResolver,
@@ -53,6 +54,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ConsumersNav:Consumers`,
+      functionality: "consumers",
     },
   },
   {
@@ -65,6 +67,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ServicesNav:Services`,
+      functionality: "services",
     },
   },
   {
@@ -77,6 +80,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ResourcesNav:Resources`,
+      functionality: "resources",
     },
     resolve: {
       services: serviceResolver,
@@ -92,6 +96,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_CorsNav:CORS`,
+      functionality: "cors",
     },
   },
   {
@@ -104,6 +109,7 @@ export const ROUTES: Routes = [
     canActivate: [accessGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
+      functionality: "operations",
     },
   },
 

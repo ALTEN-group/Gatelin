@@ -1,82 +1,59 @@
 import { Injectable, signal } from "@angular/core";
-import { OperationLevel } from "@core/roles/operation-level.enum";
-import { Role } from "@core/roles/role.class";
-import { Functionality } from "@core/roles/role.model";
-
-type AccessLevels = Map<string, number>;
-const initialAccessLevels: AccessLevels = new Map<string, number>();
+import { Acls, BASE_ACLS } from "@core/app-config/app.acls";
+import { Permission, Role } from "@core/roles/role.class";
+import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
 @Injectable({ providedIn: "root" })
 export class AclService {
-  private _accessLevels = signal<AccessLevels>(initialAccessLevels);
+  private _accessLevels = signal<Acls>({});
   public readonly accessLevels = this._accessLevels.asReadonly();
 
   private readonly _areAclResolved = signal(false);
   public readonly areAclResolved = this._areAclResolved.asReadonly();
 
-  public resolveAccess(
+  public hasAccess(
     functionality: string | undefined,
-    operation?: OperationLevel,
+    operation: keyof Calls<unknown> | undefined,
   ): boolean {
-    // if (!functionality)
-    return true;
-    // if (!this._accessLevels().size) return false;
-    // const accessLevel = this._accessLevels().get(functionality);
-    // const hasFunctionality = accessLevel !== undefined;
-    // // If no operation is provided, user has access to the functionality.
-    // if (!operation) return hasFunctionality;
-    // // If operation is provided, we must check that user has a superior access.
-    // const hasSufficientRight = accessLevel && accessLevel >= operation;
-
-    // return Boolean(hasSufficientRight);
+    if (!functionality) return true;
+    const funcAcls = this.accessLevels()[functionality];
+    if (!funcAcls) return false;
+    if (operation) {
+      return funcAcls[operation as keyof typeof funcAcls] || false;
+    }
+    return funcAcls.get || false;
   }
 
-  public storeAccessLevels(
-    userRoleIds: number[],
-    roles: Role[],
-    functionalities: Functionality[],
-  ): void {
+  public storeAccessLevels(userRoleIds: number[], roles: Role[]): void {
     if (this._accessLevels().size) return;
     const userPermissions = roles
       .filter(
         (role) => typeof role.id === "number" && userRoleIds.includes(role.id),
       )
-      .map((role) => role.permissions);
-    const userAccessMap = this.buildAccessLevels(
-      userPermissions,
-      functionalities,
-    );
-    this._accessLevels.set(userAccessMap);
+      .flatMap((role) => role.permissions);
+    const acls = this.buildAcls(userPermissions);
+    this._accessLevels.set(acls);
     this._areAclResolved.set(true);
   }
 
   public resetAccessLevels(): void {
-    this._accessLevels.update((acl) => {
-      acl.clear();
-      return acl;
-    });
+    this._accessLevels.set({});
   }
 
-  private buildAccessLevels(
-    userPermissions: { [key: number]: number }[],
-    functionalities: Functionality[],
-  ) {
-    const userAccessMap = userPermissions.reduce((acc, curr) => {
-      Object.entries(curr).forEach(([key, value]) => {
-        const functionality =
-          functionalities.find((f) => f.id.toString() === key)?.key || key;
-        // if functionality already exists, keep the highest access level
-        if (acc.has(functionality)) {
-          const existingValue = acc.get(functionality) as number;
-          if (value > existingValue) {
-            acc.set(functionality, value);
-          }
-          return;
-        }
-        acc.set(functionality, value);
-      });
-      return acc;
-    }, new Map<string, number>());
-    return userAccessMap;
+  private buildAcls(userPermissions: Permission[]): Acls {
+    const userAcls: Acls = {};
+    for (const functionality in BASE_ACLS) {
+      userAcls[functionality] = {};
+      const routes = BASE_ACLS[functionality];
+      for (const route in routes) {
+        const routeId = routes[route as keyof typeof routes];
+        const hasPermission = userPermissions.some(
+          (perm) => perm.route === routeId,
+        );
+        // transform routeId to access true/false
+        userAcls[functionality][route as keyof typeof routes] = hasPermission;
+      }
+    }
+    return userAcls;
   }
 }

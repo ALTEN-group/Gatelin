@@ -43,7 +43,7 @@ export class NavbarComponent {
 
   private readonly hasAccessToNotifications = computed(() => {
     return (
-      this.areNotifsEnabled && this.aclService.resolveAccess("notifications")
+      this.areNotifsEnabled && this.aclService.hasAccess("notifications", "get")
     );
   });
 

@@ -8,7 +8,7 @@
             [loading]="loading()"
             (onClick)="clicked.emit()"
             [protectFeature]="functionalityKey()"
-            [minimalOperation]="3"
+            operation="update"
             data-testid="validate-button"
         />
     }
@@ -36,7 +36,7 @@
             [severity]="severity() ? severity() : 'primary'"
             [loading]="loading()"
             [icon]="icon() ? icon() : ''"
-            [minimalOperation]="3"
+            operation="archive"
             (onClick)="clicked.emit()"
             data-testid="delete-button"
         />
@@ -45,7 +45,7 @@
         <p-button pRipple
             [outlined]="true"
             [protectFeature]="functionalityKey()"
-            [minimalOperation]="2"
+            operation="update"
             [label]="label() ? label() : 'Modifier'"
             [severity]="severity() ? severity() : 'primary'"
             [disabled]="disabled()"
