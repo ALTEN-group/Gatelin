@@ -2,8 +2,8 @@ import { Component } from "@angular/core";
 import { CardModule } from "primeng/card";
 
 @Component({
-  selector: "adm-not-found",
-  templateUrl: "./not-found.component.html",
+  selector: "adm-unauthorized",
+  templateUrl: "./unauthorized.component.html",
   imports: [CardModule],
 })
-export class NotFoundComponent {}
+export class UnauthorizedComponent {}

@@ -3,12 +3,12 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AppPaths } from "app/app.routes";
 
-export function accessGuard(): CanActivateFn {
+export function aclGuard(): CanActivateFn {
   return (route: ActivatedRouteSnapshot) => {
     const router = inject(Router);
     const aclService = inject(AclService);
     const hasAccess = resolveAccess(route, aclService);
-    if (!hasAccess) redirectsToHome(router);
+    if (!hasAccess) redirectsToUnauthorized(router);
     return hasAccess;
   };
 }
@@ -21,6 +21,6 @@ function resolveAccess(
   return aclService.hasAccess(requiredFunctionality, "get");
 }
 
-function redirectsToHome(router: Router): void {
-  router.navigate([`/${AppPaths.ROUTES}`]);
+function redirectsToUnauthorized(router: Router): void {
+  router.navigate([`/${AppPaths.UNAUTHORIZED}`]);
 }

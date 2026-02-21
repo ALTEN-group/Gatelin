@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { accessGuard } from "@core/acl/acl.guard";
+import { aclGuard } from "@core/acl/acl.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
@@ -17,6 +17,7 @@ export const AppPaths = {
   CORS: "cors",
   OPERATIONS: "operations",
   NOT_FOUND: "not-found",
+  UNAUTHORIZED: "unauthorized",
 } as const;
 
 export const ROUTES: Routes = [
@@ -33,7 +34,7 @@ export const ROUTES: Routes = [
         (m) => m.RoutesComponent,
       ),
     title: "Routes",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_RoutesNav:Routes`,
       functionality: "routes",
@@ -51,7 +52,7 @@ export const ROUTES: Routes = [
         (m) => m.ConsumersComponent,
       ),
     title: "Consumers",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ConsumersNav:Consumers`,
       functionality: "consumers",
@@ -64,7 +65,7 @@ export const ROUTES: Routes = [
         (m) => m.ServicesComponent,
       ),
     title: "Services",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ServicesNav:Services`,
       functionality: "services",
@@ -77,7 +78,7 @@ export const ROUTES: Routes = [
         (m) => m.ResourcesComponent,
       ),
     title: "Resources",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ResourcesNav:Resources`,
       functionality: "resources",
@@ -93,7 +94,7 @@ export const ROUTES: Routes = [
         (m) => m.CorsComponent,
       ),
     title: "CORS",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_CorsNav:CORS`,
       functionality: "cors",
@@ -106,13 +107,23 @@ export const ROUTES: Routes = [
         (m) => m.OperationsComponent,
       ),
     title: "Operations",
-    canActivate: [accessGuard()],
+    canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
       functionality: "operations",
     },
   },
-
+  {
+    path: AppPaths.UNAUTHORIZED,
+    loadComponent: () =>
+      import("./core/pages/unauthorized/unauthorized.component").then(
+        (m) => m.UnauthorizedComponent,
+      ),
+    title: "Unauthorized",
+    data: {
+      breadcrumb: $localize`:@@Unauthorized_unauthorizedNav:Unauthorized`,
+    },
+  },
   {
     path: AppPaths.NOT_FOUND,
     component: NotFoundComponent,
