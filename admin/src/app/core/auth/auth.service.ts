@@ -24,6 +24,8 @@ export class AuthenticationService {
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
   private readonly consumerApi: string = `${this.apiPrefix}gateway/consumers`;
+  private readonly signOutApi: string =
+    `${this.apiPrefix}gateway/consumers/archive`;
   private readonly meApi: string = `${this.apiPrefix}users/users/me`;
 
   private readonly _isAuthenticated = signal(false);
@@ -47,8 +49,8 @@ export class AuthenticationService {
     );
   }
 
-  public logout(): Observable<string> {
-    return this.http.delete(this.consumerApi, { responseType: "text" }).pipe(
+  public logout(): Observable<void> {
+    return this.http.patch<void>(this.signOutApi, {}).pipe(
       tap(() => {
         this.tokenService.deleteAccessToken();
         this.tokenService.deleteRefreshToken();
@@ -56,7 +58,7 @@ export class AuthenticationService {
         this.rolesService.resetRoles();
         this.redirectToLogin();
       }),
-      catchError(() => of("")),
+      catchError(() => of()),
     );
   }
 

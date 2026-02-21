@@ -20,10 +20,10 @@ INSERT INTO "service" (name, pattern, locked, "creatorId", "creatorName") VALUES
 INSERT INTO operation (name, description, "creatorId", "creatorName") VALUES
 ('read', 'Retrieve a single resource', -1, 'system'),
 ('list', 'Search multiple resources', -1, 'system'),
-('create', 'Create a new resource', -1, 'system'),
-('bulk create', 'Create multiple new resources', -1, 'system'),
 ('update', 'Update an existing resource', -1, 'system'),
 ('bulk update', 'Update multiple existing resources', -1, 'system'),
+('create', 'Create a new resource', -1, 'system'),
+('bulk create', 'Create multiple new resources', -1, 'system'),
 ('archive', 'Archive a resource', -1, 'system'),
 ('bulk archive', 'Archive multiple resources', -1, 'system'),
 ('delete', 'Delete a resource', -1, 'system'),
