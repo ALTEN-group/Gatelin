@@ -33,6 +33,7 @@ INSERT INTO operation (name, description, "creatorId", "creatorName") VALUES
 
 
 INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VALUES
+(1, 'session', true, -1, 'system'),
 (1, 'consumers', true, -1, 'system'),
 (1, 'routes', true, -1, 'system'),
 (1, 'services', true, -1, 'system'),

@@ -23,9 +23,7 @@ export class AuthenticationService {
 
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
-  private readonly consumerApi: string = `${this.apiPrefix}gateway/consumers`;
-  private readonly signOutApi: string =
-    `${this.apiPrefix}gateway/consumers/archive`;
+  private readonly sessionApi: string = `${this.apiPrefix}gateway/sessions`;
   private readonly meApi: string = `${this.apiPrefix}users/users/me`;
 
   private readonly _isAuthenticated = signal(false);
@@ -37,7 +35,7 @@ export class AuthenticationService {
   public login(email: string, pwd: string): Observable<boolean> {
     if (!email || !pwd) return of(false);
     const payload = { email, pwd };
-    return this.http.post<LoginResponse>(this.consumerApi, payload).pipe(
+    return this.http.post<LoginResponse>(this.sessionApi, payload).pipe(
       tap((res) => {
         const { accessToken, refreshToken } = res;
         this.saveTokens(accessToken, refreshToken);
@@ -50,7 +48,7 @@ export class AuthenticationService {
   }
 
   public logout(): Observable<void> {
-    return this.http.patch<void>(this.signOutApi, {}).pipe(
+    return this.http.delete<void>(this.sessionApi, {}).pipe(
       tap(() => {
         this.tokenService.deleteAccessToken();
         this.tokenService.deleteRefreshToken();
@@ -64,9 +62,9 @@ export class AuthenticationService {
 
   public refreshToken(): Observable<boolean> {
     const refreshToken = this.tokenService.getRefreshToken();
-    if (refreshToken) {
+    if (refreshToken)
       return this.http
-        .put<{ accessToken: string; refreshToken: string }>(this.consumerApi, {
+        .put<{ accessToken: string; refreshToken: string }>(this.sessionApi, {
           refreshToken,
         })
         .pipe(
@@ -81,7 +79,7 @@ export class AuthenticationService {
             return of(false);
           }),
         );
-    }
+
     return of(false);
   }
 

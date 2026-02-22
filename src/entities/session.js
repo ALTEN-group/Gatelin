@@ -2,10 +2,10 @@
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
 /**
- * Consumer entity configuration for database operations.
- * Defines validation rules, types, and constraints for consumer data.
+ * Session entity configuration for database operations.
+ * Defines validation rules, types, and constraints for session data.
  */
-const consumerEntity = new SQLEntity("consumer", [
+const sessionEntity = new SQLEntity("consumer", [
   {
     key: "id",
     type: "integer",
@@ -14,9 +14,9 @@ const consumerEntity = new SQLEntity("consumer", [
     typeCheck: true,
     filter: true,
     methods: ["POST"],
-    operations: ["SELECT"],
+    operations: [],
     required: false,
-    safe: true,
+    safe: false,
     sanitize: true,
     normalize: false,
     validate: true,
@@ -32,9 +32,9 @@ const consumerEntity = new SQLEntity("consumer", [
     typeCheck: true,
     filter: true,
     methods: ["POST"],
-    operations: ["SELECT"],
-    required: false,
-    safe: true,
+    operations: ["INSERT"],
+    required: true,
+    safe: false,
     sanitize: true,
     normalize: false,
     validate: true,
@@ -49,10 +49,10 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 30,
     typeCheck: true,
     filter: true,
-    methods: ["POST"],
-    operations: ["SELECT"],
-    required: false,
-    safe: true,
+    methods: ["POST", "PUT"],
+    operations: ["INSERT", "UPDATE"],
+    required: true,
+    safe: false,
     sanitize: true,
     normalize: false,
     validate: true,
@@ -67,9 +67,9 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 8000,
     typeCheck: true,
     filter: false,
-    methods: ["POST"],
-    operations: ["SELECT"],
-    required: false,
+    methods: ["POST", "PUT"],
+    operations: ["INSERT", "UPDATE"],
+    required: true,
     safe: true,
     sanitize: true,
     normalize: false,
@@ -85,9 +85,9 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 8000,
     typeCheck: true,
     filter: false,
-    methods: ["POST"],
-    operations: ["SELECT"],
-    required: false,
+    methods: ["POST", "PUT"],
+    operations: ["INSERT", "UPDATE"],
+    required: true,
     safe: true,
     sanitize: true,
     normalize: false,
@@ -103,10 +103,10 @@ const consumerEntity = new SQLEntity("consumer", [
     max: 100,
     typeCheck: true,
     filter: true,
-    methods: ["POST"],
-    operations: ["SELECT"],
-    required: false,
-    safe: true,
+    methods: ["POST", "PUT"],
+    operations: ["INSERT", "UPDATE"],
+    required: true,
+    safe: false,
     sanitize: true,
     normalize: false,
     validate: true,
@@ -119,10 +119,10 @@ const consumerEntity = new SQLEntity("consumer", [
     type: "boolean",
     typeCheck: true,
     filter: true,
-    methods: ["POST", "PATCH"],
-    operations: ["SELECT", "UPDATE"],
-    required: true,
-    safe: true,
+    methods: [],
+    operations: ["UPDATE"],
+    required: false,
+    safe: false,
     sanitize: false,
     normalize: false,
     validate: true,
@@ -132,4 +132,4 @@ const consumerEntity = new SQLEntity("consumer", [
   },
 ]);
 
-export default consumerEntity;
+export default sessionEntity;

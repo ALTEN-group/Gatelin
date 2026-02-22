@@ -25,9 +25,10 @@ import { startDeleteArchivedConsumersJob } from "./jobs/delete-archived-consumer
 // middlewares
 import { send } from "./middlewares/res/send.js";
 import checkRoute from "./middlewares/validators/check-route.js";
-import { checkRequest } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
+import { checkRequest as cr } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
 
 // Routes
+import session from "./routes/session.js";
 import consumer from "./routes/consumer.js";
 import proxy from "./routes/proxy.js";
 import route from "./routes/route.js";
@@ -36,6 +37,8 @@ import resource from "./routes/resource.js";
 import operation from "./routes/operation.js";
 import corsRoutes from "./routes/cors.js";
 
+const svc = "/gateway/";
+
 app.use(express.json());
 app.use("/gateway/health", healixRouter);
 // performance measurement starts for any call to the following routes
@@ -43,13 +46,14 @@ app.use(startTimer);
 // Validate route
 app.use(checkRoute);
 // Routes
-app.use("/gateway/consumers", consumer);
-app.use("/gateway/routes", ...checkRequest, route, send);
-app.use("/gateway/services", ...checkRequest, service, send);
-app.use("/gateway/resources", ...checkRequest, resource, send);
-app.use("/gateway/operations", ...checkRequest, operation, send);
-app.use("/gateway/cors", ...checkRequest, corsRoutes, send);
-app.use("/", ...checkRequest, proxy);
+app.use(`${svc}sessions`, session);
+app.use(`${svc}consumers`, ...cr, consumer);
+app.use(`${svc}routes`, ...cr, route, send);
+app.use(`${svc}services`, ...cr, service, send);
+app.use(`${svc}resources`, ...cr, resource, send);
+app.use(`${svc}operations`, ...cr, operation, send);
+app.use(`${svc}cors`, ...cr, corsRoutes, send);
+app.use("/", ...cr, proxy);
 
 // Performance measurement ends
 app.use(endTimer);

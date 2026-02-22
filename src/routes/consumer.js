@@ -1,86 +1,24 @@
 // @ts-check
-import {
-  createTokens,
-  decodeAccess,
-  decodeRefresh,
-  refreshTokens,
-} from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
 
-// import { when } from "../middlewares/conditional.js";
-
-import uEnt from "../entities/user.js";
 import cEnt from "../entities/consumer.js";
-import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
-import { checkPwd } from "../middlewares/http/check-pwd.js";
-import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
-import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
-import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
-import {
-  addToCache,
-  updateCache,
-  deleteFromCache,
-} from "../middlewares/cache/consumer.js";
-import { sendConsumer } from "../middlewares/res/send-consumer.js";
-import { createRow } from "../middlewares/mappers/consumer/createRow.js";
+import { deleteFromCache } from "../middlewares/cache/consumer.js";
 import { send204 } from "../middlewares/res/send-204.js";
 import { send } from "../middlewares/res/send.js";
 
 // middleware sub-stacks
-const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
-// const activate = [ activateUser, uEnt.update ];
-const getConsumer = [...checkRequest, createRow]; // get consumer from tokens
-const addConsumer = [
-  checkPwd,
-  createTokens,
-  cEnt.validateArray,
-  cEnt.add,
-  addToCache,
-  sendConsumer,
-];
-const updateConsumer = [
-  refreshTokens,
-  getUserById,
-  cEnt.update,
-  updateCache,
-  sendConsumer,
-];
-const deleteConsumer = [cEnt.archive, deleteFromCache, send204];
 
-const add = [
-  checkEmail,
-  // when(en local res => !res.locals.active, activate),
-  addConsumer,
-];
+const deleteConsumer = [cEnt.archive, deleteFromCache, send204];
 
 const getMany = [cEnt.get, send];
 
-const update = [
-  getConsumer,
-  checkRefreshToken,
-  ignoreExpiration,
-  decodeAccess, // extract issuer
-  decodeRefresh, // check expiration
-  updateConsumer,
-];
-
-const del = [getConsumer, deleteConsumer];
+const del = [deleteConsumer];
 
 //Routes
 
 // Get routes
 router.post("/search", getMany);
-
-// add a consumer. e.g. Log a user
-router.post("/", add);
-
-// Update a consumer with new tokens
-// Used for automatic login and refresh tokens
-router.put("/", update);
-
-// sign-out a user. Used when logging out
-router.patch("/sign-out", del);
 
 // Bulk archive consumers.
 router.patch("/archive", del);
