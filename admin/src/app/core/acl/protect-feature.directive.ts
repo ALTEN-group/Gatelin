@@ -29,38 +29,21 @@ export class ProtectFeatureDirective {
   });
 
   /**
-   * Stores the initial display style of the element before any access control modifications.
-   * This allows the directive to restore the original display value when access is granted
-   * after previously being hidden.
-   */
-  private initialDisplayStyle: string | undefined;
-
-  readonly storeDisplayEffect = effect(() => {
-    this.storeInitialDisplayStyle();
-  });
-
-  /**
-   * Effect that controls the visibility of the host element based on user access permissions.
+   * Effect that controls the disabled state of the host element based on user access permissions.
    *
-   * When the user lacks access, the element's display style is set to "none" to hide it.
-   * When the user has access, the element's display style is restored to its initial value.
+   * When the user lacks access, the "p-disabled" class is added to the element.
+   * When the user has access, the "p-disabled" class is removed from the element.
    *
    * This effect automatically runs whenever the `hasAccess` signal changes.
-   *
-   * @remarks
-   * The effect preserves the original display style of the element and restores it
-   * when access is granted, ensuring the element returns to its intended layout behavior.
    */
-  readonly hideEffect = effect(() => {
+  readonly toggleDisabledEffect = effect(() => {
     const hasAccess = this.hasAccess();
-    // Hide the element if the user does not have access
-    if (!hasAccess) this.elementRef.nativeElement.style.display = "none";
-    else this.elementRef.nativeElement.style.display = this.initialDisplayStyle;
-  });
+    const element = this.elementRef.nativeElement;
 
-  private storeInitialDisplayStyle() {
-    if (this.initialDisplayStyle !== undefined) return;
-    this.initialDisplayStyle =
-      this.elementRef.nativeElement.style.display ?? "";
-  }
+    if (!hasAccess) {
+      element.classList.add("p-disabled");
+    } else {
+      element.classList.remove("p-disabled");
+    }
+  });
 }
