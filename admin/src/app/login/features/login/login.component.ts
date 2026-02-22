@@ -14,6 +14,7 @@ import {
 } from "@angular/forms";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
+import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
 import { EmailValidator } from "@form/utils/email.validator";
@@ -43,6 +44,7 @@ import { InputTextModule } from "primeng/inputtext";
     AvatarModule,
     InputGroupAddonModule,
     InputGroupModule,
+    ThemeToggleButtonComponent,
   ],
 })
 export class LoginComponent implements AfterViewInit {
@@ -90,8 +92,7 @@ export class LoginComponent implements AfterViewInit {
         .subscribe((res: boolean) => {
           if (res) {
             this.authService.redirectToApp();
-            const { firstName, lastName } =
-              this.authService.user() || {};
+            const { firstName, lastName } = this.authService.user() || {};
             this.snackbarService.displayInfo(
               `Bienvenue ${firstName} ${lastName}`,
             );
