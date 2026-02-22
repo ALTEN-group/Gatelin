@@ -13,9 +13,9 @@ import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
 import { isCacheable } from "@crud/core/utils/offline/cacheable.utils";
 import { OfflineService } from "@crud/core/utils/offline/offline.service";
 import {
-  EMPTY,
   bufferCount,
   catchError,
+  EMPTY,
   forkJoin,
   switchMap,
   throwError,
@@ -87,9 +87,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (!offlineService.isOnline()) {
           return handleOfflineMode();
         }
-        // if (isUnauthorized(err)) {
-        //   return refreshToken(err);
-        // }
+        if (isUnauthorized(err)) {
+          return refreshToken(err);
+        }
         return returnError(err);
       }
       snackbarService.displayError();
