@@ -107,21 +107,15 @@ function deleteFromCache(id) {
  * Deletes all archived consumers from the database.
  * This function is typically run by a scheduled job to clean up old/inactive consumer records.
  *
- * @return {Promise<number>} A promise that resolves with the number of deleted consumers
+ * @param {Date} date - The date before which archived consumers should be deleted.
  * @throws {Error} Database connection or query execution errors
  * @example
  * // Delete all archived consumers
  * const deletedCount = await deleteArchived();
  * console.log(`Deleted ${deletedCount} archived consumers`);
  */
-function deleteArchived() {
-  const filters = {
-    archived: {
-      value: true,
-      matchMode: "equals",
-    },
-  };
-  const { query, args } = cEnt.query.delete(filters);
+function deleteArchived(date) {
+  const { query, args } = cEnt.query.deleteArchived(date);
   return execute(query, args, null).then((r) => r.rowCount || 0);
 }
 

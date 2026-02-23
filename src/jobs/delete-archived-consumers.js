@@ -1,7 +1,7 @@
 // @ts-check
 import { CronJob } from "cron";
 import { log } from "@dwtechs/winstan";
-import consumerSvc from "../services/consumer.js";
+import cSvc from "../services/consumer.js";
 
 /**
  * Cron job to delete archived consumers from the database.
@@ -20,12 +20,13 @@ export function startDeleteArchivedConsumersJob() {
     "0 0 2 * * *", // cronTime: second, minute, hour, day, month, weekday
     async () => {
       try {
+        const currentDate = new Date();
         log.info("Starting scheduled deletion of archived consumers...");
-        const deletedCount = await consumerSvc.deleteArchived();
+        const deletedCount = await cSvc.deleteArchived(currentDate);
         log.info(`Successfully deleted ${deletedCount} archived consumer(s)`);
-      } catch (error) {
+      } catch (err) {
         log.error(
-          `Failed to delete archived consumers: ${error.message || error.msg}`,
+          `Failed to delete archived consumers: ${err.message || err.msg}`,
         );
       }
     },
