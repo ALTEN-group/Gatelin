@@ -1,6 +1,6 @@
 ```mermaid
 ---
-caption: Refresh Token
+caption: Sequence diagram for session token refresh
 ---
 
 sequenceDiagram
@@ -13,7 +13,7 @@ sequenceDiagram
   activate f
   f--)f: Load application
   f--)f: Get tokens from local storage
-  f->>msg: put(consumers/) { refreshToken } + Authorization: Bearer accessToken
+  f->>msg: put(/sessions) { refreshToken } + Authorization: Bearer accessToken
   deactivate f
   activate msg
   msg--)msg: Parse Bearer token from Authorization header
@@ -43,7 +43,6 @@ sequenceDiagram
     end
   end
   activate msg
-  msg--)msg: Set ignoreExpiration flag for accessToken validation
   msg--)msg: Set ignoreExpiration flag for accessToken validation
   
   par decode access token
@@ -83,22 +82,26 @@ sequenceDiagram
 
   end 
   
+  msg--)msg: Get user by id from ms_user
+  msg--)msg: Fetch updated user data: { nickname, roles }
+  msg--)msg: Update req.body.rows[0] with nickname and roles
+  
   rect rgb(100, 200, 100, 0.2)
-    note over msg: Toker-express Library Block<br/>Inputs:<br/>- issuer (user id) from decoded accessToken<br/>- consumer data: { nickname, rolesArrayAgg }<br/>- TOKEN_SECRET (env)<br/>- ACCESS_TOKEN_DURATION (env)<br/>- REFRESH_TOKEN_DURATION (env)<br/>Generates new JWT tokens with updated expiration
+    note over msg: Toker-express Library Block<br/>Inputs:<br/>- issuer (user id) from decoded accessToken<br/>- consumer data: { nickname, roles }<br/>- TOKEN_SECRET (env)<br/>- ACCESS_TOKEN_DURATION (env)<br/>- REFRESH_TOKEN_DURATION (env)<br/>Generates new JWT tokens with updated expiration
     msg--)msg: Generate new accessToken (JWT with user payload)
     msg--)msg: Generate new refreshToken (JWT with user id)
   end
   rect rgb(100, 200, 100, 0.2)
     note over msg: Antity-pgsql Library Block
-    msg-->>db: update consumer with new tokens
+    msg-->>db: update consumer with new tokens (nickname, roles, accessToken, refreshToken)
     deactivate msg
     activate db
     db-->>msg: Consumer updated
   end
   deactivate db
   activate msg
-  msg--)msg: Update consumer in cache with new tokens
-  msg->>f: return 200 ok { nickname, accessToken, refreshToken, rolesArrayAgg }
+  msg--)msg: Update consumer in cache with new tokens and roles
+  msg->>f: return 200 ok { nickname, accessToken, refreshToken, roles }
   deactivate msg
   activate f
   f->>u: Display home page
