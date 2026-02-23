@@ -64,7 +64,7 @@ function updateCache(req, res, next) {
   const c = req.body.rows[0];
   log.debug(`Updating consumer ${c.id} in cache`);
   // Update consumer in cache
-  const updatedC = csmerSvc.updateCache(c.id, c.accessToken, c.refreshToken);
+  const updatedC = csmerSvc.updateCache(c.id, c.accessToken, c.refreshToken, c.roles);
   if (!updatedC)
     return next({
       status: 404,

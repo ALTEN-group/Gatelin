@@ -75,19 +75,18 @@ function addToCache(consumer) {
  * @param {number|string} id - The ID of the consumer to update. Can be a number or a string.
  * @param {string} accessToken - The new access token for the consumer.
  * @param {string} refreshToken - The new refresh token for the consumer.
+ * @param {number[]} roles - The updated array of role IDs for the consumer.
+ * @return {boolean} True if the consumer was found and updated, false if no consumer with the given ID exists in the cache.
+ * @throws {Error} If the provided ID is not a valid number or if there is an issue updating the cache.
  * @return {boolean} True if a consumer was found and updated, false otherwise
- * @example
- * const updated = updateCache(1, 'new-access-token', 'new-refresh-token');
- * if (!updated) {
- *   console.log('Consumer not found in cache');
- * }
  */
-function updateCache(id, accessToken, refreshToken) {
+function updateCache(id, accessToken, refreshToken, roles) {
   let found = false;
   consumers = consumers.map((c) => {
     if (c.id === +id) {
       c.accessToken = accessToken;
       c.refreshToken = refreshToken;
+      c.roles = roles;
       found = true;
     }
     return c;

@@ -10,16 +10,17 @@ erDiagram
   route }o--|| resource : ""
   resource }o--|| service : ""
   route }o--|| operation : ""
-  attribute }o--|| resource : ""
   consumer {
     int id PK
     int userId
     varchar nickname
     varchar accessToken UK
     varchar refreshToken UK
-    int[] rolesArrayAgg "array of role IDs"
+    int[] roles "array of role IDs"
+    boolean archived
     timestamp createdAt
     timestamp updatedAt
+    timestamp archivedAt
   }
 
   service {
@@ -65,7 +66,7 @@ erDiagram
     varchar name
     varchar description
     method[] methods "array of HTTP methods"
-    boolean jwt
+    boolean isProtected
     boolean locked
     int creatorId
     text creatorName
@@ -82,10 +83,25 @@ erDiagram
     int operationId
     varchar operationName
     varchar pattern "route pattern"
+    varchar name
     varchar description
     text url "COMPUTED: /service.pattern/resource.name/route.pattern"
     json methods "array of HTTP methods"
-    boolean jwt
+    boolean isProtected
+    boolean locked
+    timestamp createdAt
+    int creatorId
+    varchar creatorName
+    timestamp updatedAt
+    int updaterId
+    varchar updaterName
+  }
+
+  resources["resources VIEW"] {
+    int id
+    int serviceId
+    varchar serviceName
+    varchar name
     boolean locked
     timestamp createdAt
     int creatorId
@@ -99,14 +115,6 @@ erDiagram
     int id PK
     varchar name UK "e.g. read, write, update, delete, list, execute"
     text description
-    timestamp createdAt
-    timestamp updatedAt
-  }
-
-  attribute {
-    int id PK
-    int resourceId FK
-    varchar name "e.g. password, email, firstName"
     int creatorId
     text creatorName
     int updaterId
