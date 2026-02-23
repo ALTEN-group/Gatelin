@@ -1,6 +1,6 @@
 ```mermaid
 ---
-caption: Sequence diagram for user connection
+caption: Sequence diagram for session creation (user login)
 ---
 
 sequenceDiagram
@@ -24,7 +24,7 @@ sequenceDiagram
   u->>f: Enter email and password
   deactivate u
   activate f
-  f->>msg: post(consumers/) { email, pwd }
+  f->>msg: post(/consumers) { email, pwd }
   deactivate f
 
   rect rgb(220, 220, 220, 0.1)
@@ -49,8 +49,8 @@ sequenceDiagram
   end
   rect rgb(220, 220, 220, 0.1)
     note over msg,udb: User Lookup Block
-    msg--)msg: Prepare filters : { email, archived: false }
-    msg->>msu: post(users/) { filters }
+    msg--)msg: Prepare filters : { email: { value, matchMode }, archived: { value: false, matchMode: 'is' } }
+    msg->>msu: post(/users/search) { filters }
     deactivate msg
     activate msu
     rect rgb(100, 200, 100, 0.2)
@@ -81,11 +81,11 @@ sequenceDiagram
     udb->>msu: User found
     deactivate udb
     activate msu
-    msu->>msg: return 200 ok { id, nickname, roles, active, rolesArrayAgg... }
+    msu->>msg: return 200 ok { rows: [{ id, nickname, roles, active, email... }] }
     deactivate msu
     activate msg
-    msg--)msg: Add nickname and rolesArrayAgg to req.body.rows[0]
-    msg--)msg: Add user id and active to res.locals.user
+    msg--)msg: Create req.body.rows[0] with { userId, nickname, roles }
+    msg--)msg: Add user { id, active } to res.locals.user
   end
 
   rect rgb(220, 220, 220, 0.1)
@@ -126,8 +126,8 @@ sequenceDiagram
   rect rgb(220, 220, 220, 0.1)
     note over msg,adb: Password Validation Block
     activate msg
-    msg--)msg: Prepare filters for pwd comparison : { userId: id, pwd }
-    msg->>msa: post(login/) { filters }
+    msg--)msg: Prepare filters for pwd verification : { userId: { value: id, matchMode }, pwd: { value, matchMode } }
+    msg->>msa: post(/auth/verify) { filters }
     deactivate msg
     activate msa
     rect rgb(100, 200, 100, 0.2)
@@ -181,26 +181,26 @@ sequenceDiagram
     activate msg
   end
   rect rgb(220, 220, 220, 0.1)
-    note over msg,gdb: Token Creation & Consumer Insertion Block
+    note over msg,gdb: Token Creation & Session Insertion Block
     rect rgb(100, 200, 100, 0.2)
-      note over msg: Toker-express Lib Block<br/>from :<br/>- res.locals.user: { id, active }<br/>- req.body.rows[0]: { nickname, rolesArrayAgg }
+      note over msg: Toker-express Lib Block<br/>from :<br/>- res.locals.user: { id, active }<br/>- req.body.rows[0]: { userId, nickname, roles }
       msg--)msg: Create accessToken with payload : { id, nickname, roles }
       msg--)msg: Create refreshToken
       msg--)msg: Add accessToken and refreshToken to req.body.rows[0]
     end
     rect rgb(100, 200, 100, 0.2)
-      note over msg: Consumer Entity Block
-      msg--)msg: Validate consumer data (nickname, accessToken, refreshToken, rolesArrayAgg)
+      note over msg: Session Entity Block
+      msg--)msg: Validate session data (userId, nickname, accessToken, refreshToken, roles)
     end
-    msg->>gdb: Insert consumer in db
+    msg->>gdb: Insert session in consumer table
     deactivate msg
     activate gdb
-    gdb->>msg: Consumer added
+    gdb->>msg: Session added
     deactivate gdb
     activate msg
-    msg--)msg: Add consumer to cache (async)
-    msg--)msg: Clear unsafe props from response data
-    msg->>f: return 201 created : { nickname, accessToken, refreshToken, rolesArrayAgg }
+    msg--)msg: Add session to cache (async)
+    msg--)msg: Delete unsafe props from response data
+    msg->>f: return 200 ok : { nickname, accessToken, refreshToken, roles }
     deactivate msg
     activate f
     f->>u: Display home page
