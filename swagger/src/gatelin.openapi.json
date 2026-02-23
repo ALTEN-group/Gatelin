@@ -69,7 +69,7 @@
             "description": "JWT refresh token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           },
-          "rolesArrayAgg": {
+          "roles": {
             "type": "array",
             "items": {
               "type": "integer"
@@ -77,7 +77,7 @@
             "example": [1, 2]
           }
         },
-        "required": ["id", "nickname", "accessToken", "refreshToken", "rolesArrayAgg"]
+        "required": ["nickname", "accessToken", "refreshToken", "roles"]
       },
       "route": {
         "type": "object",
@@ -394,11 +394,11 @@
     }
   },
   "paths": {
-    "/gatelin/consumers": {
+    "/gatelin/sessions": {
       "post": {
-        "tags": ["Consumer Management"],
-        "summary": "Add new consumer during login sequence",
-        "description": "Register one consumer in the system during logging sequence (login). Send email and pwd directly in the request body.",
+        "tags": ["Session Management"],
+        "summary": "Create a new session (login)",
+        "description": "Create a new consumer session by authenticating with email and password. Returns access and refresh tokens for subsequent requests.",
         "requestBody": {
           "required": true,
           "content": {
@@ -433,8 +433,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Consumer created successfully",
+          "200": {
+            "description": "Session created successfully (login successful)",
             "content": {
               "application/json": {
                 "schema": {
@@ -452,9 +452,9 @@
         }
       },
       "put": {
-        "tags": ["Consumer Management"],
-        "summary": "Update consumer tokens",
-        "description": "Update a consumer with new access and refresh tokens (used for login with token and token refresh).\n\n**IMPORTANT:** This endpoint requires valid tokens from a previous login. You must:\n1. First call POST /consumers to login and receive real tokens\n2. Copy the accessToken and refreshToken from the login response\n3. Use those exact tokens in both the Authorization header and request body\n4. The tokens are validated against the cache - fake tokens will fail with 401",
+        "tags": ["Session Management"],
+        "summary": "Refresh session tokens",
+        "description": "Update a consumer session with new access and refresh tokens (used for automatic login and token refresh).\n\n**IMPORTANT:** This endpoint requires valid tokens from a previous login. You must:\n1. First call POST /sessions to login and receive real tokens\n2. Copy the accessToken and refreshToken from the login response\n3. Use those exact tokens in both the Authorization header and request body\n4. The tokens are validated against the cache - fake tokens will fail with 401",
         "security": [
           {
             "bearerAuth": []
@@ -475,7 +475,7 @@
         },
         "responses": {
           "200": {
-            "description": "Consumer updated successfully",
+            "description": "Session updated successfully (tokens refreshed)",
             "content": {
               "application/json": {
                 "schema": {
@@ -503,9 +503,9 @@
         }
       },
       "delete": {
-        "tags": ["Consumer Management"],
-        "summary": "Remove consumer",
-        "description": "Delete a consumer from the system (used when logging out). Requires JWT access token in Authorization header.",
+        "tags": ["Session Management"],
+        "summary": "Delete session (logout)",
+        "description": "Delete a consumer session from the system (archive and remove from cache). Requires JWT access token in Authorization header.",
         "security": [
           {
             "bearerAuth": []
@@ -513,7 +513,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Consumer deleted successfully (logout successful)"
+            "description": "Session deleted successfully (logout successful)"
           },
           "401": {
             "$ref": "#/components/responses/unauthorizedError"
@@ -2052,8 +2052,8 @@
   },
   "tags": [
     {
-      "name": "Consumer Management",
-      "description": "Consumer lifecycle management for authenticated sessions"
+      "name": "Session Management",
+      "description": "Session lifecycle management: login, token refresh, and logout"
     },
     {
       "name": "Route Management",
