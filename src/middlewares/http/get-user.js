@@ -72,11 +72,11 @@ export function getUserById(req, res, next) {
     },
     archived: {
       value: false,
-      matchMode: "is",
+      matchMode: "equals",
     },
     active: {
       value: true,
-      matchMode: "is",
+      matchMode: "equals",
     },
   };
 

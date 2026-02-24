@@ -19,11 +19,18 @@ app.post("/users/users/search/", (req, res) => {
 
   const { filters } = req.body;
 
-  if (!filters || !filters.email)
-    return res.status(400).json({ error: "Missing email filter" });
+  if (!filters || (!filters.email && !filters.id))
+    return res.status(400).json({ error: "Missing email or id filter" });
 
-  const email = filters.email.value;
-  const user = mockUsers.find((u) => u.email === email);
+  let user;
+
+  if (filters.email) {
+    const email = filters.email.value;
+    user = mockUsers.find((u) => u.email === email);
+  } else if (filters.id) {
+    const id = filters.id.value;
+    user = mockUsers.find((u) => u.id === id);
+  }
 
   if (!user) return res.status(404).json({ error: "User not found" });
 
