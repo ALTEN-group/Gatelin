@@ -1,4 +1,4 @@
-import { FunctionalityAccessLevel } from "@core/roles/role.class";
+import { FunctionalityAccessLevel, Permission } from "@core/roles/role.class";
 import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
 import { GeoCoordinates, INIT_COORDINATES } from "@form/utils/location.config";
 
@@ -12,7 +12,7 @@ export class User extends CrudItemBase implements GeoCoordinates {
   email = "";
   phone = "";
   token = "";
-  roles: number[] = [];
+  permissions: Permission[] = [];
   active = true;
   updatedAt: number | null = null;
   updatedBy: { firstName: string; lastName: string } | null = null;

@@ -38,7 +38,10 @@ export default function checkAcl(req, res, next) {
   // Get all roles for this consumer and check their permissions
   const hasAccess = c.roles.some((id) => {
     const role = roleService.getOne(id);
-    if (!role) return false;
+    log.debug(
+      `Checking role ${role.name} for access to route ${r.url} with operation ${o}`,
+    );
+    if (!role) return next({ statusCode: 403, message: "Forbidden" });
 
     // Check if this role has permission for the route and operation
     return role.permissions.some(

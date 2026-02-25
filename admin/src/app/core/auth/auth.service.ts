@@ -40,6 +40,7 @@ export class AuthenticationService {
         this.authenticate();
       }),
       this.getUserBasics(),
+      map(() => true),
       catchError(() => of(false)),
     );
   }
@@ -79,10 +80,12 @@ export class AuthenticationService {
     return of(false);
   }
 
-  public updateUser( nickname: string, firstName: string, lastName: string ): void {
-    this._user.update(
-      (u) => ({ ...u, nickname, firstName, lastName }) as User,
-    );
+  public updateUser(
+    nickname: string,
+    firstName: string,
+    lastName: string,
+  ): void {
+    this._user.update((u) => ({ ...u, nickname, firstName, lastName }) as User);
   }
 
   // Get user basics info
@@ -96,8 +99,7 @@ export class AuthenticationService {
         const { nickname, firstName, lastName, permissions } = res;
         this.updateUser(nickname, firstName, lastName);
         // Store ACLs directly from user's permissions
-        if (permissions)
-          this.aclService.storeAccessLevels(permissions);
+        if (permissions) this.aclService.storeAccessLevels(permissions);
       }),
       catchError(() => of(null)),
     );
@@ -111,10 +113,8 @@ export class AuthenticationService {
 
   public redirectToApp(): void {
     const returnUrl = this.route.snapshot.queryParamMap.get("returnUrl");
-    if (returnUrl)
-      this.router.navigate([returnUrl]);
-    else
-      this.router.navigate(["/"]);
+    if (returnUrl) this.router.navigate([returnUrl]);
+    else this.router.navigate(["/"]);
   }
 
   private resetCurrentUser(): void {

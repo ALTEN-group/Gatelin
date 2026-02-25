@@ -1,5 +1,10 @@
 p-toolbar {
     margin: 0 0.25rem;
-    padding: 2px 12px;
+    padding: 14px 12px;
     border: 0;
+
+    .toolbar-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
 }
