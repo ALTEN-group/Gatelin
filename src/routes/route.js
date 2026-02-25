@@ -4,15 +4,9 @@ const router = express.Router();
 
 import rEnt from "../entities/route.js";
 import history from "../middlewares/history.js";
-import { sendHistory } from "../middlewares/res/send-history.js";
-
-const getMany = [
-  rEnt.get,
-];
 
 const getHistory = [
-  history.get("route"),
-  sendHistory,
+  history.get("route")
 ];
 
 const add = [
@@ -27,19 +21,17 @@ const update = [
   rEnt.update,
 ];
 
-const del = [
-  rEnt.delete,
-];
+const del = [rEnt.archive];
 
 // Get routes
-router.post("/search", getMany);
+router.post("/search", rEnt.get);
 // Get version history of a specific route
 router.get("/:id/history", getHistory);
 // add a route.
 router.post("/", add);
 // Update a route.
 router.put("/", update);
-// delete a route.
-router.delete("/", del);
+// Bulk archive
+router.post("/archive", del);
 
 export default router;

@@ -86,10 +86,29 @@ function deleteFromCache(id) {
   corsOrigins = corsOrigins.filter((c) => c.id !== +id);
 }
 
+/**
+ * Deletes all archived CORS origins from the database that have been archived for a specified duration.
+ * This function is typically run by a scheduled job to clean up old/inactive CORS records.
+ *
+ * @param {Date} date - The date before which archived CORS origins should be deleted.
+ * @throws {Error} Database connection or query execution errors
+ * @example
+ * // Delete all CORS origins archived for more than 2 months
+ * const twoMonthsAgo = new Date();
+ * twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+ * const deletedCount = await deleteArchived(twoMonthsAgo);
+ * console.log(`Deleted ${deletedCount} archived CORS origin(s)`);
+ */
+function deleteArchived(date) {
+  const { query, args } = cEnt.query.deleteArchived(date);
+  return execute(query, args, null).then((r) => r.rowCount || 0);
+}
+
 export default {
   init,
   getAll,
   addToCache,
   updateCache,
   deleteFromCache,
+  deleteArchived,
 };

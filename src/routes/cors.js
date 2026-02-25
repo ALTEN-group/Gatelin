@@ -3,10 +3,11 @@ import express from "express";
 const router = express.Router();
 
 import cEnt from "../entities/cors.js";
+import history from "../middlewares/history.js";
 import { addToCache, updateCache, deleteFromCache } from "../middlewares/cache/cors.js";
 
-const getMany = [
-  cEnt.get,
+const getHistory = [
+  history.get("route")
 ];
 
 const add = [
@@ -23,20 +24,17 @@ const update = [
   updateCache,  // Update cache after DB update
 ];
 
-const del = [
-  cEnt.delete,
-  deleteFromCache,  // Remove from cache after DB deletion
-];
+const del = [cEnt.archive, deleteFromCache];
 
 // Get routes
-router.post("/search", getMany);
-// Get updates history of a user
-// router.get("/:id/history", getHistory);
-// add a route.
+router.post("/search", cEnt.get);
+// Get version history of a specific CORS entry
+router.get("/:id/history", getHistory);
+// add a CORS entry.
 router.post("/", add);
-// Update a route.
+// Update a CORS entry.
 router.put("/", update);
-// delete a route.
-router.delete("/", del);
+// Bulk archive
+router.post("/archive", del);
 
 export default router;

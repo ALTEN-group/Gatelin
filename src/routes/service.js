@@ -3,14 +3,11 @@ import express from "express";
 const router = express.Router();
 
 import sEnt from "../entities/service.js";
+import history from "../middlewares/history.js";
 
-const getMany = [
-  sEnt.get,
+const getHistory = [
+  history.get("route")
 ];
-
-// const getHistory = [
-//   // history.get,
-// ];
 
 const add = [
   sEnt.normalizeArray,
@@ -24,19 +21,17 @@ const update = [
   sEnt.update,
 ];
 
-const del = [
-  sEnt.delete,
-];
+const del = [sEnt.archive];
 
-// Get routes
-router.post("/search", getMany);
-// Get updates history of a user
-// router.get("/:id/history", getHistory);
-// add a route.
+// Get services
+router.post("/search", sEnt.get);
+// Get version history of a specific service
+router.get("/:id/history", getHistory);
+// add a service.
 router.post("/", add);
-// Update a route.
+// Update a service.
 router.put("/", update);
-// delete a route.
-router.delete("/", del);
+// Bulk archive
+router.post("/archive", del);
 
 export default router;

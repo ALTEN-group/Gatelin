@@ -20,7 +20,8 @@ import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
 
 // Cron jobs
-import { startDeleteArchivedConsumersJob } from "./jobs/delete-archived-consumers.js";
+import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
+import { startDeleteOldHistoryJob } from "./jobs/delete-old-history.js";
 
 // middlewares
 import { send } from "./middlewares/res/send.js";
@@ -71,7 +72,8 @@ Promise.all([
   .then(() => {
     app.use(cors(corsOptions));
     // Start cron jobs
-    startDeleteArchivedConsumersJob();
+    startDeleteArchivedEntitiesJob();
+    startDeleteOldHistoryJob();
     listen(app);
   })
   .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));

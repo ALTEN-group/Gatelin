@@ -59,7 +59,7 @@ const update = [
   ignoreExpiration,
   decodeAccess, // extract issuer
   decodeRefresh, // check expiration
-  updateSession,
+  updateSession, 
 ];
 
 const del = [getSession, deleteSession];
