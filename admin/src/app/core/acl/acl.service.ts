@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { BASE_ACLS } from "@core/app-config/app.acls";
-import { Permission, Role } from "@core/roles/role.class";
+import { Permission } from "@core/roles/role.class";
 import { Acls } from "@crud/core/utils/acls/acls.model";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
@@ -19,19 +19,13 @@ export class AclService {
     if (!functionality) return true;
     const funcAcls = this.accessLevels()[functionality];
     if (!funcAcls) return false;
-    if (operation) {
+    if (operation)
       return funcAcls[operation as keyof typeof funcAcls] || false;
-    }
     return funcAcls.get || false;
   }
 
-  public storeAccessLevels(userRoleIds: number[], roles: Role[]): void {
+  public storeAccessLevels(userPermissions: Permission[]): void {
     if (this._accessLevels().size) return;
-    const userPermissions = roles
-      .filter(
-        (role) => typeof role.id === "number" && userRoleIds.includes(role.id),
-      )
-      .flatMap((role) => role.permissions);
     const acls = this.buildAcls(userPermissions);
     this._accessLevels.set(acls);
     this._areAclResolved.set(true);

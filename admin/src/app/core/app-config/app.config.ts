@@ -1,8 +1,8 @@
 import {
-  inject,
-  LOCALE_ID,
-  makeEnvironmentProviders,
-  provideAppInitializer,
+    inject,
+    LOCALE_ID,
+    makeEnvironmentProviders,
+    provideAppInitializer,
 } from "@angular/core";
 import { TitleStrategy } from "@angular/router";
 import { APP_CONFIG, AppConfig } from "@core/app-config/app-config.token";
@@ -10,8 +10,8 @@ import { SIDENAV } from "@core/app-config/app.sidenav";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
 import { AuthenticationService } from "@core/auth/auth.service";
 import {
-  APP_FORM_CONFIG,
-  FormTokenData,
+    APP_FORM_CONFIG,
+    FormTokenData,
 } from "@form/utils/form.injection-token";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
@@ -66,6 +66,5 @@ function checkToken(authService: AuthenticationService) {
     }),
     filter(Boolean),
     authService.getUserBasics(),
-    authService.setAcl(),
   );
 }

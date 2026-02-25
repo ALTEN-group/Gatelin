@@ -272,6 +272,10 @@ services:
     hostname: ${MSUSER_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
+      MSROLE_SEARCH_URL: ${MSROLE_SEARCH_URL}
+    depends_on:
+      ms_role_mock:
+        condition: service_healthy
     networks:
       - internal
     volumes:

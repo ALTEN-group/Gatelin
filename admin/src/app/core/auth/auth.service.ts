@@ -5,7 +5,6 @@ import { AclService } from "@core/acl/acl.service";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { LoginResponse } from "@core/auth/auth.dto";
 import { TokenService } from "@core/auth/token.service";
-import { RolesService } from "@core/roles/roles.service";
 import { User } from "@core/user/user.class";
 import { Observable, of, pipe } from "rxjs";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
@@ -18,7 +17,6 @@ export class AuthenticationService {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly tokenService = inject(TokenService);
-  private readonly rolesService = inject(RolesService);
   private readonly aclService = inject(AclService);
 
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
@@ -42,7 +40,6 @@ export class AuthenticationService {
         this.authenticate();
       }),
       this.getUserBasics(),
-      this.setAcl(),
       catchError(() => of(false)),
     );
   }
@@ -53,7 +50,6 @@ export class AuthenticationService {
         this.tokenService.deleteAccessToken();
         this.tokenService.deleteRefreshToken();
         this.resetCurrentUser();
-        this.rolesService.resetRoles();
         this.redirectToLogin();
       }),
       catchError(() => of()),
@@ -83,14 +79,9 @@ export class AuthenticationService {
     return of(false);
   }
 
-  public updateUser(
-    nickname: string,
-    firstName: string,
-    lastName: string,
-    roles: number[],
-  ): void {
+  public updateUser( nickname: string, firstName: string, lastName: string ): void {
     this._user.update(
-      (user) => ({ ...user, nickname, firstName, lastName, roles }) as User,
+      (u) => ({ ...u, nickname, firstName, lastName }) as User,
     );
   }
 
@@ -102,23 +93,13 @@ export class AuthenticationService {
   public getAccount(): Observable<User | null> {
     return this.http.get<User>(this.meApi).pipe(
       tap((res) => {
-        const { nickname, firstName, lastName, roles } = res;
-        this.updateUser(nickname, firstName, lastName, roles);
+        const { nickname, firstName, lastName, permissions } = res;
+        this.updateUser(nickname, firstName, lastName);
+        // Store ACLs directly from user's permissions
+        if (permissions)
+          this.aclService.storeAccessLevels(permissions);
       }),
       catchError(() => of(null)),
-    );
-  }
-
-  public setAcl() {
-    return pipe(
-      switchMap(() => this.rolesService.getAll()),
-      tap(() => {
-        this.aclService.storeAccessLevels(
-          this.user()?.roles || [],
-          this.rolesService.roles,
-        );
-      }),
-      map(() => true),
     );
   }
 
@@ -130,11 +111,10 @@ export class AuthenticationService {
 
   public redirectToApp(): void {
     const returnUrl = this.route.snapshot.queryParamMap.get("returnUrl");
-    if (returnUrl) {
+    if (returnUrl)
       this.router.navigate([returnUrl]);
-    } else {
+    else
       this.router.navigate(["/"]);
-    }
   }
 
   private resetCurrentUser(): void {
@@ -144,10 +124,8 @@ export class AuthenticationService {
   }
 
   private saveTokens(accessToken: string, refreshToken: string) {
-    // if (accessToken && refreshToken) {
     this.tokenService.saveAccessToken(accessToken);
     this.tokenService.saveRefreshToken(refreshToken);
-    // }
   }
 
   private authenticate() {
