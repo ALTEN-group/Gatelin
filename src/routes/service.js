@@ -5,33 +5,15 @@ const router = express.Router();
 import sEnt from "../entities/service.js";
 import history from "../middlewares/history.js";
 
-const getHistory = [
-  history.get("route")
-];
-
-const add = [
-  sEnt.normalizeArray,
-  sEnt.validateArray,
-  sEnt.add,
-];
-
-const update = [
-  sEnt.normalizeArray,
-  sEnt.validateArray,
-  sEnt.update,
-];
-
-const del = [sEnt.archive];
-
 // Get services
 router.post("/search", sEnt.get);
 // Get version history of a specific service
-router.get("/:id/history", getHistory);
+router.get("/:id/history", history.get("service"));
 // add a service.
-router.post("/", add);
+router.post("/", sEnt.add);
 // Update a service.
-router.put("/", update);
+router.put("/", sEnt.update);
 // Bulk archive
-router.post("/archive", del);
+router.post("/archive", sEnt.archive);
 
 export default router;

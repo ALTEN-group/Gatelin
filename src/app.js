@@ -7,8 +7,8 @@ import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
 import helmet from "helmet";
-import { helmetConfig } from "./config/helmet.js";
-import { corsOptions } from "./config/cors.js";
+import { helmetConfig } from "./conf/helmet.js";
+import { corsOptions } from "./conf/cors.js";
 
 const app = express();
 app.use(helmet(helmetConfig));

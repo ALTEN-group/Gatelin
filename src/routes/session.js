@@ -33,7 +33,6 @@ const getSession = [...checkRequest, createRow]; // get session from tokens
 const addSession = [
   checkPwd,
   createTokens,
-  sEnt.validateArray,
   sEnt.add,
   addToCache,
   sendSession,

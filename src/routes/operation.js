@@ -5,33 +5,15 @@ const router = express.Router();
 import oEnt from "../entities/operation.js";
 import history from "../middlewares/history.js";
 
-const getHistory = [
-  history.get("route"),
-];
-
-const add = [
-  oEnt.normalizeArray,
-  oEnt.validateArray,
-  oEnt.add,
-];
-
-const update = [
-  oEnt.normalizeArray,
-  oEnt.validateArray,
-  oEnt.update,
-];
-
-const del = [oEnt.archive];
-
 // Get routes
 router.post("/search", oEnt.get);
 // Get version history of a specific operation
-router.get("/:id/history", getHistory);
+router.get("/:id/history", history.get("operation"));
 // add an operation.
-router.post("/", add);
+router.post("/", oEnt.add);
 // Update an operation.
-router.put("/", update);
+router.put("/", oEnt.update);
 // Bulk archive
-router.post("/archive", del);
+router.post("/archive", oEnt.archive);
 
 export default router;
