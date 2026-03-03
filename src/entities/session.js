@@ -14,7 +14,7 @@ const sessionEntity = new SQLEntity("consumer", [
     typeCheck: true,
     filter: true,
     need: ["POST"],
-    operations: [],
+    operations: ["SELECT"],
     send: false,
     sanitizer: null,
     normalizer: null,

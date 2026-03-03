@@ -30,4 +30,16 @@ export default new SQLEntity("cors", [
     normalizer: null,
     validator: null,
   },
+  {
+    key: "archived",
+    type: "boolean",
+    typeCheck: true,
+    filter: true,
+    need: [],
+    operations: ["UPDATE"],
+    send: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
 ]);
