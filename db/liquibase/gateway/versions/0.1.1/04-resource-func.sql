@@ -22,11 +22,11 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
         name = COALESCE(NEW.name, name),
         protected = COALESCE(NEW.protected, protected)
       WHERE id = NEW.id;
+
+      PERFORM soft_delete(''resource'', OLD.id, NEW.archived, OLD.archived);
+
       RETURN NEW;
       
-    ELSIF TG_OP = ''DELETE'' THEN
-      DELETE FROM resource WHERE id = OLD.id;
-      RETURN OLD;
     END IF;
   END;
 ' LANGUAGE plpgsql SECURITY DEFINER;

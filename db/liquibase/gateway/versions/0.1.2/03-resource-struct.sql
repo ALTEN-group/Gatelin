@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS resource (
   "serviceId" INT NOT NULL,
 	name varchar(20) NOT NULL,
   locked BOOLEAN DEFAULT FALSE,
+  archived BOOLEAN DEFAULT FALSE,
+  "archivedAt" TIMESTAMP
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

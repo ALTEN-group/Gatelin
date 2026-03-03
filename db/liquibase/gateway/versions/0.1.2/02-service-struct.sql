@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS "service" (
 	name varchar(20) NOT NULL,
   pattern TEXT,
   locked BOOLEAN DEFAULT FALSE,
+  archived BOOLEAN DEFAULT FALSE,
+  "archivedAt" TIMESTAMP
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

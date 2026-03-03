@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS route (
   methods method[] NOT NULL,
   "isProtected" BOOLEAN DEFAULT FALSE,
   locked BOOLEAN DEFAULT FALSE,
+  archived BOOLEAN DEFAULT FALSE,
+  "archivedAt" TIMESTAMP
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,
