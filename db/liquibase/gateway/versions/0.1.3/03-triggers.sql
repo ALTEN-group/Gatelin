@@ -3,7 +3,7 @@
 -- Create INSTEAD OF trigger on routes view
 --
 CREATE TRIGGER routes_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON routes
+INSTEAD OF INSERT OR UPDATE OR DELETE ON "routes"
 FOR EACH ROW 
 EXECUTE PROCEDURE iud_route();
 
@@ -19,7 +19,7 @@ EXECUTE PROCEDURE change_trigger();
 -- Create INSTEAD OF trigger on resources view
 --
 CREATE TRIGGER resources_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON resources
+INSTEAD OF INSERT OR UPDATE OR DELETE ON "resources"
 FOR EACH ROW 
 EXECUTE PROCEDURE iud_resource();
 

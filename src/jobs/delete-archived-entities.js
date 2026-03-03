@@ -53,7 +53,7 @@ export function startDeleteArchivedEntitiesJob() {
           try {
             log.info(`  - Processing ${entity.name}...`);
             const deletedCount =
-              await entity.service.deleteArchived(twoMonthsAgo);
+              await entity.service.deleteArchived("log.history", twoMonthsAgo);
             if (deletedCount > 0)
               log.info(`    ✓ Deleted ${deletedCount} archived ${entity.name}`);
             else
