@@ -1,7 +1,7 @@
 // @ts-check
 
 import { execute } from "@dwtechs/antity-pgsql";
-import route from "../entities/route.js";
+import rEnt from "../entities/route.js";
 import { stripTrailingSlash } from "../utils/url.js";
 
 /**
@@ -28,7 +28,13 @@ let routes = null;
  * console.log('Route cache initialized with', routes.length, 'routes');
  */
 function init() {
-  const { query, args } = route.query.select(false, 0, 0, "id", null, null);
+  const filters = {
+    archived: {
+      value: false,
+      matchMode: "equals",
+    },
+  };
+  const { query, args } = rEnt.query.select(0, 0, "id", "ASC", filters);
   return execute(query, args, null).then((r) => (routes = r.rows));
 }
 
@@ -71,8 +77,8 @@ function getOne(requestUrl, requestMethod) {
  * console.log(`Deleted ${deletedCount} archived route(s)`);
  */
 function deleteArchived(date) {
-  const { query, args } = route.query.deleteArchived(date);
-  return execute(query, args, null).then((r) => r.rowCount || 0);
+  const q = rEnt.query.deleteArchive();
+  return execute(q, [date], null).then((r) => r.rowCount || 0);
 }
 
 export default {

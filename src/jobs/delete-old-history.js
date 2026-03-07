@@ -1,7 +1,7 @@
 // @ts-check
 import { CronJob } from "cron";
 import { log } from "@dwtechs/winstan";
-import { deleteArchive } from "@dwtechs/antity-pgsql";
+import { execute } from "@dwtechs/antity-pgsql";
 
 /**
  * Cron job to delete history records older than 6 months.
@@ -45,6 +45,11 @@ export function startDeleteOldHistoryJob() {
  * @returns {Promise<number>} Number of deleted records
  */
 async function deleteOldHistory() {
-  const result = await deleteArchive("log.history", "6 months");
-  return result.rowCount || 0;
+  // Calculate date for 6 months ago
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const query = "DELETE FROM log.history WHERE created < $1";
+  const args = [sixMonthsAgo];
+  return execute(query, args, null).then((r) => r.rowCount || 0);
 }

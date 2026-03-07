@@ -26,8 +26,14 @@ let corsOrigins = null;
  * console.log('CORS cache initialized with', corsOrigins.length, 'origins');
  */
 function init() {
-  const { query, args } = cEnt.query.select(false, 0, 0, "id", null, null);
-  return execute(query, args, null).then((r) => corsOrigins = r.rows );
+  const filters = {
+    archived: {
+      value: false,
+      matchMode: "equals",
+    },
+  };
+  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
+  return execute(query, args, null).then((r) => (corsOrigins = r.rows));
 }
 
 /**
@@ -41,7 +47,7 @@ function init() {
  */
 function getAll() {
   if (!corsOrigins) return [];
-  return corsOrigins.map(c => c.name);
+  return corsOrigins.map((c) => c.name);
 }
 
 /**
@@ -87,21 +93,21 @@ function deleteFromCache(id) {
 }
 
 /**
- * Deletes all archived CORS origins from the database that have been archived for a specified duration.
- * This function is typically run by a scheduled job to clean up old/inactive CORS records.
+ * Deletes all archived routes from the database that have been archived for a specified duration.
+ * This function is typically run by a scheduled job to clean up old/inactive route records.
  *
- * @param {Date} date - The date before which archived CORS origins should be deleted.
+ * @param {Date} date - The date before which archived routes should be deleted.
  * @throws {Error} Database connection or query execution errors
  * @example
- * // Delete all CORS origins archived for more than 2 months
+ * // Delete all routes archived for more than 2 months
  * const twoMonthsAgo = new Date();
  * twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
  * const deletedCount = await deleteArchived(twoMonthsAgo);
- * console.log(`Deleted ${deletedCount} archived CORS origin(s)`);
+ * console.log(`Deleted ${deletedCount} archived route(s)`);
  */
 function deleteArchived(date) {
-  const { query, args } = cEnt.query.deleteArchived(date);
-  return execute(query, args, null).then((r) => r.rowCount || 0);
+  const q = cEnt.query.deleteArchive();
+  return execute(q, [date], null).then((r) => r.rowCount || 0);
 }
 
 export default {

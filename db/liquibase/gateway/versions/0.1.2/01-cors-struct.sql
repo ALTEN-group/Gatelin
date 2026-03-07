@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS cors (
 	id SERIAL PRIMARY KEY,
 	name varchar(50) NOT NULL,
   archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP
+  "archivedAt" TIMESTAMP,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

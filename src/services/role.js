@@ -29,7 +29,7 @@ function init() {
   const filters = {
     archived: {
       value: false,
-      matchMode: "is",
+      matchMode: "equals",
     },
   };
   http

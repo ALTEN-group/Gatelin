@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS resource (
 	name varchar(20) NOT NULL,
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP
+  "archivedAt" TIMESTAMP,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

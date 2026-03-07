@@ -16,8 +16,8 @@ import oEnt from "../entities/operation.js";
  * console.log(`Deleted ${deletedCount} archived operation(s)`);
  */
 function deleteArchived(date) {
-  const { query, args } = oEnt.query.deleteArchived(date);
-  return execute(query, args, null).then((r) => r.rowCount || 0);
+  const q = oEnt.query.deleteArchive();
+  return execute(q, [date], null).then((r) => r.rowCount || 0);
 }
 
 export default {

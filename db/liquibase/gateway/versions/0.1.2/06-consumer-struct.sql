@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS consumer (
   "refreshToken" varchar(600) NOT NULL UNIQUE,
   "roles" INT[] NOT NULL,
   archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP
+  "archivedAt" TIMESTAMP,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW(),
+  "updatedAt" TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_consumer_user_id ON consumer("userId");

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "service" (
   pattern TEXT,
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP
+  "archivedAt" TIMESTAMP,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

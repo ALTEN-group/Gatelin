@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS route (
   "isProtected" BOOLEAN DEFAULT FALSE,
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP
+  "archivedAt" TIMESTAMP,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,

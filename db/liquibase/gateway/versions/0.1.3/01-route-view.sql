@@ -17,6 +17,7 @@ create or replace view routes AS
   array_to_json(r.methods) as methods,
   r."isProtected",
   r.locked,
+  r.archived,
   h.tstamp AS "updatedAt",
   h."consumerId" AS "updaterId",
   h."consumerName" AS "updaterName",
