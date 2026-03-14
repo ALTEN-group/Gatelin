@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { CONSUMER_COLUMNS } from "app/admin/data-access/consumers/consumer.conf";
@@ -28,7 +28,7 @@ export class ConsumersService {
     archive: this.crud.archive,
   };
 
-  public readonly config = (payload: ConfBuilderPayload) =>
+  public readonly config = (payload: ActivatedRouteSnapshot) =>
     CONSUMER_COLUMNS(payload);
   public readonly entityFactory = consumerFactory;
 }

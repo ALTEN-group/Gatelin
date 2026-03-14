@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { USERS_TABLE_CONF } from "@core/user/users-table.conf";
-import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
@@ -31,6 +31,6 @@ export class UsersService {
   public readonly factory = () => new User();
 
   public readonly conf: (
-    payload: ConfBuilderPayload,
+    payload: ActivatedRouteSnapshot,
   ) => StrictCrudItemOptions<User>[] = (payload) => USERS_TABLE_CONF(payload);
 }

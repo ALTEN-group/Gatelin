@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { aclGuard } from "@core/acl/acl.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
+import { rolesResolver } from "@core/roles/roles.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
@@ -56,6 +57,9 @@ export const ROUTES: Routes = [
     data: {
       breadcrumb: $localize`:@@Admin_ConsumersNav:Consumers`,
       functionality: "consumers",
+    },
+    resolve: {
+      roles: rolesResolver,
     },
   },
   {

@@ -8,7 +8,6 @@ import {
 import { AclService } from "@core/acl/acl.service";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
-import { BreadcrumbComponent } from "@core/ui/breadcrumb/breadcrumb.component";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
 import { OfflineService } from "@crud/core/utils/offline/offline.service";
 import { MenuItem, SharedModule } from "primeng/api";
@@ -26,7 +25,6 @@ import { MenuModule } from "primeng/menu";
     BadgeModule,
     MenuModule,
     SharedModule,
-    BreadcrumbComponent,
   ],
   encapsulation: ViewEncapsulation.None,
 })

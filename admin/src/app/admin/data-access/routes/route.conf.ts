@@ -1,5 +1,5 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
-import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
@@ -17,7 +17,7 @@ import { Route } from "app/admin/data-access/routes/route.model";
 import { Service } from "app/admin/data-access/services/service.model";
 
 export const ROUTE_COLUMNS: (
-  payload: ConfBuilderPayload,
+  payload: ActivatedRouteSnapshot,
 ) => StrictCrudItemOptions<Route>[] = ({ data }) => [
   ID_CONFIG,
   {

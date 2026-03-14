@@ -1,6 +1,6 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
 import { User } from "@core/user/user.class";
-import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
@@ -11,12 +11,8 @@ import { EmailValidator } from "@form/utils/email.validator";
 import { LOCATION_CONFIG } from "@form/utils/location.config";
 import { SelectItem } from "primeng/api";
 
-interface UserConfPayload {
-  roles: Role[];
-}
-
 export const USERS_TABLE_CONF: (
-  payload: ConfBuilderPayload<UserConfPayload>,
+  payload: ActivatedRouteSnapshot,
 ) => StrictCrudItemOptions<User>[] = (payload) => [
   ID_CONFIG,
   {

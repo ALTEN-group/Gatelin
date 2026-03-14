@@ -1,6 +1,6 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
-import { ConfBuilderPayload } from "@crud/core/models/conf-builder-payload.model";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
@@ -14,7 +14,7 @@ import {
 import { Consumer } from "app/admin/data-access/consumers/consumer.model";
 
 export const CONSUMER_COLUMNS: (
-  payload: ConfBuilderPayload,
+  payload: ActivatedRouteSnapshot,
 ) => StrictCrudItemOptions<Consumer>[] = ({ data }) => [
   ID_CONFIG,
   {
