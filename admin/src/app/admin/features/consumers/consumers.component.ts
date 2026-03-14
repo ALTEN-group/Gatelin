@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { ConfigHelper } from "@crud/core/utils/crud-service/config.helper";
 import { TableComponent } from "@table/table.component";
 import { ConsumersService } from "app/admin/data-access/consumers/consumers.service";
-import { ConfigHelper } from "app/admin/features/routes/config.helper";
 
 /**
  * Component to display and manage API consumers
