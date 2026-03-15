@@ -14,12 +14,12 @@ export function getFilters(
   filterLevel: FilterLevel,
 ): TableLazyLoadEventFilters {
   // If there is an "archived" column, set its default filter to false
-  const archived = { value: false, matchMode: "equals" };
-  const initialFilters: TableLazyLoadEventFilters = items.some(
-    (item) => item.key === "archived",
-  )
-    ? { archived: filterLevel === "advanced" ? [archived] : archived }
-    : {};
+  // const archived = { value: false, matchMode: "equals" };
+  // const initialFilters: TableLazyLoadEventFilters = items.some(
+  //   (item) => item.key === "archived",
+  // )
+  //   ? { archived: filterLevel === "advanced" ? [archived] : archived }
+  //   : {};
   return items.reduce((filters, item) => {
     if (item.columnOptions?.defaultFilter) {
       const filter = item.columnOptions.defaultFilter;
@@ -31,7 +31,7 @@ export function getFilters(
       };
     }
     return filters;
-  }, initialFilters);
+  }, {});
 }
 
 export function applyDefaultFilters(
