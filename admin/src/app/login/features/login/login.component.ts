@@ -91,7 +91,6 @@ export class LoginComponent implements AfterViewInit {
         .login(this.email.value, this.password.value)
         .subscribe((res: boolean) => {
           if (res) {
-            this.authService.redirectToApp();
             const { firstName, lastName } = this.authService.user() || {};
             this.snackbarService.displayInfo(
               `Bienvenue ${firstName} ${lastName}`,
