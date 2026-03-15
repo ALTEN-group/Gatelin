@@ -15,6 +15,6 @@ import sEnt from "../../entities/session.js";
  * router.post('/sessions', addSession, sendSession);
  */
 export function sendSession(req, res, _next) {
-  const data = deleteProps(req.body.rows, sEnt.unsafeProps);
+  const data = deleteProps(req.body.rows, sEnt.privateProps);
   res.status(200).json(data[0]);
 }

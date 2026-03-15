@@ -30,13 +30,7 @@ import { send204 } from "../middlewares/res/send-204.js";
 const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
 // const activate = [ activateUser, uEnt.update ];
 const getSession = [...checkRequest, createRow]; // get session from tokens
-const addSession = [
-  checkPwd,
-  createTokens,
-  sEnt.add,
-  addToCache,
-  sendSession,
-];
+const addSession = [checkPwd, createTokens, sEnt.add, addToCache, sendSession];
 const updateSession = [
   refreshTokens,
   getUserById,
@@ -53,12 +47,12 @@ const add = [
 ];
 
 const update = [
+  ignoreExpiration,
   getSession,
   checkRefreshToken,
-  ignoreExpiration,
   decodeAccess, // extract issuer
   decodeRefresh, // check expiration
-  updateSession, 
+  updateSession,
 ];
 
 const del = [getSession, deleteSession];
