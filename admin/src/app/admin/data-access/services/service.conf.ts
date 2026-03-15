@@ -32,7 +32,7 @@ export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
   },
   {
     key: "locked",
-    label: "Vérouillé",
+    label: "Verrouillé",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...ARCHIVED_CONFIG,

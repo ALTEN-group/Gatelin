@@ -501,7 +501,7 @@ export class TableComponent<TData extends CrudItemBase>
         // TODO: this might not be the only strategy to update files.
         switchMap((res) => {
           const files = this.getFiles(entry);
-          const id = res?.rows[0]?.id || entry.id;
+          const id = res?.rows?.[0]?.id || entry.id;
           return this.loader.updateFiles(files, id);
         }),
       )

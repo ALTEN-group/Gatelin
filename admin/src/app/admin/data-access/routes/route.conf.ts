@@ -149,7 +149,7 @@ export const ROUTE_COLUMNS: (
   },
   {
     key: "locked",
-    label: "Vérouillé",
+    label: "Verrouillé",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...ARCHIVED_CONFIG,

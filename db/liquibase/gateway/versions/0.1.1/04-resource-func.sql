@@ -4,11 +4,11 @@
 CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO resource ("serviceId", name, protected, "creatorId", "creatorName")
+      INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName")
       VALUES (
         NEW."serviceId",
         NEW.name,
-        NEW.protected,
+        NEW.locked,
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
       SET 
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
         name = COALESCE(NEW.name, name),
-        protected = COALESCE(NEW.protected, protected)
+        locked = COALESCE(NEW.locked, locked)
       WHERE id = NEW.id;
 
       PERFORM soft_delete(''resource'', OLD.id, NEW.archived, OLD.archived);

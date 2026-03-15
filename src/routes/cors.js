@@ -4,10 +4,14 @@ const router = express.Router();
 
 import cEnt from "../entities/cors.js";
 import history from "../middlewares/history.js";
-import { addToCache, updateCache, deleteFromCache } from "../middlewares/cache/cors.js";
+import {
+  addToCache,
+  updateCache,
+  deleteFromCache,
+} from "../middlewares/cache/cors.js";
 
-const add = [cEnt.add, addToCache];
-const update = [cEnt.update, updateCache];
+const add = [cEnt.addArraySubstack, addToCache];
+const update = [cEnt.updateArraySubstack, updateCache];
 const del = [cEnt.archive, deleteFromCache];
 
 // Get routes

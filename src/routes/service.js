@@ -10,9 +10,9 @@ router.post("/search", sEnt.get);
 // Get version history of a specific service
 router.get("/:id/history", history.get("service"));
 // add a service.
-router.post("/", sEnt.add);
+router.post("/", sEnt.addArraySubstack);
 // Update a service.
-router.put("/", sEnt.update);
+router.put("/", sEnt.updateArraySubstack);
 // Bulk archive
 router.post("/archive", sEnt.archive);
 

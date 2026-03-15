@@ -15,11 +15,7 @@ BEGIN
                           THEN NOW()::timestamp
                      ELSE "archivedAt"
                      END,
-      archived = COALESCE($2, archived),
-      active = CASE WHEN $2 = TRUE
-                    THEN FALSE
-               ELSE active
-               END
+      archived = COALESCE($2, archived)
     WHERE id = $1', p_table_name)
   USING p_id, p_new_archived, p_old_archived;
 END;

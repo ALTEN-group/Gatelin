@@ -10,9 +10,9 @@ router.post("/search", oEnt.get);
 // Get version history of a specific operation
 router.get("/:id/history", history.get("operation"));
 // add an operation.
-router.post("/", oEnt.add);
+router.post("/", oEnt.addArraySubstack);
 // Update an operation.
-router.put("/", oEnt.update);
+router.put("/", oEnt.updateArraySubstack);
 // Bulk archive
 router.post("/archive", oEnt.archive);
 
