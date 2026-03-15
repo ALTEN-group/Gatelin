@@ -38,6 +38,7 @@ export class AuthenticationService {
         const { accessToken, refreshToken } = res;
         this.saveTokens(accessToken, refreshToken);
         this.authenticate();
+        this.redirectToApp();
       }),
       this.getUserBasics(),
       map(() => true),
