@@ -51,7 +51,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   };
 
   const redirectToLogin = (err: HttpErrorResponse) => {
-    router.navigate(["/login"]);
+    authenticationService.redirectToLogin();
     return returnError(err);
   };
 
