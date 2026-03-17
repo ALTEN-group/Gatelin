@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS property (
   price DECIMAL(12, 2) NOT NULL, -- Sale price
   notary_fees DECIMAL(10, 2), -- Notary fees (frais de notaire)
   agency_fees DECIMAL(10, 2), -- Real estate agency fees
+  loan_fees DECIMAL(10, 2), -- Loan fees (frais d'emprunt)
   
+
   -- Construction & Condition
   construction_year INT,
   
@@ -80,7 +82,6 @@ INSERT INTO line_item (name, type, description) VALUES
   ('electricity', 'expense', 'Electricity utility bill'),
   ('gas', 'expense', 'Gas utility bill'),
   ('internet', 'expense', 'Internet subscription'),
-  ('phone', 'expense', 'Phone subscription'),
   ('condominium', 'expense', 'Monthly condominium charges'),
   ('property_tax', 'expense', 'Annual property tax (taxe foncière)'),
   ('housing_tax', 'expense', 'Annual housing tax (taxe d''habitation)'),
@@ -88,7 +89,8 @@ INSERT INTO line_item (name, type, description) VALUES
   ('maintenance', 'expense', 'Regular maintenance costs'),
   ('repairs', 'expense', 'Repair costs'),
   ('cleaning', 'expense', 'Cleaning service costs'),
-  ('garbage', 'expense', 'Garbage collection fees')
+  ('garbage', 'expense', 'Garbage collection fees'),
+  ('decoration', 'expense', 'Home decoration and interior design costs')
 ON CONFLICT (name) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS property_transaction (
