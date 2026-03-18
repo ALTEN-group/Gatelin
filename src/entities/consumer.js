@@ -98,7 +98,7 @@ const consumerEntity = new SQLEntity("consumer", [
     isTypeChecked: true,
     isFilterable: true,
     requiredFor: [],
-    operations: ["SELECT"],
+    operations: ["SELECT", "UPDATE"],
     isPrivate: false,
     sanitizer: null,
     normalizer: null,
