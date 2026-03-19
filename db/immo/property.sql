@@ -159,6 +159,99 @@ WHERE pt.payment_date IS NOT NULL
 GROUP BY pt.property_id, EXTRACT(YEAR FROM pt.payment_date), EXTRACT(MONTH FROM pt.payment_date)
 ORDER BY pt.property_id, EXTRACT(YEAR FROM pt.payment_date) DESC, EXTRACT(MONTH FROM pt.payment_date) DESC;
 
+-- ============================================================
+-- Stock Portfolio Tables
+-- ============================================================
+
+-- Stock Table
+-- One row per stock / ETF held
+
+CREATE TABLE IF NOT EXISTS stock (
+  id SERIAL PRIMARY KEY,
+  ticker VARCHAR(20) NOT NULL UNIQUE, -- e.g. AAPL, MC.PA
+  isin VARCHAR(12),                   -- International Securities Identification Number
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TRIGGER trigger_update_stock_timestamp
+BEFORE UPDATE ON stock
+FOR EACH ROW
+EXECUTE FUNCTION update_transaction_timestamp();
+
+-- Stock Buy Table
+-- Records each purchase (like buying a property)
+
+CREATE TABLE IF NOT EXISTS stock_buy (
+  id SERIAL PRIMARY KEY,
+  stock_id INT NOT NULL,
+
+  quantity DECIMAL(18, 6) NOT NULL,        -- Number of shares / units
+  price_per_share DECIMAL(14, 4) NOT NULL, -- Unit price at purchase
+  fees DECIMAL(10, 2) DEFAULT 0,           -- Brokerage fees
+  bought_at DATE NOT NULL,
+
+  description TEXT,
+
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  CONSTRAINT fk_stock_buy_stock
+    FOREIGN KEY (stock_id) REFERENCES stock (id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+
+  CHECK (quantity > 0),
+  CHECK (price_per_share > 0),
+  CHECK (fees >= 0)
+);
+
+CREATE TRIGGER trigger_update_stock_buy_timestamp
+BEFORE UPDATE ON stock_buy
+FOR EACH ROW
+EXECUTE FUNCTION update_transaction_timestamp();
+
+CREATE INDEX IF NOT EXISTS idx_stock_buy_stock_id ON stock_buy(stock_id);
+CREATE INDEX IF NOT EXISTS idx_stock_buy_bought_at ON stock_buy(bought_at);
+
+-- Dividend Table
+-- Records dividend payments received (like rent income)
+
+CREATE TABLE IF NOT EXISTS dividend (
+  id SERIAL PRIMARY KEY,
+  stock_id INT NOT NULL,
+
+  amount DECIMAL(12, 2) NOT NULL, -- Net amount received
+  payment_date DATE NOT NULL,
+
+  description TEXT,
+
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  CONSTRAINT fk_dividend_stock
+    FOREIGN KEY (stock_id) REFERENCES stock (id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+
+  CHECK (amount > 0)
+);
+
+CREATE TRIGGER trigger_update_dividend_timestamp
+BEFORE UPDATE ON dividend
+FOR EACH ROW
+EXECUTE FUNCTION update_transaction_timestamp();
+
+CREATE INDEX IF NOT EXISTS idx_dividend_stock_id ON dividend(stock_id);
+CREATE INDEX IF NOT EXISTS idx_dividend_payment_date ON dividend(payment_date);
+
+-- ============================================================
 -- Example inserts
 -- Get line item IDs first, then insert transactions
 -- Rental income
