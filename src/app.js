@@ -41,7 +41,7 @@ import corsRoutes from "./routes/cors.js";
 const svc = "/gateway/";
 
 app.use(express.json());
-app.use("/gateway/health", healixRouter);
+app.use(`${svc}health`, healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route
