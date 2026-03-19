@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dwtechs/antity-pgsql": "0.12.0",
+    "@dwtechs/antity-pgsql": "0.13.0",
     "@dwtechs/checkard": "3.6.0",
     "@dwtechs/errandler-express": "0.1.0",
     "@dwtechs/healix-express": "0.1.0",

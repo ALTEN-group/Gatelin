@@ -207,7 +207,7 @@ export default new SQLEntity("routes", [
     isTypeChecked: true,
     isFilterable: true,
     requiredFor: ["POST"],
-    operations: ["SELECT", "UPDATE"],
+    operations: ["SELECT"],
     isPrivate: true,
     sanitizer: null,
     normalizer: null,

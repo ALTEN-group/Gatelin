@@ -80,7 +80,7 @@ export default new SQLEntity("resources", [
     isTypeChecked: true,
     isFilterable: true,
     requiredFor: ["POST"],
-    operations: ["SELECT", "UPDATE"],
+    operations: ["SELECT"],
     isPrivate: false,
     sanitizer: null,
     normalizer: null,
