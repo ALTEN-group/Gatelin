@@ -50,11 +50,16 @@ export const mockRoles = [
       { route: 29, operations: [6] }, // addCors
       { route: 30, operations: [8] }, // archiveCors
 
+      // Preferences - all operations
+      { route: 31, operations: [2] }, // getPreferences
+      { route: 32, operations: [6] }, // addPreferences
+      { route: 33, operations: [4] }, // updatePreferences
+
       // Users
-      { route: 31, operations: [1] }, // getBasicUserInfo
+      { route: 34, operations: [1] }, // getBasicUserInfo
 
       // Roles
-      { route: 32, operations: [2] }, // searchRoles
+      { route: 35, operations: [2] }, // searchRoles
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -109,11 +114,16 @@ export const mockRoles = [
       { route: 29, operations: [6] }, // addCors
       { route: 30, operations: [8] }, // archiveCors
 
+      // Preferences - all operations
+      { route: 31, operations: [2] }, // getPreferences
+      { route: 32, operations: [6] }, // addPreferences
+      { route: 33, operations: [4] }, // updatePreferences
+
       // Users
-      { route: 31, operations: [1] }, // getBasicUserInfo
+      { route: 34, operations: [1] }, // getBasicUserInfo
 
       // Roles
-      { route: 32, operations: [2] }, // searchRoles
+      { route: 35, operations: [2] }, // searchRoles
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -144,11 +154,14 @@ export const mockRoles = [
       // CORS - read only
       { route: 26, operations: [2] }, // searchCors
 
+      // Preferences - read only
+      { route: 31, operations: [2] }, // getPreferences
+
       // Users
-      { route: 31, operations: [1] }, // getBasicUserInfo
+      { route: 34, operations: [1] }, // getBasicUserInfo
 
       // Roles
-      { route: 32, operations: [2] }, // searchRoles
+      { route: 35, operations: [2] }, // searchRoles
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -163,7 +176,7 @@ export const mockRoles = [
       { route: 2, operations: [5] }, // signIn
 
       // Users - basic info only
-      { route: 31, operations: [1] }, // getBasicUserInfo
+      { route: 34, operations: [1] }, // getBasicUserInfo
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",

@@ -1,5 +1,79 @@
 # Gatelin
 
+## start-dev.sh Script
+
+The `start-dev.sh` script is a convenience utility for quickly starting the development environment with a single command. It builds and runs all services using docker-compose.
+
+### What It Does
+
+1. **Builds** all Docker images (if changes detected)
+2. **Starts** all services defined in `docker/docker-compose.yml`
+3. **Loads** environment variables from `docker/conf/.env.dev`
+4. **Runs** in detached mode (background)
+
+### When to Use It
+
+Use this script when you need to:
+- Start your local development environment
+- Start working after cloning the repository
+- Restart services after making changes
+- Quickly spin up all containers
+
+### How to Run
+
+```bash
+./start-dev.sh
+```
+
+### After Running
+
+After starting the environment:
+- Services run in the background (detached mode)
+- Use `docker-compose logs -f` to view live logs
+- Use `docker ps` to see running containers
+- Services are accessible on their configured ports
+
+---
+
+## reset-db.sh Script
+
+The `reset-db.sh` script is a utility for completely resetting the database during development. It removes all Docker containers and volumes related to the database, giving you a fresh start.
+
+### What It Does
+
+1. **Loads environment variables** from `docker/conf/.env.dev` (or uses defaults)
+2. **Stops and removes** the PostgreSQL container (`gatelin-postgres-local`)
+3. **Stops and removes** the Liquibase migration container (`gatelin-gatelin-migration-local`)
+4. **Removes** the PostgreSQL data volume (`gatelin_postgres_data`)
+5. **Restarts all services** by calling `./start-dev.sh` to rebuild and start fresh
+
+### When to Use It
+
+Use this script when you need to:
+- Clear all database data and start fresh
+- Reset the database after schema changes go wrong
+- Fix migration conflicts or errors
+- Clean up before running migrations from scratch
+
+### How to Run
+
+```bash
+./reset-db.sh
+```
+
+**⚠️ WARNING**: This script **permanently deletes all database data**. Only use it in development environments, never in production!
+
+### After Running
+
+The script automatically:
+1. Restarts all services using `start-dev.sh`
+2. Rebuilds and starts the database container
+3. Runs migrations automatically
+4. Your application is ready to use with a fresh database and clean schema
+
+---
+
+
 ## Usage
 
 ### Docker
