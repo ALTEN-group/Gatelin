@@ -46,6 +46,7 @@ The `reset-db.sh` script is a utility for completely resetting the database duri
 3. **Stops and removes** the Liquibase migration container (`gatelin-gatelin-migration-local`)
 4. **Removes** the PostgreSQL data volume (`gatelin_postgres_data`)
 5. **Restarts all services** by calling `./start-dev.sh` to rebuild and start fresh
+6. **Restarts the Gatelin container** specifically to ensure clean reconnection to the database
 
 ### When to Use It
 

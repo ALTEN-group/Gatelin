@@ -26,6 +26,7 @@ ENV_NAME=${ENV_NAME:-local}
 
 POSTGRES_CONTAINER="${APP_NAME}-postgres-${ENV_NAME}"
 MIGRATION_CONTAINER="${APP_NAME}-${APP_NAME}-migration-${ENV_NAME}"
+GATELIN_CONTAINER="${APP_NAME}"
 VOLUME_NAME="${APP_NAME}_postgres_data"
 
 # Stop and remove containers
@@ -42,3 +43,14 @@ echo -e "${GREEN}✅ Database reset complete!${NC}"
 # Restart all services
 echo -e ""
 ./start-dev.sh
+
+# Wait for services to be ready
+echo -e ""
+echo -e "${YELLOW}⏳ Waiting for services to start...${NC}"
+sleep 5
+
+# Restart Gatelin container specifically
+echo -e "🔄 Restarting Gatelin container..."
+docker restart $GATELIN_CONTAINER 2>/dev/null && echo -e "${GREEN}✓${NC} Restarted $GATELIN_CONTAINER" || echo -e "${YELLOW}⚠${NC}  Container $GATELIN_CONTAINER not found"
+
+echo -e "${GREEN}🎉 All done! Application ready with fresh database.${NC}"
