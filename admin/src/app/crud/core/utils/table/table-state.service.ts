@@ -43,9 +43,14 @@ export class TableStateService<TData> {
     };
   });
 
-  public setStaticInformation(payload: { lazy: boolean; entityLabel: string }) {
+  public setStaticInformation(payload: {
+    lazy: boolean;
+    entityLabel: string;
+    excelExportMode: ExcelExportMode;
+  }) {
     this.lazy.set(payload.lazy);
     this.entityLabel.set(payload.entityLabel);
+    this.excelExportMode.set(payload.excelExportMode);
   }
 
   public setCurrentTime() {

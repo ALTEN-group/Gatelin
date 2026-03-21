@@ -46,10 +46,7 @@ export class TableToolbarComponent<TData extends CrudItemBase> {
   public readonly exportClicked = output<ExportOptions>();
 
   public readonly isExportEnabled = computed(() => {
-    return (
-      (this.isExcelExportEnabled() || this.isCsvExportEnabled()) &&
-      !this.isExportingData()
-    );
+    return this.isExcelExportEnabled() || this.isCsvExportEnabled();
   });
 
   public readonly isToolbarDisplayed = computed(() => {

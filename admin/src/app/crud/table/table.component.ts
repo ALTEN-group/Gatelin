@@ -186,7 +186,7 @@ export class TableComponent<TData extends CrudItemBase>
    * Local export is faster but limited by browser memory and capabilities.
    * Server export handles large datasets and complex formatting but requires backend support.
    */
-  public readonly excelExportMode = input<ExcelExportMode>("server");
+  public readonly excelExportMode = input<ExcelExportMode>("local");
 
   /**
    * Enables/disables column filtering functionality in the table.
@@ -258,7 +258,7 @@ export class TableComponent<TData extends CrudItemBase>
    * When enabled, shows an Excel export button for downloading data as .xlsx file.
    * Excel export supports better formatting and larger datasets than CSV.
    */
-  public readonly isExcelExportEnabled = input(false);
+  public readonly isExcelExportEnabled = input(true);
 
   /**
    * Enables preferences mode for the table.
@@ -394,6 +394,7 @@ export class TableComponent<TData extends CrudItemBase>
     this.state.setStaticInformation({
       lazy: this.lazy(),
       entityLabel: this.entityLabel(),
+      excelExportMode: this.excelExportMode(),
     });
 
     if (this.lazy()) {

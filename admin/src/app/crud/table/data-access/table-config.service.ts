@@ -7,7 +7,7 @@ import { catchError, map, Observable, of } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class TableConfigService {
-  private readonly api = `${inject(APP_CONFIG).apiPrefix}preferences`;
+  private readonly api = `${inject(APP_CONFIG).apiPrefix}gateway/preferences`;
   private readonly http = inject(HttpClient);
 
   public getViews(componentId: string): Observable<TableConfig[]> {
