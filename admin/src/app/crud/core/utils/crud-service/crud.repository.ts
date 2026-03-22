@@ -116,8 +116,8 @@ export class CrudRepository<T> {
     });
   }
 
-  private restore(ids: number[]): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/restore`, { rows: ids });
+  private restore(ids: number[]): Observable<null> {
+    return this.http.post<null>(`${this.apiUrl}/restore`, { rows: ids });
   }
 
   private getHistory(id: number): Observable<RowsAndCount<HistorizedData<T>>> {

@@ -109,6 +109,9 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
   /** Emitted when entry is archived/deleted */
   public readonly archived = output<TData | null>();
 
+  /** Emitted when entry is restored */
+  public readonly restored = output<TData | null>();
+
   /** Emitted when entry is edited (value changes) */
   public readonly edited = output<TData | null>();
 
@@ -217,6 +220,28 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
       : $localize`:@@EditionDialog_CloseButtonClose:Fermer`;
   });
 
+  private readonly canArchiveRestore = computed(() => {
+    if (!this.canInteract()) return false;
+    if (this.isCreation()) return false;
+    return true;
+  });
+
+  public readonly isArchiveBtnDisplayed = computed(() => {
+    return (
+      this.features().archive &&
+      this.canArchiveRestore() &&
+      !this.editedEntry()?.archived
+    );
+  });
+
+  public readonly isRestoreBtnDisplayed = computed(() => {
+    return (
+      this.features().restore &&
+      this.canArchiveRestore() &&
+      this.editedEntry()?.archived
+    );
+  });
+
   // Public methods
   /**
    * Handles form value changes and updates the edited entry
@@ -265,7 +290,11 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
   /**
    * Handles delete/archive action and emits the current entry
    */
-  public onDelete() {
+  public onArchive() {
     this.archived.emit(this.editedEntry());
+  }
+
+  public onRestore() {
+    this.restored.emit(this.editedEntry());
   }
 }
