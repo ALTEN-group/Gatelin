@@ -16,7 +16,7 @@ export interface Repository<T> {
   update: (args: T) => Observable<Rows<T>>;
   archive: (args: number[]) => Observable<null>;
   updateFiles: (files: File[], id: number) => Observable<Rows<T>>;
-  restore: (args: number[]) => Observable<void>;
+  restore: (args: number[]) => Observable<null>;
   getHistory: (id: number) => Observable<RowsAndCount<HistorizedData<T>>>;
 }
 

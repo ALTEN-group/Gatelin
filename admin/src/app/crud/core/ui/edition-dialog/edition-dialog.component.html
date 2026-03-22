@@ -65,7 +65,7 @@
                   i18n-label="@@EditionDialog_ArchiveButton"
                   icon="pi pi-trash"
                   class="p-button-danger delete-button"
-                  (click)="onDelete()"
+                  (click)="onArchive()"
                   [disabled]="!archiveCheckbox.checked">
                 </button>
               </div>
@@ -77,22 +77,50 @@
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <crd-crud-button
-      type="cancel"
-      [label]="closeButtonLabel()"
-      icon="pi pi-times"
-      [disabled]="isLoading()"
-      (click)="onHide()"
-    />
-    @if (canInteract()) {
-      <crd-crud-button
-        type="validate"
-        icon="pi pi-check"
-        [protectFeature]="functionalityKey()"
-        operation="update"
-        [disabled]="isLoading() || invalidForm"
-        (click)="onSave()"
-      />
-    }
+    <div class="dialog-actions-container">
+      <div class="left-actions">
+        <crd-crud-button
+          type="cancel"
+          [label]="closeButtonLabel()"
+          icon="pi pi-times"
+          [disabled]="isLoading()"
+          (click)="onHide()"
+        />
+        @if (isArchiveBtnDisplayed()) {
+          <crd-crud-button
+            type="delete"
+            i18n-label="@@EditionDialog_ArchiveButton"
+            label="Archiver"
+            icon="pi pi-trash"
+            [functionalityKey]="functionalityKey()"
+            [disabled]="isLoading()"
+            (click)="onArchive()"
+          />
+        }
+        @if (isRestoreBtnDisplayed()) {
+          <crd-crud-button
+            type="edit"
+            icon="pi pi-bolt"
+            [functionalityKey]="functionalityKey()"
+            [disabled]="isLoading()"
+            (click)="onRestore()"
+          />
+        }
+      </div>
+
+      <div class="right-actions">
+        @if (canInteract()) {
+          <crd-crud-button
+            type="validate"
+            icon="pi pi-check"
+            [protectFeature]="functionalityKey()"
+            operation="update"
+            [disabled]="isLoading() || invalidForm"
+            (click)="onSave()"
+          />
+        }
+      </div>
+
+    </div>
   </ng-template>
 </p-dialog>

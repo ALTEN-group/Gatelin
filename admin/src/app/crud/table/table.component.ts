@@ -50,7 +50,12 @@ import {
   getDefaultSort,
 } from "@table/utils/sort/primeng-sort.builder";
 import { TableColumnsStorage } from "@table/utils/views/table-columns.storage";
-import { ConfirmationService, MessageService, SharedModule } from "primeng/api";
+import {
+  Confirmation,
+  ConfirmationService,
+  MessageService,
+  SharedModule,
+} from "primeng/api";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ProgressBarModule } from "primeng/progressbar";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
@@ -200,7 +205,7 @@ export class TableComponent<TData extends CrudItemBase>
    * Controls what type of filter controls are shown and how they behave.
    * Higher levels provide more sophisticated filtering options.
    */
-  public readonly filterLevel = input<FilterLevel>("basic");
+  public readonly filterLevel = input<FilterLevel>("advanced");
 
   /**
    * Trigger for forcing table data reload from parent component.
@@ -481,6 +486,13 @@ export class TableComponent<TData extends CrudItemBase>
     this.handleArchive([editedEntry.id]);
   }
 
+  public onEditedEntryRestore(editedEntry: TData | null): void {
+    if (!editedEntry || !editedEntry?.id) {
+      return;
+    }
+    this.handleRestore([editedEntry.id]);
+  }
+
   public onEditedEntryEdit(entry: TData | null): void {
     if (!entry) {
       return;
@@ -648,25 +660,50 @@ export class TableComponent<TData extends CrudItemBase>
   }
 
   private handleArchive(ids: number[]) {
+    const confirm = this.getConfirmPayload("archive");
     this.confirmationService.confirm({
-      message: $localize`:@@Table_DeleteConfirmationMessage:Etes-vous sûr de vouloir archiver cet élément ?`,
-      header: "Confirmation",
-      icon: "pi pi-info-circle",
-      rejectLabel: "Annuler",
-      rejectButtonProps: {
-        label: "Annuler",
-        severity: "secondary",
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: "Archiver",
-        severity: "danger",
-      },
+      ...confirm,
       accept: () => {
         this.loader.archive(ids).subscribe(() => {
           this.hideEditionDialog();
         });
       },
     });
+  }
+
+  private handleRestore(ids: number[]) {
+    const confirm = this.getConfirmPayload("restore");
+    this.confirmationService.confirm({
+      ...confirm,
+      accept: () => {
+        this.loader.restore(ids).subscribe(() => {
+          this.hideEditionDialog();
+        });
+      },
+    });
+  }
+
+  private getConfirmPayload(type: "archive" | "restore"): Confirmation {
+    return {
+      message:
+        type === "archive"
+          ? $localize`:@@Table_DeleteConfirmationMessage:Etes-vous sûr de vouloir archiver cet élément ?`
+          : $localize`:@@Table_RestoreConfirmationMessage:Etes-vous sûr de vouloir restaurer cet élément ?`,
+      header: $localize`:@@Table_Confirmation:Confirmation`,
+      icon: "pi pi-info-circle",
+      rejectLabel: $localize`:@@Table_Cancel:Annuler`,
+      rejectButtonProps: {
+        label: $localize`:@@Table_Cancel:Annuler`,
+        severity: "secondary",
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label:
+          type === "archive"
+            ? $localize`:@@Table_Archive:Archiver`
+            : $localize`:@@Table_Restore:Restaurer`,
+        severity: "danger",
+      },
+    };
   }
 }
