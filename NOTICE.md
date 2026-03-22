@@ -74,6 +74,39 @@ The script automatically:
 
 ---
 
+## Running Tests
+
+The Gatelin project uses Jest as the test runner with Babel for ES module support. Tests are located in the [tests/](tests/) directory.
+
+### Available Test Commands
+
+**Run all tests once:**
+```bash
+npm test
+```
+
+**Run tests in watch mode** (automatically re-runs on file changes):
+```bash
+npm run test:watch
+```
+
+**Run tests with coverage report:**
+```bash
+npm run test:coverage
+```
+
+### Test Structure
+
+The test suite currently covers:
+- Validators (ACL, route, consumer checks)
+- Mappers (additional headers)
+- HTTP middlewares (user retrieval, password checks)
+- Cache middlewares (consumer caching)
+
+All test files follow the pattern `*.test.js` and are organized by functionality in the [tests/middlewares/](tests/middlewares/) directory.
+
+---
+
 
 ## Usage
 

@@ -265,7 +265,7 @@ export class TableComponent<TData extends CrudItemBase>
    * When enabled, will query configured views from backend and allow user to switch and add new ones.
    * When disabled, only the default view is used without any view management options.
    */
-  public readonly isPreferencesModeEnabled = input(false);
+  public readonly isPreferencesModeEnabled = input(true);
 
   /**
    * Enables lazy loading mode for large datasets.
@@ -294,7 +294,7 @@ export class TableComponent<TData extends CrudItemBase>
    * When enabled, adds a checkbox column allowing users to select multiple rows.
    * Selected rows are available via selectedEntries property for bulk actions.
    */
-  public readonly selectable = input<boolean>(false);
+  public readonly selectable = input<boolean>(true);
 
   /**
    * Enables column sorting functionality in table headers.
@@ -520,6 +520,7 @@ export class TableComponent<TData extends CrudItemBase>
         this.isExportDialogVisible.set(false);
         if (!success) {
           this.messageService.add({
+            key: "table-toast",
             severity: "error",
             summary: $localize`:@@Table_ExportFailed:Echec de l'export`,
             detail: $localize`:@@Table_ExportFailedDetail:Une erreur est survenue lors de l'export des données.`,

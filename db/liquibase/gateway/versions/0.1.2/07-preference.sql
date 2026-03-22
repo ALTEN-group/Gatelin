@@ -1,4 +1,4 @@
-CREATE TABLE user_preference (
+CREATE TABLE preference (
   id           SERIAL      PRIMARY KEY,
   "userId"     INT         NOT NULL,
   "tableName"  VARCHAR(60) NOT NULL,
@@ -8,12 +8,12 @@ CREATE TABLE user_preference (
   UNIQUE ("userId", "tableName", name)   -- still prevent duplicates
 );
 
-CREATE OR REPLACE FUNCTION check_user_preference_limit() RETURNS trigger AS '
+CREATE OR REPLACE FUNCTION check_preference_limit() RETURNS trigger AS '
   DECLARE
     pref_count INT;
   BEGIN
     SELECT COUNT(*) INTO pref_count
-    FROM user_preference
+    FROM preference
     WHERE "userId" = NEW."userId" AND "tableName" = NEW."tableName";
 
     IF pref_count >= 10 THEN
@@ -24,6 +24,6 @@ CREATE OR REPLACE FUNCTION check_user_preference_limit() RETURNS trigger AS '
   END;
 ' LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE TRIGGER trg_user_preference_limit
-  BEFORE INSERT ON user_preference
-  FOR EACH ROW EXECUTE FUNCTION check_user_preference_limit();
+CREATE TRIGGER trg_preference_limit
+  BEFORE INSERT ON preference
+  FOR EACH ROW EXECUTE FUNCTION check_preference_limit();

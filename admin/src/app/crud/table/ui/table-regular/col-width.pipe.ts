@@ -7,7 +7,8 @@ const defaultWidth = "150px";
   standalone: true,
 })
 export class ColWidthPipe {
-  transform(width: string | undefined): string {
+  transform(width: string | undefined, defaultWidthOverride?: string): string {
+    if (defaultWidthOverride) return defaultWidthOverride;
     return width ?? defaultWidth;
   }
 }

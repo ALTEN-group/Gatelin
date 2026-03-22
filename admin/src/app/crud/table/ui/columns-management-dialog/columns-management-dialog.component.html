@@ -16,7 +16,7 @@
             [views]="editedViews()"
             (viewSelected)="onSelectView($event)"
             (viewCreationClicked)="isViewCreation.set(true)"
-            (viewCreationDone)="isViewCreation.set(false)"
+            (viewCreationDone)="onCreateView($event)"
             (deleteView)="onDeleteView($event)"
           />
         </div>

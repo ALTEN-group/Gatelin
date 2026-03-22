@@ -41,10 +41,9 @@ export class ColumnsViewsComponent {
   public readonly views = input.required<TableConfig[]>();
 
   public readonly deleteView = output<number>();
-  public readonly addView = output<string>();
   public readonly viewSelected = output<number>();
   public readonly viewCreationClicked = output<void>();
-  public readonly viewCreationDone = output<void>();
+  public readonly viewCreationDone = output<string>();
 
   public readonly activeViewId = computed(() => {
     return this.views().find((view) => view.isActive)?.id ?? null;
@@ -74,15 +73,8 @@ export class ColumnsViewsComponent {
     this.viewCreationClicked.emit();
   }
 
-  public hideNewViewField(): void {
+  public hideNewViewField(name?: string): void {
     this.isNewFieldDisplayed = false;
-    this.viewCreationDone.emit();
-  }
-
-  public submitNewView(name?: string): void {
-    if (name) {
-      this.hideNewViewField();
-      this.addView.emit(name);
-    }
+    this.viewCreationDone.emit(name ?? "");
   }
 }

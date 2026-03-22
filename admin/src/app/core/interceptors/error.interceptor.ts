@@ -4,7 +4,6 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 import { effect, inject } from "@angular/core";
-import { Router } from "@angular/router";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { TokenService } from "@core/auth/token.service";
 import { cloneReq } from "@core/interceptors/clone-req";
@@ -27,7 +26,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const offlineService = inject(OfflineService);
   const authenticationService = inject(AuthenticationService);
   const tokenService = inject(TokenService);
-  const router = inject(Router);
 
   let pendingRequests: HttpRequest<unknown>[] = [];
 

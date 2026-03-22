@@ -9,9 +9,7 @@ import { /**isObject,**/ isArray } from "@dwtechs/checkard";
  */
 function send(_req, res) {
   const data = res.locals;
-  res.status(200).json({rows: data.rows, total: data.total}); 
+  res.status(200).json({ rows: data.rows, total: data.total });
 }
 
-export {
-  send,
-};
+export { send };

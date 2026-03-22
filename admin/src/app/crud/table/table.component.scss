@@ -75,12 +75,6 @@ tbl-table {
         text-overflow: ellipsis;
         white-space: nowrap;
 
-        &.checkbox-column {
-          max-width: 3rem;
-          min-width: 3rem;
-          width: 3rem;
-        }
-
         &.clickable {
           cursor: pointer;
         }

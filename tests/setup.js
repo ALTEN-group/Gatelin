@@ -1,7 +1,7 @@
 // Test setup file for gateway service
 
 // Mock environment variables
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = "test";
 // Note: Service URLs are set in individual tests since we mock HTTP calls
 
 // Mock console to reduce test noise
@@ -21,14 +21,14 @@ global.createMockRequest = (overrides = {}) => ({
   params: {},
   query: {},
   headers: {},
-  ...overrides
+  ...overrides,
 });
 
 global.createMockResponse = (overrides = {}) => ({
   status: jest.fn().mockReturnThis(),
   json: jest.fn().mockReturnThis(),
   send: jest.fn().mockReturnThis(),
-  ...overrides
+  ...overrides,
 });
 
 global.createMockNext = () => jest.fn();

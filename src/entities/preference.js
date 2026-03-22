@@ -1,7 +1,7 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
-export default new SQLEntity("user_preferences", [
+export default new SQLEntity("preference", [
   {
     key: "id",
     type: "integer",
@@ -22,9 +22,9 @@ export default new SQLEntity("user_preferences", [
     min: null,
     max: null,
     isTypeChecked: true,
-    isFilterable: false,
+    isFilterable: true,
     requiredFor: [],
-    operations: ["SELECT", "INSERT"],
+    operations: ["INSERT"],
     isPrivate: true,
     sanitizer: null,
     normalizer: null,

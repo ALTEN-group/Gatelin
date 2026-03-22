@@ -19,8 +19,7 @@ export class AclService {
     if (!functionality) return true;
     const funcAcls = this.accessLevels()[functionality];
     if (!funcAcls) return false;
-    if (operation)
-      return funcAcls[operation as keyof typeof funcAcls] || false;
+    if (operation) return funcAcls[operation as keyof typeof funcAcls] || false;
     return funcAcls.get || false;
   }
 

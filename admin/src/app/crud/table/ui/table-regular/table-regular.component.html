@@ -42,7 +42,9 @@
     <!-- Header labels row -->
     <tr>
       @if (selectable()) {
-        <th class="checkbox-column" scope="col">
+        <th class="checkbox-column" scope="col" 
+          [style.width]="undefined | colWidth: '3rem !important'"
+          [style.max-width]="undefined | colWidth: '3rem !important'">
           <p-tableHeaderCheckbox />
         </th>
       }
@@ -79,7 +81,9 @@
     @if (filterable() && (filterLevel() === "basic" || filterLevel() === "intermediate")) {
       <tr>
         @if (selectable()) {
-          <th class="checkbox-column" scope="col"></th>
+          <th class="checkbox-column" scope="col"
+          [style.width]="undefined | colWidth: '3rem !important'"
+          [style.max-width]="undefined | colWidth: '3rem !important'"></th>
         }
         @for (col of columns; track trackCol(col)) {
           <th
@@ -106,7 +110,9 @@
   <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
     <tr [ngStyle]="customRowStyles() ? customRowStyles()?.(rowData) : {}" [pContextMenuRow]="rowData">
       @if (selectable()) {
-        <td class="checkbox-column">
+        <td class="checkbox-column"
+          [style.width]="undefined | colWidth: '3rem !important'"
+          [style.max-width]="undefined | colWidth: '3rem !important'">
           <p-tableCheckbox [value]="rowData" />
         </td>
       }

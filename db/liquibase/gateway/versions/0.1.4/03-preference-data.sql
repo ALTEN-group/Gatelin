@@ -1,7 +1,7 @@
-INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
+INSERT INTO preference ("userId", "tableName", name, value) VALUES
 
 -- routes
-(1, 'routes', 'compact', '[
+(3, 'routes', 'compact', '[
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -20,7 +20,7 @@ INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
 ]'),
 
 -- consumers
-(1, 'consumers', 'compact', '[
+(3, 'consumers', 'compact', '[
   {"key":"id",           "isVisible":false},
   {"key":"userId",       "isVisible":true},
   {"key":"nickname",     "isVisible":true},
@@ -32,7 +32,7 @@ INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
 ]'),
 
 -- services
-(1, 'services', 'compact', '[
+(3, 'services', 'compact', '[
   {"key":"id",        "isVisible":false},
   {"key":"name",      "isVisible":true},
   {"key":"pattern",   "isVisible":true},
@@ -42,7 +42,7 @@ INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
 ]'),
 
 -- resources
-(1, 'resources', 'compact', '[
+(3, 'resources', 'compact', '[
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
@@ -53,7 +53,7 @@ INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
 ]'),
 
 -- cors
-(1, 'cors', 'compact', '[
+(3, 'cors', 'compact', '[
   {"key":"id",        "isVisible":false},
   {"key":"name",      "isVisible":true},
   {"key":"archived",  "isVisible":false},
@@ -61,7 +61,7 @@ INSERT INTO user_preference ("userId", "tableName", name, value) VALUES
 ]'),
 
 -- operations
-(1, 'operations', 'compact', '[
+(3, 'operations', 'compact', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},

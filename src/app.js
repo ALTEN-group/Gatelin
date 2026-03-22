@@ -55,7 +55,7 @@ app.use(`${svc}services`, ...cr, service, send);
 app.use(`${svc}resources`, ...cr, resource, send);
 app.use(`${svc}operations`, ...cr, operation, send);
 app.use(`${svc}cors`, ...cr, corsRoutes, send);
-app.use(`${svc}preferences`, ...cr, preference);
+app.use(`${svc}preferences`, ...cr, preference, send);
 app.use("/", ...cr, proxy);
 
 // Performance measurement ends
