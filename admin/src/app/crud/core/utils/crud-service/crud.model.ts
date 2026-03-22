@@ -17,7 +17,7 @@ export interface Repository<T> {
   archive: (args: number[]) => Observable<null>;
   updateFiles: (files: File[], id: number) => Observable<Rows<T>>;
   restore: (args: number[]) => Observable<null>;
-  getHistory: (id: number) => Observable<RowsAndCount<HistorizedData<T>>>;
+  history: (id: number) => Observable<RowsAndCount<HistorizedData<T>>>;
 }
 
 export type Calls<T> = Partial<Repository<T>>;

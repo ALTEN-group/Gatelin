@@ -56,7 +56,7 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
   public readonly functionalityKey = input<string>();
 
   /** Function to retrieve history data for an entry by ID */
-  public readonly getHistory =
+  public readonly history =
     input<
       (id: number) => Observable<{
         rows: HistorizedData<TData>[];
@@ -196,9 +196,9 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
     distinctUntilChanged(),
     filter((id): id is number => !!id),
     switchMap((id) => {
-      const getHistory = this.getHistory();
-      if (this.features().getHistory && getHistory) {
-        return getHistory(id);
+      const history = this.history();
+      if (this.features().history && history) {
+        return history(id);
       }
       return of(NO_ROWS_AND_COUNT);
     }),

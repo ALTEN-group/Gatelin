@@ -21,7 +21,7 @@ export class CrudFeatures {
   create = false;
   update = false;
   archive = false;
-  getHistory = false;
+  history = false;
   updateFiles = false;
   restore = false;
 }

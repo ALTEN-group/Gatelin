@@ -21,7 +21,7 @@
         (validityChange)="onValidityChange($event)"
       />
 
-      @if (features().getHistory) {
+      @if (features().history) {
         <p-accordion class="accordion">
           @if (history$ | async; as historyData) {
           <p-accordion-panel>

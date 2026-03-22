@@ -24,7 +24,7 @@ export class UsersService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    getHistory: this.crud.getHistory,
+    history: this.crud.history,
     updateFiles: this.crud.updateFiles,
   };
 

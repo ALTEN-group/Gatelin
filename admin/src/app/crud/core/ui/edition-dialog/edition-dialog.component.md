@@ -50,7 +50,7 @@ features: {
   read: true,
   update: true,
   archive: true,
-  getHistory: true,
+  history: true,
   export: false
 }
 ```
@@ -136,13 +136,13 @@ groupValidator: (group: AbstractControl) => {
 
 ### History and Permissions
 
-#### `getHistory`
+#### `history`
 **Type:** `(id: number) => Observable<{rows: HistorizedData<TData>[], total: number}>` | **Default:** `undefined`  
 **Description:** Function to retrieve history data for an entry by ID.
 
 ```typescript
-getHistory: (id: number) => {
-  return this.userService.getHistory(id).pipe(
+history: (id: number) => {
+  return this.userService.history(id).pipe(
     map(response => ({
       rows: response.data,
       total: response.total
