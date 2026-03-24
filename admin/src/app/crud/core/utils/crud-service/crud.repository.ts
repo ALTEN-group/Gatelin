@@ -42,7 +42,7 @@ export class CrudRepository<T> {
     update: (item: T) => this.update(item),
     archive: (ids: number[]) => this.archive(ids),
     restore: (ids: number[]) => this.restore(ids),
-    getHistory: (id: number) => this.getHistory(id),
+    history: (id: number) => this.history(id),
     updateFiles: (files: File[], id: number) => this.updateFiles(files, id),
   });
 
@@ -120,7 +120,7 @@ export class CrudRepository<T> {
     return this.http.post<null>(`${this.apiUrl}/restore`, { rows: ids });
   }
 
-  private getHistory(id: number): Observable<RowsAndCount<HistorizedData<T>>> {
+  private history(id: number): Observable<RowsAndCount<HistorizedData<T>>> {
     return this.http.get<RowsAndCount<HistorizedData<T>>>(
       `${this.apiUrl}/${id}/history`,
     );
