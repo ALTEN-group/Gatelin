@@ -8,8 +8,14 @@ import { injectBody } from "../middlewares/mappers/preference/injectBody.js";
 import { upsertRows } from "../middlewares/mappers/preference/upsertRows.js";
 
 // GET all preferences for the authenticated user and the given table
+<<<<<<< HEAD
 router.get("/:tableName", injectFilters, pEnt.get);
 // Upsert preferences: insert rows without IDs, update rows with IDs
 router.put("/:tableName", injectBody, upsertRows);
+=======
+router.get("/:tableName", injectFilters, pEnt.get, send);
+// Add new preferences for the authenticated user and the given table
+router.put("/:tableName", injectBody, pEnt.syncArraySubstack, send);
+>>>>>>> 11ddc29141744bb18d914baa7655c718c03a2a0e
 
 export default router;
