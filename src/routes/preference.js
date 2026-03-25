@@ -10,8 +10,6 @@ import { send } from "../middlewares/res/send.js";
 // GET all preferences for the authenticated user and the given table
 router.get("/:tableName", injectFilters, pEnt.get, send);
 // Add new preferences for the authenticated user and the given table
-router.post("/:tableName", injectBody, pEnt.addArraySubstack, send);
-// Update existing preferences for the authenticated user and the given table
-router.put("/:tableName", injectBody, pEnt.updateArraySubstack, send);
+router.put("/:tableName", injectBody, pEnt.syncArraySubstack, send);
 
 export default router;
