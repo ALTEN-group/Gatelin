@@ -6,6 +6,29 @@ x-service-healthcheck: &healthcheck
   timeout: 5s
   retries: 5
 
+# dockerfile mount during build
+x-secret-args: &secretArgs
+  secrets:
+    - apt_repository
+    - apk_repository
+    - npmrc
+
+# mount for run
+x-secret-mount: &secretMount
+  - source: npmrc
+    target: /home/user/.npmrc
+
+x-default-args: &defaultArgs
+  UID: ${UID}
+  GID: ${GID}
+  TZ: ${TZ}
+  LOCALE: ${LOCALE}
+  HOME_PATH: ${HOME_PATH}
+
+x-default-envs: &defaultEnvs
+  PORT: ${DEFAULT_PORT}
+  TZ: ${TZ}
+
 services:
 
   postgres:
@@ -166,17 +189,15 @@ services:
     build:
       context: ${PWD}/admin
       dockerfile: dockerfile
+      <<: *secretArgs
       args:
-        UID: ${UID}
-        GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NODE_ENV: ${NODE_ENV}
+        <<: *defaultArgs
+        NODE_VERSION: ${ADMIN_NODE_VERSION}
+    secrets: *secretMount
     container_name: ${ADMIN_HOST}
     hostname: ${ADMIN_HOST}
     environment:
-      LOGIN_URL: ${ADMIN_LOGIN_URL}
-      ME_URL: ${ADMIN_ME_URL}
+      <<: *defaultEnvs
     networks:
       - internal
     volumes:
@@ -334,6 +355,15 @@ networks:
   external:
     name: ${APP_NAME}-external-${ENV_NAME}
     driver: bridge
+    
+secrets:
+  apk_repository:
+    environment: APK_REPOSITORY
+  apt_repository:
+    environment: APT_REPOSITORY
+  npmrc:
+    environment: NPMRC
+
 
 volumes:
   postgres_data:
