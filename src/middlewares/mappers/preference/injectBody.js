@@ -4,7 +4,6 @@ import { log } from "@dwtechs/winstan";
 /**
  * Express middleware that injects userId (from the JWT session) and tableName
  * (from the URL param) into each row of req.body.rows sent by the front-end.
- * Also maps the frontend field name conf → value to match the DB schema.
  *
  * @param {import('express').Request} req
  * @param {Object} req.body
@@ -28,9 +27,6 @@ export function injectBody(req, res, next) {
     ...row,
     userId,
     tableName,
-    // normalise frontend shape: conf → value (DB column name)
-    value: row.conf ?? row.value,
-    conf: undefined,
   }));
 
   next();

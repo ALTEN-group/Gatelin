@@ -3,7 +3,8 @@ CREATE TABLE preference (
   "userId"     INT         NOT NULL,
   "tableName"  VARCHAR(60) NOT NULL,
   name         VARCHAR(60) NOT NULL DEFAULT 'default',
-  value        JSONB       NOT NULL DEFAULT '{}',
+  conf         JSONB       NOT NULL DEFAULT '{}',
+  "isActive"   BOOLEAN     NOT NULL DEFAULT true,
   "updatedAt"  TIMESTAMP   NOT NULL DEFAULT NOW(),
   UNIQUE ("userId", "tableName", name)   -- still prevent duplicates
 );

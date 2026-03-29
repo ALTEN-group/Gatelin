@@ -1,4 +1,4 @@
-INSERT INTO preference ("userId", "tableName", name, value) VALUES
+INSERT INTO preference ("userId", "tableName", name, conf, "isActive") VALUES
 
 -- routes
 (3, 'routes', 'compact', '[
@@ -17,7 +17,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"locked",        "isVisible":false},
   {"key":"archived",      "isVisible":false},
   {"key":"archivedAt",    "isVisible":false}
-]'),
+]', true),
 
 -- consumers
 (3, 'consumers', 'compact', '[
@@ -29,7 +29,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"roles",        "isVisible":true},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
-]'),
+]', true),
 
 -- services
 (3, 'services', 'compact', '[
@@ -39,7 +39,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"locked",    "isVisible":false},
   {"key":"archived",  "isVisible":false},
   {"key":"archivedAt","isVisible":false}
-]'),
+]', true),
 
 -- resources
 (3, 'resources', 'compact', '[
@@ -50,7 +50,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"locked",      "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]'),
+]', true),
 
 -- cors
 (3, 'cors', 'compact', '[
@@ -58,7 +58,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"name",      "isVisible":true},
   {"key":"archived",  "isVisible":false},
   {"key":"archivedAt","isVisible":false}
-]'),
+]', true),
 
 -- operations
 (3, 'operations', 'compact', '[
@@ -71,7 +71,7 @@ INSERT INTO preference ("userId", "tableName", name, value) VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]')
+]', true)
 
 ;
 
