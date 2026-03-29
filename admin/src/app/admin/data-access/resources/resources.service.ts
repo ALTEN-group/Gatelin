@@ -24,6 +24,8 @@ export class ResourcesService {
     create: this.crud.create,
     update: this.crud.update,
     archive: this.crud.archive,
+    restore: this.crud.restore,
+    history: this.crud.history,
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
