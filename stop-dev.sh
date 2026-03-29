@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Stop Development Environment Script
-# This script stops and removes all services, containers, and volumes for this project
+# This script stops and removes all services and containers for this project
 # Usage: ./stop-dev.sh [--rmi | -i]
 #   --rmi, -i : Also remove images used by services
 
@@ -21,7 +21,7 @@ fi
 echo -e "${YELLOW}🛑 Stopping development environment...${NC}"
 
 # Build docker compose command
-COMPOSE_CMD="docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev down -v"
+COMPOSE_CMD="docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev down"
 
 # Add --rmi flag if requested
 if [ "$REMOVE_IMAGES" = true ]; then
@@ -34,8 +34,8 @@ eval $COMPOSE_CMD
 
 echo -e "${RED}✅ Development environment stopped and cleaned!${NC}"
 if [ "$REMOVE_IMAGES" = true ]; then
-  echo -e "All containers, volumes, and images for this project have been removed."
+  echo -e "All containers and images for this project have been removed."
 else
-  echo -e "All containers and volumes for this project have been removed."
+  echo -e "All containers for this project have been removed."
   echo -e "Run './stop-dev.sh --rmi' to also remove images."
 fi
