@@ -35,12 +35,12 @@ function rollback(){
 function createUser()
 {
   psql -h ${DB_HOST} -d postgres -tc "SELECT 1 FROM pg_roles WHERE rolname = '${DB_USER}'" | grep -q 1 || psql -h ${DB_HOST} -d ${DB_NAME} -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';"
-  psql -h ${DB_HOST} -d ${DB_NAME} -c "GRANT CONNECT ON DATABASE $DB_NAME TO $DB_USER; \
+  psql -h ${DB_HOST} -d ${DB_NAME} -c "CREATE SCHEMA IF NOT EXISTS log; \
+                                      GRANT CONNECT ON DATABASE $DB_NAME TO $DB_USER; \
+                                      GRANT USAGE ON SCHEMA public TO $DB_USER; \
+                                      GRANT USAGE ON SCHEMA log TO $DB_USER; \
                                       GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO $DB_USER; \
                                       GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA log TO $DB_USER; \
-                                      GRANT USAGE ON SCHEMA public TO $DB_USER; \
-                                      CREATE SCHEMA IF NOT EXISTS log; \
-                                      GRANT USAGE ON SCHEMA log TO $DB_USER; \
                                       GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO $DB_USER;
                                       GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA log TO $DB_USER;"
 }
