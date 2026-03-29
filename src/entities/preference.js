@@ -72,18 +72,4 @@ export default new SQLEntity("preference", [
     normalizer: null,
     validator: null,
   },
-  {
-    key: "updatedAt",
-    type: "string",
-    min: null,
-    max: null,
-    isTypeChecked: false,
-    isFilterable: false,
-    requiredFor: [],
-    operations: ["SELECT"],
-    isPrivate: false,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
 ]);
