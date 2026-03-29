@@ -23,6 +23,8 @@ export class OperationsService {
     create: this.crud.create,
     update: this.crud.update,
     archive: this.crud.archive,
+    restore: this.crud.restore,
+    history: this.crud.history,
   };
 
   public readonly config = OPERATION_COLUMNS;
