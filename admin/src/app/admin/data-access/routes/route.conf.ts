@@ -132,7 +132,7 @@ export const ROUTE_COLUMNS: (
   },
   {
     key: "methods",
-    label: "Méthodes",
+    label: "Methods",
     controlType: CONTROL_TYPES.MULTISELECT,
     options: METHODS.map((m) => ({
       label: m,
@@ -144,12 +144,12 @@ export const ROUTE_COLUMNS: (
   },
   {
     key: "isProtected",
-    label: "JWT",
+    label: "Protected",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   {
     key: "locked",
-    label: "Verrouillé",
+    label: "Locked",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...ARCHIVED_CONFIG,
