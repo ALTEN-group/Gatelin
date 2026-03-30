@@ -2,10 +2,9 @@ CREATE TABLE preference (
   id           SERIAL      PRIMARY KEY,
   "userId"     INT         NOT NULL,
   "tableName"  VARCHAR(60) NOT NULL,
-  name         VARCHAR(60) NOT NULL DEFAULT 'default',
-  conf         JSONB       NOT NULL DEFAULT '{}',
-  "isActive"   BOOLEAN     NOT NULL DEFAULT true,
-  "updatedAt"  TIMESTAMP   NOT NULL DEFAULT NOW(),
+  name         VARCHAR(60) NOT NULL,
+  conf         JSONB       NOT NULL,
+  "isActive"   BOOLEAN     NOT NULL DEFAULT false,
   UNIQUE ("userId", "tableName", name)   -- still prevent duplicates
 );
 
