@@ -8,7 +8,6 @@ export const mockRoles = [
     permissions: [
       // Sessions - all operations
       { route: 1, operations: [3] }, // refreshToken
-      { route: 2, operations: [5] }, // signIn
       { route: 3, operations: [7] }, // signOut
 
       // Consumers - all operations
@@ -72,7 +71,6 @@ export const mockRoles = [
     permissions: [
       // Sessions
       { route: 1, operations: [3] }, // refreshToken
-      { route: 2, operations: [5] }, // signIn
       { route: 3, operations: [7] }, // signOut
 
       // Consumers
@@ -136,7 +134,6 @@ export const mockRoles = [
     permissions: [
       // Sessions - own account only
       { route: 1, operations: [3] }, // refreshToken
-      { route: 2, operations: [5] }, // signIn
       { route: 3, operations: [7] }, // signOut
 
       // Routes - read only
@@ -172,11 +169,9 @@ export const mockRoles = [
     description: "Guest user role with minimal permissions",
     color: "#9E9E9E",
     permissions: [
-      // Sessions - sign in only
-      { route: 2, operations: [5] }, // signIn
-
-      // Users - basic info only
-      { route: 34, operations: [1] }, // getBasicUserInfo
+      // Sessions - own account only
+      { route: 1, operations: [3] }, // refreshToken
+      { route: 3, operations: [7] }, // signOut
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
