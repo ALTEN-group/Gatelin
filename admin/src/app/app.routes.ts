@@ -4,6 +4,7 @@ import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
+import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 
 /**
@@ -17,6 +18,8 @@ export const AppPaths = {
   RESOURCES: "resources",
   CORS: "cors",
   OPERATIONS: "operations",
+  FIELDS: "fields",
+  SCOPES: "scopes",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
@@ -115,6 +118,38 @@ export const ROUTES: Routes = [
     data: {
       breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
       functionality: "operations",
+    },
+  },
+  {
+    path: AppPaths.FIELDS,
+    loadComponent: () =>
+      import("./admin/features/fields/fields.component").then(
+        (m) => m.FieldsComponent,
+      ),
+    title: "Fields",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_FieldsNav:Champs`,
+      functionality: "fields",
+    },
+    resolve: {
+      resources: resourcesResolver,
+    },
+  },
+  {
+    path: AppPaths.SCOPES,
+    loadComponent: () =>
+      import("./admin/features/scopes/scopes.component").then(
+        (m) => m.ScopesComponent,
+      ),
+    title: "Scopes",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ScopesNav:Scopes`,
+      functionality: "scopes",
+    },
+    resolve: {
+      routes: routesResolver,
     },
   },
   {

@@ -36,11 +36,19 @@ function findMatchingPermission(roles, routeId, operationId, tableName) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
+
+    // Check scope-level grant first (grants all routes for a resource)
+    if (tableName) {
+      const scopePerm = role.permissions.find((p) => !p.route && p.scope === tableName);
+      if (scopePerm) return scopePerm;
+    }
+
+    // Check route-level permission
     const perm = role.permissions.find(
       (p) => p.route === routeId && p.operations.includes(operationId),
     );
     if (!perm) continue;
-    if (perm.scope && tableName && !perm.scope.includes(tableName)) continue;
+    if (perm.tables && tableName && !perm.tables.includes(tableName)) continue;
     return perm;
   }
   return null;

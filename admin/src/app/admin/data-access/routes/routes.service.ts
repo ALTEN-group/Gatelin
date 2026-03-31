@@ -4,6 +4,7 @@ import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
 import { Route, routeFactory } from "app/admin/data-access/routes/route.model";
+import { map, Observable } from "rxjs";
 
 const routesApi: string = "gateway/routes";
 
@@ -30,4 +31,8 @@ export class RoutesService {
   public readonly config = (payload: ActivatedRouteSnapshot) =>
     ROUTE_COLUMNS(payload);
   public readonly entityFactory = routeFactory;
+
+  public getAndCacheAll(): Observable<Route[]> {
+    return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+  }
 }

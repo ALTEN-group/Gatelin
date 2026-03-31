@@ -66,17 +66,17 @@ export const mockRoles = [
 
       // Preferences
       { route: 41, operations: [2] },                                                                                        // getPreferences
-      { route: 42, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 42, operations: [11], tables: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
       { route: 43, operations: [1] },  // getBasicUserInfo
       { route: 44, operations: [2] },  // getUserPreferences
-      { route: 45, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 45, operations: [11], tables: ["users"] }, // syncUserPreferences
 
       // Roles
       { route: 46, operations: [2] },  // searchRoles
       { route: 47, operations: [2] },  // getRolePreferences
-      { route: 48, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 48, operations: [11], tables: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -147,17 +147,17 @@ export const mockRoles = [
 
       // Preferences
       { route: 41, operations: [2] },                                                                                        // getPreferences
-      { route: 42, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 42, operations: [11], tables: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
       { route: 43, operations: [1] },  // getBasicUserInfo
       { route: 44, operations: [2] },  // getUserPreferences
-      { route: 45, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 45, operations: [11], tables: ["users"] }, // syncUserPreferences
 
       // Roles
       { route: 46, operations: [2] },  // searchRoles
       { route: 47, operations: [2] },  // getRolePreferences
-      { route: 48, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 48, operations: [11], tables: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",

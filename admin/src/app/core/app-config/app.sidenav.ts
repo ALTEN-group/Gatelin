@@ -56,4 +56,22 @@ export const SIDENAV: MenuItem[] = [
       functionality: "operations",
     },
   },
+  {
+    id: "fields",
+    label: $localize`:@@Admin_FieldsNav:Champs`,
+    routerLink: `/${AppPaths.FIELDS}`,
+    icon: "pi pi-list",
+    data: {
+      functionality: "fields",
+    },
+  },
+  {
+    id: "scopes",
+    label: $localize`:@@Admin_ScopesNav:Scopes`,
+    routerLink: `/${AppPaths.SCOPES}`,
+    icon: "pi pi-filter",
+    data: {
+      functionality: "scopes",
+    },
+  },
 ];

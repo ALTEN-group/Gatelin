@@ -10,6 +10,8 @@ erDiagram
   route }o--|| resource : ""
   resource }o--|| service : ""
   route }o--|| operation : ""
+  field }o--|| resource : ""
+  scope }o--|| route : ""
   consumer {
     int id PK
     int userId
@@ -121,6 +123,27 @@ erDiagram
     text updaterName
     timestamp createdAt
     timestamp updatedAt
+  }
+
+  field {
+    int id PK
+    int resourceId FK
+    text name
+    boolean locked
+    boolean archived
+    timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+  }
+
+  scope {
+    int id PK
+    int routeId FK
+    varchar value
+    boolean locked
+    boolean archived
   }
 
 ```

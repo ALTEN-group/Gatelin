@@ -5,6 +5,8 @@ const tableKeys = [
   "resources",
   "cors",
   "operations",
+  "fields",
+  "scopes",
 ] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
@@ -52,5 +54,17 @@ export const TABLES: Record<AppTable, TableInfo> = {
     title: $localize`:@@TableLabels_Operations:Opérations`,
     key: "operations",
     functionalityKey: "operations",
+  },
+  fields: {
+    label: $localize`:@@TableLabels_Field:Champ`,
+    title: $localize`:@@TableLabels_Fields:Champs`,
+    key: "fields",
+    functionalityKey: "fields",
+  },
+  scopes: {
+    label: $localize`:@@TableLabels_Scope:Scope`,
+    title: $localize`:@@TableLabels_Scopes:Scopes`,
+    key: "scopes",
+    functionalityKey: "scopes",
   },
 } as const;
