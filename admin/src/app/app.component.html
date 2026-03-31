@@ -24,3 +24,9 @@
     }
   }
 }
+
+@if (isUserBasicsLoading()) {
+  <div class="user-loading-overlay">
+    <p-progressSpinner class="user-spinner" />
+  </div>
+}
