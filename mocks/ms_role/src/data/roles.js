@@ -50,19 +50,26 @@ export const mockRoles = [
       { route: 29, operations: [6] }, // addCors
       { route: 30, operations: [8] }, // archiveCors
 
+      // Fields
+      { route: 31, operations: [2] },  // searchFields
+      { route: 32, operations: [2] },  // getFieldHistory
+      { route: 33, operations: [4] },  // updateFields
+      { route: 34, operations: [6] },  // addFields
+      { route: 35, operations: [8] },  // archiveFields
+
       // Preferences
-      { route: 31, operations: [2] },                                                                                        // getPreferences
-      { route: 32, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 36, operations: [2] },                                                                                        // getPreferences
+      { route: 37, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 33, operations: [1] },  // getBasicUserInfo
-      { route: 35, operations: [2] },  // getUserPreferences
-      { route: 36, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 38, operations: [1] },  // getBasicUserInfo
+      { route: 39, operations: [2] },  // getUserPreferences
+      { route: 40, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 34, operations: [2] },  // searchRoles
-      { route: 37, operations: [2] },  // getRolePreferences
-      { route: 38, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 41, operations: [2] },  // searchRoles
+      { route: 42, operations: [2] },  // getRolePreferences
+      { route: 43, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -117,19 +124,26 @@ export const mockRoles = [
       { route: 29, operations: [6], fields: ["name"] }, // addCors
       { route: 30, operations: [8] }, // archiveCors
 
+      // Fields
+      { route: 31, operations: [2] },  // searchFields
+      { route: 32, operations: [2] },  // getFieldHistory
+      { route: 33, operations: [4], fields: ["name"] }, // updateFields - no locked
+      { route: 34, operations: [6], fields: ["resourceId", "name"] }, // addFields - no locked
+      { route: 35, operations: [8] },  // archiveFields
+
       // Preferences
-      { route: 31, operations: [2] },                                                                                        // getPreferences
-      { route: 32, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 36, operations: [2] },                                                                                        // getPreferences
+      { route: 37, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 33, operations: [1] },  // getBasicUserInfo
-      { route: 35, operations: [2] },  // getUserPreferences
-      { route: 36, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 38, operations: [1] },  // getBasicUserInfo
+      { route: 39, operations: [2] },  // getUserPreferences
+      { route: 40, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 34, operations: [2] },  // searchRoles
-      { route: 37, operations: [2] },  // getRolePreferences
-      { route: 38, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 41, operations: [2] },  // searchRoles
+      { route: 42, operations: [2] },  // getRolePreferences
+      { route: 43, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -160,17 +174,20 @@ export const mockRoles = [
       // CORS - public fields only
       { route: 26, operations: [2], fields: ["id", "name"] }, // searchCors
 
+      // Fields
+      { route: 31, operations: [2], fields: ["id", "resourceId", "name"] }, // searchFields - public fields only
+
       // Preferences
-      { route: 31, operations: [2] }, // getPreferences
+      { route: 36, operations: [2] }, // getPreferences
 
       // Users
-      { route: 33, operations: [1] },  // getBasicUserInfo
-      { route: 35, operations: [2] },  // getUserPreferences
-      { route: 36, operations: [11] }, // syncUserPreferences
+      { route: 38, operations: [1] },  // getBasicUserInfo
+      { route: 39, operations: [2] },  // getUserPreferences
+      { route: 40, operations: [11] }, // syncUserPreferences
 
       // Roles
-      { route: 34, operations: [2], fields: ["id", "name", "description", "color", "level"] }, // searchRoles
-      { route: 37, operations: [2] },  // getRolePreferences - read only for regular users
+      { route: 41, operations: [2], fields: ["id", "name", "description", "color", "level"] }, // searchRoles
+      { route: 42, operations: [2] },  // getRolePreferences - read only for regular users
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
