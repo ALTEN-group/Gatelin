@@ -12,9 +12,11 @@ erDiagram
   route }o--|| operation : ""
   field }o--|| resource : ""
   scope }o--|| route : ""
+  consumer }o--|| user : "(external)"
+  preference }o--|| user : "(external)"
   consumer {
     int id PK
-    int userId
+    int userId FK "ms_user"
     varchar nickname
     varchar accessToken UK
     varchar refreshToken UK
@@ -146,4 +148,15 @@ erDiagram
     boolean archived
   }
 
+  preference {
+    int id PK
+    int userId FK "ms_user"
+    varchar tableName
+    varchar name
+    jsonb conf
+    boolean isActive
+  }
+  user {
+    
+  }
 ```

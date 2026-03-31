@@ -32,18 +32,24 @@ function filterFields(item, allowed) {
   return Object.fromEntries(Object.entries(item).filter(([k]) => allowed.has(k)));
 }
 
-function findMatchingPermission(roles, routeId, operationId, tableName) {
+function findMatchingPermission(roles, routeId, operationId, tableName, serviceName) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
 
-    // Check scope-level grant first (grants all routes for a resource)
+    // 1. Service-level grant — access to every route in the service
+    if (serviceName) {
+      const servicePerm = role.permissions.find((p) => !p.route && !p.scope && p.service === serviceName);
+      if (servicePerm) return servicePerm;
+    }
+
+    // 2. Scope-level grant — access to all routes for a resource (tableName)
     if (tableName) {
       const scopePerm = role.permissions.find((p) => !p.route && p.scope === tableName);
       if (scopePerm) return scopePerm;
     }
 
-    // Check route-level permission
+    // 3. Route-level permission
     const perm = role.permissions.find(
       (p) => p.route === routeId && p.operations.includes(operationId),
     );
@@ -61,7 +67,7 @@ export default function checkAcl(req, res, next) {
   const c = res.locals.consumer;
   log.debug(`checkAcl(consumer: ${c.id}, operation: ${r.operationId}, route: ${r.url}`);
 
-  const perm = findMatchingPermission(c.roles, r.id, r.operationId, req.params.tableName);
+  const perm = findMatchingPermission(c.roles, r.id, r.operationId, req.params.tableName, r.serviceName);
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
   const fields = perm.fields;

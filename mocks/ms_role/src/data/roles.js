@@ -7,6 +7,9 @@ export const mockRoles = [
     description: "Administrator role with full permissions",
     color: "#FF5722",
     permissions: [
+      // Service-level grant — full access to all gateway routes
+      { service: "gateway" },
+
       // Sessions
       { route: 1, operations: [3] }, // refreshToken
       { route: 3, operations: [7] }, // signOut
