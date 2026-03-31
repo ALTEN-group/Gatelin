@@ -1,5 +1,3 @@
-import { /**isObject,**/ isArray } from "@dwtechs/checkard";
-
 /**
  * Prepare and send response back to the front-end
  * This JavaScript function, send, prepares and sends a response back to the front-end.

@@ -44,17 +44,23 @@ INSERT INTO route ("resourceId", "operationId", pattern, name, description, meth
 (8, 4, '',                    'updateFields',    'Update fields',        ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
 (8, 6, '',                    'addFields',       'Add fields',           ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (8, 8, '/archive',            'archiveFields',   'Archive fields',       ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+-- scopes
+(9,  2, '/search',             'searchScopes',    'Search scopes',        ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(9,  2, '/(?<id>\d+)/history', 'getScopeHistory',  'Manage scope history',  ARRAY['GET',  'OPTIONS']::method[], true, true, -1, 'system'),
+(9,  4, '',                    'updateScopes',    'Update scopes',        ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
+(9,  6, '',                    'addScopes',       'Add scopes',           ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(9,  8, '/archive',            'archiveScopes',   'Archive scopes',       ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- preferences
-(9, 2,  '/(?<tableName>[a-zA-Z0-9_-]+)', 'getPreferences',  'Get preferences for the authenticated user and a given table',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(9, 11, '/(?<tableName>[a-zA-Z0-9_-]+)', 'syncPreferences', 'Sync preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
+(10, 2,  '/(?<tableName>[a-zA-Z0-9_-]+)', 'getPreferences',  'Get preferences for the authenticated user and a given table',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(10, 11, '/(?<tableName>[a-zA-Z0-9_-]+)', 'syncPreferences', 'Sync preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- users
-(10, 1,  '/me',                                          'getBasicUserInfo',   'Get basic user info at login',                                               ARRAY['GET',  'OPTIONS']::method[], true, false, -1, 'system'),
-(10, 2,  '/preferences/(?<tableName>[a-zA-Z0-9_-]+)',  'getUserPreferences',  'Get preferences for the authenticated user and a given table (users service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
-(10, 11, '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system'),
+(11, 1,  '/me',                                          'getBasicUserInfo',   'Get basic user info at login',                                               ARRAY['GET',  'OPTIONS']::method[], true, false, -1, 'system'),
+(11, 2,  '/preferences/(?<tableName>[a-zA-Z0-9_-]+)',  'getUserPreferences',  'Get preferences for the authenticated user and a given table (users service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
+(11, 11, '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system'),
 -- roles
-(11, 2,  '/search',                                    'searchRoles',        'Search roles',                                                               ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(11, 2,  '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'getRolePreferences',  'Get preferences for the authenticated user and a given table (roles service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
-(11, 11, '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'syncRolePreferences', 'Sync preferences for the authenticated user and a given table (roles service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system')
+(12, 2,  '/search',                                    'searchRoles',        'Search roles',                                                               ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(12, 2,  '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'getRolePreferences',  'Get preferences for the authenticated user and a given table (roles service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
+(12, 11, '/preferences/(?<tableName>[a-zA-Z0-9_-]+)', 'syncRolePreferences', 'Sync preferences for the authenticated user and a given table (roles service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system')
 
 ;
 

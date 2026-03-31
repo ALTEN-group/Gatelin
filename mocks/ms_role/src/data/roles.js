@@ -57,19 +57,26 @@ export const mockRoles = [
       { route: 34, operations: [6] },  // addFields
       { route: 35, operations: [8] },  // archiveFields
 
+      // Scopes
+      { route: 36, operations: [2] },  // searchScopes
+      { route: 37, operations: [2] },  // getScopeHistory
+      { route: 38, operations: [4] },  // updateScopes
+      { route: 39, operations: [6] },  // addScopes
+      { route: 40, operations: [8] },  // archiveScopes
+
       // Preferences
-      { route: 36, operations: [2] },                                                                                        // getPreferences
-      { route: 37, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 41, operations: [2] },                                                                                        // getPreferences
+      { route: 42, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 38, operations: [1] },  // getBasicUserInfo
-      { route: 39, operations: [2] },  // getUserPreferences
-      { route: 40, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 43, operations: [1] },  // getBasicUserInfo
+      { route: 44, operations: [2] },  // getUserPreferences
+      { route: 45, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 41, operations: [2] },  // searchRoles
-      { route: 42, operations: [2] },  // getRolePreferences
-      { route: 43, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 46, operations: [2] },  // searchRoles
+      { route: 47, operations: [2] },  // getRolePreferences
+      { route: 48, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -131,19 +138,26 @@ export const mockRoles = [
       { route: 34, operations: [6], fields: ["resourceId", "name"] }, // addFields - no locked
       { route: 35, operations: [8] },  // archiveFields
 
+      // Scopes
+      { route: 36, operations: [2] },  // searchScopes
+      { route: 37, operations: [2] },  // getScopeHistory
+      { route: 38, operations: [4], fields: ["value"] }, // updateScopes - no locked
+      { route: 39, operations: [6], fields: ["routeId", "value"] }, // addScopes - no locked
+      { route: 40, operations: [8] },  // archiveScopes
+
       // Preferences
-      { route: 36, operations: [2] },                                                                                        // getPreferences
-      { route: 37, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
+      { route: 41, operations: [2] },                                                                                        // getPreferences
+      { route: 42, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 38, operations: [1] },  // getBasicUserInfo
-      { route: 39, operations: [2] },  // getUserPreferences
-      { route: 40, operations: [11], scope: ["users"] }, // syncUserPreferences
+      { route: 43, operations: [1] },  // getBasicUserInfo
+      { route: 44, operations: [2] },  // getUserPreferences
+      { route: 45, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 41, operations: [2] },  // searchRoles
-      { route: 42, operations: [2] },  // getRolePreferences
-      { route: 43, operations: [11], scope: ["roles"] }, // syncRolePreferences
+      { route: 46, operations: [2] },  // searchRoles
+      { route: 47, operations: [2] },  // getRolePreferences
+      { route: 48, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -177,17 +191,23 @@ export const mockRoles = [
       // Fields
       { route: 31, operations: [2], fields: ["id", "resourceId", "name"] }, // searchFields - public fields only
 
+      // Scopes
+      { route: 36, operations: [2], fields: ["id", "routeId", "value"] }, // searchScopes - public fields only
+
       // Preferences
-      { route: 36, operations: [2] }, // getPreferences
+      { route: 41, operations: [2] }, // getPreferences
 
       // Users
-      { route: 38, operations: [1] },  // getBasicUserInfo
-      { route: 39, operations: [2] },  // getUserPreferences
-      { route: 40, operations: [11] }, // syncUserPreferences
+      { route: 43, operations: [1] },  // getBasicUserInfo
+      { route: 44, operations: [2] },  // getUserPreferences
+      { route: 45, operations: [11] }, // syncUserPreferences
 
       // Roles
-      { route: 41, operations: [2], fields: ["id", "name", "description", "color", "level"] }, // searchRoles
-      { route: 42, operations: [2] },  // getRolePreferences - read only for regular users
+      { route: 46, operations: [2], fields: ["id", "name", "description", "color", "level"] }, // searchRoles
+      { route: 47, operations: [2] },  // getRolePreferences - read only for regular users
+
+      // Scopes
+      { route: 44, operations: [2], fields: ["id", "routeId", "value"] }, // searchScopes - public fields only
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",

@@ -1,6 +1,6 @@
 -- Resource IDs:
 --  1=session, 2=consumers, 3=routes, 4=services, 5=resources
---  6=operations, 7=cors, 8=fields, 9=preferences, 10=users, 11=roles
+--  6=operations, 7=cors, 8=fields, 9=scopes, 10=preferences, 11=users, 12=roles
 
 INSERT INTO field ("resourceId", name, locked, "creatorId", "creatorName") VALUES
 

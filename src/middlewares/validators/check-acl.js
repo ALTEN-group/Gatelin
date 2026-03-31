@@ -1,4 +1,5 @@
 import { log } from "@dwtechs/winstan";
+import { isArray, isProperty } from "@dwtechs/checkard";
 import roleService from "../../services/role.js";
 
 /**
@@ -27,29 +28,48 @@ import roleService from "../../services/role.js";
  * // User with roles ['user', 'admin'] would pass
  * // User with roles ['user'] would get 403 Forbidden
  */
+function filterFields(item, allowed) {
+  return Object.fromEntries(Object.entries(item).filter(([k]) => allowed.has(k)));
+}
+
+function findMatchingPermission(roles, routeId, operationId, tableName) {
+  for (const id of roles) {
+    const role = roleService.getOne(id);
+    if (!role) continue;
+    const perm = role.permissions.find(
+      (p) => p.route === routeId && p.operations.includes(operationId),
+    );
+    if (!perm) continue;
+    if (perm.scope && tableName && !perm.scope.includes(tableName)) continue;
+    return perm;
+  }
+  return null;
+}
+
 export default function checkAcl(req, res, next) {
   const r = res.locals.route;
   if (!r.isProtected) return next(); // if no jwt required for this route
 
   const c = res.locals.consumer;
-  const o = r.operationId;
-  log.debug(`checkAcl(consumer: ${c.id}, operation: ${o}, route: ${r.url}`);
+  log.debug(`checkAcl(consumer: ${c.id}, operation: ${r.operationId}, route: ${r.url}`);
 
-  // Get all roles for this consumer and check their permissions
-  const hasAccess = c.roles.some((id) => {
-    const role = roleService.getOne(id);
-    log.debug(
-      `Checking role ${role.name} for access to route ${r.url} with operation ${o}`,
-    );
-    if (!role) return next({ statusCode: 403, message: "Forbidden" });
+  const perm = findMatchingPermission(c.roles, r.id, r.operationId, req.params.tableName);
+  if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
-    // Check if this role has permission for the route and operation
-    return role.permissions.some(
-      (p) => p.route === r.id && p.operations.includes(r.operationId),
-    );
-  });
+  const fields = perm.fields;
 
-  if (!hasAccess) return next({ statusCode: 403, message: "Forbidden" });
+  // Filter request body fields on write operations
+  if (fields?.length && req.body) {
+    const allowed = new Set(fields);
+    const rows = req.body.rows;
+    if (isArray(rows))
+      req.body.rows = rows.map((item) => filterFields(item, allowed));
+    else if (!isProperty(req.body, "rows"))
+      req.body = filterFields(req.body, allowed);
+  }
+
+  // Store field allowlist for request body filtering
+  res.locals.aclFields = fields;
 
   next();
 }
