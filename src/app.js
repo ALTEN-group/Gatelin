@@ -37,6 +37,7 @@ import service from "./routes/service.js";
 import resource from "./routes/resource.js";
 import operation from "./routes/operation.js";
 import corsRoutes from "./routes/cors.js";
+import field from "./routes/field.js";
 import preference from "./routes/preference.js";
 
 const svc = "/gateway/";
@@ -55,6 +56,7 @@ app.use(`${svc}services`, ...cr, service, send);
 app.use(`${svc}resources`, ...cr, resource, send);
 app.use(`${svc}operations`, ...cr, operation, send);
 app.use(`${svc}cors`, ...cr, corsRoutes, send);
+app.use(`${svc}fields`, ...cr, field, send);
 app.use(`${svc}preferences`, ...cr, preference, send);
 app.use("/", ...cr, proxy);
 
