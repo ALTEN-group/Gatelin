@@ -40,8 +40,7 @@ INSERT INTO route ("resourceId", "operationId", pattern, name, description, meth
 (7, 8, '/archive', 'archiveCors', 'Archive cors', ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- preferences
 (8, 2,  '/(?<tableName>[a-zA-Z0-9_-]+)', 'getPreferences',    'Get preferences for the authenticated user and a given table',    ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(8, 6,  '/(?<tableName>[a-zA-Z0-9_-]+)', 'addPreferences',    'Add preferences for the authenticated user and a given table',    ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
-(8, 4,  '/(?<tableName>[a-zA-Z0-9_-]+)', 'updatePreferences', 'Update preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
+(8, 11, '/(?<tableName>[a-zA-Z0-9_-]+)', 'syncPreferences',   'Replace the full set of preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- users
 (9, 1, '/me', 'getBasicUserInfo', 'Get basic user info at login', ARRAY['GET', 'OPTIONS']::method[], true, false, -1, 'system'),
 -- roles

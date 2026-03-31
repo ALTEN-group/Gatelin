@@ -28,6 +28,7 @@ INSERT INTO operation (name, description, "creatorId", "creatorName") VALUES
 ('bulk archive', 'Archive multiple resources', -1, 'system'),
 ('delete', 'Delete a resource', -1, 'system'),
 ('bulk delete', 'Delete multiple resources', -1, 'system'),
+('bulk sync', 'Replace the full set of resources in a single operation', -1, 'system'),
 ('execute', 'Execute a specific operation or command', -1, 'system')
 ;
 
