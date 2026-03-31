@@ -38,13 +38,28 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     }
   });
 
+  const formatErrorMessage = (err: HttpErrorResponse) => {
+    const { statusText, message, url } = err;
+    // keep only the path of the url after /api/
+    const parsedUrl = url ? url.split("/api/")[1] : "";
+    if (statusText && parsedUrl) {
+      return `${statusText} (${parsedUrl})`;
+    }
+    return message;
+  };
+
+  const isNotFound = (err: HttpErrorResponse) => {
+    return err.status === 404;
+  };
+
   const isUnauthorized = (err: HttpErrorResponse) => {
     return err.status === 401;
   };
 
-  const returnError = (err: HttpErrorResponse) => {
-    // TODO: maybe return error depending on status
-    snackbarService.displayError(err.message);
+  const returnError = (err: HttpErrorResponse, withoutMessage = false) => {
+    if (!withoutMessage) {
+      snackbarService.displayError(formatErrorMessage(err));
+    }
     return throwError(() => err);
   };
 
@@ -89,6 +104,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (err instanceof HttpErrorResponse) {
         if (!offlineService.isOnline()) {
           return handleOfflineMode();
+        }
+        if (isNotFound(err)) {
+          return returnError(err, true);
         }
         if (isUnauthorized(err)) {
           return refreshToken(err);

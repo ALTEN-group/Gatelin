@@ -6,6 +6,7 @@ import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { LoginResponse } from "@core/auth/auth.dto";
 import { TokenService } from "@core/auth/token.service";
 import { User } from "@core/user/user.class";
+import { LoadingService } from "@core/utils/loading/loading.service";
 import { Observable, of, pipe } from "rxjs";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
 
@@ -18,6 +19,7 @@ export class AuthenticationService {
   private readonly route = inject(ActivatedRoute);
   private readonly tokenService = inject(TokenService);
   private readonly aclService = inject(AclService);
+  private readonly loadingService = inject(LoadingService);
 
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
 
@@ -95,6 +97,7 @@ export class AuthenticationService {
   }
 
   public getAccount(): Observable<User | null> {
+    this.loadingService.startUserBasicsLoading();
     return this.http.get<User>(this.meApi).pipe(
       tap((res) => {
         const { nickname, firstName, lastName, permissions } = res;
@@ -102,7 +105,11 @@ export class AuthenticationService {
         // Store ACLs directly from user's permissions
         if (permissions) this.aclService.storeAccessLevels(permissions);
       }),
-      catchError(() => of(null)),
+      tap(() => this.loadingService.stopUserBasicsLoading()),
+      catchError(() => {
+        this.loadingService.stopUserBasicsLoading();
+        return of(null);
+      }),
     );
   }
 
