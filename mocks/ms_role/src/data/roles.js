@@ -12,8 +12,8 @@ export const mockRoles = [
       { route: 3, operations: [7] }, // signOut
 
       // Consumers
-      { route: 4, operations: [2] }, // getConsumers
-      { route: 5, operations: [8] }, // archiveConsumers
+      { route: 4,  operations: [2] }, // getConsumers
+      { route: 5,  operations: [8] }, // archiveConsumers
 
       // Routes
       { route: 6,  operations: [2] }, // searchRoutes
@@ -51,14 +51,18 @@ export const mockRoles = [
       { route: 30, operations: [8] }, // archiveCors
 
       // Preferences
-      { route: 31, operations: [2] }, // getPreferences
-      { route: 32, operations: [11] }, // syncPreferences
+      { route: 31, operations: [2] },                                                                                        // getPreferences
+      { route: 32, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 33, operations: [1] }, // getBasicUserInfo
+      { route: 33, operations: [1] },  // getBasicUserInfo
+      { route: 35, operations: [2] },  // getUserPreferences
+      { route: 36, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 34, operations: [2] }, // searchRoles
+      { route: 34, operations: [2] },  // searchRoles
+      { route: 37, operations: [2] },  // getRolePreferences
+      { route: 38, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -75,8 +79,8 @@ export const mockRoles = [
       { route: 3, operations: [7] }, // signOut
 
       // Consumers
-      { route: 4, operations: [2] }, // getConsumers
-      { route: 5, operations: [8] }, // archiveConsumers
+      { route: 4,  operations: [2] }, // getConsumers
+      { route: 5,  operations: [8] }, // archiveConsumers
 
       // Routes
       { route: 6,  operations: [2] }, // searchRoutes
@@ -114,14 +118,18 @@ export const mockRoles = [
       { route: 30, operations: [8] }, // archiveCors
 
       // Preferences
-      { route: 31, operations: [2] }, // getPreferences
-      { route: 32, operations: [11] }, // syncPreferences
+      { route: 31, operations: [2] },                                                                                        // getPreferences
+      { route: 32, operations: [11], scope: ["routes", "consumers", "services", "resources", "operations", "cors"] }, // syncPreferences
 
       // Users
-      { route: 33, operations: [1] }, // getBasicUserInfo
+      { route: 33, operations: [1] },  // getBasicUserInfo
+      { route: 35, operations: [2] },  // getUserPreferences
+      { route: 36, operations: [11], scope: ["users"] }, // syncUserPreferences
 
       // Roles
-      { route: 34, operations: [2] }, // searchRoles
+      { route: 34, operations: [2] },  // searchRoles
+      { route: 37, operations: [2] },  // getRolePreferences
+      { route: 38, operations: [11], scope: ["roles"] }, // syncRolePreferences
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
@@ -156,10 +164,13 @@ export const mockRoles = [
       { route: 31, operations: [2] }, // getPreferences
 
       // Users
-      { route: 33, operations: [1] }, // getBasicUserInfo
+      { route: 33, operations: [1] },  // getBasicUserInfo
+      { route: 35, operations: [2] },  // getUserPreferences
+      { route: 36, operations: [11] }, // syncUserPreferences
 
       // Roles
       { route: 34, operations: [2], fields: ["id", "name", "description", "color", "level"] }, // searchRoles
+      { route: 37, operations: [2] },  // getRolePreferences - read only for regular users
     ],
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: "2024-01-01T00:00:00Z",
