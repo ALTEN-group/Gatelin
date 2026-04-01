@@ -1,42 +1,24 @@
 // @ts-check
-import { CronJob } from "cron";
 import { log } from "@dwtechs/winstan";
 import { execute } from "@dwtechs/antity-pgsql";
+import { scheduleDailyAt } from "./scheduler.js";
 
 /**
- * Cron job to delete history records older than 6 months.
- * Runs once daily at 3:00 AM.
- *
- * Cron schedule format: "second minute hour day month weekday"
- * Current schedule: "0 0 3 * * *" means every day at 3:00 AM
- *
- * @example
- * // Start the cron job
- * startDeleteOldHistoryJob();
+ * Daily job to delete history records older than 6 months.
+ * Runs every day at 3:00 AM UTC.
  */
 export function startDeleteOldHistoryJob() {
-  // Schedule: Run every day at 3:00 AM
-  new CronJob(
-    "0 0 3 * * *", // cronTime: second, minute, hour, day, month, weekday
-    async () => {
-      try {
-        log.info("Starting scheduled deletion of old history records...");
-        const deletedCount = await deleteOldHistory();
-        log.info(`Successfully deleted ${deletedCount} old history record(s)`);
-      } catch (err) {
-        log.error(
-          `Failed to delete old history records: ${err.message || err.msg}`,
-        );
-      }
-    },
-    null, // onComplete
-    true, // start immediately
-    "UTC", // timezone - Change this to your timezone if needed (e.g., "America/New_York")
-  );
+  scheduleDailyAt(3, async () => {
+    try {
+      log.info("Starting scheduled deletion of old history records...");
+      const deletedCount = await deleteOldHistory();
+      log.info(`Successfully deleted ${deletedCount} old history record(s)`);
+    } catch (err) {
+      log.error(`Failed to delete old history records: ${err.message || err.msg}`);
+    }
+  });
 
-  log.info(
-    "Delete old history records cron job initialized (runs daily at 3:00 AM UTC)",
-  );
+  log.info("Delete old history records job initialized (runs daily at 3:00 AM UTC)");
 }
 
 /**

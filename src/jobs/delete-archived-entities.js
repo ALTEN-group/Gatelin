@@ -1,6 +1,6 @@
 // @ts-check
-import { CronJob } from "cron";
 import { log } from "@dwtechs/winstan";
+import { scheduleDailyAt } from "./scheduler.js";
 import consumerSvc from "../services/consumer.js";
 import serviceSvc from "../services/service.js";
 import corsSvc from "../services/cors.js";
@@ -23,10 +23,7 @@ import routeSvc from "../services/route.js";
  * startDeleteArchivedEntitiesJob();
  */
 export function startDeleteArchivedEntitiesJob() {
-  // Schedule: Run every day at 2:00 AM
-  new CronJob(
-    "0 0 2 * * *", // cronTime: second, minute, hour, day, month, weekday
-    async () => {
+  scheduleDailyAt(2, async () => {
       try {
         // Calculate date for 2 months ago
         const twoMonthsAgo = new Date();
@@ -75,12 +72,7 @@ export function startDeleteArchivedEntitiesJob() {
         );
       }
     },
-    null, // onComplete
-    true, // start immediately
-    "UTC", // timezone - Change this to your timezone if needed (e.g., "America/New_York")
-  );
+  });
 
-  log.info(
-    "Delete archived entities cron job initialized (runs daily at 2:00 AM UTC, deletes entities archived > 2 months)",
-  );
+  log.info("Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > 2 months)");
 }

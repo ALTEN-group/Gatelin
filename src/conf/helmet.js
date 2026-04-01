@@ -1,52 +1,30 @@
 // @ts-check
 
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data: https:",
+  "connect-src 'self'",
+  "font-src 'self'",
+  "object-src 'none'",
+  "media-src 'self'",
+  "frame-src 'none'",
+].join("; ");
+
 /**
- * Helmet security configuration for production-grade security headers
- * @see https://helmetjs.github.io/
+ * Security headers middleware — replaces helmet.
+ * Sets Content-Security-Policy, HSTS, X-Frame-Options, and other hardening headers.
  */
-export const helmetConfig = {
-  // Content Security Policy - Restrict resource loading
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
-    },
-  },
-  // HTTP Strict Transport Security - Force HTTPS
-  hsts: {
-    maxAge: 31536000, // 1 year
-    includeSubDomains: true,
-    preload: true,
-  },
-  // X-Frame-Options - Prevent clickjacking
-  frameguard: {
-    action: 'deny',
-  },
-  // X-Content-Type-Options - Prevent MIME sniffing
-  noSniff: true,
-  // X-XSS-Protection - Enable XSS filter
-  xssFilter: true,
-  // Referrer-Policy - Control referrer information
-  referrerPolicy: {
-    policy: 'strict-origin-when-cross-origin',
-  },
-  // Cross-Origin-Resource-Policy - Control resource sharing
-  crossOriginResourcePolicy: {
-    policy: 'same-origin',
-  },
-  // Cross-Origin-Opener-Policy - Isolate browsing context
-  crossOriginOpenerPolicy: {
-    policy: 'same-origin',
-  },
-  // Cross-Origin-Embedder-Policy - Control embedding
-  crossOriginEmbedderPolicy: true,
-  // Hide X-Powered-By header
-  hidePoweredBy: true,
-};
+export function securityMiddleware(req, res, next) {
+  res.setHeader("Content-Security-Policy", CSP);
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+}

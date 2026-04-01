@@ -1,17 +1,15 @@
 // @ts-check
 import express from "express";
-import cors from "cors";
 import { log } from "@dwtechs/winstan";
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
-import helmet from "helmet";
-import { helmetConfig } from "./conf/helmet.js";
-import { corsOptions } from "./conf/cors.js";
+import { securityMiddleware } from "./conf/helmet.js";
+import { corsMiddleware } from "./conf/cors.js";
 
 const app = express();
-app.use(helmet(helmetConfig));
+app.use(securityMiddleware);
 app.disable("x-powered-by");
 
 import consumerSvc from "./services/consumer.js";
@@ -76,7 +74,7 @@ Promise.all([
   roleSvc.init(),
 ])
   .then(() => {
-    app.use(cors(corsOptions));
+    app.use(corsMiddleware);
     // Start cron jobs
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();

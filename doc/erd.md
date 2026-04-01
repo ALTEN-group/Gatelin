@@ -9,7 +9,8 @@ erDiagram
   
   route }o--|| resource : ""
   resource }o--|| service : ""
-  route }o--|| operation : ""
+  route }o--|{ route_operation : ""
+  route_operation }|--|| operation : ""
   field }o--|| resource : ""
   scope }o--|| route : ""
   consumer }o--|| user : "(external)"
@@ -65,7 +66,6 @@ erDiagram
   route {
     int id PK
     int resourceId FK
-    int operationId FK
     varchar pattern
     varchar name
     varchar description
@@ -78,41 +78,9 @@ erDiagram
     text updaterName
   }
 
-  routes["routes VIEW"] {
-    int id
-    int serviceId
-    varchar serviceName
-    int resourceId
-    varchar resourceName
-    int operationId
-    varchar operationName
-    varchar pattern "route pattern"
-    varchar name
-    varchar description
-    text url "COMPUTED: /service.pattern/resource.name/route.pattern"
-    json methods "array of HTTP methods"
-    boolean isProtected
-    boolean locked
-    timestamp createdAt
-    int creatorId
-    varchar creatorName
-    timestamp updatedAt
-    int updaterId
-    varchar updaterName
-  }
-
-  resources["resources VIEW"] {
-    int id
-    int serviceId
-    varchar serviceName
-    varchar name
-    boolean locked
-    timestamp createdAt
-    int creatorId
-    varchar creatorName
-    timestamp updatedAt
-    int updaterId
-    varchar updaterName
+  route_operation {
+    int routeId FK
+    int operationId FK
   }
 
   operation {

@@ -32,29 +32,16 @@ function filterFields(item, allowed) {
   return Object.fromEntries(Object.entries(item).filter(([k]) => allowed.has(k)));
 }
 
-function findMatchingPermission(roles, routeId, operationId, tableName, serviceName) {
+function findMatchingPermission(roles, routeId, routeOperations, table) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
 
-    // 1. Service-level grant — access to every route in the service
-    if (serviceName) {
-      const servicePerm = role.permissions.find((p) => !p.route && !p.scope && p.service === serviceName);
-      if (servicePerm) return servicePerm;
-    }
-
-    // 2. Scope-level grant — access to all routes for a resource (tableName)
-    if (tableName) {
-      const scopePerm = role.permissions.find((p) => !p.route && p.scope === tableName);
-      if (scopePerm) return scopePerm;
-    }
-
-    // 3. Route-level permission
     const perm = role.permissions.find(
-      (p) => p.route === routeId && p.operations.includes(operationId),
+      (p) => p.route === routeId && p.operations.some((op) => routeOperations.includes(op)),
     );
     if (!perm) continue;
-    if (perm.tables && tableName && !perm.tables.includes(tableName)) continue;
+    if (perm.tables && table && !perm.tables.includes(table)) continue;
     return perm;
   }
   return null;
@@ -65,9 +52,9 @@ export default function checkAcl(req, res, next) {
   if (!r.isProtected) return next(); // if no jwt required for this route
 
   const c = res.locals.consumer;
-  log.debug(`checkAcl(consumer: ${c.id}, operation: ${r.operationId}, route: ${r.url}`);
+  log.debug(`checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`);;
 
-  const perm = findMatchingPermission(c.roles, r.id, r.operationId, req.params.tableName, r.serviceName);
+  const perm = findMatchingPermission(c.roles, r.id, r.operations, req.params.tableName);
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
   const fields = perm.fields;

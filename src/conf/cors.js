@@ -1,25 +1,32 @@
 // @ts-check
 import corsSvc from "../services/cors.js";
 
+const METHODS = "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH";
+const HEADERS = "Content-Type, Authorization";
+
 /**
- * CORS configuration for the gateway.
+ * CORS middleware for the gateway.
  * Validates incoming requests against a dynamic whitelist loaded from the database.
  * The whitelist is checked on each request to allow real-time updates through the admin.
  */
-export const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps, Postman)
-    if (!origin) return callback(null, true);
-    
-    // Get fresh whitelist from cache on each request (dynamic updates)
-    const currentWhitelist = corsSvc.getAll();
-    
-    if (currentWhitelist.indexOf(origin) !== -1)
-      callback(null, true);
-    else
-      callback(new Error(`Origin ${origin} not allowed by CORS`));
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
+export function corsMiddleware(req, res, next) {
+  const origin = req.headers.origin;
+
+  if (origin) {
+    const whitelist = corsSvc.getAll();
+    if (whitelist.indexOf(origin) === -1)
+      return next({ statusCode: 403, message: `Origin ${origin} not allowed by CORS` });
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Access-Control-Allow-Methods", METHODS);
+  res.setHeader("Access-Control-Allow-Headers", HEADERS);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    return res.end();
+  }
+
+  next();
+}
