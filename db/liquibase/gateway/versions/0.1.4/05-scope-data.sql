@@ -7,7 +7,6 @@ INSERT INTO scopes (value, locked, "creatorId", "creatorName") VALUES
 ('cors',        true,  -1, 'system'),
 ('fields',      true,  -1, 'system'),
 ('scopes',      true,  -1, 'system'),
-('preferences', true,  -1, 'system'),
-('users',       true,  -1, 'system'),
-('roles',       true,  -1, 'system')
+('users',       false,  -1, 'system'),
+('roles',       false,  -1, 'system')
 ;
