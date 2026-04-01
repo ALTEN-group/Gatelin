@@ -1,4 +1,4 @@
-INSERT INTO preference ("userId", "tableName", name, conf, "isActive") VALUES
+INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
 
 -- routes
 (3, 'routes', 'Compact', '[

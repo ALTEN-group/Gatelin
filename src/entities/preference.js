@@ -31,7 +31,7 @@ export default new SQLEntity("preference", [
     validator: null,
   },
   {
-    key: "tableName",
+    key: "resource",
     type: "string",
     min: 1,
     max: 60,

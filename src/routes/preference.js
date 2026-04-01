@@ -6,8 +6,8 @@ import pEnt from "../entities/preference.js";
 import { injectFilters } from "../middlewares/mappers/preference/injectFilters.js";
 import { injectBody } from "../middlewares/mappers/preference/injectBody.js";
 
-router.get("/:tableName", injectFilters, pEnt.get);
+router.get("/:resource", injectFilters, pEnt.get);
 // Add new preferences for the authenticated user and the given table
-router.put("/:tableName", injectBody, pEnt.syncArraySubstack);
+router.put("/:resource", injectBody, pEnt.syncArraySubstack);
 
 export default router;
