@@ -22,7 +22,7 @@ describe("checkAcl middleware", () => {
   });
 
   beforeEach(() => {
-    req = {};
+    req = { originalUrl: "/api/test" };
     res = {
       locals: {
         route: { isProtected: true, id: 10, operationId: 2, url: "/api/test" },
@@ -110,5 +110,57 @@ describe("checkAcl middleware", () => {
       statusCode: 403,
       message: "Forbidden",
     });
+  });
+
+  it("should allow when perm.scopes contains a keyword present in the URL path", () => {
+    req.originalUrl = "/gateway/preferences/routes";
+    roleService.getOne.mockImplementation((id) => ({
+      id,
+      name: `role-${id}`,
+      permissions: id === 1 ? [{ route: 10, operations: [2], scopes: ["routes", "consumers"] }] : [],
+    }));
+
+    checkAcl(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should allow when perm.scopes keyword appears before the route name in the URL path", () => {
+    req.originalUrl = "/gateway/routes/preferences";
+    roleService.getOne.mockImplementation((id) => ({
+      id,
+      name: `role-${id}`,
+      permissions: id === 1 ? [{ route: 10, operations: [2], scopes: ["routes", "consumers"] }] : [],
+    }));
+
+    checkAcl(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should deny when perm.scopes is defined but no URL segment matches", () => {
+    req.originalUrl = "/gateway/preferences/services";
+    roleService.getOne.mockImplementation((id) => ({
+      id,
+      name: `role-${id}`,
+      permissions: [{ route: 10, operations: [2], scopes: ["routes", "consumers"] }],
+    }));
+
+    checkAcl(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({ statusCode: 403, message: "Forbidden" });
+  });
+
+  it("should allow when no perm.scopes restriction is set regardless of URL", () => {
+    req.originalUrl = "/gateway/scopes/search";
+    roleService.getOne.mockImplementation((id) => ({
+      id,
+      name: `role-${id}`,
+      permissions: id === 1 ? [{ route: 10, operations: [2] }] : [],
+    }));
+
+    checkAcl(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
   });
 });

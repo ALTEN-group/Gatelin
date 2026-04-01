@@ -1,6 +1,7 @@
 import { log } from "@dwtechs/winstan";
 import { isArray, isProperty } from "@dwtechs/checkard";
 import roleService from "../../services/role.js";
+import scopeService from "../../services/scope.js";
 
 /**
  * Express middleware that validates user access control permissions for protected routes.
@@ -32,7 +33,7 @@ function filterFields(item, allowed) {
   return Object.fromEntries(Object.entries(item).filter(([k]) => allowed.has(k)));
 }
 
-function findMatchingPermission(roles, routeId, routeOperations, table) {
+function findMatchingPermission(roles, routeId, routeOperations, urlSegments) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
@@ -41,7 +42,10 @@ function findMatchingPermission(roles, routeId, routeOperations, table) {
       (p) => p.route === routeId && p.operations.some((op) => routeOperations.includes(op)),
     );
     if (!perm) continue;
-    if (perm.tables && table && !perm.tables.includes(table)) continue;
+    if (perm.scopes) {
+      const scopeValues = scopeService.getValues(perm.scopes);
+      if (!scopeValues.some((v) => urlSegments.includes(v))) continue;
+    }
     return perm;
   }
   return null;
@@ -54,7 +58,8 @@ export default function checkAcl(req, res, next) {
   const c = res.locals.consumer;
   log.debug(`checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`);;
 
-  const perm = findMatchingPermission(c.roles, r.id, r.operations, req.params.tableName);
+  const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
+  const perm = findMatchingPermission(c.roles, r.id, r.operations, urlSegments);
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
   const fields = perm.fields;

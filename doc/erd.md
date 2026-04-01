@@ -12,7 +12,6 @@ erDiagram
   route }o--|{ route_operation : ""
   route_operation }|--|| operation : ""
   field }o--|| resource : ""
-  scope }o--|| route : ""
   consumer }o--|| user : "(external)"
   preference }o--|| user : "(external)"
   consumer {
@@ -110,7 +109,6 @@ erDiagram
 
   scope {
     int id PK
-    int routeId FK
     varchar value
     boolean locked
     boolean archived

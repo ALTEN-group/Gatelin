@@ -5,17 +5,18 @@ import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
-import { securityMiddleware } from "./conf/helmet.js";
+import { security } from "./conf/sec.js";
 import { corsMiddleware } from "./conf/cors.js";
 
 const app = express();
-app.use(securityMiddleware);
+app.use(security);
 app.disable("x-powered-by");
 
 import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
+import scopeSvc from "./services/scope.js";
 
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
@@ -72,6 +73,7 @@ Promise.all([
   consumerSvc.init(),
   corsSvc.init(),
   roleSvc.init(),
+  scopeSvc.init(),
 ])
   .then(() => {
     app.use(corsMiddleware);
