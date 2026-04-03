@@ -12,6 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import { NavigationStart, Router } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
@@ -52,11 +53,13 @@ export class LoginComponent implements AfterViewInit {
   private readonly loadingService = inject(LoadingService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   public readonly userServerUrl = inject(APP_CONFIG).apiPrefix;
 
   public isPasswordHidden = true;
   public isLoading = false;
+  public isRedirecting = false;
 
   public formGroup: FormGroup = new FormGroup({
     email: new FormControl("", [Validators.required, EmailValidator]),
@@ -76,6 +79,14 @@ export class LoginComponent implements AfterViewInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.formGroup.setErrors(null);
+      });
+
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.isRedirecting = true;
+        }
       });
   }
 
