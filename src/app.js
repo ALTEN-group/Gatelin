@@ -16,7 +16,7 @@ import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
-import scopeSvc from "./services/scope.js";
+// import scopeSvc from "./services/scope.js";
 
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
@@ -37,7 +37,7 @@ import resource from "./routes/resource.js";
 import operation from "./routes/operation.js";
 import corsRoutes from "./routes/cors.js";
 import field from "./routes/field.js";
-import scope from "./routes/scope.js";
+// import scope from "./routes/scope.js";
 import preference from "./routes/preference.js";
 
 const svc = "/gateway/";
@@ -57,7 +57,7 @@ app.use(`${svc}resources`, ...cr, resource, send);
 app.use(`${svc}operations`, ...cr, operation, send);
 app.use(`${svc}cors`, ...cr, corsRoutes, send);
 app.use(`${svc}fields`, ...cr, field, send);
-app.use(`${svc}scopes`, ...cr, scope, send);
+// app.use(`${svc}scopes`, ...cr, scope, send);
 app.use(`${svc}preferences`, ...cr, preference, send);
 app.use("/", ...cr, proxy);
 
@@ -73,7 +73,7 @@ Promise.all([
   consumerSvc.init(),
   corsSvc.init(),
   roleSvc.init(),
-  scopeSvc.init(),
+  // scopeSvc.init(),
 ])
   .then(() => {
     app.use(corsMiddleware);

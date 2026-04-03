@@ -107,13 +107,6 @@ erDiagram
     text updaterName
   }
 
-  scope {
-    int id PK
-    varchar value
-    boolean locked
-    boolean archived
-  }
-
   preference {
     int id PK
     int userId FK "ms_user"
