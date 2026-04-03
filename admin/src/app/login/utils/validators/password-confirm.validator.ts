@@ -1,7 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 
 export const PasswordConfirmValidator: ValidatorFn = (
-  // group: FormGroup
   group: AbstractControl,
 ): ValidationErrors | null => {
   const password1 = group.get("password");

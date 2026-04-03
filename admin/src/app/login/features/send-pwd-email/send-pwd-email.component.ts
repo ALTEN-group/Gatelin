@@ -53,9 +53,7 @@ export class SendPwdEmailComponent implements OnInit {
     this.location.back();
   }
 
-  public send(): void {
-    console.log("todo: send email");
-  }
+  public send(): void {}
 
   private listenToEmailFormControlStatusChanges() {
     this.email?.statusChanges

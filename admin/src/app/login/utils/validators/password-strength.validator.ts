@@ -15,26 +15,22 @@ export function PasswordStrengthValidator(
     return null;
   }
 
-  //const upperCaseRegex = /[A-Z]+/;
   if (!containsUpperCase(value)) {
     return {
       passwordStrength: "Doit contenir au moins une majuscule",
     };
   }
 
-  // const lowerCaseRegex = /[a-z]+/;
   if (!containsLowerCase(value)) {
     return {
       passwordStrength: "Doit contenir au moins une minuscule",
     };
   }
 
-  // const numberRegex = /[0-9]+/g;
   if (!containsNumber(value)) {
     return { passwordStrength: "Doit contenir au moins un chiffre" };
   }
 
-  // const specialRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?°`€£§]+/;
   if (!containsSpecialCharacter(value)) {
     return {
       passwordStrength: "Doit contenir au moins un caractère special",

@@ -180,13 +180,6 @@ export class ControlOptions {
    */
   disabled?: boolean;
   /**
-   * @deprecated
-   * Non applicable property - this will have no effect
-   * If set to true, will force the control to always reset to the default value
-   * @example `forceDefaultValue: true` // Control value will be reset to defaultValue on form reset
-   */
-  forceDefaultValue?: boolean;
-  /**
    * Help text to display under the field to provide additional guidance
    * @example `helpText: 'Password must contain at least 8 characters with one uppercase letter'`
    */
