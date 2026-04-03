@@ -1,5 +1,6 @@
 import { DatePipe } from "@angular/common";
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   input,
@@ -16,6 +17,7 @@ import { FullHistoryRow, HistorizedData } from "./history.model";
 
 @Component({
   selector: "shared-history",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./history.component.html",
   styleUrls: ["./history.component.scss"],
   imports: [TableModule, SharedModule, DatePipe, ButtonModule],

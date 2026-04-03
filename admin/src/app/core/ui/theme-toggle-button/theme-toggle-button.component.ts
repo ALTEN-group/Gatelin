@@ -1,8 +1,14 @@
-import { Component, computed, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from "@angular/core";
 import { ThemeService } from "@core/ui/theme-toggle-button/theme.service";
 
 @Component({
   selector: "adm-theme-toggle-button",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./theme-toggle-button.component.html",
   styleUrls: ["./theme-toggle-button.component.scss"],
 })

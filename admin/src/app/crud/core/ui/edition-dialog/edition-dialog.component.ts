@@ -1,5 +1,6 @@
 import { AsyncPipe } from "@angular/common";
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   input,
@@ -28,6 +29,7 @@ import { distinctUntilChanged, filter, Observable, of, switchMap } from "rxjs";
 
 @Component({
   selector: "crd-edition-dialog",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./edition-dialog.component.html",
   styleUrls: ["./edition-dialog.component.scss"],
   imports: [

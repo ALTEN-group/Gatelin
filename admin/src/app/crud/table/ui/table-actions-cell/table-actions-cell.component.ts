@@ -1,4 +1,9 @@
-import { Component, input, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from "@angular/core";
 import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { CrudFeatures } from "@crud/core/utils/table/crud-loader.class";
 import { ButtonModule } from "primeng/button";
@@ -6,6 +11,7 @@ import { TooltipModule } from "primeng/tooltip";
 
 @Component({
   selector: "tbl-table-actions-cell",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./table-actions-cell.component.html",
   styleUrls: ["./table-actions-cell.component.scss"],
   imports: [ButtonModule, ProtectFeatureDirective, TooltipModule],

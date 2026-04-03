@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   inject,
@@ -31,6 +32,7 @@ import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-login",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
   encapsulation: ViewEncapsulation.None,

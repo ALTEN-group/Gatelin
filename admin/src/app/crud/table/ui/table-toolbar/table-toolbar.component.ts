@@ -1,4 +1,11 @@
-import { Component, computed, input, model, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  model,
+  output,
+} from "@angular/core";
 import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
 import { CrudFeatures } from "@crud/core/utils/table/crud-loader.class";
@@ -13,6 +20,7 @@ import { ToolbarModule } from "primeng/toolbar";
 
 @Component({
   selector: "tbl-table-toolbar",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./table-toolbar.component.html",
   styleUrls: ["./table-toolbar.component.scss"],
   imports: [

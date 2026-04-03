@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -17,6 +18,7 @@ import { MenuModule } from "primeng/menu";
 
 @Component({
   selector: "adm-navbar",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.scss"],
   imports: [

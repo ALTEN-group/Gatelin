@@ -1,5 +1,11 @@
 import { Location } from "@angular/common";
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   FormControl,
@@ -15,6 +21,7 @@ import { SharedModule } from "primeng/api";
 import { CardModule } from "primeng/card";
 @Component({
   selector: "adm-send-pwd-email",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./send-pwd-email.component.html",
   styleUrls: ["./send-pwd-email.component.scss"],
   imports: [CardModule, SharedModule, FormsModule, ReactiveFormsModule],
@@ -29,10 +36,10 @@ export class SendPwdEmailComponent implements OnInit {
 
   ngOnInit() {
     this.emailFormGroup = new FormGroup({
-      emailFormControl: new FormControl(
-        this.authService.user()?.email || "",
-        [Validators.required, EmailValidator],
-      ),
+      emailFormControl: new FormControl(this.authService.user()?.email || "", [
+        Validators.required,
+        EmailValidator,
+      ]),
     });
 
     this.listenToEmailFormControlStatusChanges();

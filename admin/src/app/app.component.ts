@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnInit,
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
@@ -11,7 +10,6 @@ import { AuthenticationService } from "@core/auth/auth.service";
 import { NavbarComponent } from "@core/ui/navbar/navbar.component";
 import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { LoadingService } from "@core/utils/loading/loading.service";
-import { RoutingListener } from "@core/utils/routing.listener";
 import { PrimeNG } from "primeng/config";
 import { ProgressBarModule } from "primeng/progressbar";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
@@ -31,8 +29,7 @@ import { SidenavComponent } from "./core/ui/sidenav/sidenav.component";
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
-  private readonly routingListener = inject(RoutingListener);
+export class AppComponent {
   private readonly authService = inject(AuthenticationService);
   private readonly sidenavService = inject(SidenavService);
   private readonly primeNgConfig = inject(PrimeNG);
@@ -54,24 +51,7 @@ export class AppComponent implements OnInit {
     return this.sidenavService.getMobileDisplay();
   }
 
-  ngOnInit() {
-    // Watch for route changes
-    this.listenToRoutesChanges();
-
-    // Set translations for primeNG components
-    this.setTranslations();
-  }
-
-  private listenToRoutesChanges() {
-    this.routingListener.isLoginPage$.subscribe((isLoginPage) => {
-      // TODO: that should probably be better in a guard
-      if (isLoginPage && this.isAuthenticated()) {
-        this.authService.redirectToApp();
-      }
-    });
-  }
-
-  private setTranslations() {
+  constructor() {
     this.primeNgConfig.setTranslation(PrimeNgTranslations);
   }
 }

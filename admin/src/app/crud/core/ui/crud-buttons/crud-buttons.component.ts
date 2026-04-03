@@ -1,4 +1,9 @@
-import { Component, input, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from "@angular/core";
 import { ProtectFeatureDirective } from "@core/acl/protect-feature.directive";
 import { ButtonModule, ButtonSeverity } from "primeng/button";
 
@@ -13,6 +18,7 @@ export type ButtonType =
   standalone: true,
   imports: [ButtonModule, ProtectFeatureDirective],
   selector: "crd-crud-button",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./crud-buttons.component.html",
   host: { style: "margin: 0 0.25rem" },
 })

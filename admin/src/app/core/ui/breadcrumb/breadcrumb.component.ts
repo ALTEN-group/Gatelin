@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
@@ -12,6 +12,7 @@ import { distinctUntilChanged, filter, map } from "rxjs/operators";
 
 @Component({
   selector: "adm-breadcrumb",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./breadcrumb.component.html",
   styleUrls: ["./breadcrumb.component.scss"],
   imports: [BreadcrumbModule],

@@ -6,7 +6,7 @@ import {
   Service,
   serviceFactory,
 } from "app/admin/data-access/services/service.model";
-import { map, Observable } from "rxjs";
+import { map, Observable, shareReplay, tap } from "rxjs";
 
 const servicesApi: string = "gateway/services";
 
@@ -20,17 +20,26 @@ export class ServicesService {
 
   public readonly httpCalls: Calls<Service> = {
     get: this.crud.get,
-    create: this.crud.create,
-    update: this.crud.update,
-    archive: this.crud.archive,
-    restore: this.crud.restore,
+    create: (item) => this.crud.create(item).pipe(tap(() => this.invalidateCache())),
+    update: (item) => this.crud.update(item).pipe(tap(() => this.invalidateCache())),
+    archive: (ids) => this.crud.archive(ids).pipe(tap(() => this.invalidateCache())),
+    restore: (ids) => this.crud.restore(ids).pipe(tap(() => this.invalidateCache())),
     history: this.crud.history,
   };
 
   public readonly config = SERVICE_COLUMNS;
   public readonly entityFactory = serviceFactory;
 
+  private _all$: Observable<Service[]> | null = null;
+
   public getAndCacheAll(): Observable<Service[]> {
-    return this.crud.getAll().pipe(map((res) => res.rows ?? []));
+    if (!this._all$) {
+      this._all$ = this.crud.getAll().pipe(map((res) => res.rows ?? []), shareReplay(1));
+    }
+    return this._all$;
+  }
+
+  private invalidateCache(): void {
+    this._all$ = null;
   }
 }

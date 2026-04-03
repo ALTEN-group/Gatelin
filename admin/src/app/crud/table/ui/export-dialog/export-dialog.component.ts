@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -19,6 +20,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 
 @Component({
   selector: "tbl-export-dialog",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./export-dialog.component.html",
   styleUrls: ["./export-dialog.component.scss"],
   imports: [

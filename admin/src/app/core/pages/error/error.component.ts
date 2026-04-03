@@ -1,5 +1,5 @@
 import { AsyncPipe } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ErrorTranslatePipe } from "@core/pages/error/error-translate.pipe";
 import { CardModule } from "primeng/card";
@@ -7,6 +7,7 @@ import { map } from "rxjs";
 
 @Component({
   selector: "adm-error",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./error.component.html",
   styleUrls: ["./error.component.scss"],
   imports: [CardModule, AsyncPipe, ErrorTranslatePipe],

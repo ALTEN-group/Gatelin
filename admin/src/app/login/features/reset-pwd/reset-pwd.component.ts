@@ -1,4 +1,9 @@
-import { Component, OnInit, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -17,6 +22,7 @@ import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "adm-reset-pwd",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./reset-pwd.component.html",
   styleUrls: ["./reset-pwd.component.scss"],
   imports: [

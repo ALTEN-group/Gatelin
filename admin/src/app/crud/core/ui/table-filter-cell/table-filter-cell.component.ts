@@ -1,5 +1,12 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, inject, input, linkedSignal, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  linkedSignal,
+  OnInit,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import {
@@ -19,6 +26,7 @@ import { Table, TableModule } from "primeng/table";
 
 @Component({
   selector: "crd-table-filter-cell",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./table-filter-cell.component.html",
   styleUrls: ["./table-filter-cell.component.scss"],
   imports: [

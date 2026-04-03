@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -14,6 +15,7 @@ import { PanelMenu, PanelMenuModule } from "primeng/panelmenu";
 
 @Component({
   selector: "adm-sidenav",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./sidenav.component.html",
   styleUrls: ["./sidenav.component.scss"],
   encapsulation: ViewEncapsulation.None,

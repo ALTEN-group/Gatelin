@@ -1,5 +1,5 @@
 import { NgClass } from "@angular/common";
-import { Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
@@ -7,6 +7,7 @@ import { Tooltip } from "primeng/tooltip";
 
 @Component({
   selector: "app-home-card",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardModule, RouterLink, Tooltip, ButtonModule, NgClass],
   styleUrls: ["./home-card.component.scss"],
   template: `
