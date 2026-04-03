@@ -12,11 +12,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { NavigationStart, Router } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
 import { LoadingService } from "@core/utils/loading/loading.service";
+import { RoutingListener } from "@core/utils/routing.listener";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
 import { EmailValidator } from "@form/utils/email.validator";
 import { LoginBackgroundComponent } from "app/login/ui/login-background/login-background.component";
@@ -53,7 +53,7 @@ export class LoginComponent implements AfterViewInit {
   private readonly loadingService = inject(LoadingService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly router = inject(Router);
+  private readonly routingListener = inject(RoutingListener);
 
   public readonly userServerUrl = inject(APP_CONFIG).apiPrefix;
 
@@ -81,12 +81,10 @@ export class LoginComponent implements AfterViewInit {
         this.formGroup.setErrors(null);
       });
 
-    this.router.events
+    this.routingListener.navigationStart$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          this.isRedirecting = true;
-        }
+      .subscribe(() => {
+        this.isRedirecting = true;
       });
   }
 
