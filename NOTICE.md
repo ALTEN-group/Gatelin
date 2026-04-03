@@ -1,5 +1,45 @@
 # Gatelin
 
+## setup-env.sh Script
+
+The `setup-env.sh` script creates your local environment file from the committed template. It must be run once after cloning the repository, before starting the development environment.
+
+### What It Does
+
+1. **Copies** `docker/conf/.env.dev.example` to `docker/conf/.env.dev`
+2. **Skips** if `docker/conf/.env.dev` already exists
+
+`docker/conf/.env.dev` is gitignored and never committed. The example file contains all variables with sensitive values left blank.
+
+### When to Use It
+
+Run this script:
+- After cloning the repository for the first time
+- When a new environment variable has been added to `.env.dev.example`
+
+### How to Run
+
+```bash
+./setup-env.sh
+```
+
+### After Running
+
+Fill in the sensitive values in `docker/conf/.env.dev`:
+- `LIQUIBASE_DB_PWD`
+- `POSTGRES_ROOT_PWD`
+- `GATELIN_DB_USER`
+- `GATELIN_DB_PWD`
+- `NPM_REGISTRY_DOMAIN`
+- `NPM_REGISTRY_NODE`
+- `NPM_REGISTRY_URL`
+- `NPM_REGISTRY_USER`
+- `NPM_REGISTRY_TOKEN`
+
+Then start the development environment with `./start-dev.sh`.
+
+---
+
 ## start-dev.sh Script
 
 The `start-dev.sh` script is a convenience utility for quickly starting the development environment with a single command. It builds and runs all services using docker-compose.

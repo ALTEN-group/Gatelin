@@ -5,3 +5,4 @@ Thumbs.db
 src/public/*
 package-lock.json
 tests/coverage/
+docker/conf/.env.dev
