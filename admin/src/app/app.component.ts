@@ -44,8 +44,6 @@ export class AppComponent implements OnInit {
   public readonly isLoading = this.loadingService.isLoading;
   public readonly loadingMode = this.loadingService.mode;
 
-  public readonly isUserBasicsLoading = this.loadingService.isUserBasicsLoading;
-
   get getExpanded(): boolean {
     return this.sidenavService.getExpanded();
   }
