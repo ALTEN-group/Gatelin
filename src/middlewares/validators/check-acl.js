@@ -30,21 +30,25 @@ import scopeService from "../../services/scope.js";
  * // User with roles ['user'] would get 403 Forbidden
  */
 function filterFields(item, allowed) {
-  return Object.fromEntries(Object.entries(item).filter(([k]) => allowed.has(k)));
+  return Object.fromEntries(
+    Object.entries(item).filter(([k]) => allowed.has(k)),
+  );
 }
 
-function findMatchingPermission(roles, routeId, routeOperations, urlSegments) {
+function findMatchingPermission(roles, routeId, routeOperations, scopeSegment) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
 
     const perm = role.permissions.find(
-      (p) => p.route === routeId && p.operations.some((op) => routeOperations.includes(op)),
+      (p) =>
+        p.route === routeId &&
+        p.operations.some((op) => routeOperations.includes(op)),
     );
     if (!perm) continue;
     if (perm.scopes) {
       const scopeValues = scopeService.getValues(perm.scopes);
-      if (!scopeValues.some((v) => urlSegments.includes(v))) continue;
+      if (!scopeValues.includes(scopeSegment)) continue;
     }
     return perm;
   }
@@ -56,10 +60,20 @@ export default function checkAcl(req, res, next) {
   if (!r.isProtected) return next(); // if no jwt required for this route
 
   const c = res.locals.consumer;
-  log.debug(`checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`);;
+  log.debug(
+    `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
+  );
 
   const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
-  const perm = findMatchingPermission(c.roles, r.id, r.operations, urlSegments);
+  const resourceIndex = urlSegments.indexOf(r.resourceName);
+  const scopeSegment =
+    resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+  const perm = findMatchingPermission(
+    c.roles,
+    r.id,
+    r.operations,
+    scopeSegment,
+  );
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
   const fields = perm.fields;
