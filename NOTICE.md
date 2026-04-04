@@ -147,6 +147,51 @@ All test files follow the pattern `*.test.js` and are organized by functionality
 
 ---
 
+## build-prod.sh Script
+
+The `build-prod.sh` script builds a production-ready Gatelin Docker image using `dockerfile.prod` and `docker/conf/.env.prod`.
+
+### What It Does
+
+1. **Loads** build arguments from `docker/conf/.env.prod`
+2. **Reads** the version from `package.json`
+3. **Builds** the image using `dockerfile.prod`
+4. **Tags** the image as `dwtechs/gatelin:<version>` and `dwtechs/gatelin:latest`
+
+### When to Use It
+
+Run this script when you need to:
+- Build a production image before pushing to a registry
+- Verify the production image builds correctly
+
+### How to Run
+
+```bash
+./scripts/build-prod.sh
+```
+
+---
+
+## start-prod.sh Script
+
+The `start-prod.sh` script starts the production environment using `docker/docker-compose.prod.yml` and `docker/conf/.env.prod`.
+
+### What It Does
+
+1. **Reads** `VERSION` from `docker/conf/.env.prod` (fails if not set)
+2. **Starts** all production services in detached mode using the pre-built `dwtechs/gatelin:<version>` image
+
+### When to Use It
+
+Run this script after `build-prod.sh` to start the production stack locally (e.g. for smoke testing).
+
+### How to Run
+
+```bash
+./scripts/start-prod.sh
+```
+
+---
 
 ## Usage
 

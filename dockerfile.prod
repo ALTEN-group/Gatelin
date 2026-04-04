@@ -1,4 +1,4 @@
-ARG NODE_VERSION
+ARG NODE_VERSION=24.11.0-alpine3.22
 FROM node:${NODE_VERSION}
 
 ARG NODE_ENV
@@ -19,7 +19,7 @@ USER user
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --chmod=640 ./package*.json ./
 
-RUN npm ci --only=production --loglevel=error --ignore-scripts --no-fund
+RUN npm i --only=production --loglevel=error --ignore-scripts --no-fund
 
 COPY --chown=user:usergroup ./src ./src
 
