@@ -34,7 +34,7 @@ function init() {
  * @return {string[]} Array of scope value strings
  */
 function getValues(ids) {
-  return scopes.filter((s) => ids.includes(s.id)).map((s) => s.value);
+  return scopes.filter((s) => ids.includes(s.id)).map((s) => s.name);
 }
 
 export default {

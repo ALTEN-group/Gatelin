@@ -6,7 +6,7 @@ export const SIDENAV: MenuItem[] = [
     id: "routes",
     label: $localize`:@@Admin_RoutesNav:Routes`,
     routerLink: `/${AppPaths.ROUTES}`,
-    icon: "pi pi-arrow-right-arrow-left",
+    icon: "pi pi-directions",
     data: {
       functionality: "routes",
     },
@@ -60,7 +60,7 @@ export const SIDENAV: MenuItem[] = [
     id: "fields",
     label: $localize`:@@Admin_FieldsNav:Fields`,
     routerLink: `/${AppPaths.FIELDS}`,
-    icon: "pi pi-table",
+    icon: "pi pi-list",
     data: {
       functionality: "fields",
     },
@@ -69,7 +69,7 @@ export const SIDENAV: MenuItem[] = [
     id: "scopes",
     label: $localize`:@@Admin_ScopesNav:Scopes`,
     routerLink: `/${AppPaths.SCOPES}`,
-    icon: "pi pi-lock",
+    icon: "pi pi-filter",
     data: {
       functionality: "scopes",
     },

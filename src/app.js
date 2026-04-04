@@ -16,6 +16,7 @@ import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
+import scopeSvc from "./services/scope.js";
 
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
@@ -72,6 +73,7 @@ Promise.all([
   consumerSvc.init(),
   corsSvc.init(),
   roleSvc.init(),
+  scopeSvc.init(),
 ])
   .then(() => {
     app.use(corsMiddleware);
