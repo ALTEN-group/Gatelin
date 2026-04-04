@@ -16,7 +16,6 @@ import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
 import corsSvc from "./services/cors.js";
 import roleSvc from "./services/role.js";
-// import scopeSvc from "./services/scope.js";
 
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
@@ -35,30 +34,30 @@ import route from "./routes/route.js";
 import service from "./routes/service.js";
 import resource from "./routes/resource.js";
 import operation from "./routes/operation.js";
-import corsRoutes from "./routes/cors.js";
+import cors from "./routes/cors.js";
 import field from "./routes/field.js";
-// import scope from "./routes/scope.js";
+import scope from "./routes/scope.js";
 import preference from "./routes/preference.js";
 
-const svc = "/gateway/";
+const s = "/gateway/";
 
 app.use(express.json());
-app.use(`${svc}health`, healixRouter);
+app.use(`${s}health`, healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);
 // Validate route
 app.use(checkRoute);
 // Routes
-app.use(`${svc}sessions`, session);
-app.use(`${svc}consumers`, ...cr, consumer);
-app.use(`${svc}routes`, ...cr, route, send);
-app.use(`${svc}services`, ...cr, service, send);
-app.use(`${svc}resources`, ...cr, resource, send);
-app.use(`${svc}operations`, ...cr, operation, send);
-app.use(`${svc}cors`, ...cr, corsRoutes, send);
-app.use(`${svc}fields`, ...cr, field, send);
-// app.use(`${svc}scopes`, ...cr, scope, send);
-app.use(`${svc}preferences`, ...cr, preference, send);
+app.use(`${s}sessions`, session);
+app.use(`${s}consumers`, ...cr, consumer);
+app.use(`${s}routes`, ...cr, route, send);
+app.use(`${s}services`, ...cr, service, send);
+app.use(`${s}resources`, ...cr, resource, send);
+app.use(`${s}operations`, ...cr, operation, send);
+app.use(`${s}cors`, ...cr, cors, send);
+app.use(`${s}fields`, ...cr, field, send);
+app.use(`${s}scopes`, ...cr, scope, send);
+app.use(`${s}preferences`, ...cr, preference, send);
 app.use("/", ...cr, proxy);
 
 // Performance measurement ends
@@ -73,7 +72,6 @@ Promise.all([
   consumerSvc.init(),
   corsSvc.init(),
   roleSvc.init(),
-  // scopeSvc.init(),
 ])
   .then(() => {
     app.use(corsMiddleware);
