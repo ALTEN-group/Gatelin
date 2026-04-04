@@ -24,7 +24,7 @@ export const SIDENAV: MenuItem[] = [
     id: "services",
     label: $localize`:@@Admin_ServicesNav:Services`,
     routerLink: `/${AppPaths.SERVICES}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-server",
     data: {
       functionality: "services",
     },
@@ -33,7 +33,7 @@ export const SIDENAV: MenuItem[] = [
     id: "apis",
     label: $localize`:@@Admin_ApisNav:Resources`,
     routerLink: `/${AppPaths.RESOURCES}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-sitemap",
     data: {
       functionality: "resources",
     },
@@ -42,7 +42,7 @@ export const SIDENAV: MenuItem[] = [
     id: "cors",
     label: $localize`:@@Admin_CorsNav:Cors`,
     routerLink: `/${AppPaths.CORS}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-globe",
     data: {
       functionality: "cors",
     },
@@ -51,7 +51,7 @@ export const SIDENAV: MenuItem[] = [
     id: "operations",
     label: $localize`:@@Admin_OperationsNav:Operations`,
     routerLink: `/${AppPaths.OPERATIONS}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-bolt",
     data: {
       functionality: "operations",
     },

@@ -20,7 +20,7 @@ Run this script:
 ### How to Run
 
 ```bash
-./setup-env.sh
+./scripts/setup-env.sh
 ```
 
 ### After Running
@@ -36,7 +36,7 @@ Fill in the sensitive values in `docker/conf/.env.dev`:
 - `NPM_REGISTRY_USER`
 - `NPM_REGISTRY_TOKEN`
 
-Then start the development environment with `./start-dev.sh`.
+Then start the development environment with `./scripts/start-dev.sh`.
 
 ---
 
@@ -62,7 +62,7 @@ Use this script when you need to:
 ### How to Run
 
 ```bash
-./start-dev.sh
+./scripts/start-dev.sh
 ```
 
 ### After Running
@@ -85,7 +85,7 @@ The `reset-db.sh` script is a utility for completely resetting the database duri
 2. **Stops and removes** the PostgreSQL container (`gatelin-postgres-local`)
 3. **Stops and removes** the Liquibase migration container (`gatelin-gatelin-migration-local`)
 4. **Removes** the PostgreSQL data volume (`gatelin_postgres_data`)
-5. **Restarts all services** by calling `./start-dev.sh` to rebuild and start fresh
+5. **Restarts all services** by calling `./scripts/start-dev.sh` to rebuild and start fresh
 6. **Restarts the Gatelin container** specifically to ensure clean reconnection to the database
 
 ### When to Use It
@@ -99,7 +99,7 @@ Use this script when you need to:
 ### How to Run
 
 ```bash
-./reset-db.sh
+./scripts/reset-db.sh
 ```
 
 **⚠️ WARNING**: This script **permanently deletes all database data**. Only use it in development environments, never in production!
