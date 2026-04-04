@@ -12,6 +12,7 @@ export interface Repository<T> {
   get: (e: CrudGetParams) => Observable<RowsAndCount<T>>;
   getById: (id: number) => Observable<RowsAndCount<T>>;
   getAll: () => Observable<RowsAndCount<T>>;
+  getAndCacheAll: () => Observable<T[]>;
   create: (args: T) => Observable<Rows<T>>;
   update: (args: T) => Observable<Rows<T>>;
   archive: (args: number[]) => Observable<null>;

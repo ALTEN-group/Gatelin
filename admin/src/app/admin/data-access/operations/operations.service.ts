@@ -6,7 +6,7 @@ import {
   Operation,
   operationFactory,
 } from "app/admin/data-access/operations/operation.model";
-import { map, Observable, shareReplay, tap } from "rxjs";
+import { Observable } from "rxjs";
 
 const operationsEndpoint: string = "gateway/operations";
 
@@ -20,26 +20,17 @@ export class OperationsService {
 
   public readonly httpCalls: Calls<Operation> = {
     get: this.crud.get,
-    create: (item) => this.crud.create(item).pipe(tap(() => this.invalidateCache())),
-    update: (item) => this.crud.update(item).pipe(tap(() => this.invalidateCache())),
-    archive: (ids) => this.crud.archive(ids).pipe(tap(() => this.invalidateCache())),
-    restore: (ids) => this.crud.restore(ids).pipe(tap(() => this.invalidateCache())),
+    create: this.crud.create,
+    update: this.crud.update,
+    archive: this.crud.archive,
+    restore: this.crud.restore,
     history: this.crud.history,
   };
 
   public readonly config = OPERATION_COLUMNS;
   public readonly entityFactory = operationFactory;
 
-  private _all$: Observable<Operation[]> | null = null;
-
   public getAndCacheAll(): Observable<Operation[]> {
-    if (!this._all$) {
-      this._all$ = this.crud.getAll().pipe(map((res) => res.rows ?? []), shareReplay(1));
-    }
-    return this._all$;
-  }
-
-  private invalidateCache(): void {
-    this._all$ = null;
+    return this.crud.getAndCacheAll();
   }
 }

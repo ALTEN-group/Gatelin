@@ -14,7 +14,7 @@ import {
 } from "@crud/core/utils/crud-service/no-rows";
 import { isArray } from "@dwtechs/checkard";
 import { TableLazyLoadEvent } from "primeng/table";
-import { catchError, Observable, of } from "rxjs";
+import { catchError, map, Observable, of, shareReplay, tap } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class CrudRepository<T> {
@@ -25,6 +25,7 @@ export class CrudRepository<T> {
   /* Initialized in with() */
   private apiUrl = "";
   private fileOperationsConfig: FileOperationConfig<T> = {};
+  private _all$: Observable<T[]> | null = null;
 
   /** Configure the repository with an endpoint and return CRUD operations */
   public with(config: CrudRepositoryConfig): Repository<T> {
@@ -38,12 +39,17 @@ export class CrudRepository<T> {
     get: (e) => this.get(e),
     getById: (id: number) => this.getById(id),
     getAll: () => this.get({}),
-    create: (item: T) => this.create(item),
-    update: (item: T) => this.update(item),
-    archive: (ids: number[]) => this.archive(ids),
-    restore: (ids: number[]) => this.restore(ids),
+    create: (item: T) =>
+      this.create(item).pipe(tap(() => this.invalidateCache())),
+    update: (item: T) =>
+      this.update(item).pipe(tap(() => this.invalidateCache())),
+    archive: (ids: number[]) =>
+      this.archive(ids).pipe(tap(() => this.invalidateCache())),
+    restore: (ids: number[]) =>
+      this.restore(ids).pipe(tap(() => this.invalidateCache())),
     history: (id: number) => this.history(id),
     updateFiles: (files: File[], id: number) => this.updateFiles(files, id),
+    getAndCacheAll: () => this.getAllAndCache(),
   });
 
   /**
@@ -118,6 +124,20 @@ export class CrudRepository<T> {
 
   private restore(ids: number[]): Observable<null> {
     return this.http.post<null>(`${this.apiUrl}/restore`, { rows: ids });
+  }
+
+  private getAllAndCache(): Observable<T[]> {
+    if (!this._all$) {
+      this._all$ = this.get({}).pipe(
+        map((res) => res.rows ?? []),
+        shareReplay(1),
+      );
+    }
+    return this._all$;
+  }
+
+  private invalidateCache(): void {
+    this._all$ = null;
   }
 
   private history(id: number): Observable<RowsAndCount<HistorizedData<T>>> {

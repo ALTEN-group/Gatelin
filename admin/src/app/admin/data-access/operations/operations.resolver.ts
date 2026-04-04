@@ -5,9 +5,9 @@ import { OperationsService } from "app/admin/data-access/operations/operations.s
 import { Observable } from "rxjs";
 
 export const operationsResolver: ResolveFn<Operation[]> = (
-	_route,
-	_state,
+  _route,
+  _state,
 ): Observable<Operation[]> => {
-	const service = inject(OperationsService);
-	return service.getAndCacheAll();
+  const service = inject(OperationsService);
+  return service.getAndCacheAll();
 };
