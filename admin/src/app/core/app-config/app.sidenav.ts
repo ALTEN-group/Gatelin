@@ -6,7 +6,7 @@ export const SIDENAV: MenuItem[] = [
     id: "routes",
     label: $localize`:@@Admin_RoutesNav:Routes`,
     routerLink: `/${AppPaths.ROUTES}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-arrow-right-arrow-left",
     data: {
       functionality: "routes",
     },
@@ -33,7 +33,11 @@ export const SIDENAV: MenuItem[] = [
     id: "apis",
     label: $localize`:@@Admin_ApisNav:Resources`,
     routerLink: `/${AppPaths.RESOURCES}`,
+<<<<<<< HEAD
     icon: "pi pi-sitemap",
+=======
+    icon: "pi pi-box",
+>>>>>>> a2cda0e2af91281439d982e779eb9262b094d519
     data: {
       functionality: "resources",
     },
@@ -42,7 +46,11 @@ export const SIDENAV: MenuItem[] = [
     id: "cors",
     label: $localize`:@@Admin_CorsNav:Cors`,
     routerLink: `/${AppPaths.CORS}`,
+<<<<<<< HEAD
     icon: "pi pi-globe",
+=======
+    icon: "pi pi-shield",
+>>>>>>> a2cda0e2af91281439d982e779eb9262b094d519
     data: {
       functionality: "cors",
     },
@@ -60,7 +68,7 @@ export const SIDENAV: MenuItem[] = [
     id: "fields",
     label: $localize`:@@Admin_FieldsNav:Fields`,
     routerLink: `/${AppPaths.FIELDS}`,
-    icon: "pi pi-list",
+    icon: "pi pi-table",
     data: {
       functionality: "fields",
     },
@@ -69,7 +77,7 @@ export const SIDENAV: MenuItem[] = [
     id: "scopes",
     label: $localize`:@@Admin_ScopesNav:Scopes`,
     routerLink: `/${AppPaths.SCOPES}`,
-    icon: "pi pi-filter",
+    icon: "pi pi-lock",
     data: {
       functionality: "scopes",
     },

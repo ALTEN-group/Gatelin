@@ -33,10 +33,6 @@ ENV_NAME=${ENV_NAME:-local}
 
 VOLUME_NAME="${APP_NAME}_postgres_data"
 
-# Remove postgres volume
-echo -e "${YELLOW}🗑️  Removing postgres volume...${NC}"
-docker volume rm $VOLUME_NAME 2>/dev/null && echo -e "✓ Removed volume $VOLUME_NAME" || echo -e "⚠  Volume $VOLUME_NAME not found"
-
 # Build docker compose command
 COMPOSE_CMD="docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev down"
 
@@ -48,6 +44,10 @@ fi
 
 # Execute command
 eval $COMPOSE_CMD
+
+# Remove postgres volume (after containers are stopped)
+echo -e "${YELLOW}🗑️  Removing postgres volume...${NC}"
+docker volume rm $VOLUME_NAME 2>/dev/null && echo -e "✓ Removed volume $VOLUME_NAME" || echo -e "⚠  Volume $VOLUME_NAME not found"
 
 echo -e "${RED}✅ Development environment stopped and cleaned!${NC}"
 if [ "$REMOVE_IMAGES" = true ]; then

@@ -76,7 +76,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     }
     return authenticationService.refreshToken().pipe(
       switchMap((res) => {
-        const token = tokenService.getRefreshToken();
+        const token = tokenService.getAccessToken();
         if (!res || !token) {
           return redirectToLogin(err);
         }
