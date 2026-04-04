@@ -74,6 +74,10 @@
     <comment></comment>
     <sqlFile path="versions/0.1.2/08-field-struct.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="0.1.2-09" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.2/09-scope-struct.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- Updates for version 0.1.3 : functions -->
   <changeSet id="0.1.3-01" author="lcluber">
@@ -105,6 +109,10 @@
   <changeSet id="0.1.4-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/0.1.4/04-field-data.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.4-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.4/05-scope-data.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>

@@ -132,6 +132,42 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
+]', false),
+
+-- fields
+(3, 'fields', 'Compact', '[
+  {"key":"id",           "isVisible":false},
+  {"key":"resourceId",   "isVisible":false},
+  {"key":"resourceName", "isVisible":true},
+  {"key":"name",         "isVisible":true},
+  {"key":"locked",       "isVisible":false},
+  {"key":"archived",     "isVisible":false},
+  {"key":"archivedAt",   "isVisible":false}
+]', true),
+(3, 'fields', 'Archives', '[
+  {"key":"id",           "isVisible":false},
+  {"key":"resourceId",   "isVisible":false},
+  {"key":"resourceName", "isVisible":true},
+  {"key":"name",         "isVisible":true},
+  {"key":"locked",       "isVisible":false},
+  {"key":"archived",     "isVisible":true},
+  {"key":"archivedAt",   "isVisible":true}
+]', false),
+
+-- scopes
+(3, 'scopes', 'Compact', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"routeId",   "isVisible":false},
+  {"key":"value",     "isVisible":true},
+  {"key":"archived",  "isVisible":false},
+  {"key":"archivedAt","isVisible":false}
+]', true),
+(3, 'scopes', 'Archives', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"routeId",   "isVisible":false},
+  {"key":"value",     "isVisible":true},
+  {"key":"archived",  "isVisible":true},
+  {"key":"archivedAt","isVisible":true}
 ]', false)
 
 ;
