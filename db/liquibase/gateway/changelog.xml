@@ -40,6 +40,14 @@
     <comment></comment>
     <sqlFile path="versions/0.1.1/04-resource-func.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="0.1.1-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.1/05-scope-func.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.1-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.1/06-field-func.sql" splitStatements="false"/>
+  </changeSet>
   
   <!-- Updates for version 0.1.2 : functions -->
   <changeSet id="0.1.2-01" author="lcluber">
@@ -90,7 +98,15 @@
   </changeSet>
   <changeSet id="0.1.3-03" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/0.1.3/03-triggers.sql" splitStatements="false"/>
+    <sqlFile path="versions/0.1.3/03-scope-view.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.3-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.3/04-field-view.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="0.1.3-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/0.1.3/05-triggers.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- Updates for version 0.1.4 : functions -->

@@ -25,6 +25,25 @@ export const SCOPE_COLUMNS: (
     controlOptions: {
       validators: [required],
     },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
+    key: "routeName",
+    label: "Route",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    options: data.routes.map((r: Route) => ({
+      label: r.name,
+      value: r.name,
+    })),
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+    },
   },
   {
     key: "name",

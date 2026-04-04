@@ -68,6 +68,7 @@ INSERT INTO field ("resourceId", name, locked, "creatorId", "creatorName") VALUE
 -- scopes (resourceId=9)
 (9, 'id',         true,  -1, 'system'),
 (9, 'routeId',    true,  -1, 'system'),
+(9, 'routeName',  true,  -1, 'system'),
 (9, 'name',       false, -1, 'system'),
 (9, 'archived',   true,  -1, 'system'),
 (9, 'archivedAt', true,  -1, 'system')
