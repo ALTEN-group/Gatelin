@@ -1,0 +1,31 @@
+ARG NODE_VERSION
+ARG NGINX_VERSION
+FROM node:${NODE_VERSION} AS build
+
+RUN apk update && apk add tzdata
+
+ARG TZ
+ENV TZ=${TZ}
+
+ARG UID
+ARG GID
+RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
+USER user
+
+ENV NODE_ENV=production
+
+WORKDIR /usr/src/app
+COPY --chown=user:usergroup . .
+
+RUN npm i --loglevel=error --ignore-scripts --no-fund \
+    && npm run build
+
+############
+### prod ###
+############
+
+FROM nginx:${NGINX_VERSION}
+
+RUN rm -f /etc/nginx/conf.d/*.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /usr/src/app/docs/.vitepress/dist /usr/share/nginx/html/docs
