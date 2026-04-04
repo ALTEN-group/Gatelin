@@ -1,7 +1,7 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
-export default new SQLEntity("scopes", [
+export default new SQLEntity("scope", [
   {
     key: "id",
     type: "integer",
@@ -17,7 +17,21 @@ export default new SQLEntity("scopes", [
     validator: null,
   },
   {
-    key: "value",
+    key: "routeId",
+    type: "integer",
+    min: 1,
+    max: null,
+    isTypeChecked: true,
+    isFilterable: true,
+    requiredFor: ["POST"],
+    operations: ["SELECT", "INSERT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
+  {
+    key: "name",
     type: "string",
     min: 1,
     max: 50,
@@ -25,20 +39,6 @@ export default new SQLEntity("scopes", [
     isFilterable: true,
     requiredFor: ["POST", "PUT"],
     operations: ["SELECT", "INSERT", "UPDATE"],
-    isPrivate: false,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
-  {
-    key: "locked",
-    type: "boolean",
-    min: null,
-    max: null,
-    isTypeChecked: true,
-    isFilterable: true,
-    requiredFor: [],
-    operations: ["SELECT"],
     isPrivate: false,
     sanitizer: null,
     normalizer: null,

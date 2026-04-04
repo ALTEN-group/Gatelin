@@ -42,4 +42,18 @@ export const BASE_ACLS: AclsMapping = {
     archive: 35,
     history: 32,
   },
+  fields: {
+    get: 37,
+    history: 38,
+    update: 39,
+    create: 40,
+    archive: 41,
+  },
+  scopes: {
+    get: 43,
+    history: 44,
+    update: 45,
+    create: 46,
+    archive: 47,
+  },
 };

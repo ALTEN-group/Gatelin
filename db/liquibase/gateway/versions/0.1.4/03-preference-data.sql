@@ -157,17 +157,17 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
 -- scopes
 (3, 'scopes', 'Compact', '[
   {"key":"id",         "isVisible":false},
-  {"key":"routeId",   "isVisible":false},
-  {"key":"value",     "isVisible":true},
-  {"key":"archived",  "isVisible":false},
-  {"key":"archivedAt","isVisible":false}
+  {"key":"routeId",    "isVisible":true},
+  {"key":"name",       "isVisible":true},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', true),
 (3, 'scopes', 'Archives', '[
   {"key":"id",         "isVisible":false},
-  {"key":"routeId",   "isVisible":false},
-  {"key":"value",     "isVisible":true},
-  {"key":"archived",  "isVisible":true},
-  {"key":"archivedAt","isVisible":true}
+  {"key":"routeId",    "isVisible":true},
+  {"key":"name",       "isVisible":true},
+  {"key":"archived",   "isVisible":true},
+  {"key":"archivedAt", "isVisible":true}
 ]', false)
 
 ;
