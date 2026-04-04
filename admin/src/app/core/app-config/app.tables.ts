@@ -56,8 +56,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "operations",
   },
   fields: {
-    label: $localize`:@@TableLabels_Field:Champ`,
-    title: $localize`:@@TableLabels_Fields:Champs`,
+    label: $localize`:@@TableLabels_Field:Field`,
+    title: $localize`:@@TableLabels_Fields:Fields`,
     key: "fields",
     functionalityKey: "fields",
   },

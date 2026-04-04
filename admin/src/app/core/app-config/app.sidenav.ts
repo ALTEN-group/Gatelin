@@ -58,7 +58,7 @@ export const SIDENAV: MenuItem[] = [
   },
   {
     id: "fields",
-    label: $localize`:@@Admin_FieldsNav:Champs`,
+    label: $localize`:@@Admin_FieldsNav:Fields`,
     routerLink: `/${AppPaths.FIELDS}`,
     icon: "pi pi-list",
     data: {

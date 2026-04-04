@@ -10,6 +10,5 @@ export const scopeFactory = (): Scope => ({
   id: null,
   routeId: null,
   name: "",
-  archivedAt: null,
-  archived: false,
+  ...new ArchiveInfo(),
 });

@@ -131,7 +131,7 @@ export const ROUTES: Routes = [
     title: "Fields",
     canActivate: [aclGuard()],
     data: {
-      breadcrumb: $localize`:@@Admin_FieldsNav:Champs`,
+      breadcrumb: $localize`:@@Admin_FieldsNav:Fields`,
       functionality: "fields",
     },
     resolve: {
