@@ -19,7 +19,33 @@ sed -i "" \
   -e "s|^GATELIN_DB_PWD=.*|GATELIN_DB_PWD=${GATELIN_DB_PWD}|" \
   "$ENV_FILE"
 
+# Load registry vars from the generated env file
+set +e
+source "$ENV_FILE" 2>/dev/null
+set -e
+
+# Build NPMRC only with non-empty values (no deprecated fields)
+NPMRC_CONTENT=""
+if [ -n "$NPM_REGISTRY_URL" ]; then
+  NPMRC_CONTENT="registry=${NPM_REGISTRY_URL}"
+  if [ -n "$NPM_REGISTRY_TOKEN" ]; then
+    NPMRC_CONTENT="${NPMRC_CONTENT}
+//${NPM_REGISTRY_URL}:_authToken=${NPM_REGISTRY_TOKEN}"
+  fi
+fi
+
+sed -i "" \
+  -e "s|^NPMRC=.*|NPMRC=\"${NPMRC_CONTENT}\"|" \
+  "$ENV_FILE"
+
 echo "$ENV_FILE created from $ENV_EXAMPLE."
+echo ""
+echo "Auto-generated values:"
+echo "  LIQUIBASE_DB_PWD  = ${LIQUIBASE_DB_PWD}"
+echo "  POSTGRES_ROOT_PWD = ${POSTGRES_ROOT_PWD}"
+echo "  GATELIN_DB_USER   = ${GATELIN_DB_USER}"
+echo "  GATELIN_DB_PWD    = ${GATELIN_DB_PWD}"
+echo ""
 echo "Fill in the required values before starting the stack:"
 echo "  NPM_REGISTRY_DOMAIN        (your npm registry domain)"
 echo "  NPM_REGISTRY_NODE          (your npm registry name)"
