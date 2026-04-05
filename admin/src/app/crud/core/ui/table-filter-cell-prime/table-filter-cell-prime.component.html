@@ -5,7 +5,7 @@
     <ng-container [ngTemplateOutlet]="date"/>
   }
   @case (ControlType.CHECKBOX) {
-    <p-columnFilter type="boolean" [field]="column.key" display="menu" />
+    <p-columnFilter type="boolean" matchMode="equals" [field]="column.key" display="menu" />
   }
   @case (ControlType.SELECT) {
     <ng-container [ngTemplateOutlet]="select"/>
