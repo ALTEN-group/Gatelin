@@ -13,6 +13,9 @@ import { stripTrailingSlash } from "../utils/url.js";
 /** @type {RouteConfig[]|null} */
 let routes = null;
 
+/** @type {Map<string, string>} */
+let serviceBaseUrls = new Map();
+
 /**
  * Initializes the route cache by loading all route configurations from the database.
  * This function should be called once when the application starts to populate the
@@ -35,7 +38,16 @@ function init() {
     },
   };
   const { query, args } = rEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => (routes = r.rows));
+  const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
+  const san = `${SERVER_SCHEME}${APP_NAME}-`;
+  const ep = `-${ENV_NAME}:${PORT}`;
+  return execute(query, args, null).then((r) => {
+    routes = r.rows.map((row) => ({ ...row, _regex: new RegExp(row.url) }));
+    serviceBaseUrls = new Map(
+      [...new Set(routes.map((row) => row.serviceName))]
+        .map((name) => [name, `${san}${name}${ep}`])
+    );
+  });
 }
 
 /**
@@ -58,9 +70,12 @@ function getOne(requestUrl, requestMethod) {
   const actualUrl = stripTrailingSlash(requestUrl);
   // Find the first route that matches the URL and method
   return routes.find(
-    (r) =>
-      new RegExp(r.url).test(actualUrl) && r.methods.includes(requestMethod),
+    (r) => r._regex.test(actualUrl) && r.methods.includes(requestMethod),
   );
+}
+
+function getServiceBaseUrl(serviceName) {
+  return serviceBaseUrls.get(serviceName);
 }
 
 /**
@@ -84,5 +99,6 @@ function deleteArchived(date) {
 export default {
   init,
   getOne,
+  getServiceBaseUrl,
   deleteArchived,
 };

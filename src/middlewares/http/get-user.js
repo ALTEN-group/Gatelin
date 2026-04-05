@@ -48,7 +48,8 @@ export function getUserByEmail(req, res, next) {
     .then((r) => {
       const u = r.data.rows[0]; // Expecting single user object
       log.debug(
-        `ms_user response: id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
+        () =>
+          `ms_user response: id=${u?.id}, nickname=${u?.nickname}, email=${u?.email}, roles=${u?.roles}, active=${u?.active}`,
       );
       req.body.rows = [
         // Attach user data to request body for db update in downstream middleware
@@ -85,7 +86,8 @@ export function getUserById(req, res, next) {
     .then((r) => {
       const u = r.data.rows[0]; // Expecting single user object
       log.debug(
-        `ms_user response: id=${u?.id}, nickname=${u?.nickname}, roles=${u?.roles}`,
+        () =>
+          `ms_user response: id=${u?.id}, nickname=${u?.nickname}, roles=${u?.roles}`,
       );
       // Attach user data to request body for db update in downstream middleware
       req.body.rows[0].nickname = u.nickname;

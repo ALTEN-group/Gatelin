@@ -20,7 +20,8 @@ export async function upsertRows(req, res, next) {
   const rowsToUpdate = rows.filter((row) => row.id);
 
   log.debug(
-    `upsertRows: ${rowsToInsert.length} inserts, ${rowsToUpdate.length} updates`,
+    () =>
+      `upsertRows: ${rowsToInsert.length} inserts, ${rowsToUpdate.length} updates`,
   );
 
   const results = [];

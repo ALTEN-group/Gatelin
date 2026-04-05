@@ -25,7 +25,7 @@ function query(verb, url, params, data, headers) {
 
   return fetch(fullUrl, init)
     .then(async (res) => {
-      const responseData = await res.json().catch(() => null);
+      const responseData = res.status !== 204 ? await res.json().catch(() => null) : null;
       if (!res.ok) {
         const err = new Error(`HTTP ${res.status}`);
         err.status = res.status;
@@ -49,10 +49,12 @@ function query(verb, url, params, data, headers) {
  * Logs the start of an HTTP query.
  */
 function logStart(method, url, params, data, headers) {
-  const p = JSON.stringify(params) || null;
-  const d = JSON.stringify(data) || null;
-  const h = JSON.stringify(headers) || null;
-  log.debug(`${LOG_PREFIX} query : { method: '${method}', Url: '${url}', params: '${p}', data: '${d}', headers: '${h}'}`);
+  log.debug(() => {
+    const p = JSON.stringify(params) || null;
+    const d = JSON.stringify(data) || null;
+    const h = JSON.stringify(headers) || null;
+    return `${LOG_PREFIX} query : { method: '${method}', Url: '${url}', params: '${p}', data: '${d}', headers: '${h}'}`;
+  });
   return Date.now();
 }
 
@@ -60,9 +62,11 @@ function logStart(method, url, params, data, headers) {
  * Logs the end of an HTTP query.
  */
 function logEnd(res, time) {
-  const delta = Date.now() - time;
-  const data = JSON.stringify(res.data);
-  log.debug(`${LOG_PREFIX} response in ${delta}ms. status: ${res.status}, data: ${data}`);
+  log.debug(() => {
+    const delta = Date.now() - time;
+    const data = JSON.stringify(res.data);
+    return `${LOG_PREFIX} response in ${delta}ms. status: ${res.status}, data: ${data}`;
+  });
 }
 
 export default {

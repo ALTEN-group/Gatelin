@@ -6,7 +6,7 @@ export default function updateHeaderWithConsumer(req, res, next) {
 
   const dat = res.locals.tokens.decodedAccess;
   log.debug(
-    `updateHeaderWithConsumer(decodedAccessToken=${JSON.stringify(dat)})`,
+    () => `updateHeaderWithConsumer(decodedAccessToken=${JSON.stringify(dat)})`,
   );
   const c = res.locals.consumer;
 
@@ -14,6 +14,6 @@ export default function updateHeaderWithConsumer(req, res, next) {
     "x-consumer-id": dat.iss,
     "x-consumer-name": c.nickname,
   };
-  log.debug(`updateHeaders(${JSON.stringify(req.additionalHeaders)})`);
+  log.debug(() => `updateHeaders(${JSON.stringify(req.additionalHeaders)})`);
   next();
 }

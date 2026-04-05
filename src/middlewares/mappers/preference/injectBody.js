@@ -19,7 +19,9 @@ export function injectBody(req, res, next) {
 
   const userId = res.locals.consumer.userId;
   const { resource } = req.params;
-  log.debug(`injectPreferenceBody(userId=${userId}, resource=${resource})`);
+  log.debug(
+    () => `injectPreferenceBody(userId=${userId}, resource=${resource})`,
+  );
 
   const rows = Array.isArray(req.body.rows) ? req.body.rows : [];
 

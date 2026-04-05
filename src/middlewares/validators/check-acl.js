@@ -61,7 +61,8 @@ export default function checkAcl(req, res, next) {
 
   const c = res.locals.consumer;
   log.debug(
-    `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
+    () =>
+      `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
   );
 
   const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);

@@ -83,4 +83,4 @@ echo -e "${BLUE}ℹ${NC}  Other services (postgres, traefik, etc.) remain untouc
 
 # Restart all services
 echo -e ""
-./start-dev.sh
+./scripts/start-dev.sh

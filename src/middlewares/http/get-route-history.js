@@ -54,7 +54,9 @@ export function getRouteHistory(req, res, next) {
 
   execute(query, [routeId], null)
     .then((r) => {
-      log.debug(`Found ${r.rows.length} history records for route ${routeId}`);
+      log.debug(
+        () => `Found ${r.rows.length} history records for route ${routeId}`,
+      );
       res.locals.history = r.rows;
       next();
     })

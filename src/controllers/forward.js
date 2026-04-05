@@ -1,9 +1,6 @@
 // @ts-check
 import http from "../utils/http.js";
-
-const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
-const san = `${SERVER_SCHEME}${APP_NAME}-`;
-const ep = `-${ENV_NAME}:${PORT}`;
+import routeSvc from "../services/route.js";
 /**
  * Forwards incoming HTTP requests to appropriate microservices within the application cluster.
  * This controller handles the complete request forwarding lifecycle including URL construction,
@@ -21,12 +18,12 @@ const ep = `-${ENV_NAME}:${PORT}`;
  */
 export function forwardToService(req, res, next) {
   const method = req.method; // GET, POST, etc.
-  const serviceName = res.locals.route.serviceName; // Target microservice name
-  const route = req.url; // Request URL path
-  const body = req.body; // Request body for POST/PUT requests
+  const serviceName = res.locals.route.serviceName;
+  const route = req.url;
+  const body = req.body;
 
-  // Construct internal service URL
-  const url = `${san}${serviceName}${ep}${route}`;
+  // Look up pre-built base URL for this service
+  const url = `${routeSvc.getServiceBaseUrl(serviceName)}${route}`;
 
   // Forward request to target microservice
   http

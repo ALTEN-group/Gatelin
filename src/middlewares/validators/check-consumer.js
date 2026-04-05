@@ -26,21 +26,18 @@ import csmerSvc from "../../services/consumer.js";
  * // Use as Express middleware after JWT decoding
  * import { checkToken } from './middlewares/validators/check-token.js';
  * app.post('/refresh', decodeRefreshToken, checkToken, refreshTokens);
- * 
+ *
  * // After successful validation, req object will have:
  * // req.consumer - complete consumer object from cache
  */
 export default async function checkConsumer(req, res, next) {
-  
   const at = res.locals.tokens.access;
-  log.debug(`checkConsumer(accessToken=${at})`);
+  log.debug(() => `checkConsumer(accessToken=${at})`);
   const c = csmerSvc.getOne(at);
-  
-  if (!c)
-    return next({status: 404, msg: "Consumer not found"});
-  
-  log.debug(`checkConsumer(Consumer: ${JSON.stringify(c)})`);
+
+  if (!c) return next({ status: 404, msg: "Consumer not found" });
+
+  log.debug(() => `checkConsumer(Consumer: ${JSON.stringify(c)})`);
   res.locals.consumer = c;
   next();
-
 }

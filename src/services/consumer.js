@@ -12,8 +12,8 @@ import cEnt from "../entities/consumer.js";
  * @property {number[]} roles - Array of role IDs
  */
 
-/** @type {ConsumerCache[]} */
-let consumers = [];
+/** @type {Map<string, ConsumerCache>} */
+let consumers = new Map();
 
 /**
  * Initializes the consumer cache by loading all consumer records from the database.
@@ -36,7 +36,9 @@ function init() {
     },
   };
   const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => (consumers = r.rows));
+  return execute(query, args, null).then((r) => {
+    consumers = new Map(r.rows.map((c) => [c.accessToken, c]));
+  });
 }
 
 /**
@@ -54,7 +56,7 @@ function init() {
  * }
  */
 function getOne(accessToken) {
-  return consumers.find((r) => r.accessToken === accessToken);
+  return consumers.get(accessToken);
 }
 
 /**
@@ -66,7 +68,7 @@ function getOne(accessToken) {
  * addToCache({ id: 1, userId: 123, nickname: 'user', accessToken: '...', refreshToken: '...', roles: [1, 2] });
  */
 function addToCache(consumer) {
-  consumers.push({ ...consumer });
+  consumers.set(consumer.accessToken, { ...consumer });
 }
 
 /**
@@ -81,17 +83,17 @@ function addToCache(consumer) {
  * @return {boolean} True if a consumer was found and updated, false otherwise
  */
 function updateCache(id, accessToken, refreshToken, roles) {
-  let found = false;
-  consumers = consumers.map((c) => {
+  for (const [oldToken, c] of consumers) {
     if (c.id === +id) {
+      consumers.delete(oldToken);
       c.accessToken = accessToken;
       c.refreshToken = refreshToken;
       c.roles = roles;
-      found = true;
+      consumers.set(accessToken, c);
+      return true;
     }
-    return c;
-  });
-  return found;
+  }
+  return false;
 }
 
 /**
@@ -100,7 +102,12 @@ function updateCache(id, accessToken, refreshToken, roles) {
  * @param {string|number} id - The unique identifier of the consumer to be removed from the cache.
  */
 function deleteFromCache(id) {
-  consumers = consumers.filter((r) => r.id !== +id);
+  for (const [token, c] of consumers) {
+    if (c.id === +id) {
+      consumers.delete(token);
+      return;
+    }
+  }
 }
 
 /**

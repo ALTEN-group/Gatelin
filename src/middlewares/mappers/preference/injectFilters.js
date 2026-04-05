@@ -15,11 +15,13 @@ import { log } from "@dwtechs/winstan";
 export function injectFilters(req, res, next) {
   const userId = res.locals.consumer.userId;
   const { resource } = req.params;
-  log.debug(`injectPreferenceFilters(userId=${userId}, resource=${resource})`);
+  log.debug(
+    () => `injectPreferenceFilters(userId=${userId}, resource=${resource})`,
+  );
 
   req.body = {
     filters: {
-      userId:    { value: userId,   matchMode: "equals" },
+      userId: { value: userId, matchMode: "equals" },
       resource: { value: resource, matchMode: "equals" },
     },
     sortField: "name",
