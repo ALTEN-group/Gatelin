@@ -69,9 +69,10 @@ services:
   gatelin_migration:
     build:
       context: ${PWD}/db/liquibase
-      dockerfile: dockerfile
+      dockerfile: dockerfile.prod
       args:
         LIQUIBASE_VERSION: ${LIQUIBASE_VERSION}
+    image: dwtechs/gatelin-migration:${VERSION:-latest}
     container_name: ${GATELIN_MIGRATION_HOST}
     hostname: ${GATELIN_MIGRATION_HOST}
     environment:
@@ -93,8 +94,6 @@ services:
         condition: service_healthy
     networks:
       - internal
-    volumes:
-      - ${PWD}/db/liquibase/gateway/:/liquibase/changelog
 
   ms_role_mock:
     build:

@@ -23,6 +23,12 @@ function update(){
    /liquibase/liquibase update
 }
 
+function updateData(){
+  if [ -f "/liquibase/data/changelog.xml" ]; then
+    LIQUIBASE_SEARCH_PATH=/liquibase/data LIQUIBASE_COMMAND_CHANGELOG_FILE=changelog.xml /liquibase/liquibase update
+  fi
+}
+
 function snapshot(){
   local SNAPSHOT_NUMBER="$(( $(ls -1 ${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot* | wc -l) + 1 ))"
   /liquibase/liquibase --output-file="${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot${SNAPSHOT_NUMBER}.json" snapshot --snapshot-format=json
@@ -56,6 +62,7 @@ else
   if [[ $UPDATE = 1 ]]; then
       createDB
       update
+      updateData
       snapshot
       createUser
   elif [[ $ROLLBACK -gt 1 ]]; then

@@ -126,6 +126,7 @@ services:
       - internal
     volumes:
       - ${PWD}/db/liquibase/gateway/:/liquibase/changelog
+      - ${PWD}/db/liquibase/data/:/liquibase/data
 
   gatelin:
     build:

@@ -1,0 +1,20 @@
+ARG LIQUIBASE_VERSION
+FROM liquibase/liquibase:${LIQUIBASE_VERSION}
+
+USER root
+
+RUN apk update && apk add --no-cache postgresql-client curl
+
+USER liquibase
+
+COPY --chown=liquibase:liquibase --chmod=700 ./entrypoint.sh /docker-entrypoint.sh
+
+# Bake the gateway schema changelog into the image
+COPY --chown=liquibase:liquibase ./gateway /liquibase/changelog
+
+# Optional user data volume (mount a data/changelog.xml at runtime)
+VOLUME ["/liquibase/data"]
+
+ENV LIQUIBASE_COMMAND_SNAPSHOT_FORMAT=snapshot/snapshot
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
