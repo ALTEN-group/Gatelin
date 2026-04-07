@@ -118,7 +118,7 @@ export class CrudRepository<T> {
    */
   private archive(itemIds: number[]): Observable<null> {
     return this.http.post<null>(`${this.apiUrl}/archive`, {
-      rows: itemIds,
+      rows: itemIds.map((id) => ({ id })),
     });
   }
 
