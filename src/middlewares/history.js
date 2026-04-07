@@ -6,8 +6,8 @@ import { execute } from "@dwtechs/antity-pgsql";
  * @param {string} [schema='public'] - The schema name (defaults to 'public')
  * @returns {Function} Express middleware function
  */
-function get(tableName, schema = 'public') {
-  return function(req, res, next) {
+function get(tableName, schema = "public") {
+  return function (req, res, next) {
     const id = req.params.id;
     // log.debug(`getHistory(id=${id})`);
     if (!id) return next({ status: 400, msg: "Missing id" });
@@ -16,7 +16,7 @@ function get(tableName, schema = 'public') {
       .then((r) => {
         const { rowCount, rows } = r;
         if (!rowCount) return next({ status: 404, msg: "history not found" });
-        res.locals.history = rows;
+        res.locals.rows = rows;
         res.locals.total = rowCount;
         next();
       })
@@ -32,7 +32,7 @@ function get(tableName, schema = 'public') {
  * @param {string} [schema='public'] - The schema name (defaults to 'public')
  * @return {Promise} A promise that resolves with the history data.
  */
-function query(tableName, id, schema = 'public') {
+function query(tableName, id, schema = "public") {
   const sql = `
     SELECT id, tstamp, operation, "consumerId", "consumerName"
     FROM log.history
