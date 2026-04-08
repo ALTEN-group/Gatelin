@@ -125,7 +125,8 @@ export const ROUTE_COLUMNS: (
   {
     key: "description",
     label: "Description",
-    controlType: CONTROL_TYPES.TEXTAREA,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
     controlOptions: {
       validators: [required, maxlength(100)],
     },

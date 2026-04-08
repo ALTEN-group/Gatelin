@@ -34,29 +34,34 @@
       </tr>
     </ng-template>
     <ng-template #expandedrow let-entry>
-      <tr>
-        <td colspan="4">            
-          <p-table [value]="entry.changes" dataKey="propKey">
-            <ng-template #header>
-              <tr>
-                <th class="first-col"></th>
-                <th>Propriété</th>
-                <th>Valeur</th>
-                <th>Ancienne valeur</th>
-              </tr>
-            </ng-template>
-            <ng-template #body let-row>
-              <tr>
-                <td class="first-col"></td>
-                <td>{{ row.label }}</td>
-                <td [class.has-changed]="row.hasChanged">{{ row.newValue }}</td>
-                <td>{{ row.oldValue }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </td>
-      </tr>
-      
+      @if (entry.changes.length > 0) {
+        <tr>
+          <td colspan="4">            
+            <p-table [value]="entry.changes" dataKey="propKey">
+              <ng-template #header>
+                <tr>
+                  <th class="first-col"></th>
+                  <th>Propriété</th>
+                  <th>Valeur</th>
+                  <th>Ancienne valeur</th>
+                </tr>
+              </ng-template>
+              <ng-template #body let-row>
+                <tr>
+                  <td class="first-col"></td>
+                  <td>{{ row.label }}</td>
+                  <td [class.has-changed]="row.hasChanged">{{ row.newValue }}</td>
+                  <td>{{ row.oldValue }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </td>
+        </tr>
+      } @else {
+        <tr>
+          <td colspan="4" class="no-changes">Aucun changement enregistré</td>
+        </tr>
+      }
     </ng-template>
   </p-table>
 }

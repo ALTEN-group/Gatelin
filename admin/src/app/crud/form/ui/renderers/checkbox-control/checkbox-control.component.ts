@@ -6,6 +6,7 @@ import { CheckboxModule } from "primeng/checkbox";
 @Component({
   selector: "frm-checkbox-control",
   templateUrl: "./checkbox-control.component.html",
+  styleUrls: ["./checkbox-control.component.scss"],
   imports: [ReactiveFormsModule, CheckboxModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -13,6 +13,7 @@ import { MultiSelectModule } from "primeng/multiselect";
   imports: [MultiSelectModule, ReactiveFormsModule, IftaLabelModule],
   selector: "frm-multi-select-control",
   templateUrl: "./multi-select-control.component.html",
+  styleUrls: ["./multi-select-control.component.scss"],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

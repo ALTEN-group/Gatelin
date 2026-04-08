@@ -27,10 +27,8 @@
           <p-accordion-panel>
             <p-accordion-header>
                 <span i18n="@@EditionDialog_HistoryHeader">
-                  Historique
+                  Historique ({{historyData.total ? historyData.total : historyData.rows.length}})
                 </span>
-                &nbsp;
-                <span>({{historyData.total ? historyData.total : historyData.rows.length}})</span>
               </p-accordion-header>
               <p-accordion-content>
                 <crd-history
