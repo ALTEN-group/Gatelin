@@ -270,7 +270,7 @@ export class EditionDialogComponent<TData extends CrudItemBase> {
    * @param entry - The history entry to restore
    */
   public onHistorySelect(entry: HistorizedData<TData>) {
-    this.editedEntry.set(entry.old_val);
+    this.editedEntry.set(entry.val);
     this.invalidForm = false;
     this.forceReloadTime.set(Date.now());
   }

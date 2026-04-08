@@ -16,7 +16,7 @@ import { TableModule } from "primeng/table";
 import { FullHistoryRow, HistorizedData } from "./history.model";
 
 @Component({
-  selector: "shared-history",
+  selector: "crd-history",
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./history.component.html",
   styleUrls: ["./history.component.scss"],
@@ -38,9 +38,9 @@ export class HistoryComponent<TData> {
   public readonly selected = output<HistorizedData<TData>>();
 
   public readonly DATE_FORMAT = DATE_FORMAT;
-  public selectedDate: number | null = null;
+  public selectedDate: string | null = null;
 
-  public expandedRows: Record<number, boolean> = {};
+  public expandedRows: Record<string, boolean> = {};
 
   public showVersion(entry: HistorizedData<TData>) {
     this.selectedDate = entry.tstamp;
@@ -50,8 +50,8 @@ export class HistoryComponent<TData> {
   private buildHistoryTable() {
     const rows = this.data()?.rows ?? [];
     return rows.map((row, rowIndex) => {
-      const currentRow = row.old_val;
-      const lastRow = rows[rowIndex + 1]?.old_val;
+      const currentRow = row.val;
+      const lastRow = rows[rowIndex + 1]?.val;
       const changes = [];
       for (const propKey in currentRow) {
         const change = this.buildChangesTable(

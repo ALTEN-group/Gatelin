@@ -14,8 +14,6 @@ export class User extends CrudItemBase implements GeoCoordinates {
   token = "";
   permissions: Permission[] = [];
   active = true;
-  updatedAt: number | null = null;
-  updatedBy: { firstName: string; lastName: string } | null = null;
 
   /** Will store the functionality access levels for the logged user */
   accessLevels?: FunctionalityAccessLevel[];

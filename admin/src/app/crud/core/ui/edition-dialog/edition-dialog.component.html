@@ -30,10 +30,10 @@
                   Historique
                 </span>
                 &nbsp;
-                <span>({{historyData.total}})</span>
+                <span>({{historyData.total ? historyData.total : historyData.rows.length}})</span>
               </p-accordion-header>
               <p-accordion-content>
-                <shared-history
+                <crd-history
                   [data]="historyData"
                   [config]="config()"
                   (selected)="onHistorySelect($event)"

@@ -42,7 +42,7 @@ echo -e "${GREEN}✅ Database reset complete!${NC}"
 
 # Restart all services
 echo -e ""
-./start-dev.sh
+./scripts/start-dev.sh
 
 # Wait for services to be ready
 echo -e ""
