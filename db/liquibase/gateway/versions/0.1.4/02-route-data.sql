@@ -58,9 +58,7 @@ INSERT INTO route ("resourceId", pattern, name, description, methods, "isProtect
 (11, '/preferences/(?<resource>[a-zA-Z0-9_-]+)',  'getUserPreferences',  'Get preferences for the authenticated user and a given table (users service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
 (11, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system'),
 -- roles
-(12, '/search',                                    'searchRoles',        'Search roles',                                                               ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(12, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'getRolePreferences',  'Get preferences for the authenticated user and a given table (roles service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
-(12, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'syncRolePreferences', 'Sync preferences for the authenticated user and a given table (roles service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system')
+(12, '/search',                                    'searchRoles',        'Search roles',                                                               ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system')
 
 ;
 
@@ -122,10 +120,8 @@ INSERT INTO route_operation ("routeId", "operationId") VALUES
 (43, 1),
 (44, 2),
 (45, 12),
--- roles:          46=searchRoles, 47=getRolePreferences, 48=syncRolePreferences
-(46, 2), (46, 3),
-(47, 2),
-(48, 12)
+-- roles:          46=searchRoles
+(46, 2), (46, 3)
 
 ;
 
