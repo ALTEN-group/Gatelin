@@ -18,7 +18,10 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS '
       UPDATE scope
       SET
         "routeId" = COALESCE(NEW."routeId", "routeId"),
-        name = COALESCE(NEW.name, name)
+        name = COALESCE(NEW.name, name),
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
+        "updatedAt" = NOW()
       WHERE id = NEW.id;
 
       PERFORM soft_delete(''scope'', OLD.id, NEW.archived, OLD.archived);

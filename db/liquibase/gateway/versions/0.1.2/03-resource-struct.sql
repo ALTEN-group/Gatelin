@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS resource (
   "creatorName" TEXT,
   "updaterId" INT,
   "updaterName" TEXT,
-  -- "createdAt" TIMESTAMP DEFAULT NOW(),
-  -- "updatedAt" TIMESTAMP DEFAULT NOW(),
+  "createdAt" TIMESTAMP DEFAULT NOW(),
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
   CHECK ("serviceId">=0),
   CONSTRAINT fk_resource_service
 		FOREIGN KEY ("serviceId") REFERENCES service (id)

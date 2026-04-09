@@ -5,9 +5,10 @@
 CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO route ("resourceId", description, pattern, methods, "isProtected", "locked", "creatorId", "creatorName")
+      INSERT INTO route ("resourceId", name, description, pattern, methods, "isProtected", locked, "creatorId", "creatorName")
       VALUES (
         NEW."resourceId",
+        NEW.name,
         NEW.description,
         NEW.pattern,
         NEW.methods,
@@ -18,16 +19,20 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
-      
+
     ELSIF TG_OP = ''UPDATE'' THEN
-      UPDATE route 
-      SET 
+      UPDATE route
+      SET
         "resourceId" = COALESCE(NEW."resourceId", "resourceId"),
+        name = COALESCE(NEW.name, name),
         description = COALESCE(NEW.description, description),
         pattern = COALESCE(NEW.pattern, pattern),
         methods = COALESCE(NEW.methods, methods),
         "isProtected" = COALESCE(NEW."isProtected", "isProtected"),
-        locked = COALESCE(NEW.locked, locked)
+        locked = COALESCE(NEW.locked, locked),
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
+        "updatedAt" = NOW()
       WHERE id = NEW.id;
 
       PERFORM soft_delete(''route'', OLD.id, NEW.archived, OLD.archived);

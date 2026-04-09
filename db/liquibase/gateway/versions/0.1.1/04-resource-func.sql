@@ -14,19 +14,22 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
-      
+
     ELSIF TG_OP = ''UPDATE'' THEN
       UPDATE resource
-      SET 
+      SET
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
         name = COALESCE(NEW.name, name),
-        locked = COALESCE(NEW.locked, locked)
+        locked = COALESCE(NEW.locked, locked),
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
+        "updatedAt" = NOW()
       WHERE id = NEW.id;
 
       PERFORM soft_delete(''resource'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
-      
+
     END IF;
   END;
 ' LANGUAGE plpgsql SECURITY DEFINER;

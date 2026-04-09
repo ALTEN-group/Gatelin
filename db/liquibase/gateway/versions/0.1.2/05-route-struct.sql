@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS route (
   "creatorName" TEXT,
   "updaterId" INT,
   "updaterName" TEXT,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
   CHECK ("resourceId">=0),
   CONSTRAINT fk_route_resource
 		FOREIGN KEY ("resourceId") REFERENCES resource (id)

@@ -37,14 +37,14 @@ BEGIN
       VALUES (TG_TABLE_SCHEMA, TG_RELNAME, TG_OP, NEW."updaterId", NEW."updaterName", row_to_json(NEW));
     RETURN NEW;
   ELSIF TG_OP = ''DELETE'' THEN
-    DELETE FROM log.history 
+    DELETE FROM log.history
       WHERE "schemaName" = TG_TABLE_SCHEMA
       AND "tableName" = TG_RELNAME
       AND CAST(record->>''id'' AS INT) = OLD.id;
     RETURN OLD;
   END IF;
-  
+
   RETURN NULL;
 END;
-' LANGUAGE 'plpgsql' SECURITY DEFINER;
+' LANGUAGE plpgsql SECURITY DEFINER;
 

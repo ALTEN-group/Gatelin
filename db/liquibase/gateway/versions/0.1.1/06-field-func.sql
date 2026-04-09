@@ -20,7 +20,10 @@ CREATE OR REPLACE FUNCTION iud_field() RETURNS trigger AS '
       SET
         "resourceId" = COALESCE(NEW."resourceId", "resourceId"),
         name = COALESCE(NEW.name, name),
-        locked = COALESCE(NEW.locked, locked)
+        locked = COALESCE(NEW.locked, locked),
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
+        "updatedAt" = NOW()
       WHERE id = NEW.id;
 
       PERFORM soft_delete(''field'', OLD.id, NEW.archived, OLD.archived);
