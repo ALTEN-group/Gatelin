@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION iud_operation() RETURNS trigger AS '
       VALUES (
         NEW.name,
         NEW.description,
-        NEW."creatorId",
-        NEW."creatorName"
+        NEW."consumerId",
+        NEW."consumerName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -19,8 +19,8 @@ CREATE OR REPLACE FUNCTION iud_operation() RETURNS trigger AS '
       SET
         name = COALESCE(NEW.name, name),
         description = COALESCE(NEW.description, description),
-        "updaterId" = NEW."updaterId",
-        "updaterName" = NEW."updaterName",
+        "updaterId" = NEW."consumerId",
+        "updaterName" = NEW."consumerName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

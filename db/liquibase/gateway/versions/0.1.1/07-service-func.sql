@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION iud_service() RETURNS trigger AS '
         NEW.name,
         NEW.pattern,
         NEW.locked,
-        NEW."creatorId",
-        NEW."creatorName"
+        NEW."consumerId",
+        NEW."consumerName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -21,8 +21,8 @@ CREATE OR REPLACE FUNCTION iud_service() RETURNS trigger AS '
         name = COALESCE(NEW.name, name),
         pattern = COALESCE(NEW.pattern, pattern),
         locked = COALESCE(NEW.locked, locked),
-        "updaterId" = NEW."updaterId",
-        "updaterName" = NEW."updaterName",
+        "updaterId" = NEW."consumerId",
+        "updaterName" = NEW."consumerName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

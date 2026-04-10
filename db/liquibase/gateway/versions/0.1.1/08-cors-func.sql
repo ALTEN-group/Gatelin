@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION iud_cors() RETURNS trigger AS '
       INSERT INTO cors (name, "creatorId", "creatorName")
       VALUES (
         NEW.name,
-        NEW."creatorId",
-        NEW."creatorName"
+        NEW."consumerId",
+        NEW."consumerName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -17,8 +17,8 @@ CREATE OR REPLACE FUNCTION iud_cors() RETURNS trigger AS '
       UPDATE cors
       SET
         name = COALESCE(NEW.name, name),
-        "updaterId" = NEW."updaterId",
-        "updaterName" = NEW."updaterName",
+        "updaterId" = NEW."consumerId",
+        "updaterName" = NEW."consumerName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

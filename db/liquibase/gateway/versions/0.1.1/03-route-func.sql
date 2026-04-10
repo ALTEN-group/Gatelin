@@ -14,8 +14,8 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         NEW.methods,
         NEW."isProtected",
         NEW.locked,
-        NEW."creatorId",
-        NEW."creatorName"
+        NEW."consumerId",
+        NEW."consumerName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -30,8 +30,8 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         methods = COALESCE(NEW.methods, methods),
         "isProtected" = COALESCE(NEW."isProtected", "isProtected"),
         locked = COALESCE(NEW.locked, locked),
-        "updaterId" = NEW."updaterId",
-        "updaterName" = NEW."updaterName",
+        "updaterId" = NEW."consumerId",
+        "updaterName" = NEW."consumerName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
