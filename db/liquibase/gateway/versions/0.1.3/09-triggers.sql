@@ -83,3 +83,9 @@ AFTER INSERT OR UPDATE OR DELETE ON "field"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
+-- Create INSTEAD OF trigger on preferences view
+CREATE TRIGGER preferences_iud_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON "preferences"
+FOR EACH ROW
+EXECUTE PROCEDURE iud_preference();
+

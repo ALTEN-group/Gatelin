@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS operation (
   "updaterId" INT,
   "updaterName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "updatedAt" TIMESTAMP NULL
 );

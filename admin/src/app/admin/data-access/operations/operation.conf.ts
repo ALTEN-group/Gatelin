@@ -2,6 +2,7 @@ import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
 import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
+import { AUDIT_CONFIG } from "@crud/core/utils/confs/audit-config";
 import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
   maxlength,
@@ -30,51 +31,6 @@ export const OPERATION_COLUMNS: StrictCrudItemOptions<Operation>[] = [
       minWidth: "100%",
     },
   },
-  {
-    key: "createdAt",
-    label: "Créé le",
-    controlType: CONTROL_TYPES.DATE,
-    controlOptions: {
-      hidden: true,
-    },
-    columnOptions: {
-      isSoftHidden: true,
-    },
-  },
-  {
-    key: "creatorName",
-    label: "Créé par",
-    controlType: CONTROL_TYPES.INPUT,
-    type: INPUT_TYPES.TEXT,
-    controlOptions: {
-      hidden: true,
-    },
-    columnOptions: {
-      isSoftHidden: true,
-    },
-  },
-  {
-    key: "updatedAt",
-    label: "Modifié le",
-    controlType: CONTROL_TYPES.DATE,
-    controlOptions: {
-      hidden: true,
-    },
-    columnOptions: {
-      isSoftHidden: true,
-    },
-  },
-  {
-    key: "updaterName",
-    label: "Modifié par",
-    controlType: CONTROL_TYPES.INPUT,
-    type: INPUT_TYPES.TEXT,
-    controlOptions: {
-      hidden: true,
-    },
-    columnOptions: {
-      isSoftHidden: true,
-    },
-  },
+  ...AUDIT_CONFIG,
   ...ARCHIVED_CONFIG,
 ];

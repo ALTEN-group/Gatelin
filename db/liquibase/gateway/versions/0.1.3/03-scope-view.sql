@@ -11,7 +11,9 @@ CREATE OR REPLACE VIEW scopes AS
     s."updaterName",
     s."createdAt",
     s."creatorId",
-    s."creatorName"
+    s."creatorName",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM scope AS s
   LEFT JOIN route AS r ON r.id = s."routeId"
   ORDER BY s.id ASC

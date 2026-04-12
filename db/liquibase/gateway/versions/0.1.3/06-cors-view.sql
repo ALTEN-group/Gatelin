@@ -9,7 +9,9 @@ CREATE OR REPLACE VIEW cors_list AS
     c."updaterName",
     c."createdAt",
     c."creatorId",
-    c."creatorName"
+    c."creatorName",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM cors AS c
   ORDER BY c.id ASC
 ;

@@ -19,7 +19,9 @@ create or replace view routes AS
   r."updaterName",
   r."createdAt",
   r."creatorId",
-  r."creatorName"
+  r."creatorName",
+  NULL::INT  AS "consumerId",
+  NULL::TEXT AS "consumerName"
   FROM "route" AS r
   LEFT OUTER JOIN "resource" as b ON r."resourceId" = b.id
   LEFT OUTER JOIN "service" as s ON b."serviceId" = s.id

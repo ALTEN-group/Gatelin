@@ -10,7 +10,9 @@ create or replace view resources AS
   r."updaterName",
   r."createdAt",
   r."creatorId",
-  r."creatorName"
+  r."creatorName",
+  NULL::INT  AS "consumerId",
+  NULL::TEXT AS "consumerName"
   FROM "resource" AS r
   LEFT OUTER JOIN "service" as s ON r."serviceId" = s.id
   ORDER BY r.id ASC

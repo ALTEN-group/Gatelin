@@ -15,6 +15,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"methods",       "isVisible":true},
   {"key":"isProtected",   "isVisible":true},
   {"key":"locked",        "isVisible":false},
+  {"key":"createdAt",     "isVisible":false},
+  {"key":"creatorName",   "isVisible":false},
+  {"key":"updatedAt",     "isVisible":false},
+  {"key":"updaterName",   "isVisible":false},
   {"key":"archived",      "isVisible":false},
   {"key":"archivedAt",    "isVisible":false}
 ]', true),
@@ -32,8 +36,33 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"methods",       "isVisible":true},
   {"key":"isProtected",   "isVisible":true},
   {"key":"locked",        "isVisible":false},
+  {"key":"createdAt",     "isVisible":false},
+  {"key":"creatorName",   "isVisible":false},
+  {"key":"updatedAt",     "isVisible":false},
+  {"key":"updaterName",   "isVisible":false},
   {"key":"archived",      "isVisible":true},
   {"key":"archivedAt",    "isVisible":true}
+]', false),
+(3, 'routes', 'Audit', '[
+  {"key":"id",            "isVisible":false},
+  {"key":"serviceId",     "isVisible":false},
+  {"key":"serviceName",   "isVisible":true},
+  {"key":"resourceId",    "isVisible":false},
+  {"key":"resourceName",  "isVisible":true},
+  {"key":"pattern",       "isVisible":false},
+  {"key":"operationId",   "isVisible":false},
+  {"key":"operationName", "isVisible":false},
+  {"key":"name",          "isVisible":true},
+  {"key":"description",   "isVisible":false},
+  {"key":"methods",       "isVisible":false},
+  {"key":"isProtected",   "isVisible":false},
+  {"key":"locked",        "isVisible":false},
+  {"key":"createdAt",     "isVisible":true},
+  {"key":"creatorName",   "isVisible":true},
+  {"key":"updatedAt",     "isVisible":true},
+  {"key":"updaterName",   "isVisible":true},
+  {"key":"archived",      "isVisible":false},
+  {"key":"archivedAt",    "isVisible":false}
 ]', false),
 
 -- consumers
@@ -44,6 +73,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"accessToken",  "isVisible":false, "defaultWidth":"300px"},
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
+  {"key":"createdAt",    "isVisible":false},
+  {"key":"creatorName",  "isVisible":false},
+  {"key":"updatedAt",    "isVisible":false},
+  {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
 ]', true),
@@ -54,26 +87,64 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"accessToken",  "isVisible":false, "defaultWidth":"300px"},
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
+  {"key":"createdAt",    "isVisible":false},
+  {"key":"creatorName",  "isVisible":false},
+  {"key":"updatedAt",    "isVisible":false},
+  {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":true},
   {"key":"archivedAt",   "isVisible":true}
+]', false),
+(3, 'consumers', 'Audit', '[
+  {"key":"id",           "isVisible":false},
+  {"key":"userId",       "isVisible":true},
+  {"key":"nickname",     "isVisible":true},
+  {"key":"accessToken",  "isVisible":false, "defaultWidth":"300px"},
+  {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
+  {"key":"roles",        "isVisible":false},
+  {"key":"createdAt",    "isVisible":true},
+  {"key":"creatorName",  "isVisible":true},
+  {"key":"updatedAt",    "isVisible":true},
+  {"key":"updaterName",  "isVisible":true},
+  {"key":"archived",     "isVisible":false},
+  {"key":"archivedAt",   "isVisible":false}
 ]', false),
 
 -- services
 (3, 'services', 'Compact', '[
-  {"key":"id",        "isVisible":false},
-  {"key":"name",      "isVisible":true},
-  {"key":"pattern",   "isVisible":true},
-  {"key":"locked",    "isVisible":false},
-  {"key":"archived",  "isVisible":false},
-  {"key":"archivedAt","isVisible":false}
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"pattern",    "isVisible":true},
+  {"key":"locked",     "isVisible":false},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', true),
 (3, 'services', 'Archives', '[
-  {"key":"id",        "isVisible":false},
-  {"key":"name",      "isVisible":true},
-  {"key":"pattern",   "isVisible":true},
-  {"key":"locked",    "isVisible":false},
-  {"key":"archived",  "isVisible":true},
-  {"key":"archivedAt","isVisible":true}
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"pattern",    "isVisible":true},
+  {"key":"locked",     "isVisible":false},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":true},
+  {"key":"archivedAt", "isVisible":true}
+]', false),
+(3, 'services', 'Audit', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"pattern",    "isVisible":false},
+  {"key":"locked",     "isVisible":false},
+  {"key":"createdAt",  "isVisible":true},
+  {"key":"creatorName","isVisible":true},
+  {"key":"updatedAt",  "isVisible":true},
+  {"key":"updaterName","isVisible":true},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', false),
 
 -- resources
@@ -83,6 +154,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"locked",      "isVisible":false},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
 ]', true),
@@ -92,22 +167,57 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"locked",      "isVisible":false},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
+]', false),
+(3, 'resources', 'Audit', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"serviceId",   "isVisible":false},
+  {"key":"serviceName", "isVisible":true},
+  {"key":"name",        "isVisible":true},
+  {"key":"locked",      "isVisible":false},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
 ]', false),
 
 -- cors
 (3, 'cors', 'Compact', '[
-  {"key":"id",        "isVisible":false},
-  {"key":"name",      "isVisible":true},
-  {"key":"archived",  "isVisible":false},
-  {"key":"archivedAt","isVisible":false}
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', true),
 (3, 'cors', 'Archives', '[
-  {"key":"id",        "isVisible":false},
-  {"key":"name",      "isVisible":true},
-  {"key":"archived",  "isVisible":true},
-  {"key":"archivedAt","isVisible":true}
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":true},
+  {"key":"archivedAt", "isVisible":true}
+]', false),
+(3, 'cors', 'Audit', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"createdAt",  "isVisible":true},
+  {"key":"creatorName","isVisible":true},
+  {"key":"updatedAt",  "isVisible":true},
+  {"key":"updaterName","isVisible":true},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', false),
 
 -- operations
@@ -133,6 +243,17 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
 ]', false),
+(3, 'operations', 'Audit', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', false),
 
 -- fields
 (3, 'fields', 'Compact', '[
@@ -141,6 +262,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
   {"key":"locked",       "isVisible":false},
+  {"key":"createdAt",    "isVisible":false},
+  {"key":"creatorName",  "isVisible":false},
+  {"key":"updatedAt",    "isVisible":false},
+  {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
 ]', true),
@@ -150,26 +275,63 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
   {"key":"locked",       "isVisible":false},
+  {"key":"createdAt",    "isVisible":false},
+  {"key":"creatorName",  "isVisible":false},
+  {"key":"updatedAt",    "isVisible":false},
+  {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":true},
   {"key":"archivedAt",   "isVisible":true}
+]', false),
+(3, 'fields', 'Audit', '[
+  {"key":"id",           "isVisible":false},
+  {"key":"resourceId",   "isVisible":false},
+  {"key":"resourceName", "isVisible":true},
+  {"key":"name",         "isVisible":true},
+  {"key":"locked",       "isVisible":false},
+  {"key":"createdAt",    "isVisible":true},
+  {"key":"creatorName",  "isVisible":true},
+  {"key":"updatedAt",    "isVisible":true},
+  {"key":"updaterName",  "isVisible":true},
+  {"key":"archived",     "isVisible":false},
+  {"key":"archivedAt",   "isVisible":false}
 ]', false),
 
 -- scopes
 (3, 'scopes', 'Compact', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"routeId",    "isVisible":false},
-  {"key":"routeName",  "isVisible":true},
-  {"key":"name",       "isVisible":true},
-  {"key":"archived",   "isVisible":false},
-  {"key":"archivedAt", "isVisible":false}
+  {"key":"id",          "isVisible":false},
+  {"key":"routeId",     "isVisible":false},
+  {"key":"routeName",   "isVisible":true},
+  {"key":"name",        "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
 ]', true),
 (3, 'scopes', 'Archives', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"routeId",    "isVisible":false},
-  {"key":"routeName",  "isVisible":true},
-  {"key":"name",       "isVisible":true},
-  {"key":"archived",   "isVisible":true},
-  {"key":"archivedAt", "isVisible":true}
+  {"key":"id",          "isVisible":false},
+  {"key":"routeId",     "isVisible":false},
+  {"key":"routeName",   "isVisible":true},
+  {"key":"name",        "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":true},
+  {"key":"archivedAt",  "isVisible":true}
+]', false),
+(3, 'scopes', 'Audit', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"routeId",     "isVisible":false},
+  {"key":"routeName",   "isVisible":true},
+  {"key":"name",        "isVisible":true},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
 ]', false)
 
 ;

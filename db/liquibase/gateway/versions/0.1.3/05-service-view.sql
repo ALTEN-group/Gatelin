@@ -11,7 +11,9 @@ CREATE OR REPLACE VIEW services AS
     s."updaterName",
     s."createdAt",
     s."creatorId",
-    s."creatorName"
+    s."creatorName",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM service AS s
   ORDER BY s.id ASC
 ;

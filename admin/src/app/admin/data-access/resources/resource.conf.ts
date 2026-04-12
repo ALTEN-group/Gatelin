@@ -4,6 +4,7 @@ import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
 import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
 import { INPUT_TYPES } from "@crud/core/models/input-type.model";
 import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
+import { AUDIT_CONFIG } from "@crud/core/utils/confs/audit-config";
 import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
   maxlength,
@@ -59,5 +60,6 @@ export const RESOURCE_COLUMNS: (
     label: "Verrouillé",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
+  ...AUDIT_CONFIG,
   ...ARCHIVED_CONFIG,
 ];

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS scope (
   "updaterId"  INT,
   "updaterName" TEXT,
   "createdAt"  TIMESTAMP DEFAULT NOW(),
-  "updatedAt"  TIMESTAMP DEFAULT NOW(),
+  "updatedAt"  TIMESTAMP NULL,
   CHECK ("routeId" >= 0),
   CONSTRAINT fk_scope_route
     FOREIGN KEY ("routeId") REFERENCES route (id)

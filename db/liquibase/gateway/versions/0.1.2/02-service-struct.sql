@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS "service" (
   "updaterId" INT,
   "updaterName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "updatedAt" TIMESTAMP NULL
 );

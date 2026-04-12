@@ -10,7 +10,9 @@ CREATE OR REPLACE VIEW operations AS
     o."updaterName",
     o."createdAt",
     o."creatorId",
-    o."creatorName"
+    o."creatorName",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM operation AS o
   ORDER BY o.id ASC
 ;
