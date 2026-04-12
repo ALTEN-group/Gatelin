@@ -17,5 +17,9 @@
     <comment>Example services, resources, operations and routes</comment>
     <sqlFile path="insert-example-routes.sql"/>
   </changeSet>
+  <changeSet id="data-02" author="lcluber">
+    <comment>Example history records (one INSERT + one UPDATE per entity table)</comment>
+    <sqlFile path="insert-example-history.sql"/>
+  </changeSet>
 
 </databaseChangeLog>
