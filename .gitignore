@@ -6,3 +6,4 @@ src/public/*
 package-lock.json
 tests/coverage/
 docker/conf/.env.dev
+website/docs/.vitepress/cache

@@ -1,3 +1,5 @@
+import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
+
 const tableKeys = [
   "routes",
   "consumers",
@@ -16,7 +18,15 @@ type TableInfo = {
   title: string;
   key: AppTable;
   functionalityKey: string;
-  editionDialogSize: "xs" | "s" | "m" | "l"; // Optional size configuration for edition dialog
+  editionDialogSize: "xs" | "s" | "m" | "l";
+  customRowStyles: (row: ArchiveInfo) => { [key: string]: string };
+};
+
+const defaultRowStyles = (row: ArchiveInfo) => {
+  console.log(row, row.archived ? "archived-row" : "");
+  return {
+    opacity: row.archived ? "0.2" : "1",
+  };
 };
 
 export const TABLES: Record<AppTable, TableInfo> = {
@@ -26,6 +36,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "routes",
     functionalityKey: "routes",
     editionDialogSize: "m",
+    customRowStyles: defaultRowStyles,
   },
   consumers: {
     label: $localize`:@@TableLabels_Consumer:Consumer`,
@@ -33,6 +44,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "consumers",
     functionalityKey: "consumers",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   services: {
     label: $localize`:@@TableLabels_Service:Service`,
@@ -40,6 +52,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "services",
     functionalityKey: "services",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   resources: {
     label: $localize`:@@TableLabels_Resource:Resource`,
@@ -47,6 +60,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "resources",
     functionalityKey: "resources",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   cors: {
     label: $localize`:@@TableLabels_Cors:CORS`,
@@ -54,6 +68,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "cors",
     functionalityKey: "cors",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   operations: {
     label: $localize`:@@TableLabels_Operation:Opération`,
@@ -61,6 +76,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "operations",
     functionalityKey: "operations",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   fields: {
     label: $localize`:@@TableLabels_Field:Field`,
@@ -68,6 +84,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "fields",
     functionalityKey: "fields",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
   scopes: {
     label: $localize`:@@TableLabels_Scope:Scope`,
@@ -75,5 +92,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "scopes",
     functionalityKey: "scopes",
     editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
   },
 } as const;

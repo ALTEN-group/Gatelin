@@ -43,10 +43,6 @@ body {
   --p-overlay-modal-padding: 0.5rem;
   --p-dialog-footer-padding: 0.5rem;
 
-  .leaflet-control-attribution {
-    display: none;
-  }
-
   .p-component {
     font-family: $fontFamilyQuicksand;
   }
@@ -65,10 +61,6 @@ body {
   }
 }
 
-.cdk-overlay-container {
-  z-index: 1001; // above ng prime dialog
-}
-
 .small {
   font-size: 12px;
 }
@@ -85,14 +77,6 @@ body {
   .p-toast-message-text {
     margin: 0 !important;
   }
-}
-
-.p-knob-range {
-  stroke: var(--bluegray-100);
-}
-
-.timepicker-overlay {
-  z-index: 9999 !important;
 }
 
 .gradient-link {
