@@ -13,8 +13,7 @@ export function corsMiddleware(req, res, next) {
   const origin = req.headers.origin;
 
   if (origin) {
-    const whitelist = corsSvc.getAll();
-    if (whitelist.indexOf(origin) === -1)
+    if (!corsSvc.has(origin))
       return next({ statusCode: 403, message: `Origin ${origin} not allowed by CORS` });
     res.setHeader("Access-Control-Allow-Origin", origin);
   }

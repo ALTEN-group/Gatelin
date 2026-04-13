@@ -8,8 +8,8 @@ import sEnt from "../entities/scope.js";
  * @property {string} value - Scope keyword matched against URL path segments
  */
 
-/** @type {ScopeCache[]} */
-let scopes = [];
+/** @type {Map<number, string>} id → scope name */
+let scopes = new Map();
 
 /**
  * Initializes the scope cache by loading all non-archived scope records from the database.
@@ -24,7 +24,9 @@ function init() {
     },
   };
   const { query, args } = sEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => (scopes = r.rows));
+  return execute(query, args, null).then((r) => {
+    scopes = new Map(r.rows.map((s) => [s.id, s.name]));
+  });
 }
 
 /**
@@ -34,7 +36,7 @@ function init() {
  * @return {string[]} Array of scope value strings
  */
 function getValues(ids) {
-  return scopes.filter((s) => ids.includes(s.id)).map((s) => s.name);
+  return ids.map((id) => scopes.get(id)).filter(Boolean);
 }
 
 export default {

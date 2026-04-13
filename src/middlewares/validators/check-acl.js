@@ -77,11 +77,10 @@ export default function checkAcl(req, res, next) {
   );
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
-  const fields = perm.fields;
+  const allowed = perm._fieldsSet;
 
   // Filter request body fields on write operations
-  if (fields?.length && req.body) {
-    const allowed = new Set(fields);
+  if (allowed && req.body) {
     const rows = req.body.rows;
     if (isArray(rows))
       req.body.rows = rows.map((item) => filterFields(item, allowed));
@@ -90,7 +89,7 @@ export default function checkAcl(req, res, next) {
   }
 
   // Store field allowlist for request body filtering
-  res.locals.aclFields = fields;
+  res.locals.aclFields = perm.fields;
 
   next();
 }

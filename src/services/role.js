@@ -11,8 +11,8 @@ const url = MSROLE_SEARCH_URL;
  * @property {Array<{ route: number, operations: number[] }>} permissions - Array of permissions for the role
  */
 
-/** @type {roleCache[]} */
-let roles = [];
+/** @type {Map<number, roleCache>} id → role */
+let roles = new Map();
 
 /**
  * Initializes the role cache by loading all non-archived role records from the ms-role service.
@@ -32,9 +32,22 @@ function init() {
       matchMode: "equals",
     },
   };
-  http
+  return http
     .query("POST", url, undefined, { filters }, undefined)
-    .then((r) => (roles = r.data.rows));
+    .then((r) => {
+      roles = new Map(
+        r.data.rows.map((role) => [
+          role.id,
+          {
+            ...role,
+            permissions: role.permissions?.map((p) => ({
+              ...p,
+              _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+            })) ?? [],
+          },
+        ])
+      );
+    });
 }
 
 /**
@@ -50,7 +63,7 @@ function init() {
  * }
  */
 function getOne(id) {
-  return roles.find((r) => r.id === id);
+  return roles.get(id);
 }
 
 export default {

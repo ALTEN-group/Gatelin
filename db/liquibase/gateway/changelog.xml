@@ -21,6 +21,10 @@
     <comment></comment>
     <sqlFile path="versions/0.1.0/04-history-get-func.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="0.1.0-05" author="lcluber">
+    <comment>Functional index on log.history record id for fast entity history lookups</comment>
+    <sqlFile path="versions/0.1.0/05-history-index.sql" splitStatements="false"/>
+  </changeSet>
 
 
   <!-- Updates for version 0.1.1 : functions -->
