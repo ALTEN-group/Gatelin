@@ -1,7 +1,6 @@
+import { Calls, CrudRepository } from "@altengroup/crud-builder";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { RESOURCE_COLUMNS } from "app/admin/data-access/resources/resource.conf";
 import {
   Resource,
@@ -25,7 +24,7 @@ export class ResourcesService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    history: this.crud.history,
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>

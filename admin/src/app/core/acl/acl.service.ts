@@ -1,8 +1,8 @@
+import { Calls } from "@altengroup/crud-builder";
 import { Injectable, signal } from "@angular/core";
+import { Acls } from "@core/acl/acls.model";
 import { BASE_ACLS } from "@core/app-config/app.acls";
 import { Permission } from "@core/roles/role.class";
-import { Acls } from "@crud/core/utils/acls/acls.model";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
 
 @Injectable({ providedIn: "root" })
 export class AclService {

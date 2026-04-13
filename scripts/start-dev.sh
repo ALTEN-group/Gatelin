@@ -12,6 +12,9 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}🚀 Starting development environment...${NC}"
 
+# Ensure bind-mount directories exist before Docker tries to mount them
+mkdir -p node_modules admin/node_modules
+
 # Build and start services
 docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev up --build -d
 

@@ -1,4 +1,4 @@
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
+import { Calls } from "@altengroup/crud-builder";
 
 type RoutesMapping = {
   [key in keyof Calls<unknown>]: number;

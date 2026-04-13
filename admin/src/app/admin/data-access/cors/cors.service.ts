@@ -1,6 +1,5 @@
+import { Calls, CrudRepository } from "@altengroup/crud-builder";
 import { Injectable } from "@angular/core";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { CORS_COLUMNS } from "app/admin/data-access/cors/cors.conf";
 import { Cors, corsFactory } from "app/admin/data-access/cors/cors.model";
 
@@ -20,7 +19,7 @@ export class CorsService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    history: this.crud.history,
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = CORS_COLUMNS;

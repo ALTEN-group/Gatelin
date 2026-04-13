@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
+import { ArchiveInfo } from "@altengroup/crud-builder";
 
 /**
  * Represents a gateway route

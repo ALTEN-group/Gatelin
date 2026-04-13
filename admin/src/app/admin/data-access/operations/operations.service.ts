@@ -1,6 +1,5 @@
+import { Calls, CrudRepository } from "@altengroup/crud-builder";
 import { Injectable } from "@angular/core";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { OPERATION_COLUMNS } from "app/admin/data-access/operations/operation.conf";
 import {
   Operation,
@@ -24,7 +23,7 @@ export class OperationsService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    history: this.crud.history,
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = OPERATION_COLUMNS;

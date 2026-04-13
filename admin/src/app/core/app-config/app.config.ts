@@ -1,18 +1,20 @@
 import {
-    inject,
-    LOCALE_ID,
-    makeEnvironmentProviders,
-    provideAppInitializer,
+  APP_FORM_CONFIG,
+  FormTokenData,
+  HistorizedData,
+  HISTORY_MAPPER,
+} from "@altengroup/crud-builder";
+import {
+  inject,
+  LOCALE_ID,
+  makeEnvironmentProviders,
+  provideAppInitializer,
 } from "@angular/core";
 import { TitleStrategy } from "@angular/router";
 import { APP_CONFIG, AppConfig } from "@core/app-config/app-config.token";
 import { SIDENAV } from "@core/app-config/app.sidenav";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
 import { AuthenticationService } from "@core/auth/auth.service";
-import {
-    APP_FORM_CONFIG,
-    FormTokenData,
-} from "@form/utils/form.injection-token";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
 
@@ -53,6 +55,20 @@ export function provideAppConfig() {
     { provide: APP_CONFIG, useValue: CONFIG },
     { provide: APP_FORM_CONFIG, useValue: FORM_CONFIG }, // remove if no @form
     { provide: TitleStrategy, useClass: CustomTitleStrategyService }, // remove if no custom titles
+    {
+      provide: HISTORY_MAPPER,
+      useValue: (raw: unknown): HistorizedData<unknown> => {
+        const r = raw as any;
+        return {
+          tstamp: r.timestamp,
+          operation: r.action,
+          updaterId: r.consumerId,
+          updaterName: r.consumerName,
+          val: r.data,
+          table_name: "users",
+        };
+      },
+    },
   ]);
 }
 

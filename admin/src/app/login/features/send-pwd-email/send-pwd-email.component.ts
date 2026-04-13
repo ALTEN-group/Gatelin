@@ -1,3 +1,4 @@
+import { EmailValidator } from "@altengroup/crud-builder";
 import { Location } from "@angular/common";
 import {
   ChangeDetectionStrategy,
@@ -16,7 +17,6 @@ import {
 } from "@angular/forms";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { LoadingService } from "@core/utils/loading/loading.service";
-import { EmailValidator } from "@form/utils/email.validator";
 import { SharedModule } from "primeng/api";
 import { CardModule } from "primeng/card";
 @Component({

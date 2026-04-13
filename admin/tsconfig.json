@@ -22,9 +22,6 @@
     "types": ["jasmine", "node"],
     "paths": {
       "@messages/*": ["app/messages/*"],
-      "@crud/*": ["app/crud/*"],
-      "@form/*": ["app/crud/form/*"],
-      "@table/*": ["app/crud/table/*"],
       "@core/*": ["app/core/*"],
     },
   },

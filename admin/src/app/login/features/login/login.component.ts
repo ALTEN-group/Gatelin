@@ -19,7 +19,6 @@ import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-t
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { RoutingListener } from "@core/utils/routing.listener";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
-import { EmailValidator } from "@form/utils/email.validator";
 import { LoginBackgroundComponent } from "app/login/ui/login-background/login-background.component";
 import { SharedModule } from "primeng/api";
 import { AutoFocusModule } from "primeng/autofocus";
@@ -64,7 +63,7 @@ export class LoginComponent implements AfterViewInit {
   public isRedirecting = false;
 
   public formGroup: FormGroup = new FormGroup({
-    email: new FormControl("", [Validators.required, EmailValidator]),
+    email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [Validators.required]),
   });
 

@@ -1,9 +1,9 @@
+import { RowsAndCount } from "@altengroup/crud-builder";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { Role } from "@core/roles/role.class";
 import { RolesPayload } from "@core/roles/role.model";
-import { RowsAndCount } from "@crud/core/utils/crud-service/dto.model";
 import { TableLazyLoadEvent } from "primeng/table";
 import { catchError, map, Observable, of, tap } from "rxjs";
 

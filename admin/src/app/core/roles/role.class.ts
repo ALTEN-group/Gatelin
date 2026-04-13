@@ -1,4 +1,4 @@
-import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
+import { CrudItemBase } from "@altengroup/crud-builder";
 
 export interface Permission {
   route: number;
