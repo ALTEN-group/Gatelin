@@ -1,14 +1,37 @@
 // @ts-check
-import http from "../utils/http.js";
+import { execute } from "@dwtechs/antity-pgsql";
 
-const { MSROLE_SEARCH_URL } = process.env;
-const url = MSROLE_SEARCH_URL;
+const ROLES_WITH_PERMISSIONS_QUERY = `
+  SELECT
+    r.id, r.name, r.description, r."colorId", r."colorName", r.active,
+    r.archived, r."archivedAt", r."creatorName", r."updaterName", r."createdAt", r."updatedAt",
+    COALESCE(
+      jsonb_agg(
+        jsonb_build_object('route', pp."routeId", 'operations', pp.ops, 'fields', pp.fields)
+        ORDER BY pp."routeId"
+      ) FILTER (WHERE pp."routeId" IS NOT NULL),
+      '[]'::jsonb
+    ) AS permissions
+  FROM roles r
+  LEFT JOIN (
+    SELECT
+      "roleId",
+      "routeId",
+      array_agg("operationId" ORDER BY "operationId") AS ops,
+      (array_agg(fields ORDER BY "operationId") FILTER (WHERE fields IS NOT NULL))[1] AS fields
+    FROM permission
+    GROUP BY "roleId", "routeId"
+  ) pp ON pp."roleId" = r.id
+  WHERE r.archived = false
+  GROUP BY r.id, r.name, r.description, r."colorId", r."colorName", r.active,
+    r.archived, r."archivedAt", r."creatorName", r."updaterName", r."createdAt", r."updatedAt"
+`;
 
 /**
  * @typedef {Object} roleCache
  * @property {number} id - Role ID
  * @property {string} name - Role name
- * @property {Array<{ route: number, operations: number[] }>} permissions - Array of permissions for the role
+ * @property {Array<{ routeId: number, operationId: number, fields: string[]|null, _fieldsSet: Set<string>|null }>} permissions
  */
 
 /** @type {Map<number, roleCache>} id → role */
@@ -26,28 +49,20 @@ let roles = new Map();
  * console.log('Role cache initialized');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "equals",
-    },
-  };
-  return http
-    .query("POST", url, undefined, { filters }, undefined)
-    .then((r) => {
-      roles = new Map(
-        r.data.rows.map((role) => [
-          role.id,
-          {
-            ...role,
-            permissions: role.permissions?.map((p) => ({
-              ...p,
-              _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
-            })) ?? [],
-          },
-        ])
-      );
-    });
+  return execute(ROLES_WITH_PERMISSIONS_QUERY, [], null).then((r) => {
+    roles = new Map(
+      r.rows.map((role) => [
+        role.id,
+        {
+          ...role,
+          permissions: role.permissions?.map((p) => ({
+            ...p,
+            _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+          })) ?? [],
+        },
+      ])
+    );
+  });
 }
 
 /**
@@ -66,7 +81,13 @@ function getOne(id) {
   return roles.get(id);
 }
 
+function deleteArchived(date) {
+  return execute('DELETE FROM role WHERE archived = true AND "archivedAt" < $1', [date], null)
+    .then((r) => r.rowCount || 0);
+}
+
 export default {
   init,
   getOne,
+  deleteArchived,
 };

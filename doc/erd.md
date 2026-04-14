@@ -2,37 +2,28 @@
 
 ```mermaid
 ---
-caption: Entity Relationship Diagram 
+caption: Entity Relationship Diagram - Routes & ACL
 ---
 
 erDiagram
-  
+
   route }o--|| resource : ""
   resource }o--|| service : ""
   route }o--|{ route_operation : ""
   route_operation }|--|| operation : ""
-  field }o--|| resource : ""
+  resource ||--o{ field : ""
   scope }o--|| route : ""
-  consumer }o--|| user : "(external)"
-  preference }o--|| user : "(external)"
-  consumer {
-    int id PK
-    int userId FK "ms_user"
-    varchar nickname
-    varchar accessToken UK
-    varchar refreshToken UK
-    int[] roles "array of role IDs"
-    boolean archived
-    timestamp createdAt
-    timestamp updatedAt
-    timestamp archivedAt
-  }
+  permission }o--|| route : ""
+  permission }o--|| operation : ""
+  permission }o--|| role : ""
+  role }o--|| color : ""
 
-  service {
+  color {
     int id PK
-    varchar name "e.g. gateway, ms-user, ms-auth"
-    text pattern
-    boolean locked
+    varchar name UK
+    varchar code UK
+    boolean archived
+    timestamp archivedAt
     int creatorId
     text creatorName
     int updaterId
@@ -41,9 +32,36 @@ erDiagram
     timestamp updatedAt
   }
 
-  cors {
+  role {
+    int id PK
+    int colorId FK
+    varchar name
+    varchar description
+    boolean active
+    boolean archived
+    timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  permission {
+    int roleId FK
+    int routeId FK
+    int operationId FK
+    text[] fields
+  }
+
+  service {
     int id PK
     varchar name
+    text pattern
+    boolean locked
+    boolean archived
+    timestamp archivedAt
     int creatorId
     text creatorName
     int updaterId
@@ -55,12 +73,16 @@ erDiagram
   resource {
     int id PK
     int serviceId FK
-    varchar name "e.g. user, role, route"
+    varchar name
     boolean locked
+    boolean archived
+    timestamp archivedAt
     int creatorId
     text creatorName
     int updaterId
     text updaterName
+    timestamp createdAt
+    timestamp updatedAt
   }
 
   route {
@@ -69,13 +91,17 @@ erDiagram
     varchar pattern
     varchar name
     varchar description
-    method[] methods "array of HTTP methods"
+    method[] methods
     boolean isProtected
     boolean locked
+    boolean archived
+    timestamp archivedAt
     int creatorId
     text creatorName
     int updaterId
     text updaterName
+    timestamp createdAt
+    timestamp updatedAt
   }
 
   route_operation {
@@ -85,8 +111,10 @@ erDiagram
 
   operation {
     int id PK
-    varchar name UK "e.g. read, write, update, delete, list, execute"
+    varchar name UK
     text description
+    boolean archived
+    timestamp archivedAt
     int creatorId
     text creatorName
     int updaterId
@@ -106,25 +134,71 @@ erDiagram
     text creatorName
     int updaterId
     text updaterName
-  }
-
-  preference {
-    int id PK
-    int userId FK "ms_user"
-    varchar tableName
-    varchar name
-    jsonb conf
-    boolean isActive
+    timestamp createdAt
+    timestamp updatedAt
   }
 
   scope {
     int id PK
     int routeId FK
-    varchar name UK "URL path segment matched after resourceName"
+    varchar name UK
     boolean archived
+    timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+    timestamp createdAt
+    timestamp updatedAt
+  }
+```
+
+```mermaid
+---
+caption: Entity Relationship Diagram - Consumer & Preferences
+---
+
+erDiagram
+
+  consumer }o--|| user : "(external)"
+  preference }o--|| user : "(external)"
+
+  cors {
+    int id PK
+    varchar name
+    boolean archived
+    timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  consumer {
+    int id PK
+    int userId FK "ms_user"
+    varchar nickname
+    varchar accessToken UK
+    varchar refreshToken UK
+    int[] roles "array of role IDs"
+    boolean archived
+    timestamp archivedAt
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  preference {
+    int id PK
+    int userId FK "ms_user"
+    varchar resource
+    varchar name
+    jsonb conf
+    boolean isActive
   }
 
   user {
-    
+
   }
 ```

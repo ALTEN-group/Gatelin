@@ -9,7 +9,10 @@ Gatelin is an API Gateway that acts as a single entry point for a microservices 
 - 🌐 **CORS management** — Configure and enforce Cross-Origin Resource Sharing policies
 - 🔐 **Authentication** — JWT token validation and consumer session management
 - 🛡️ **Authorization** — Role-based access control (ACL) validation
-- 🎛️ **Front-end admin** — Manage the gateway via a user-friendly web interface
+- � **Role management** — Create, update, archive, and search roles with assigned permissions
+- 🎨 **Color management** — Curated list of colors assignable to roles
+- 🔑 **Permission management** — Per-role, per-route operation access stored directly in the gateway database
+- �🎛️ **Front-end admin** — Manage the gateway via a user-friendly web interface
 
 ## Health Check
 

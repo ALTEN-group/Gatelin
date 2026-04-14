@@ -65,6 +65,10 @@ export default function checkAcl(req, res, next) {
       `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
   );
 
+  // Extract URL path segments (strip query string first), then find the position
+  // of the resource name (e.g. "preferences") to identify the scope segment that
+  // follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
+  // scopeSegment is used to match scope-restricted permissions (perm.scopes).
   const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
   const resourceIndex = urlSegments.indexOf(r.resourceName);
   const scopeSegment =
