@@ -8,5 +8,7 @@ CREATE OR REPLACE VIEW colors AS
     "creatorName",
     "updaterName",
     "createdAt",
-    "updatedAt"
+    "updatedAt",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM color;

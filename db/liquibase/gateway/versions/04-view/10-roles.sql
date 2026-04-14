@@ -11,6 +11,8 @@ CREATE OR REPLACE VIEW roles AS
     r."creatorName",
     r."updaterName",
     r."createdAt",
-    r."updatedAt"
+    r."updatedAt",
+    NULL::INT  AS "consumerId",
+    NULL::TEXT AS "consumerName"
   FROM role r
   LEFT JOIN color c ON c.id = r."colorId";

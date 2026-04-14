@@ -35,9 +35,10 @@ export class AuthenticationService {
     const payload = { email, pwd };
     return this.http.post<LoginResponse>(this.sessionApi, payload).pipe(
       tap((res) => {
-        const { accessToken, refreshToken } = res;
+        const { accessToken, refreshToken, permissions } = res;
         this.saveTokens(accessToken, refreshToken);
         this.authenticate();
+        if (permissions) this.aclService.storeAccessLevels(permissions);
       }),
       this.getUserBasics(),
       tap(() => this.redirectToApp()),
@@ -97,11 +98,10 @@ export class AuthenticationService {
   public getAccount(): Observable<User | null> {
     return this.http.get<User>(this.meApi).pipe(
       tap((res) => {
-        const { nickname, firstName, lastName, permissions } = res;
+        const { nickname, firstName, lastName } = res;
         this.updateUser(nickname, firstName, lastName);
-        // Store ACLs directly from user's permissions
-        if (permissions) this.aclService.storeAccessLevels(permissions);
       }),
+      map(() => this._user()),
       catchError(() => {
         return of(null);
       }),

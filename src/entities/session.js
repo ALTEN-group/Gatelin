@@ -5,7 +5,7 @@ import { SQLEntity } from "@dwtechs/antity-pgsql";
  * Session entity configuration for database operations.
  * Defines validation rules, types, and constraints for session data.
  */
-const sessionEntity = new SQLEntity("consumer", [
+const sessionEntity = new SQLEntity("consumers", [
   {
     key: "id",
     type: "integer",

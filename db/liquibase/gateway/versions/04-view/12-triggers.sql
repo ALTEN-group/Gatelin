@@ -113,3 +113,10 @@ CREATE TRIGGER role_history_trigger
 AFTER INSERT OR UPDATE OR DELETE ON "role"
 FOR EACH ROW
 EXECUTE PROCEDURE change_trigger();
+
+-- INSTEAD OF trigger on consumers view
+CREATE TRIGGER consumers_iud_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON "consumers"
+FOR EACH ROW
+EXECUTE PROCEDURE iud_consumer();
+

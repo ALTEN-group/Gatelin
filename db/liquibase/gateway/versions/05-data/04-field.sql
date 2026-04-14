@@ -1,6 +1,6 @@
 -- Resource IDs:
 --  1=session, 2=consumers, 3=routes, 4=services, 5=resources
---  6=operations, 7=cors, 8=fields, 9=scopes, 10=preferences, 11=users, 12=roles
+--  6=operations, 7=cors, 8=fields, 9=scopes, 10=preferences, 11=roles, 12=colors, 13=users
 
 INSERT INTO field ("resourceId", name, locked, "creatorId", "creatorName") VALUES
 
@@ -71,7 +71,32 @@ INSERT INTO field ("resourceId", name, locked, "creatorId", "creatorName") VALUE
 (9, 'routeName',  true,  -1, 'system'),
 (9, 'name',       false, -1, 'system'),
 (9, 'archived',   true,  -1, 'system'),
-(9, 'archivedAt', true,  -1, 'system')
+(9, 'archivedAt', true,  -1, 'system'),
+
+-- roles (resourceId=11)
+(11, 'id',          true,  -1, 'system'),
+(11, 'name',        false, -1, 'system'),
+(11, 'description', false, -1, 'system'),
+(11, 'colorId',     false, -1, 'system'),
+(11, 'colorName',   false, -1, 'system'),
+(11, 'active',      false, -1, 'system'),
+(11, 'archived',    true,  -1, 'system'),
+(11, 'archivedAt',  true,  -1, 'system'),
+(11, 'createdAt',   true,  -1, 'system'),
+(11, 'creatorName', true,  -1, 'system'),
+(11, 'updatedAt',   true,  -1, 'system'),
+(11, 'updaterName', true,  -1, 'system'),
+
+-- colors (resourceId=12)
+(12, 'id',          true,  -1, 'system'),
+(12, 'name',        false, -1, 'system'),
+(12, 'code',        false, -1, 'system'),
+(12, 'archived',    true,  -1, 'system'),
+(12, 'archivedAt',  true,  -1, 'system'),
+(12, 'createdAt',   true,  -1, 'system'),
+(12, 'creatorName', true,  -1, 'system'),
+(12, 'updatedAt',   true,  -1, 'system'),
+(12, 'updaterName', true,  -1, 'system')
 
 ;
 

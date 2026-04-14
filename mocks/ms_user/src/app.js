@@ -11,44 +11,6 @@ app.use(helmet());
 app.use(express.json());
 app.use("/users/health", healixRouter);
 
-// Cache for roles fetched from ms_role service
-let rolesCache = null;
-
-/**
- * Fetch roles from ms_role service
- * @returns {Promise<Array>} Array of role objects with permissions
- */
-async function fetchRoles() {
-  if (rolesCache) return rolesCache;
-  
-  const url = process.env.MSROLE_SEARCH_URL;
-  if (!url) {
-    log.error("MSROLE_SEARCH_URL environment variable not set");
-    return [];
-  }
-
-  try {
-    log.debug(`Fetching roles from: ${url}`);
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      log.error(`Failed to fetch roles: ${response.status} ${response.statusText}`);
-      return [];
-    }
-
-    const data = await response.json();
-    rolesCache = data.rows || [];
-    log.info(`Fetched ${rolesCache.length} roles from ms_role service`);
-    return rolesCache;
-  } catch (error) {
-    log.error(`Error fetching roles: ${error.message}`);
-    return [];
-  }
-}
-
 // POST /users/search - Get user by filter (used by Gatelin getUserByEmail middleware)
 app.post("/users/users/search/", (req, res) => {
   log.info(
@@ -79,61 +41,24 @@ app.post("/users/users/search/", (req, res) => {
   });
 });
 
-/**
- * Compute permissions for a user based on their roles
- * Merges all permissions from all user's roles and deduplicates
- * @param {number[]} userRoleIds - Array of role IDs
- * @param {Array} roles - Array of role objects from ms_role service
- * @returns {Array} Array of unique permissions
- */
-function getUserPermissions(userRoleIds, roles) {
-  const userRoles = roles.filter((role) => userRoleIds.includes(role.id));
-  const allPermissions = userRoles.flatMap((role) => role.permissions);
-  
-  // Deduplicate permissions by route+operations
-  const permissionsMap = new Map();
-  allPermissions.forEach((perm) => {
-    const key = perm.route;
-    if (permissionsMap.has(key)) {
-      // Merge operations arrays and deduplicate
-      const existing = permissionsMap.get(key);
-      const mergedOps = [...new Set([...existing.operations, ...perm.operations])];
-      permissionsMap.set(key, { route: perm.route, operations: mergedOps });
-    } else
-      permissionsMap.set(key, { route: perm.route, operations: [...perm.operations] });
-  });
-  
-  return Array.from(permissionsMap.values());
-}
-
 // GET /users/me - Get authenticated user's essential info (for login/navbar)
-app.get("/users/users/me/", async (req, res) => {
+app.get("/users/users/me/", (req, res) => {
   log.info(
     "GET /users/users/me/ - Get authenticated user essentials from x-consumer-id header",
   );
 
-  // Gatelin adds x-consumer-id header (userId from JWT's iss claim)
   const userId = req.headers["x-consumer-id"];
   log.debug(`Extracted userId from x-consumer-id header: ${userId}`);
   const user = mockUsers.find((u) => u.id === +userId);
-  if (!user)
-    return res.status(404).json({ error: "User not found" });
+  if (!user) return res.status(404).json({ error: "User not found" });
 
-  // Fetch roles from ms_role service
-  const roles = await fetchRoles();
-  
-  // Compute user's permissions from their roles
-  const permissions = getUserPermissions(user.roles, roles);
-
-  // Return only essential fields for login/session
   const essentials = {
     nickname: user.nickname,
     firstName: user.firstName,
     lastName: user.lastName,
-    permissions, // Include computed permissions
   };
 
-  log.debug(`GET /users/users/me/ - success: ${user.nickname} with ${permissions.length} permissions`);
+  log.debug(`GET /users/users/me/ - success: ${user.nickname}`);
   res.status(200).json(essentials);
 });
 
