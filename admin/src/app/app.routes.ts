@@ -3,6 +3,7 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
+import { colorsResolver } from "app/admin/data-access/colors/colors.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
@@ -21,6 +22,8 @@ export const AppPaths = {
   OPERATIONS: "operations",
   FIELDS: "fields",
   SCOPES: "scopes",
+  ROLES: "roles",
+  COLORS: "colors",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
@@ -152,6 +155,35 @@ export const ROUTES: Routes = [
     },
     resolve: {
       routes: routesResolver,
+    },
+  },
+  {
+    path: AppPaths.ROLES,
+    loadComponent: () =>
+      import("./admin/features/roles/roles.component").then(
+        (m) => m.RolesComponent,
+      ),
+    title: "Roles",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_RolesNav:Roles`,
+      functionality: "roles",
+    },
+    resolve: {
+      colors: colorsResolver,
+    },
+  },
+  {
+    path: AppPaths.COLORS,
+    loadComponent: () =>
+      import("./admin/features/colors/colors.component").then(
+        (m) => m.ColorsComponent,
+      ),
+    title: "Colors",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ColorsNav:Colors`,
+      functionality: "colors",
     },
   },
   {

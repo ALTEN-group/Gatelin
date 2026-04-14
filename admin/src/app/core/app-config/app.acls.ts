@@ -56,4 +56,18 @@ export const BASE_ACLS: AclsMapping = {
     create: 46,
     archive: 47,
   },
+  roles: {
+    get: 41,
+    history: 42,
+    create: 43,
+    update: 44,
+    archive: 45,
+  },
+  colors: {
+    get: 46,
+    history: 47,
+    create: 48,
+    update: 49,
+    archive: 50,
+  },
 };

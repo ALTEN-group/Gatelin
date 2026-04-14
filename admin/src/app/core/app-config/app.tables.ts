@@ -9,6 +9,8 @@ const tableKeys = [
   "operations",
   "fields",
   "scopes",
+  "roles",
+  "colors",
 ] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
@@ -91,6 +93,22 @@ export const TABLES: Record<AppTable, TableInfo> = {
     title: $localize`:@@TableLabels_Scopes:Scopes`,
     key: "scopes",
     functionalityKey: "scopes",
+    editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
+  },
+  roles: {
+    label: $localize`:@@TableLabels_Role:Rôle`,
+    title: $localize`:@@TableLabels_Roles:Rôles`,
+    key: "roles",
+    functionalityKey: "roles",
+    editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
+  },
+  colors: {
+    label: $localize`:@@TableLabels_Color:Couleur`,
+    title: $localize`:@@TableLabels_Colors:Couleurs`,
+    key: "colors",
+    functionalityKey: "colors",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
   },

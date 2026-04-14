@@ -50,19 +50,29 @@ INSERT INTO route ("resourceId", pattern, name, description, methods, "isProtect
 (9,  '',                    'updateScopes',    'Update scopes',        ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
 (9,  '',                    'addScopes',       'Add scopes',           ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (9,  '/archive',            'archiveScopes',   'Archive scopes',       ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+-- roles
+(12, '/search',             'searchRoles',    'Search roles',        ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(12, '/(?<id>\d+)/history', 'getRoleHistory',  'Manage role history',  ARRAY['GET',  'OPTIONS']::method[], true, false, -1, 'system'),
+(12, '',                    'addRoles',       'Add roles',           ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(12, '',                    'updateRoles',    'Update roles',        ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
+(12, '/archive',            'archiveRoles',   'Archive roles',       ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+-- colors
+(13, '/search',             'searchColors',   'Search colors',       ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '/(?<id>\d+)/history', 'getColorHistory', 'Manage color history', ARRAY['GET',  'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '',                    'addColors',      'Add colors',          ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '',                    'updateColors',   'Update colors',       ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '/archive',            'archiveColors',  'Archive colors',      ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- preferences
 (10, '/(?<resource>[a-zA-Z0-9_-]+)', 'getPreferences',  'Get preferences for the authenticated user and a given table',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
 (10, '/(?<resource>[a-zA-Z0-9_-]+)', 'syncPreferences', 'Sync preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- users
 (11, '/me',                                          'getBasicUserInfo',   'Get basic user info at login',                                               ARRAY['GET',  'OPTIONS']::method[], true, false, -1, 'system'),
 (11, '/preferences/(?<resource>[a-zA-Z0-9_-]+)',  'getUserPreferences',  'Get preferences for the authenticated user and a given table (users service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
-(11, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system'),
--- roles
-(12, '/search',                                    'searchRoles',        'Search roles',                                                               ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system')
+(11, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system')
 
 ;
 
--- route IDs follow insertion order above (SERIAL 1–48)
+-- route IDs follow insertion order above (SERIAL)
 INSERT INTO route_operation ("routeId", "operationId") VALUES
 -- sessions:       1=refreshToken, 2=signIn, 3=signOut
 (1,  4),
@@ -113,15 +123,25 @@ INSERT INTO route_operation ("routeId", "operationId") VALUES
 (38, 5),
 (39, 7),
 (40, 9),
--- preferences:    41=getPreferences, 42=syncPreferences
-(41, 2),
-(42, 12),
--- users:          43=getBasicUserInfo, 44=getUserPreferences, 45=syncUserPreferences
-(43, 1),
-(44, 2),
-(45, 12),
--- roles:          46=searchRoles
-(46, 2), (46, 3)
+-- roles:          41=searchRoles, 42=getRoleHistory, 43=addRoles, 44=updateRoles, 45=archiveRoles
+(41, 2), (41, 3),
+(42, 2),
+(43, 7),
+(44, 5),
+(45, 9),
+-- colors:         46=searchColors, 47=getColorHistory, 48=addColors, 49=updateColors, 50=archiveColors
+(46, 2), (46, 3),
+(47, 2),
+(48, 7),
+(49, 5),
+(50, 9),
+-- preferences:    51=getPreferences, 52=syncPreferences
+(51, 2),
+(52, 12),
+-- users:          53=getBasicUserInfo, 54=getUserPreferences, 55=syncUserPreferences
+(53, 1),
+(54, 2),
+(55, 12)
 
 ;
 

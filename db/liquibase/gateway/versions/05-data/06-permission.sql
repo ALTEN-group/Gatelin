@@ -11,9 +11,10 @@
 --   26=searchCors       27=getCorsHistory   28=updateCors       29=addCors          30=archiveCors
 --   31=searchFields     32=getFieldHistory  33=updateFields     34=addFields        35=archiveFields
 --   36=searchScopes     37=getScopeHistory  38=updateScopes     39=addScopes        40=archiveScopes
---   41=getPreferences   42=syncPreferences
---   43=getBasicUserInfo 44=getUserPreferences 45=syncUserPreferences
---   46=searchRoles
+--   41=searchRoles      42=getRoleHistory   43=addRoles         44=updateRoles      45=archiveRoles
+--   46=searchColors     47=getColorHistory  48=addColors        49=updateColors     50=archiveColors
+--   51=getPreferences   52=syncPreferences
+--   53=getBasicUserInfo 54=getUserPreferences 55=syncUserPreferences
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -67,12 +68,22 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (1, 38,  5, NULL),  -- updateScopes        → bulk update
 (1, 39,  7, NULL),  -- addScopes           → bulk create
 (1, 40,  9, NULL),  -- archiveScopes       → bulk archive
-(1, 41,  2, NULL),  -- getPreferences      → list
-(1, 42, 12, NULL),  -- syncPreferences     → bulk sync
-(1, 43,  1, NULL),  -- getBasicUserInfo    → read
-(1, 44,  2, NULL),  -- getUserPreferences  → list
-(1, 45, 12, NULL),  -- syncUserPreferences → bulk sync
-(1, 46,  2, NULL),  -- searchRoles         → list
+(1, 41,  2, NULL),  -- searchRoles         → list
+(1, 42,  2, NULL),  -- getRoleHistory      → list
+(1, 43,  7, NULL),  -- addRoles            → bulk create
+(1, 44,  5, NULL),  -- updateRoles         → bulk update
+(1, 45,  9, NULL),  -- archiveRoles        → bulk archive
+(1, 46,  2, NULL),  -- searchColors        → list
+(1, 46,  3, NULL),  -- searchColors        → export
+(1, 47,  2, NULL),  -- getColorHistory     → list
+(1, 48,  7, NULL),  -- addColors           → bulk create
+(1, 49,  5, NULL),  -- updateColors        → bulk update
+(1, 50,  9, NULL),  -- archiveColors       → bulk archive
+(1, 51,  2, NULL),  -- getPreferences      → list
+(1, 52, 12, NULL),  -- syncPreferences     → bulk sync
+(1, 53,  1, NULL),  -- getBasicUserInfo    → read
+(1, 54,  2, NULL),  -- getUserPreferences  → list
+(1, 55, 12, NULL),  -- syncUserPreferences → bulk sync
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -116,12 +127,21 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (2, 38,  5, ARRAY['value']),  -- updateScopes
 (2, 39,  7, ARRAY['value']),  -- addScopes
 (2, 40,  9, NULL),  -- archiveScopes
-(2, 41,  2, NULL),  -- getPreferences
-(2, 42, 12, NULL),  -- syncPreferences
-(2, 43,  1, NULL),  -- getBasicUserInfo
-(2, 44,  2, NULL),  -- getUserPreferences
-(2, 45, 12, NULL),  -- syncUserPreferences
-(2, 46,  2, NULL),  -- searchRoles
+(2, 41,  2, NULL),  -- searchRoles
+(2, 42,  2, NULL),  -- getRoleHistory
+(2, 43,  7, ARRAY['name', 'description', 'colorId']),  -- addRoles
+(2, 44,  5, ARRAY['name', 'description', 'colorId']),  -- updateRoles
+(2, 45,  9, NULL),  -- archiveRoles
+(2, 46,  2, NULL),  -- searchColors
+(2, 47,  2, NULL),  -- getColorHistory
+(2, 48,  7, ARRAY['name', 'code']),  -- addColors
+(2, 49,  5, ARRAY['name', 'code']),  -- updateColors
+(2, 50,  9, NULL),  -- archiveColors
+(2, 51,  2, NULL),  -- getPreferences
+(2, 52, 12, NULL),  -- syncPreferences
+(2, 53,  1, NULL),  -- getBasicUserInfo
+(2, 54,  2, NULL),  -- getUserPreferences
+(2, 55, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -135,11 +155,12 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (3, 26,  2, ARRAY['id', 'name']),  -- searchCors
 (3, 31,  2, ARRAY['id', 'resourceId', 'name']),  -- searchFields
 (3, 36,  2, ARRAY['id', 'value']),  -- searchScopes
-(3, 41,  2, NULL),  -- getPreferences
-(3, 43,  1, NULL),  -- getBasicUserInfo
-(3, 44,  2, NULL),  -- getUserPreferences
-(3, 45, 12, NULL),  -- syncUserPreferences
-(3, 46,  2, ARRAY['id', 'name', 'description', 'colorId', 'colorName']),  -- searchRoles
+(3, 41,  2, ARRAY['id', 'name', 'description', 'colorId', 'colorName']),  -- searchRoles
+(3, 46,  2, ARRAY['id', 'name', 'code']),  -- searchColors
+(3, 51,  2, NULL),  -- getPreferences
+(3, 53,  1, NULL),  -- getBasicUserInfo
+(3, 54,  2, NULL),  -- getUserPreferences
+(3, 55, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- Guest (4): session routes only
