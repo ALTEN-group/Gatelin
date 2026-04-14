@@ -1,6 +1,6 @@
-import { Calls, CrudRepository } from "@altengroup/crud-builder";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { FIELD_COLUMNS } from "app/admin/data-access/fields/field.conf";
 import { Field, fieldFactory } from "app/admin/data-access/fields/field.model";
 

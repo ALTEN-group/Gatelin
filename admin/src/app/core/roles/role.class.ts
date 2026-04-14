@@ -1,4 +1,4 @@
-import { CrudItemBase } from "@altengroup/crud-builder";
+import { CrudItemBase } from "@dwtechs/crud-builder";
 
 export interface Permission {
   route: number;

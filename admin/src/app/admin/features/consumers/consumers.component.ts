@@ -1,6 +1,6 @@
-import { ConfigHelper, TableComponent } from "@altengroup/crud-builder";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
 import { ConsumersService } from "app/admin/data-access/consumers/consumers.service";
 
 /**

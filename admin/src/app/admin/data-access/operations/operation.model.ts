@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@altengroup/crud-builder";
+import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 export interface Operation extends ArchiveInfo {
   id: number | null;

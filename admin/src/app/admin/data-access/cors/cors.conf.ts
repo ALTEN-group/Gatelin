@@ -7,7 +7,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@altengroup/crud-builder";
+} from "@dwtechs/crud-builder";
 import { Cors } from "app/admin/data-access/cors/cors.model";
 
 export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
@@ -19,6 +19,7 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
     type: INPUT_TYPES.TEXT,
     controlOptions: {
       validators: [required, minlength(1), maxlength(50)],
+      minWidth: "100%",
     },
   },
   ...createArchivedConfig(),

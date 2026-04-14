@@ -7,7 +7,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@altengroup/crud-builder";
+} from "@dwtechs/crud-builder";
 import { Service } from "app/admin/data-access/services/service.model";
 
 export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [

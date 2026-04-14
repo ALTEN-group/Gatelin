@@ -1,4 +1,3 @@
-import { Calls } from "@altengroup/crud-builder";
 import {
   computed,
   Directive,
@@ -8,6 +7,7 @@ import {
   input,
 } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
+import { Calls } from "@dwtechs/crud-builder";
 
 @Directive({
   selector: "[protectFeature]",

@@ -1,3 +1,5 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
   createArchivedConfig,
@@ -7,9 +9,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@altengroup/crud-builder";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+} from "@dwtechs/crud-builder";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { Scope } from "app/admin/data-access/scopes/scope.model";
 

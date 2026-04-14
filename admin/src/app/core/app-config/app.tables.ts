@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@altengroup/crud-builder";
+import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",

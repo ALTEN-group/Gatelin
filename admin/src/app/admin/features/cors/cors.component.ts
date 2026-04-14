@@ -1,6 +1,6 @@
-import { TableComponent } from "@altengroup/crud-builder";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { TableComponent } from "@dwtechs/crud-builder";
 import { CorsService } from "app/admin/data-access/cors/cors.service";
 
 @Component({

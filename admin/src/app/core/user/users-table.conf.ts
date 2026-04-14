@@ -1,3 +1,6 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { Role } from "@core/roles/role.class";
+import { User } from "@core/user/user.class";
 import {
   ARCHIVED_CONFIG,
   CONTROL_TYPES,
@@ -6,10 +9,7 @@ import {
   INPUT_TYPES,
   required,
   StrictCrudItemOptions,
-} from "@altengroup/crud-builder";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { Role } from "@core/roles/role.class";
-import { User } from "@core/user/user.class";
+} from "@dwtechs/crud-builder";
 import { SelectItem } from "primeng/api";
 
 export const USERS_TABLE_CONF: (

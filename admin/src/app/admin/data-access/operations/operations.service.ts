@@ -1,5 +1,5 @@
-import { Calls, CrudRepository } from "@altengroup/crud-builder";
 import { Injectable } from "@angular/core";
+import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { OPERATION_COLUMNS } from "app/admin/data-access/operations/operation.conf";
 import {
   Operation,

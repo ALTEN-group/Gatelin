@@ -46,6 +46,10 @@
       .p-panelmenu-panel {
         border: 0;
 
+        .p-panelmenu-header ul {
+          margin: 0;
+        }
+
         .p-panelmenu-header-link {
           height: 30px;
         }

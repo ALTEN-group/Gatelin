@@ -1,3 +1,6 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { Role } from "@core/roles/role.class";
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
   createArchivedConfig,
@@ -7,10 +10,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@altengroup/crud-builder";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { Role } from "@core/roles/role.class";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+} from "@dwtechs/crud-builder";
 import { Consumer } from "app/admin/data-access/consumers/consumer.model";
 
 export const CONSUMER_COLUMNS: (

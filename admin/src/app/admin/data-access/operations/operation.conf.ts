@@ -6,8 +6,8 @@ import {
   maxlength,
   minlength,
   required,
-  StrictCrudItemOptions
-} from "@altengroup/crud-builder";
+  StrictCrudItemOptions,
+} from "@dwtechs/crud-builder";
 import { Operation } from "app/admin/data-access/operations/operation.model";
 
 export const OPERATION_COLUMNS: StrictCrudItemOptions<Operation>[] = [

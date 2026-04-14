@@ -1,10 +1,4 @@
 import {
-  APP_FORM_CONFIG,
-  FormTokenData,
-  HistorizedData,
-  HISTORY_MAPPER,
-} from "@altengroup/crud-builder";
-import {
   inject,
   LOCALE_ID,
   makeEnvironmentProviders,
@@ -15,6 +9,12 @@ import { APP_CONFIG, AppConfig } from "@core/app-config/app-config.token";
 import { SIDENAV } from "@core/app-config/app.sidenav";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
 import { AuthenticationService } from "@core/auth/auth.service";
+import {
+  APP_FORM_CONFIG,
+  FormTokenData,
+  HistorizedData,
+  HISTORY_MAPPER,
+} from "@dwtechs/crud-builder";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
 
@@ -60,12 +60,11 @@ export function provideAppConfig() {
       useValue: (raw: unknown): HistorizedData<unknown> => {
         const r = raw as any;
         return {
-          tstamp: r.timestamp,
-          operation: r.action,
+          tstamp: r.tstamp,
+          operation: r.operation,
           updaterId: r.consumerId,
           updaterName: r.consumerName,
-          val: r.data,
-          table_name: "users",
+          record: r.record,
         };
       },
     },

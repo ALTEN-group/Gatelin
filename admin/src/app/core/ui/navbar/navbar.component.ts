@@ -1,4 +1,3 @@
-import { OfflineService } from "@altengroup/crud-builder";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +10,7 @@ import { AclService } from "@core/acl/acl.service";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
+import { OfflineService } from "@dwtechs/crud-builder";
 import { MenuItem, SharedModule } from "primeng/api";
 import { BadgeModule } from "primeng/badge";
 import { ButtonModule } from "primeng/button";
