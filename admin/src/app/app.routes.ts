@@ -5,6 +5,7 @@ import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
+import { gatewayRolesResolver } from "app/admin/data-access/roles/roles.resolver";
 import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 
@@ -22,7 +23,6 @@ export const AppPaths = {
   FIELDS: "fields",
   SCOPES: "scopes",
   ROLES: "roles",
-  COLORS: "colors",
   PERMISSIONS: "permissions",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
@@ -175,16 +175,21 @@ export const ROUTES: Routes = [
     },
   },
   {
-    path: AppPaths.COLORS,
+    path: AppPaths.PERMISSIONS,
     loadComponent: () =>
-      import("./admin/features/colors/colors.component").then(
-        (m) => m.ColorsComponent,
+      import("./admin/features/permissions/permissions.component").then(
+        (m) => m.PermissionsComponent,
       ),
-    title: "Colors",
+    title: "Permissions",
     canActivate: [aclGuard()],
     data: {
-      breadcrumb: $localize`:@@Admin_ColorsNav:Colors`,
-      functionality: "colors",
+      breadcrumb: $localize`:@@Admin_PermissionsNav:Permissions`,
+      functionality: "permissions",
+    },
+    resolve: {
+      roles: gatewayRolesResolver,
+      routes: routesResolver,
+      operations: operationsResolver,
     },
   },
   {
