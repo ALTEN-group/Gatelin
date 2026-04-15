@@ -79,17 +79,34 @@ export const SIDENAV: MenuItem[] = [
     label: $localize`:@@Admin_RolesNav:Roles`,
     routerLink: `/${AppPaths.ROLES}`,
     icon: "pi pi-id-card",
-    data: {
-      functionality: "roles",
-    },
-  },
-  {
-    id: "colors",
-    label: $localize`:@@Admin_ColorsNav:Colors`,
-    routerLink: `/${AppPaths.COLORS}`,
-    icon: "pi pi-palette",
-    data: {
-      functionality: "colors",
-    },
+    items: [
+      {
+        id: "roles",
+        label: $localize`:@@Admin_RolesNav:Roles`,
+        routerLink: `/${AppPaths.ROLES}`,
+        icon: "pi pi-id-card",
+        data: {
+          functionality: "roles",
+        },
+      },
+      {
+        id: "colors",
+        label: $localize`:@@Admin_ColorsNav:Colors`,
+        routerLink: `/${AppPaths.COLORS}`,
+        icon: "pi pi-palette",
+        data: {
+          functionality: "colors",
+        },
+      },
+      {
+        id: "permissions",
+        label: $localize`:@@Admin_PermissionsNav:Permissions`,
+        routerLink: `/${AppPaths.PERMISSIONS}`,
+        icon: "pi pi-lock",
+        data: {
+          functionality: "permissions",
+        },
+      },
+    ],
   },
 ];

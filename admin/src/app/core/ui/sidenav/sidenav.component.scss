@@ -16,6 +16,10 @@
     overflow: auto;
     border-right: 1px solid var(--primary-bg-color);
 
+    ul {
+      margin: 0;
+    }
+
     .p-panel-header {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
@@ -45,10 +49,6 @@
 
       .p-panelmenu-panel {
         border: 0;
-
-        .p-panelmenu-header ul {
-          margin: 0;
-        }
 
         .p-panelmenu-header-link {
           height: 30px;
