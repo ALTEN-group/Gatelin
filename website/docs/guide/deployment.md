@@ -33,7 +33,6 @@ PWD_SECRET=your_password_hash_secret_min_32_chars
 # Microservices URLs
 MSAUTH_URL=https://auth.yourdomain.com
 MSUSER_URL=https://users.yourdomain.com
-MSROLE_URL=https://roles.yourdomain.com
 
 # SSL Certificate (Let's Encrypt)
 ACME_EMAIL=admin@yourdomain.com

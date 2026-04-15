@@ -3,14 +3,11 @@
 import { execute } from "@dwtechs/antity-pgsql";
 import cEnt from "../entities/cors.js";
 
-/**
- * @typedef {Object} CorsConfig
- * @property {number} id - CORS configuration ID
- * @property {string} name - Allowed origin (URL)
- */
+/** @type {Map<number, string>} id → origin name */
+const corsOrigins = new Map();
 
-/** @type {CorsConfig[]|null} */
-let corsOrigins = null;
+/** @type {Set<string>} origin names for O(1) lookup */
+const corsOriginNames = new Set();
 
 /**
  * Initializes the CORS cache by loading all allowed origins from the database.
@@ -23,7 +20,7 @@ let corsOrigins = null;
  * @example
  * // Initialize CORS cache at application startup
  * await init();
- * console.log('CORS cache initialized with', corsOrigins.length, 'origins');
+ * console.log('CORS cache initialized with', corsOrigins.size, 'origins');
  */
 function init() {
   const filters = {
@@ -33,33 +30,38 @@ function init() {
     },
   };
   const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => (corsOrigins = r.rows));
+  return execute(query, args, null).then((r) => {
+    corsOrigins.clear();
+    corsOriginNames.clear();
+    for (const row of r.rows) {
+      corsOrigins.set(row.id, row.name);
+      corsOriginNames.add(row.name);
+    }
+  });
 }
 
 /**
- * Returns all cached CORS origins as an array of origin strings.
- * Used to populate CORS whitelist.
+ * Checks if an origin is in the CORS whitelist.
  *
- * @return {string[]} Array of allowed origin URLs
+ * @param {string} origin - The origin to check
+ * @return {boolean} True if the origin is allowed
  * @example
- * const whitelist = getAll();
- * // ['http://localhost:3000', 'https://example.com']
+ * if (!has('http://localhost:3000')) return next({ statusCode: 403 });
  */
-function getAll() {
-  if (!corsOrigins) return [];
-  return corsOrigins.map((c) => c.name);
+function has(origin) {
+  return corsOriginNames.has(origin);
 }
 
 /**
  * Adds a CORS origin to the cache.
  *
- * @param {CorsConfig} corsOrigin - The CORS origin object to add
+ * @param {{ id: number, name: string }} corsOrigin - The CORS origin object to add
  * @example
  * addToCache({ id: 1, name: 'http://localhost:3000' });
  */
 function addToCache(corsOrigin) {
-  if (!corsOrigins) corsOrigins = [];
-  corsOrigins.push({ ...corsOrigin });
+  corsOrigins.set(corsOrigin.id, corsOrigin.name);
+  corsOriginNames.add(corsOrigin.name);
 }
 
 /**
@@ -70,16 +72,13 @@ function addToCache(corsOrigin) {
  * @return {boolean} True if updated, false if not found
  */
 function updateCache(id, name) {
-  if (!corsOrigins) return false;
-  let found = false;
-  corsOrigins = corsOrigins.map((c) => {
-    if (c.id === +id) {
-      c.name = name;
-      found = true;
-    }
-    return c;
-  });
-  return found;
+  const numId = +id;
+  if (!corsOrigins.has(numId)) return false;
+  const oldName = corsOrigins.get(numId);
+  corsOrigins.set(numId, name);
+  corsOriginNames.delete(oldName);
+  corsOriginNames.add(name);
+  return true;
 }
 
 /**
@@ -88,22 +87,24 @@ function updateCache(id, name) {
  * @param {number} id - The ID of the CORS origin to delete
  */
 function deleteFromCache(id) {
-  if (!corsOrigins) return;
-  corsOrigins = corsOrigins.filter((c) => c.id !== +id);
+  const numId = +id;
+  const name = corsOrigins.get(numId);
+  corsOrigins.delete(numId);
+  if (name) corsOriginNames.delete(name);
 }
 
 /**
- * Deletes all archived routes from the database that have been archived for a specified duration.
- * This function is typically run by a scheduled job to clean up old/inactive route records.
+ * Deletes all archived CORS origins from the database that have been archived for a specified duration.
+ * This function is typically run by a scheduled job to clean up old/inactive CORS records.
  *
- * @param {Date} date - The date before which archived routes should be deleted.
+ * @param {Date} date - The date before which archived CORS origins should be deleted.
  * @throws {Error} Database connection or query execution errors
  * @example
- * // Delete all routes archived for more than 2 months
+ * // Delete all CORS origins archived for more than 2 months
  * const twoMonthsAgo = new Date();
  * twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
  * const deletedCount = await deleteArchived(twoMonthsAgo);
- * console.log(`Deleted ${deletedCount} archived route(s)`);
+ * console.log(`Deleted ${deletedCount} archived CORS origin(s)`);
  */
 function deleteArchived(date) {
   const q = cEnt.query.deleteArchive();
@@ -112,7 +113,7 @@ function deleteArchived(date) {
 
 export default {
   init,
-  getAll,
+  has,
   addToCache,
   updateCache,
   deleteFromCache,

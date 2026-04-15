@@ -1,5 +1,7 @@
 // @ts-check
 
+const TRAILING_SLASH_RE = /\/$/;
+
 /**
  * Removes trailing slash from a URL string if present.
  * This ensures consistent URL matching by normalizing URLs with and without trailing slashes.
@@ -12,5 +14,5 @@
  * stripTrailingSlash('/api/users')  // returns '/api/users'
  */
 export function stripTrailingSlash(url) {
-  return url.replace(/\/$/, "");
+  return url.replace(TRAILING_SLASH_RE, "");
 }

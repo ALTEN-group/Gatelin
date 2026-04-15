@@ -42,10 +42,13 @@ function init() {
   const san = `${SERVER_SCHEME}${APP_NAME}-`;
   const ep = `-${ENV_NAME}:${PORT}`;
   return execute(query, args, null).then((r) => {
-    routes = r.rows.map((row) => ({ ...row, _regex: new RegExp(row.url) }));
+    const serviceNames = new Set();
+    routes = r.rows.map((row) => {
+      serviceNames.add(row.serviceName);
+      return { ...row, _regex: new RegExp(row.url) };
+    });
     serviceBaseUrls = new Map(
-      [...new Set(routes.map((row) => row.serviceName))]
-        .map((name) => [name, `${san}${name}${ep}`])
+      [...serviceNames].map((name) => [name, `${san}${name}${ep}`])
     );
   });
 }

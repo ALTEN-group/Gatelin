@@ -17,12 +17,12 @@ import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
 import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
 import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
-import {
-  addToCache,
+import { addToCache,
   updateCache,
   deleteFromCache,
 } from "../middlewares/cache/consumer.js";
 import { sendSession } from "../middlewares/res/send-session.js";
+import { resolvePermissions } from "../middlewares/mappers/resolve-permissions.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { send204 } from "../middlewares/res/send-204.js";
 
@@ -30,12 +30,13 @@ import { send204 } from "../middlewares/res/send-204.js";
 const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
 // const activate = [ activateUser, uEnt.update ];
 const getSession = [...checkRequest, createRow]; // get session from tokens
-const addSession = [checkPwd, createTokens, sEnt.add, addToCache, sendSession];
+const addSession = [checkPwd, createTokens, sEnt.add, addToCache, resolvePermissions, sendSession];
 const updateSession = [
   refreshTokens,
   getUserById,
   sEnt.update,
   updateCache,
+  resolvePermissions,
   sendSession,
 ];
 const deleteSession = [sEnt.archive, deleteFromCache, send204];

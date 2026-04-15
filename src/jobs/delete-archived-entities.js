@@ -7,6 +7,8 @@ import corsSvc from "../services/cors.js";
 import operationSvc from "../services/operation.js";
 import resourceSvc from "../services/resource.js";
 import routeSvc from "../services/route.js";
+import roleSvc from "../services/role.js";
+import colorSvc from "../services/color.js";
 
 /**
  * Cron job to delete archived entities from the database.
@@ -41,25 +43,28 @@ export function startDeleteArchivedEntitiesJob() {
         { name: "operations", service: operationSvc },
         { name: "resources", service: resourceSvc },
         { name: "routes", service: routeSvc },
+        { name: "roles", service: roleSvc },
+        { name: "colors", service: colorSvc },
       ];
 
       let totalDeleted = 0;
 
-      // Process each entity
-      for (const entity of entities) {
-        try {
-          log.info(`  - Processing ${entity.name}...`);
-          const deletedCount =
-            await entity.service.deleteArchived(twoMonthsAgo);
-          if (deletedCount > 0)
-            log.info(`    ✓ Deleted ${deletedCount} archived ${entity.name}`);
-          else log.info(`    • No archived ${entity.name} to delete`);
+      // Process all entities concurrently
+      const results = await Promise.allSettled(
+        entities.map((entity) =>
+          entity.service.deleteArchived(twoMonthsAgo).then((count) => ({ entity, count }))
+        )
+      );
 
-          totalDeleted += deletedCount;
-        } catch (err) {
-          log.error(
-            `    ✗ Failed to delete archived ${entity.name}: ${err.message || err.msg}`,
-          );
+      for (const result of results) {
+        if (result.status === "fulfilled") {
+          const { entity, count } = result.value;
+          if (count > 0)
+            log.info(`    ✓ Deleted ${count} archived ${entity.name}`);
+          else log.info(`    • No archived ${entity.name} to delete`);
+          totalDeleted += count;
+        } else {
+          log.error(`    ✗ Failed: ${result.reason?.message || result.reason?.msg}`);
         }
       }
 

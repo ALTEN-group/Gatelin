@@ -65,6 +65,10 @@ export default function checkAcl(req, res, next) {
       `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
   );
 
+  // Extract URL path segments (strip query string first), then find the position
+  // of the resource name (e.g. "preferences") to identify the scope segment that
+  // follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
+  // scopeSegment is used to match scope-restricted permissions (perm.scopes).
   const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
   const resourceIndex = urlSegments.indexOf(r.resourceName);
   const scopeSegment =
@@ -77,11 +81,10 @@ export default function checkAcl(req, res, next) {
   );
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 
-  const fields = perm.fields;
+  const allowed = perm._fieldsSet;
 
   // Filter request body fields on write operations
-  if (fields?.length && req.body) {
-    const allowed = new Set(fields);
+  if (allowed && req.body) {
     const rows = req.body.rows;
     if (isArray(rows))
       req.body.rows = rows.map((item) => filterFields(item, allowed));
@@ -90,7 +93,7 @@ export default function checkAcl(req, res, next) {
   }
 
   // Store field allowlist for request body filtering
-  res.locals.aclFields = fields;
+  res.locals.aclFields = perm.fields;
 
   next();
 }

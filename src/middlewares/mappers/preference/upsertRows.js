@@ -15,9 +15,12 @@ import pEnt from "../../../entities/preference.js";
 export async function upsertRows(req, res, next) {
   const rows = req.body.rows || [];
 
-  // Separate rows into inserts and updates
-  const rowsToInsert = rows.filter((row) => !row.id);
-  const rowsToUpdate = rows.filter((row) => row.id);
+  // Separate rows into inserts and updates in a single pass
+  const rowsToInsert = [];
+  const rowsToUpdate = [];
+  for (const row of rows) {
+    (row.id ? rowsToUpdate : rowsToInsert).push(row);
+  }
 
   log.debug(
     () =>

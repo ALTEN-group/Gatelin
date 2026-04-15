@@ -13,6 +13,8 @@ Gatelin is an API Gateway that acts as a single entry point for microservices ar
 - 🌐 Cors management - Configure and enforce Cross-Origin Resource Sharing policies
 - 🔐 Authentication - JWT token validation and consumer session management
 - 🛡️ Authorization - Role-based access control (ACL) validation
+- 🎭 Role management — Create, update, archive, and search roles with assigned permissions
+- 🔑 Permission management — Per-role, per-route operation access stored directly in the gateway database
 - 🎛️ Front-end admin - Manage the gateway via a user-friendly web interface
 
 
@@ -339,6 +341,160 @@ Authorization: Bearer <access_token>
 
 **Response (204 No Content):** Routes are removed from cache immediately
 
+### Role Management
+
+Roles define access control profiles assigned to consumers. Each role carries a set of permissions (allowed operations per route).
+
+#### Search Roles
+
+```
+POST /gateway/roles/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "id",
+  "sortOrder": "ASC",
+  "filters": {
+    "archived": {
+      "value": false,
+      "matchMode": "equals"
+    }
+  }
+}
+```
+
+#### Get Role History
+
+```
+GET /gateway/roles/:id/history
+Authorization: Bearer <access_token>
+```
+
+#### Create Role
+
+```
+POST /gateway/roles
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "name": "editor",
+  "description": "Can edit content",
+  "colorId": 3,
+  "creatorId": 1,
+  "creatorName": "admin"
+}
+```
+
+#### Update Role
+
+```
+PUT /gateway/roles
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "id": 1,
+  "name": "editor",
+  "description": "Can edit and publish content",
+  "colorId": 4,
+  "updaterId": 1,
+  "updaterName": "admin"
+}
+```
+
+#### Archive Roles
+
+```
+POST /gateway/roles/archive
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "ids": [1, 2, 3]
+}
+```
+
+### Color Management
+
+Colors are assignable to roles for visual differentiation in the admin panel.
+
+#### Search Colors
+
+```
+POST /gateway/colors/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "pagination": true,
+  "first": 0,
+  "rows": 20,
+  "sortField": "name",
+  "sortOrder": "ASC",
+  "filters": {
+    "archived": {
+      "value": false,
+      "matchMode": "equals"
+    }
+  }
+}
+```
+
+#### Get Color History
+
+```
+GET /gateway/colors/:id/history
+Authorization: Bearer <access_token>
+```
+
+#### Create Color
+
+```
+POST /gateway/colors
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "name": "indigo",
+  "code": "#4B0082",
+  "creatorId": 1,
+  "creatorName": "admin"
+}
+```
+
+#### Update Color
+
+```
+PUT /gateway/colors
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "id": 1,
+  "name": "indigo",
+  "code": "#4B0082",
+  "updaterId": 1,
+  "updaterName": "admin"
+}
+```
+
+#### Archive Colors
+
+```
+POST /gateway/colors/archive
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "ids": [1, 2]
+}
+```
+
 ### Proxy (Request Forwarding)
 
 All requests not matching `/health`, `/gatelin/*` (admin endpoints), or `/consumers` are treated as proxy requests and forwarded to the appropriate microservice based on route configuration.
@@ -616,7 +772,6 @@ services:
       # Microservices
       MSAUTH_VERIFY_URL: ${MSAUTH_URL}/auth/verify
       MSUSER_SEARCH_URL: ${MSUSER_URL}/users/users/search
-      MSROLE_SEARCH_URL: ${MSROLE_URL}/roles/roles/search
       # Application
       APP_NAME: gatelin
       ENV_NAME: production
@@ -722,7 +877,6 @@ PWD_SECRET=your_password_hash_secret_min_32_chars
 # Microservices URLs (replace with your actual services)
 MSAUTH_URL=https://auth.yourdomain.com
 MSUSER_URL=https://users.yourdomain.com
-MSROLE_URL=https://roles.yourdomain.com
 
 # SSL Certificate (Let's Encrypt)
 ACME_EMAIL=admin@yourdomain.com

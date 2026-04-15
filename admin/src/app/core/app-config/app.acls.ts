@@ -5,55 +5,75 @@ import { AclsMapping } from "@core/acl/acls.model";
  */
 export const BASE_ACLS: AclsMapping = {
   consumers: {
-    get: 1,
+    get: 4, // getConsumers
   },
   routes: {
-    get: 7,
-    create: 10,
-    update: 9,
-    archive: 11,
-    getHistory: 8,
+    get: 6, // searchRoutes
+    getHistory: 7,
+    update: 8,
+    create: 9,
+    archive: 10,
   },
   services: {
-    get: 13,
-    create: 16,
-    update: 15,
-    archive: 17,
-    getHistory: 14,
+    get: 11, // searchServices
+    getHistory: 12,
+    update: 13,
+    create: 14,
+    archive: 15,
   },
   resources: {
-    get: 19,
-    create: 22,
-    update: 21,
-    archive: 23,
-    getHistory: 20,
+    get: 16, // searchResources
+    getHistory: 17,
+    update: 18,
+    create: 19,
+    archive: 20,
   },
   operations: {
-    get: 25,
-    create: 28,
-    update: 27,
-    archive: 29,
-    getHistory: 26,
+    get: 21, // searchOperations
+    getHistory: 22,
+    update: 23,
+    create: 24,
+    archive: 25,
   },
   cors: {
-    get: 31,
-    create: 34,
-    update: 33,
-    archive: 35,
-    getHistory: 32,
+    get: 26, // searchCors
+    getHistory: 27,
+    update: 28,
+    create: 29,
+    archive: 30,
   },
   fields: {
-    get: 37,
-    getHistory: 38,
-    update: 39,
-    create: 40,
-    archive: 41,
+    get: 31, // searchFields
+    getHistory: 32,
+    update: 33,
+    create: 34,
+    archive: 35,
   },
   scopes: {
-    get: 43,
-    getHistory: 44,
-    update: 45,
-    create: 46,
-    archive: 47,
+    get: 36, // searchScopes
+    getHistory: 37,
+    update: 38,
+    create: 39,
+    archive: 40,
+  },
+  roles: {
+    get: 41, // searchRoles
+    getHistory: 42,
+    create: 43,
+    update: 44,
+    archive: 45,
+  },
+  colors: {
+    get: 46, // searchColors
+    getHistory: 47,
+    create: 48,
+    update: 49,
+    archive: 50,
+  },
+  permissions: {
+    get: 56, // searchPermissions
+    create: 57, // addPermissions
+    update: 58, // updatePermissions
+    archive: 59, // deletePermissions
   },
 };

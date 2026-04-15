@@ -1,18 +1,16 @@
 // @ts-check
-import http from "../utils/http.js";
-
-const { MSROLE_SEARCH_URL } = process.env;
-const url = MSROLE_SEARCH_URL;
+import { execute } from "@dwtechs/antity-pgsql";
+import rpEnt from "../entities/role-cache.js";
 
 /**
  * @typedef {Object} roleCache
  * @property {number} id - Role ID
  * @property {string} name - Role name
- * @property {Array<{ route: number, operations: number[] }>} permissions - Array of permissions for the role
+ * @property {Array<{ routeId: number, operationId: number, fields: string[]|null, _fieldsSet: Set<string>|null }>} permissions
  */
 
-/** @type {roleCache[]} */
-let roles = [];
+/** @type {Map<number, roleCache>} id → role */
+let roles = new Map();
 
 /**
  * Initializes the role cache by loading all non-archived role records from the ms-role service.
@@ -32,9 +30,21 @@ function init() {
       matchMode: "equals",
     },
   };
-  http
-    .query("POST", url, undefined, { filters }, undefined)
-    .then((r) => (roles = r.data.rows));
+  const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
+  return execute(query, args, null).then((r) => {
+    roles = new Map(
+      r.rows.map((role) => [
+        role.id,
+        {
+          ...role,
+          permissions: role.permissions?.map((p) => ({
+            ...p,
+            _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+          })) ?? [],
+        },
+      ])
+    );
+  });
 }
 
 /**
@@ -50,10 +60,16 @@ function init() {
  * }
  */
 function getOne(id) {
-  return roles.find((r) => r.id === id);
+  return roles.get(id);
+}
+
+function deleteArchived(date) {
+  return execute('DELETE FROM role WHERE archived = true AND "archivedAt" < $1', [date], null)
+    .then((r) => r.rowCount || 0);
 }
 
 export default {
   init,
   getOne,
+  deleteArchived,
 };

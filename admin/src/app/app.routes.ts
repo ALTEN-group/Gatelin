@@ -21,6 +21,8 @@ export const AppPaths = {
   OPERATIONS: "operations",
   FIELDS: "fields",
   SCOPES: "scopes",
+  ROLES: "roles",
+  COLORS: "colors",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
@@ -152,6 +154,36 @@ export const ROUTES: Routes = [
     },
     resolve: {
       routes: routesResolver,
+    },
+  },
+  {
+    path: AppPaths.ROLES,
+    loadComponent: () =>
+      import("./admin/features/roles/roles.component").then(
+        (m) => m.RolesComponent,
+      ),
+    title: "Roles",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_RolesNav:Roles`,
+      functionality: "roles",
+    },
+    resolve: {
+      routes: routesResolver,
+      operations: operationsResolver,
+    },
+  },
+  {
+    path: AppPaths.COLORS,
+    loadComponent: () =>
+      import("./admin/features/colors/colors.component").then(
+        (m) => m.ColorsComponent,
+      ),
+    title: "Colors",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ColorsNav:Colors`,
+      functionality: "colors",
     },
   },
   {
