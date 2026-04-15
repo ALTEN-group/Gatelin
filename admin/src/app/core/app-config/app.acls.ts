@@ -63,17 +63,10 @@ export const BASE_ACLS: AclsMapping = {
     update: 44,
     archive: 45,
   },
-  colors: {
-    get: 46, // searchColors
-    getHistory: 47,
-    create: 48,
-    update: 49,
-    archive: 50,
-  },
   permissions: {
-    get: 56, // searchPermissions
-    create: 57, // addPermissions
-    update: 58, // updatePermissions
-    archive: 59, // deletePermissions
+    get: 46, // searchPermissions
+    create: 47, // addPermissions
+    update: 48, // updatePermissions
+    archive: 49, // deletePermissions
   },
 };

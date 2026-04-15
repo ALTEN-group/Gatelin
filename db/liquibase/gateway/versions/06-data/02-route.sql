@@ -56,24 +56,18 @@ INSERT INTO route ("resourceId", pattern, name, description, methods, "isProtect
 (10, '',                    'addRoles',       'Add roles',           ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
 (10, '',                    'updateRoles',    'Update roles',        ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
 (10, '/archive',            'archiveRoles',   'Archive roles',       ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
--- colors
-(11, '/search',             'searchColors',   'Search colors',       ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
-(11, '/(?<id>\d+)/history', 'getColorHistory', 'Manage color history', ARRAY['GET',  'OPTIONS']::method[], true, true, -1, 'system'),
-(11, '',                    'addColors',      'Add colors',          ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
-(11, '',                    'updateColors',   'Update colors',       ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
-(11, '/archive',            'archiveColors',  'Archive colors',      ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- permissions
-(12, '/search',  'searchPermissions',  'Search permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(12, '',         'addPermissions',     'Add permissions',     ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
-(12, '',         'updatePermissions',  'Update permissions',  ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
-(12, '/archive', 'deletePermissions',  'Delete permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(11, '/search',  'searchPermissions',  'Search permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(11, '',         'addPermissions',     'Add permissions',     ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(11, '',         'updatePermissions',  'Update permissions',  ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
+(11, '/archive', 'deletePermissions',  'Delete permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
 -- preferences
-(13, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(13, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
+(12, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(12, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
 -- users
-(14, '/me',                    'getBasicUserInfo',    'Get authenticated user basic info', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(14, '/(?<resource>[\w\-]+)', 'getUserPreferences',  'Get user preferences',              ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(14, '/(?<resource>[\w\-]+)', 'syncUserPreferences', 'Sync user preferences',             ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system')
+(13, '/me',                    'getBasicUserInfo',    'Get authenticated user basic info', ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '/(?<resource>[\w\-]+)', 'getUserPreferences',  'Get user preferences',              ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
+(13, '/(?<resource>[\w\-]+)', 'syncUserPreferences', 'Sync user preferences',             ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system')
 
 ;
 
@@ -134,24 +128,18 @@ INSERT INTO route_operation ("routeId", "operationId") VALUES
 (43, 7),
 (44, 5),
 (45, 9),
--- colors:         46=searchColors, 47=getColorHistory, 48=addColors, 49=updateColors, 50=archiveColors
+-- permissions:    46=searchPermissions, 47=addPermissions, 48=updatePermissions, 49=deletePermissions
 (46, 2), (46, 3),
-(47, 2),
-(48, 7),
-(49, 5),
-(50, 9),
--- permissions:    51=searchPermissions, 52=addPermissions, 53=updatePermissions, 54=deletePermissions
-(51, 2), (51, 3),
-(52, 7),
-(53, 5),
-(54, 9),
--- preferences:    55=getPreferences, 56=syncPreferences
-(55, 2),
-(56, 12),
--- users:          57=getBasicUserInfo, 58=getUserPreferences, 59=syncUserPreferences
-(57, 1),
-(58, 2),
-(59, 12)
+(47, 7),
+(48, 5),
+(49, 9),
+-- preferences:    50=getPreferences, 51=syncPreferences
+(50, 2),
+(51, 12),
+-- users:          52=getBasicUserInfo, 53=getUserPreferences, 54=syncUserPreferences
+(52, 1),
+(53, 2),
+(54, 12)
 
 ;
 

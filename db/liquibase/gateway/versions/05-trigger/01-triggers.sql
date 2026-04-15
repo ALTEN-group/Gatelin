@@ -90,18 +90,6 @@ FOR EACH ROW
 EXECUTE PROCEDURE iud_preference();
 
 
--- INSTEAD OF trigger on colors view
-CREATE TRIGGER colors_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON "colors"
-FOR EACH ROW
-EXECUTE PROCEDURE iud_color();
-
--- History trigger on color table
-CREATE TRIGGER color_history_trigger
-AFTER INSERT OR UPDATE OR DELETE ON "color"
-FOR EACH ROW
-EXECUTE PROCEDURE change_trigger();
-
 -- INSTEAD OF trigger on roles view
 CREATE TRIGGER roles_iud_trigger
 INSTEAD OF INSERT OR UPDATE OR DELETE ON "roles"

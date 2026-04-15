@@ -68,10 +68,6 @@
     <comment></comment>
     <sqlFile path="versions/02-func/10-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-11" author="lcluber">
-    <comment>Color iud trigger function</comment>
-    <sqlFile path="versions/02-func/11-color.sql" splitStatements="false"/>
-  </changeSet>
   <changeSet id="0.1.1-12" author="lcluber">
     <comment>Role iud trigger function</comment>
     <sqlFile path="versions/02-func/12-role.sql" splitStatements="false"/>
@@ -126,10 +122,6 @@
     <comment>Permission table with FKs to route and operation</comment>
     <sqlFile path="versions/03-struct/10-permission.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-11" author="lcluber">
-    <comment>Color table</comment>
-    <sqlFile path="versions/03-struct/11-color.sql" splitStatements="false"/>
-  </changeSet>
   <changeSet id="0.1.2-12" author="lcluber">
     <comment>Role table with FK to color</comment>
     <sqlFile path="versions/03-struct/12-role.sql" splitStatements="false"/>
@@ -167,10 +159,6 @@
   <changeSet id="0.1.3-08" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/08-preference.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="0.1.3-09" author="lcluber">
-    <comment>Colors view</comment>
-    <sqlFile path="versions/04-view/09-colors.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="0.1.3-10" author="lcluber">
     <comment>Roles view with colorName</comment>
@@ -213,10 +201,6 @@
   <changeSet id="0.1.4-06" author="lcluber">
     <comment>Insert default permission data</comment>
     <sqlFile path="versions/06-data/06-permission.sql"/>
-  </changeSet>
-  <changeSet id="0.1.4-07" author="lcluber">
-    <comment>Default color data</comment>
-    <sqlFile path="versions/06-data/07-color.sql"/>
   </changeSet>
   <changeSet id="0.1.4-08" author="lcluber">
     <comment>Default role data</comment>

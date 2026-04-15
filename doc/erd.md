@@ -16,27 +16,12 @@ erDiagram
   permission }o--|| route : ""
   permission }o--|| operation : ""
   permission }o--|| role : ""
-  role }o--|| color : ""
-
-  color {
-    int id PK
-    varchar name UK
-    varchar code UK
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
-  }
 
   role {
     int id PK
-    int colorId FK
     varchar name
     varchar description
+    varchar color
     boolean active
     boolean archived
     timestamp archivedAt

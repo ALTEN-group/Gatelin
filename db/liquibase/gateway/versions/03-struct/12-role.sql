@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS role (
   id SERIAL PRIMARY KEY,
   name varchar(50) NOT NULL,
   description varchar(100) NULL,
-  "colorId" INT NULL,
+  color VARCHAR(7) NULL,
   active BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
@@ -11,9 +11,5 @@ CREATE TABLE IF NOT EXISTS role (
   "updaterId" INT,
   "updaterName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT fk_role_color
-    FOREIGN KEY ("colorId") REFERENCES color (id)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
+  "updatedAt" TIMESTAMP DEFAULT NOW()
 );
