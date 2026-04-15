@@ -11,6 +11,7 @@ const tableKeys = [
   "scopes",
   "roles",
   "colors",
+  "permissions",
 ] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
@@ -109,6 +110,14 @@ export const TABLES: Record<AppTable, TableInfo> = {
     title: $localize`:@@TableLabels_Colors:Couleurs`,
     key: "colors",
     functionalityKey: "colors",
+    editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
+  },
+  permissions: {
+    label: $localize`:@@TableLabels_Permission:Permission`,
+    title: $localize`:@@TableLabels_Permissions:Permissions`,
+    key: "permissions",
+    functionalityKey: "permissions",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
   },

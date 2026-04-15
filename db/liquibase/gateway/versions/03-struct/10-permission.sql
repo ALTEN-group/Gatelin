@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS permission (
+  id            SERIAL PRIMARY KEY,
   "roleId"      INT NOT NULL,
   "routeId"     INT NOT NULL,
   "operationId" INT NOT NULL,
   fields        TEXT[],
-  PRIMARY KEY ("roleId", "routeId", "operationId"),
+  CONSTRAINT permission_unique UNIQUE ("roleId", "routeId", "operationId"),
   CHECK ("roleId">=0),
   CHECK ("routeId">=0),
   CHECK ("operationId">=0),

@@ -70,4 +70,10 @@ export const BASE_ACLS: AclsMapping = {
     update: 49,
     archive: 50,
   },
+  permissions: {
+    get: 56,    // searchPermissions
+    create: 57, // addPermissions
+    update: 58, // updatePermissions
+    archive: 59, // deletePermissions
+  },
 };

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls } from "@crud/core/utils/crud-service/crud.model";
 import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
 import { ROLE_COLUMNS } from "app/admin/data-access/roles/role.conf";
@@ -28,8 +27,7 @@ export class GatewayRolesService {
     history: this.crud.history,
   };
 
-  public readonly config = (payload: ActivatedRouteSnapshot) =>
-    ROLE_COLUMNS(payload);
+  public readonly config = ROLE_COLUMNS;
   public readonly entityFactory = gatewayRoleFactory;
 
   public getAndCacheAll(): Observable<GatewayRole[]> {

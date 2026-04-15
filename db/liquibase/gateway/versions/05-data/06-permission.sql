@@ -84,6 +84,11 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (1, 53,  1, NULL),  -- getBasicUserInfo    → read
 (1, 54,  2, NULL),  -- getUserPreferences  → list
 (1, 55, 12, NULL),  -- syncUserPreferences → bulk sync
+(1, 56,  2, NULL),  -- searchPermissions   → list
+(1, 56,  3, NULL),  -- searchPermissions   → export
+(1, 57,  7, NULL),  -- addPermissions      → bulk create
+(1, 58,  5, NULL),  -- updatePermissions   → bulk update
+(1, 59,  9, NULL),  -- deletePermissions   → bulk archive
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -142,6 +147,10 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (2, 53,  1, NULL),  -- getBasicUserInfo
 (2, 54,  2, NULL),  -- getUserPreferences
 (2, 55, 12, NULL),  -- syncUserPreferences
+(2, 56,  2, NULL),  -- searchPermissions
+(2, 57,  7, NULL),  -- addPermissions
+(2, 58,  5, NULL),  -- updatePermissions
+(2, 59,  9, NULL),  -- deletePermissions
 
 -- ============================================================
 -- User (3): read-only, public fields only

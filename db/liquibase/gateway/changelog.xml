@@ -180,6 +180,10 @@
     <comment>All INSTEAD OF and history triggers</comment>
     <sqlFile path="versions/04-view/12-triggers.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="0.1.3-13" author="lcluber">
+    <comment>Permissions view</comment>
+    <sqlFile path="versions/04-view/13-permissions.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- data -->
   <changeSet id="0.1.4-01" author="lcluber">

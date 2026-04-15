@@ -1,31 +1,6 @@
 // @ts-check
 import { execute } from "@dwtechs/antity-pgsql";
-
-const ROLES_WITH_PERMISSIONS_QUERY = `
-  SELECT
-    r.id, r.name, r.description, r."colorId", r."colorName", r.active,
-    r.archived, r."archivedAt", r."creatorName", r."updaterName", r."createdAt", r."updatedAt",
-    COALESCE(
-      jsonb_agg(
-        jsonb_build_object('route', pp."routeId", 'operations', pp.ops, 'fields', pp.fields)
-        ORDER BY pp."routeId"
-      ) FILTER (WHERE pp."routeId" IS NOT NULL),
-      '[]'::jsonb
-    ) AS permissions
-  FROM roles r
-  LEFT JOIN (
-    SELECT
-      "roleId",
-      "routeId",
-      array_agg("operationId" ORDER BY "operationId") AS ops,
-      (array_agg(fields ORDER BY "operationId") FILTER (WHERE fields IS NOT NULL))[1] AS fields
-    FROM permission
-    GROUP BY "roleId", "routeId"
-  ) pp ON pp."roleId" = r.id
-  WHERE r.archived = false
-  GROUP BY r.id, r.name, r.description, r."colorId", r."colorName", r.active,
-    r.archived, r."archivedAt", r."creatorName", r."updaterName", r."createdAt", r."updatedAt"
-`;
+import rpEnt from "../entities/role-cache.js";
 
 /**
  * @typedef {Object} roleCache
@@ -49,7 +24,14 @@ let roles = new Map();
  * console.log('Role cache initialized');
  */
 function init() {
-  return execute(ROLES_WITH_PERMISSIONS_QUERY, [], null).then((r) => {
+  const filters = {
+    archived: {
+      value: false,
+      matchMode: "equals",
+    },
+  };
+  const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
+  return execute(query, args, null).then((r) => {
     roles = new Map(
       r.rows.map((role) => [
         role.id,

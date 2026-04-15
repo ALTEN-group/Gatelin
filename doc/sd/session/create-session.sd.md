@@ -199,8 +199,14 @@ sequenceDiagram
     deactivate gdb
     activate msg
     msg--)msg: Add session to cache (async)
+    rect rgb(100, 200, 100, 0.2)
+      note over msg: Permission Resolution Block<br/>from :<br/>- req.body.rows[0]: { roles }
+      msg--)msg: Resolve permissions from role cache for each role id
+      msg--)msg: Merge operations and fields across roles
+      msg--)msg: Store merged permissions array in res.locals.permissions
+    end
     msg--)msg: Delete unsafe props from response data
-    msg->>f: return 200 ok : { nickname, accessToken, refreshToken, roles }
+    msg->>f: return 200 ok : { nickname, accessToken, refreshToken, roles, permissions }
     deactivate msg
     activate f
     f->>u: Display home page

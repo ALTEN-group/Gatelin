@@ -41,6 +41,7 @@ import scope from "./routes/scope.js";
 import preference from "./routes/preference.js";
 import role from "./routes/role.js";
 import color from "./routes/color.js";
+import permission from "./routes/permission.js";
 
 const s = "/gateway/";
 
@@ -63,6 +64,7 @@ app.use(`${s}scopes`, ...cr, scope, send);
 app.use(`${s}preferences`, ...cr, preference, send);
 app.use(`${s}roles`, ...cr, role, send);
 app.use(`${s}colors`, ...cr, color, send);
+app.use(`${s}permissions`, ...cr, permission, send);
 app.use("/", ...cr, proxy);
 
 // Performance measurement ends

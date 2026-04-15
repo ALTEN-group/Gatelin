@@ -62,13 +62,16 @@ INSERT INTO route ("resourceId", pattern, name, description, methods, "isProtect
 (12, '',                    'addColors',      'Add colors',          ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
 (12, '',                    'updateColors',   'Update colors',       ARRAY['PUT',  'OPTIONS']::method[], true, true, -1, 'system'),
 (12, '/archive',            'archiveColors',  'Archive colors',      ARRAY['POST', 'OPTIONS']::method[], true, true, -1, 'system'),
--- preferences
-(10, '/(?<resource>[a-zA-Z0-9_-]+)', 'getPreferences',  'Get preferences for the authenticated user and a given table',  ARRAY['GET', 'OPTIONS']::method[], true, true, -1, 'system'),
-(10, '/(?<resource>[a-zA-Z0-9_-]+)', 'syncPreferences', 'Sync preferences for the authenticated user and a given table', ARRAY['PUT', 'OPTIONS']::method[], true, true, -1, 'system'),
--- users
-(13, '/me',                                          'getBasicUserInfo',   'Get basic user info at login',                                               ARRAY['GET',  'OPTIONS']::method[], true, false, -1, 'system'),
-(13, '/preferences/(?<resource>[a-zA-Z0-9_-]+)',  'getUserPreferences',  'Get preferences for the authenticated user and a given table (users service)',  ARRAY['GET', 'OPTIONS']::method[], true, true,  -1, 'system'),
-(13, '/preferences/(?<resource>[a-zA-Z0-9_-]+)', 'syncUserPreferences', 'Sync preferences for the authenticated user and a given table (users service)', ARRAY['PUT', 'OPTIONS']::method[], true, true,  -1, 'system')
+-- permissions
+(14, '/search',  'searchPermissions',  'Search permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '',         'addPermissions',     'Add permissions',     ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '',         'updatePermissions',  'Update permissions',  ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '/archive', 'deletePermissions',  'Delete permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+-- permissions
+(14, '/search',  'searchPermissions',  'Search permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '',         'addPermissions',     'Add permissions',     ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '',         'updatePermissions',  'Update permissions',  ARRAY['PUT',  'OPTIONS']::method[], true, false, -1, 'system'),
+(14, '/archive', 'deletePermissions',  'Delete permissions',  ARRAY['POST', 'OPTIONS']::method[], true, false, -1, 'system')
 
 ;
 
@@ -141,7 +144,12 @@ INSERT INTO route_operation ("routeId", "operationId") VALUES
 -- users:          53=getBasicUserInfo, 54=getUserPreferences, 55=syncUserPreferences
 (53, 1),
 (54, 2),
-(55, 12)
+(55, 12),
+-- permissions:    56=searchPermissions, 57=addPermissions, 58=updatePermissions, 59=deletePermissions
+(56, 2), (56, 3),
+(57, 7),
+(58, 5),
+(59, 9)
 
 ;
 

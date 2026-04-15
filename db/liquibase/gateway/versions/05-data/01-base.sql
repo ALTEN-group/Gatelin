@@ -46,5 +46,6 @@ INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VAL
 (1, 'preferences', true, -1, 'system'),
 (1, 'roles', false, -1, 'system'),
 (1, 'colors', true, -1, 'system'),
-(2, 'users', true, -1, 'system')
+(2, 'users', true, -1, 'system'),
+(1, 'permissions', false, -1, 'system')
 ;

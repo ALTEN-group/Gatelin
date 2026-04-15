@@ -3,7 +3,6 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
-import { colorsResolver } from "app/admin/data-access/colors/colors.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
@@ -170,7 +169,8 @@ export const ROUTES: Routes = [
       functionality: "roles",
     },
     resolve: {
-      colors: colorsResolver,
+      routes: routesResolver,
+      operations: operationsResolver,
     },
   },
   {
