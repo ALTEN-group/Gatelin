@@ -384,7 +384,7 @@ Authorization: Bearer <access_token>
 {
   "name": "editor",
   "description": "Can edit content",
-  "colorId": 3,
+  "color": "#4B0082",
   "creatorId": 1,
   "creatorName": "admin"
 }
@@ -401,7 +401,7 @@ Authorization: Bearer <access_token>
   "id": 1,
   "name": "editor",
   "description": "Can edit and publish content",
-  "colorId": 4,
+  "color": "#0000FF",
   "updaterId": 1,
   "updaterName": "admin"
 }
@@ -416,82 +416,6 @@ Authorization: Bearer <access_token>
 
 {
   "ids": [1, 2, 3]
-}
-```
-
-### Color Management
-
-Colors are assignable to roles for visual differentiation in the admin panel.
-
-#### Search Colors
-
-```
-POST /gateway/colors/search
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "pagination": true,
-  "first": 0,
-  "rows": 20,
-  "sortField": "name",
-  "sortOrder": "ASC",
-  "filters": {
-    "archived": {
-      "value": false,
-      "matchMode": "equals"
-    }
-  }
-}
-```
-
-#### Get Color History
-
-```
-GET /gateway/colors/:id/history
-Authorization: Bearer <access_token>
-```
-
-#### Create Color
-
-```
-POST /gateway/colors
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "name": "indigo",
-  "code": "#4B0082",
-  "creatorId": 1,
-  "creatorName": "admin"
-}
-```
-
-#### Update Color
-
-```
-PUT /gateway/colors
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "id": 1,
-  "name": "indigo",
-  "code": "#4B0082",
-  "updaterId": 1,
-  "updaterName": "admin"
-}
-```
-
-#### Archive Colors
-
-```
-POST /gateway/colors/archive
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "ids": [1, 2]
 }
 ```
 

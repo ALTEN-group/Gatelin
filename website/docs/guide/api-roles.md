@@ -41,7 +41,7 @@ Authorization: Bearer <access_token>
 {
   "name": "editor",
   "description": "Can edit content",
-  "colorId": 3,
+  "color": "#4B0082",
   "creatorId": 1,
   "creatorName": "admin"
 }
@@ -60,7 +60,7 @@ Authorization: Bearer <access_token>
   "id": 1,
   "name": "editor",
   "description": "Can edit and publish content",
-  "colorId": 4,
+  "color": "#0000FF",
   "updaterId": 1,
   "updaterName": "admin"
 }
@@ -88,6 +88,6 @@ Authorization: Bearer <access_token>
 |---|---|
 | `name` | Unique role name |
 | `description` | Human-readable description |
-| `colorId` | ID of the color assigned to the role |
+| `color` | Hex color code assigned to the role (e.g. `#FF8000`) |
 | `active` | Whether the role is currently active |
 | `archived` | Whether the role is archived |

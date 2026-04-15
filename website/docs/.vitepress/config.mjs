@@ -27,7 +27,6 @@ export default defineConfig({
           { text: 'CORS', link: '/guide/api-cors' },
           { text: 'Routes', link: '/guide/api-routes' },
           { text: 'Roles', link: '/guide/api-roles' },
-          { text: 'Colors', link: '/guide/api-colors' },
           { text: 'Proxy', link: '/guide/api-proxy' },
         ],
       },
