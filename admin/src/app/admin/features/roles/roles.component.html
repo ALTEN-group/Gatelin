@@ -7,9 +7,6 @@
     [tableTitle]="tableInformation.title"
     [customRowStyles]="tableInformation.customRowStyles"
     [filterLevel]="tableInformation.filterLevel"
+    [isDefaultEditionDisabled]="true"
     (rowClicked)="onRoleClick($event)"
 />
-
-@if (selectedRole()?.id) {
-  <adm-permissions [roleId]="selectedRole()!.id!" />
-}

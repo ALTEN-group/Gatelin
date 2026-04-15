@@ -1,10 +1,23 @@
-<tbl-table
-  [config]="config"
-  [httpCalls]="permHttpCalls"
-  [entityFactory]="entityFactory"
-  [entityId]="tableInformation.key"
-  [entityLabel]="tableInformation.label"
-  [tableTitle]="tableInformation.title"
-  [forceReload]="forceReload()"
-  [filterLevel]="tableInformation.filterLevel"
-/>
+@if (showRoleSelect) {
+  <p-select
+    [options]="roles"
+    [(ngModel)]="selectedRole"
+    (onChange)="onRoleSelect($event.value)"
+    optionLabel="name"
+    placeholder="Select a role"
+    i18n-placeholder="@@Permissions_SelectRole"
+  />
+}
+
+@if (roleId()) {
+  <tbl-table
+    [config]="config"
+    [httpCalls]="permHttpCalls"
+    [entityFactory]="entityFactory"
+    [entityId]="tableInformation.key"
+    [entityLabel]="tableInformation.label"
+    [tableTitle]="tableInformation.title"
+    [forceReload]="forceReload()"
+    [filterLevel]="tableInformation.filterLevel"
+  />
+}

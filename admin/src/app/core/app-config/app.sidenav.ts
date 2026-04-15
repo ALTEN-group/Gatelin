@@ -76,28 +76,10 @@ export const SIDENAV: MenuItem[] = [
   },
   {
     id: "roles",
-    label: $localize`:@@Admin_RolesNav:Roles`,
-    routerLink: `/${AppPaths.ROLES}`,
+    label: $localize`:@@Admin_AuthorizationNav:Authorizations`,
+    routerLink: `/${AppPaths.PERMISSIONS}`,
     icon: "pi pi-id-card",
     items: [
-      {
-        id: "roles",
-        label: $localize`:@@Admin_RolesNav:Roles`,
-        routerLink: `/${AppPaths.ROLES}`,
-        icon: "pi pi-id-card",
-        data: {
-          functionality: "roles",
-        },
-      },
-      {
-        id: "colors",
-        label: $localize`:@@Admin_ColorsNav:Colors`,
-        routerLink: `/${AppPaths.COLORS}`,
-        icon: "pi pi-palette",
-        data: {
-          functionality: "colors",
-        },
-      },
       {
         id: "permissions",
         label: $localize`:@@Admin_PermissionsNav:Permissions`,
@@ -105,6 +87,15 @@ export const SIDENAV: MenuItem[] = [
         icon: "pi pi-lock",
         data: {
           functionality: "permissions",
+        },
+      },
+      {
+        id: "roles",
+        label: $localize`:@@Admin_RolesNav:Roles`,
+        routerLink: `/${AppPaths.ROLES}`,
+        icon: "pi pi-id-card",
+        data: {
+          functionality: "roles",
         },
       },
     ],
