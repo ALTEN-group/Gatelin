@@ -23,6 +23,7 @@ export const AppPaths = {
   SCOPES: "scopes",
   ROLES: "roles",
   COLORS: "colors",
+  PERMISSIONS: "permissions",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
