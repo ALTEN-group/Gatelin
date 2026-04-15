@@ -63,15 +63,17 @@ export class AuthenticationService {
     const refreshToken = this.tokenService.getRefreshToken();
     if (refreshToken)
       return this.http
-        .put<{ accessToken: string; refreshToken: string }>(this.sessionApi, {
+        .put<LoginResponse>(this.sessionApi, {
           refreshToken,
         })
         .pipe(
           tap((res) => {
-            const { accessToken, refreshToken } = res ?? {};
+            const { accessToken, refreshToken, permissions } = res ?? {};
             if (!accessToken || !refreshToken) return;
             this.saveTokens(accessToken, refreshToken);
             this.authenticate();
+            this.aclService.resetAccessLevels();
+            if (permissions) this.aclService.storeAccessLevels(permissions);
           }),
           map((res) => !!res),
           catchError(() => {

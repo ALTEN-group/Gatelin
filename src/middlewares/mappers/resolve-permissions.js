@@ -10,8 +10,8 @@ import roleSvc from "../../services/role.js";
  * @param {import('express').NextFunction} next - Express next function
  * @return {void}
  */
-export function resolvePermissions(req, res, next) {
-  const roleIds = req.body.rows[0]?.roles ?? [];
+export function resolvePermissions(_req, res, next) {
+  const roleIds = res.locals.rows[0]?.roles ?? [];
   const permMap = new Map();
 
   for (const id of roleIds) {
@@ -19,7 +19,9 @@ export function resolvePermissions(req, res, next) {
     for (const p of perms) {
       if (permMap.has(p.route)) {
         const existing = permMap.get(p.route);
-        const operations = [...new Set([...existing.operations, ...p.operations])];
+        const operations = [
+          ...new Set([...existing.operations, ...p.operations]),
+        ];
         // null means unrestricted — if either role is unrestricted, result is unrestricted
         const fields =
           existing.fields === null || p.fields === null
@@ -27,7 +29,11 @@ export function resolvePermissions(req, res, next) {
             : [...new Set([...existing.fields, ...p.fields])];
         permMap.set(p.route, { route: p.route, operations, fields });
       } else {
-        permMap.set(p.route, { route: p.route, operations: [...p.operations], fields: p.fields ?? null });
+        permMap.set(p.route, {
+          route: p.route,
+          operations: [...p.operations],
+          fields: p.fields ?? null,
+        });
       }
     }
   }

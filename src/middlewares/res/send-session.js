@@ -16,8 +16,8 @@ import sEnt from "../../entities/session.js";
  * // Use as final middleware in route
  * router.post('/sessions', addSession, sendSession);
  */
-export function sendSession(req, res, _next) {
+export function sendSession(_req, res, _next) {
   const permissions = res.locals.permissions ?? [];
-  const data = deleteProps(req.body.rows, sEnt.privateProps);
+  const data = deleteProps(res.locals.rows, sEnt.privateProps);
   res.status(200).json({ ...data[0], permissions });
 }
