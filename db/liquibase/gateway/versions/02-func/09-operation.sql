@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION iud_operation() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM soft_delete(''operation'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM archive(''operation'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 

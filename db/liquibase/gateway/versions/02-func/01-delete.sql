@@ -4,7 +4,7 @@
 -- and cleans up related history records
 
 -- Function to hard delete records by archivedAt and delete history for each
-CREATE OR REPLACE FUNCTION hard_delete(
+CREATE OR REPLACE FUNCTION delete(
   p_schema_name TEXT,
   p_table_name TEXT,
   p_archived_at TIMESTAMP
@@ -23,4 +23,4 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Example usage:
 -- Clean up users archived more than 1 year ago
--- SELECT hard_delete('public', 'user', NOW() - INTERVAL '1 year');
+-- SELECT delete('public', 'user', NOW() - INTERVAL '1 year');

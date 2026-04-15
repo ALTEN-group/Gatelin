@@ -35,7 +35,7 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM soft_delete(''route'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM archive(''route'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 

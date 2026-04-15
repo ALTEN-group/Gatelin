@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION iud_color() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM soft_delete(''color'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM archive(''color'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 

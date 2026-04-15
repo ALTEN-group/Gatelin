@@ -120,3 +120,13 @@ INSTEAD OF INSERT OR UPDATE OR DELETE ON "consumers"
 FOR EACH ROW
 EXECUTE PROCEDURE iud_consumer();
 
+-- Limit trigger on preference table
+CREATE TRIGGER trg_preference_limit
+  BEFORE INSERT ON preference
+  FOR EACH ROW EXECUTE FUNCTION check_preference_limit();
+
+-- INSTEAD OF trigger on permissions view
+CREATE TRIGGER permissions_iud_trigger
+INSTEAD OF INSERT OR UPDATE ON "permissions"
+FOR EACH ROW
+EXECUTE PROCEDURE iud_permission();

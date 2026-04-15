@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION iud_field() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM soft_delete(''field'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM archive(''field'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 

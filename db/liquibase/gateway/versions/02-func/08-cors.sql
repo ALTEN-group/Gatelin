@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION iud_cors() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM soft_delete(''cors'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM archive(''cors'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 
