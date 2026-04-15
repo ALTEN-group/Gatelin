@@ -57,29 +57,20 @@ export const SIDENAV: MenuItem[] = [
     },
   },
   {
-    id: "fields",
-    label: $localize`:@@Admin_FieldsNav:Fields`,
-    routerLink: `/${AppPaths.FIELDS}`,
-    icon: "pi pi-list",
-    data: {
-      functionality: "fields",
-    },
-  },
-  {
-    id: "scopes",
-    label: $localize`:@@Admin_ScopesNav:Scopes`,
-    routerLink: `/${AppPaths.SCOPES}`,
-    icon: "pi pi-filter",
-    data: {
-      functionality: "scopes",
-    },
-  },
-  {
     id: "roles",
     label: $localize`:@@Admin_AuthorizationNav:Authorizations`,
-    routerLink: `/${AppPaths.PERMISSIONS}`,
+    routerLink: `/${AppPaths.ROLES}`,
     icon: "pi pi-id-card",
     items: [
+      {
+        id: "roles",
+        label: $localize`:@@Admin_RolesNav:Roles`,
+        routerLink: `/${AppPaths.ROLES}`,
+        icon: "pi pi-id-card",
+        data: {
+          functionality: "roles",
+        },
+      },
       {
         id: "permissions",
         label: $localize`:@@Admin_PermissionsNav:Permissions`,
@@ -90,12 +81,21 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
-        id: "roles",
-        label: $localize`:@@Admin_RolesNav:Roles`,
-        routerLink: `/${AppPaths.ROLES}`,
-        icon: "pi pi-id-card",
+        id: "scopes",
+        label: $localize`:@@Admin_ScopesNav:Scopes`,
+        routerLink: `/${AppPaths.SCOPES}`,
+        icon: "pi pi-filter",
         data: {
-          functionality: "roles",
+          functionality: "scopes",
+        },
+      },
+      {
+        id: "fields",
+        label: $localize`:@@Admin_FieldsNav:Fields`,
+        routerLink: `/${AppPaths.FIELDS}`,
+        icon: "pi pi-list",
+        data: {
+          functionality: "fields",
         },
       },
     ],
