@@ -1,17 +1,18 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    effect,
-    inject,
-    input,
-    signal,
-    untracked,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
 } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { ConfigHelper } from "@crud/core/utils/crud-service/config.helper";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { TableComponent } from "@table/table.component";
-import { Permission, permissionFactory } from "app/admin/data-access/permissions/permission.model";
+import { Calls, ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import {
+  Permission,
+  permissionFactory,
+} from "app/admin/data-access/permissions/permission.model";
 import { PermissionsService } from "app/admin/data-access/permissions/permissions.service";
 import { TableLazyLoadEvent } from "primeng/table";
 

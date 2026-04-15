@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
-import { RowsAndCount } from "@crud/core/utils/crud-service/dto.model";
+import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/crud-builder";
 import { PERMISSION_COLUMNS } from "app/admin/data-access/permissions/permission.conf";
 import { Permission } from "app/admin/data-access/permissions/permission.model";
 import { TableLazyLoadEvent } from "primeng/table";

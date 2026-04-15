@@ -1,11 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
+import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { COLOR_COLUMNS } from "app/admin/data-access/colors/color.conf";
-import {
-    Color,
-    colorFactory,
-} from "app/admin/data-access/colors/color.model";
+import { Color, colorFactory } from "app/admin/data-access/colors/color.model";
 import { Observable } from "rxjs";
 
 const colorsEndpoint: string = "gateway/colors";
@@ -24,7 +20,7 @@ export class ColorsService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    history: this.crud.history,
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = COLOR_COLUMNS;
