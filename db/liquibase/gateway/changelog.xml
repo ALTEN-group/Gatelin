@@ -34,7 +34,7 @@
   </changeSet>
   <changeSet id="0.1.1-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/02-func/02-archive.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/02-set-archived.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="0.1.1-03" author="lcluber">
     <comment></comment>

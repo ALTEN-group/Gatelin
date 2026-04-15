@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM archive(''scope'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM set_archived(''scope'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 

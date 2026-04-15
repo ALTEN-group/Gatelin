@@ -1,7 +1,7 @@
 
 -- Create a reusable function for archiving any record
 -- This function handles the common pattern of soft deletes without code duplication
-CREATE OR REPLACE FUNCTION archive(
+CREATE OR REPLACE FUNCTION set_archived(
   p_table_name TEXT,
   p_id INT,
   p_new_archived BOOLEAN,
@@ -23,6 +23,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Example usage:
 -- In a trigger function:
--- PERFORM archive('user', NEW.id, NEW.archived, OLD.archived);
+-- PERFORM set_archived('user', NEW.id, NEW.archived, OLD.archived);
 -- PERFORM log_history(TG_TABLE_SCHEMA, TG_RELNAME, TG_OP, row_to_json(OLD), NULL);
 -- RETURN OLD;

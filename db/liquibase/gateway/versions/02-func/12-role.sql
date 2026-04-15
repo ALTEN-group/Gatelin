@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION iud_role() RETURNS trigger AS '
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      PERFORM archive(''role'', OLD.id, NEW.archived, OLD.archived);
+      PERFORM set_archived(''role'', OLD.id, NEW.archived, OLD.archived);
 
       RETURN NEW;
 
