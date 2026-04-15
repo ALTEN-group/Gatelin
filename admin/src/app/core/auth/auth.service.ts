@@ -101,7 +101,7 @@ export class AuthenticationService {
         const { nickname, firstName, lastName } = res;
         this.updateUser(nickname, firstName, lastName);
       }),
-      map(() => this._user() as User),
+      map(() => this._user() ?? null),
       catchError(() => {
         return of(null);
       }),

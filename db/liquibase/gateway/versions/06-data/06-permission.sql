@@ -13,8 +13,9 @@
 --   36=searchScopes     37=getScopeHistory  38=updateScopes     39=addScopes        40=archiveScopes
 --   41=searchRoles      42=getRoleHistory   43=addRoles         44=updateRoles      45=archiveRoles
 --   46=searchColors     47=getColorHistory  48=addColors        49=updateColors     50=archiveColors
---   51=getPreferences   52=syncPreferences
---   53=getBasicUserInfo 54=getUserPreferences 55=syncUserPreferences
+--   51=searchPermissions 52=addPermissions 53=updatePermissions 54=deletePermissions
+--   55=getPreferences   56=syncPreferences
+--   57=getBasicUserInfo 58=getUserPreferences 59=syncUserPreferences
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -79,16 +80,16 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (1, 48,  7, NULL),  -- addColors           → bulk create
 (1, 49,  5, NULL),  -- updateColors        → bulk update
 (1, 50,  9, NULL),  -- archiveColors       → bulk archive
-(1, 51,  2, NULL),  -- getPreferences      → list
-(1, 52, 12, NULL),  -- syncPreferences     → bulk sync
-(1, 53,  1, NULL),  -- getBasicUserInfo    → read
-(1, 54,  2, NULL),  -- getUserPreferences  → list
-(1, 55, 12, NULL),  -- syncUserPreferences → bulk sync
-(1, 56,  2, NULL),  -- searchPermissions   → list
-(1, 56,  3, NULL),  -- searchPermissions   → export
-(1, 57,  7, NULL),  -- addPermissions      → bulk create
-(1, 58,  5, NULL),  -- updatePermissions   → bulk update
-(1, 59,  9, NULL),  -- deletePermissions   → bulk archive
+(1, 51,  2, NULL),  -- searchPermissions   → list
+(1, 51,  3, NULL),  -- searchPermissions   → export
+(1, 52,  7, NULL),  -- addPermissions      → bulk create
+(1, 53,  5, NULL),  -- updatePermissions   → bulk update
+(1, 54,  9, NULL),  -- deletePermissions   → bulk archive
+(1, 55,  2, NULL),  -- getPreferences      → list
+(1, 56, 12, NULL),  -- syncPreferences     → bulk sync
+(1, 57,  1, NULL),  -- getBasicUserInfo    → read
+(1, 58,  2, NULL),  -- getUserPreferences  → list
+(1, 59, 12, NULL),  -- syncUserPreferences → bulk sync
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -142,15 +143,15 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (2, 48,  7, ARRAY['name', 'code']),  -- addColors
 (2, 49,  5, ARRAY['name', 'code']),  -- updateColors
 (2, 50,  9, NULL),  -- archiveColors
-(2, 51,  2, NULL),  -- getPreferences
-(2, 52, 12, NULL),  -- syncPreferences
-(2, 53,  1, NULL),  -- getBasicUserInfo
-(2, 54,  2, NULL),  -- getUserPreferences
-(2, 55, 12, NULL),  -- syncUserPreferences
-(2, 56,  2, NULL),  -- searchPermissions
-(2, 57,  7, NULL),  -- addPermissions
-(2, 58,  5, NULL),  -- updatePermissions
-(2, 59,  9, NULL),  -- deletePermissions
+(2, 51,  2, NULL),  -- searchPermissions
+(2, 52,  7, NULL),  -- addPermissions
+(2, 53,  5, NULL),  -- updatePermissions
+(2, 54,  9, NULL),  -- deletePermissions
+(2, 55,  2, NULL),  -- getPreferences
+(2, 56, 12, NULL),  -- syncPreferences
+(2, 57,  1, NULL),  -- getBasicUserInfo
+(2, 58,  2, NULL),  -- getUserPreferences
+(2, 59, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -166,10 +167,10 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 (3, 36,  2, ARRAY['id', 'value']),  -- searchScopes
 (3, 41,  2, ARRAY['id', 'name', 'description', 'colorId', 'colorName']),  -- searchRoles
 (3, 46,  2, ARRAY['id', 'name', 'code']),  -- searchColors
-(3, 51,  2, NULL),  -- getPreferences
-(3, 53,  1, NULL),  -- getBasicUserInfo
-(3, 54,  2, NULL),  -- getUserPreferences
-(3, 55, 12, NULL),  -- syncUserPreferences
+(3, 55,  2, NULL),  -- getPreferences
+(3, 57,  1, NULL),  -- getBasicUserInfo
+(3, 58,  2, NULL),  -- getUserPreferences
+(3, 59, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- Guest (4): session routes only
