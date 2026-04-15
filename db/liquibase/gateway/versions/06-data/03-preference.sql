@@ -332,6 +332,85 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
+]', false),
+
+-- roles
+(3, 'roles', 'Compact', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":true},
+  {"key":"colorId",     "isVisible":false},
+  {"key":"colorName",   "isVisible":true},
+  {"key":"active",      "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', true),
+(3, 'roles', 'Archives', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":true},
+  {"key":"colorId",     "isVisible":false},
+  {"key":"colorName",   "isVisible":true},
+  {"key":"active",      "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":true},
+  {"key":"archivedAt",  "isVisible":true}
+]', false),
+(3, 'roles', 'Audit', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
+  {"key":"colorId",     "isVisible":false},
+  {"key":"colorName",   "isVisible":false},
+  {"key":"active",      "isVisible":false},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', false),
+
+-- colors
+(3, 'colors', 'Compact', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"code",        "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', true),
+(3, 'colors', 'Archives', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"code",        "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":true},
+  {"key":"archivedAt",  "isVisible":true}
+]', false),
+(3, 'colors', 'Audit', '[
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"code",        "isVisible":false},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
 ]', false)
 
 ;
