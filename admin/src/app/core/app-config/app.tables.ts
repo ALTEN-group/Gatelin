@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@dwtechs/crud-builder";
+import { ArchiveInfo, FilterLevel } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",
@@ -23,10 +23,10 @@ type TableInfo = {
   functionalityKey: string;
   editionDialogSize: "xs" | "s" | "m" | "l";
   customRowStyles: (row: ArchiveInfo) => { [key: string]: string };
+  filterLevel: FilterLevel;
 };
 
 const defaultRowStyles = (row: ArchiveInfo) => {
-  console.log(row, row.archived ? "archived-row" : "");
   return {
     opacity: row.archived ? "0.2" : "1",
   };
@@ -40,6 +40,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "routes",
     editionDialogSize: "m",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   consumers: {
     label: $localize`:@@TableLabels_Consumer:Consumer`,
@@ -48,6 +49,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "consumers",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   services: {
     label: $localize`:@@TableLabels_Service:Service`,
@@ -56,6 +58,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "services",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   resources: {
     label: $localize`:@@TableLabels_Resource:Resource`,
@@ -64,6 +67,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "resources",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   cors: {
     label: $localize`:@@TableLabels_Cors:CORS`,
@@ -72,6 +76,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "cors",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   operations: {
     label: $localize`:@@TableLabels_Operation:Opération`,
@@ -80,6 +85,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "operations",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   fields: {
     label: $localize`:@@TableLabels_Field:Field`,
@@ -88,6 +94,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "fields",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   scopes: {
     label: $localize`:@@TableLabels_Scope:Scope`,
@@ -96,6 +103,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "scopes",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   roles: {
     label: $localize`:@@TableLabels_Role:Rôle`,
@@ -104,6 +112,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "roles",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   colors: {
     label: $localize`:@@TableLabels_Color:Couleur`,
@@ -112,6 +121,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "colors",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
   permissions: {
     label: $localize`:@@TableLabels_Permission:Permission`,
@@ -120,5 +130,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "permissions",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
   },
 } as const;
