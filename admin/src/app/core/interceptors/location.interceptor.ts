@@ -5,8 +5,8 @@ import {
 } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
-import { LocationInterceptorService } from "@table/utils/excel/location-interceptor.service";
 import { tap } from "rxjs";
+import { LocationInterceptorService } from "./location-interceptor.service";
 
 /**
  * Http Interceptor that listens for "location" headers in the response.

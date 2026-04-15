@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
+import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 export interface Resource extends ArchiveInfo {
   id: number | null;

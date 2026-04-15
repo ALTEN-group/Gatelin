@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { Role } from "@core/roles/role.class";
 import { RolesPayload } from "@core/roles/role.model";
-import { RowsAndCount } from "@crud/core/utils/crud-service/dto.model";
+import { RowsAndCount } from "@dwtechs/crud-builder";
 import { TableLazyLoadEvent } from "primeng/table";
 import { catchError, map, Observable, of, tap } from "rxjs";
 

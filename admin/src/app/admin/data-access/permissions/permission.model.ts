@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@crud/core/utils/confs/archived-config";
+import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 export interface Permission extends ArchiveInfo {
   id: number | null;
@@ -10,7 +10,9 @@ export interface Permission extends ArchiveInfo {
   fields: string[] | null;
 }
 
-export const permissionFactory = (roleId: number | null = null): Permission => ({
+export const permissionFactory = (
+  roleId: number | null = null,
+): Permission => ({
   id: null,
   roleId,
   routeId: null,

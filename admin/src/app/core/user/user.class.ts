@@ -1,6 +1,9 @@
 import { FunctionalityAccessLevel, Permission } from "@core/roles/role.class";
-import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
-import { GeoCoordinates, INIT_COORDINATES } from "@form/utils/location.config";
+import {
+  CrudItemBase,
+  GeoCoordinates,
+  INIT_COORDINATES,
+} from "@dwtechs/crud-builder";
 
 export class User extends CrudItemBase implements GeoCoordinates {
   firstName = "";

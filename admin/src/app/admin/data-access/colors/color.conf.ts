@@ -1,14 +1,13 @@
-import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
-import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
-import { INPUT_TYPES } from "@crud/core/models/input-type.model";
-import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
-import { AUDIT_CONFIG } from "@crud/core/utils/confs/audit-config";
-import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
 import {
-    maxlength,
-    minlength,
-    required,
-} from "@crud/form/utils/common.validators";
+  CONTROL_TYPES,
+  createArchivedConfig,
+  ID_CONFIG,
+  INPUT_TYPES,
+  maxlength,
+  minlength,
+  required,
+  StrictCrudItemOptions,
+} from "@dwtechs/crud-builder";
 import { Color } from "app/admin/data-access/colors/color.model";
 
 export const COLOR_COLUMNS: StrictCrudItemOptions<Color>[] = [
@@ -31,6 +30,5 @@ export const COLOR_COLUMNS: StrictCrudItemOptions<Color>[] = [
       validators: [required, minlength(4), maxlength(7)],
     },
   },
-  ...AUDIT_CONFIG,
-  ...ARCHIVED_CONFIG,
+  ...createArchivedConfig(),
 ];

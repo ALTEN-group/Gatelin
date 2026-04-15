@@ -7,7 +7,7 @@ import {
   input,
 } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
+import { Calls } from "@dwtechs/crud-builder";
 
 @Directive({
   selector: "[protectFeature]",

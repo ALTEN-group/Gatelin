@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
+import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { SERVICE_COLUMNS } from "app/admin/data-access/services/service.conf";
 import {
   Service,
@@ -20,11 +19,15 @@ export class ServicesService {
 
   public readonly httpCalls: Calls<Service> = {
     get: this.crud.get,
-    create: (item) => this.crud.create(item).pipe(tap(() => this.invalidateCache())),
-    update: (item) => this.crud.update(item).pipe(tap(() => this.invalidateCache())),
-    archive: (ids) => this.crud.archive(ids).pipe(tap(() => this.invalidateCache())),
-    restore: (ids) => this.crud.restore(ids).pipe(tap(() => this.invalidateCache())),
-    history: this.crud.history,
+    create: (item) =>
+      this.crud.create(item).pipe(tap(() => this.invalidateCache())),
+    update: (item) =>
+      this.crud.update(item).pipe(tap(() => this.invalidateCache())),
+    archive: (ids) =>
+      this.crud.archive(ids).pipe(tap(() => this.invalidateCache())),
+    restore: (ids) =>
+      this.crud.restore(ids).pipe(tap(() => this.invalidateCache())),
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = SERVICE_COLUMNS;
@@ -34,7 +37,10 @@ export class ServicesService {
 
   public getAndCacheAll(): Observable<Service[]> {
     if (!this._all$) {
-      this._all$ = this.crud.getAll().pipe(map((res) => res.rows ?? []), shareReplay(1));
+      this._all$ = this.crud.getAll().pipe(
+        map((res) => res.rows ?? []),
+        shareReplay(1),
+      );
     }
     return this._all$;
   }

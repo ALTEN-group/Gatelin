@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { USERS_TABLE_CONF } from "@core/user/users-table.conf";
-import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
+import {
+  Calls,
+  CrudRepository,
+  StrictCrudItemOptions,
+} from "@dwtechs/crud-builder";
 import { User } from "./user.class";
 
 @Injectable({ providedIn: "root" })

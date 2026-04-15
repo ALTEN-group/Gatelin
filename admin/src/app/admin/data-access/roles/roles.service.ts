@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Calls } from "@crud/core/utils/crud-service/crud.model";
-import { CrudRepository } from "@crud/core/utils/crud-service/crud.repository";
+import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { ROLE_COLUMNS } from "app/admin/data-access/roles/role.conf";
 import {
-    GatewayRole,
-    gatewayRoleFactory,
+  GatewayRole,
+  gatewayRoleFactory,
 } from "app/admin/data-access/roles/role.model";
 import { Observable } from "rxjs";
 
@@ -24,7 +23,7 @@ export class GatewayRolesService {
     update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
-    history: this.crud.history,
+    getHistory: this.crud.getHistory,
   };
 
   public readonly config = ROLE_COLUMNS;

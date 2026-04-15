@@ -1,22 +1,22 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { TableComponent } from "@table/table.component";
+import { TableComponent } from "@dwtechs/crud-builder";
 import { ServicesService } from "app/admin/data-access/services/services.service";
 
 @Component({
-	selector: "adm-services",
-	templateUrl: "./services.component.html",
-	imports: [TableComponent],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "adm-services",
+  templateUrl: "./services.component.html",
+  imports: [TableComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesComponent {
-	private readonly servicesService = inject(ServicesService);
+  private readonly servicesService = inject(ServicesService);
 
-	public readonly config = this.servicesService.config;
+  public readonly config = this.servicesService.config;
 
-	public readonly entityFactory = this.servicesService.entityFactory;
+  public readonly entityFactory = this.servicesService.entityFactory;
 
-	public readonly httpCalls = this.servicesService.httpCalls;
+  public readonly httpCalls = this.servicesService.httpCalls;
 
-	public readonly tableInformation = TABLES.services;
+  public readonly tableInformation = TABLES.services;
 }

@@ -1,4 +1,4 @@
-import { CrudItemBase } from "@crud/core/models/crud-item-base.class";
+import { CrudItemBase } from "@dwtechs/crud-builder";
 
 export interface Permission {
   route: number;

@@ -1,14 +1,15 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
 import { User } from "@core/user/user.class";
-import { CONTROL_TYPES } from "@crud/core/models/control-type.model";
-import { StrictCrudItemOptions } from "@crud/core/models/crud-item-options.model";
-import { INPUT_TYPES } from "@crud/core/models/input-type.model";
-import { ARCHIVED_CONFIG } from "@crud/core/utils/confs/archived-config";
-import { ID_CONFIG } from "@crud/core/utils/confs/id-config";
-import { required } from "@form/utils/common.validators";
-import { EmailValidator } from "@form/utils/email.validator";
-import { LOCATION_CONFIG } from "@form/utils/location.config";
+import {
+  ARCHIVED_CONFIG,
+  CONTROL_TYPES,
+  EmailValidator,
+  ID_CONFIG,
+  INPUT_TYPES,
+  required,
+  StrictCrudItemOptions,
+} from "@dwtechs/crud-builder";
 import { SelectItem } from "primeng/api";
 
 export const USERS_TABLE_CONF: (
@@ -69,7 +70,7 @@ export const USERS_TABLE_CONF: (
     },
   },
   {
-    key: "roles",
+    key: "roles" as any,
     controlType: CONTROL_TYPES.MULTISELECT,
     label: "Rôles",
     options: getRolesOptions(payload.data.roles),
@@ -115,7 +116,7 @@ export const USERS_TABLE_CONF: (
       hidden: true,
     },
   },
-  ...LOCATION_CONFIG,
+  // ...LOCATION_CONFIG,
   ...ARCHIVED_CONFIG,
 ];
 

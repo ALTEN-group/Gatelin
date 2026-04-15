@@ -9,8 +9,7 @@ import { TokenService } from "@core/auth/token.service";
 import { cloneReq } from "@core/interceptors/clone-req";
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
-import { isCacheable } from "@crud/core/utils/offline/cacheable.utils";
-import { OfflineService } from "@crud/core/utils/offline/offline.service";
+import { OfflineService } from "@dwtechs/crud-builder";
 import {
   bufferCount,
   catchError,
@@ -87,24 +86,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     );
   };
 
-  const handleOfflineMode = () => {
-    if (isCacheable(req)) {
-      pendingRequests.push(req);
-      snackbarService.displayInfo($localize`:@@offlineMessage:`);
-    } else {
-      snackbarService.displayError($localize`:@@noInternetConnection:`);
-    }
-    return throwError(() => new Error("No internet connection"));
-  };
-
   return next(req).pipe(
     catchError((err) => {
       loadingService.stop();
       console.log("The error was: ", err);
       if (err instanceof HttpErrorResponse) {
-        if (!offlineService.isOnline()) {
-          return handleOfflineMode();
-        }
         if (isNotFound(err)) {
           return returnError(err, true);
         }
