@@ -4,9 +4,6 @@ FROM node:${NODE_VERSION}
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
-# Install system dependencies
-RUN apk update && apk add postgresql-client tzdata 
-
 ARG TZ
 ENV TZ=${TZ}
 

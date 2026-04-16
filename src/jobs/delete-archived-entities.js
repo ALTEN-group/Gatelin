@@ -8,7 +8,6 @@ import operationSvc from "../services/operation.js";
 import resourceSvc from "../services/resource.js";
 import routeSvc from "../services/route.js";
 import roleSvc from "../services/role.js";
-import colorSvc from "../services/color.js";
 
 /**
  * Cron job to delete archived entities from the database.
@@ -44,7 +43,6 @@ export function startDeleteArchivedEntitiesJob() {
         { name: "resources", service: resourceSvc },
         { name: "routes", service: routeSvc },
         { name: "roles", service: roleSvc },
-        { name: "colors", service: colorSvc },
       ];
 
       let totalDeleted = 0;

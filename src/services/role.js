@@ -1,5 +1,6 @@
 // @ts-check
 import { execute } from "@dwtechs/antity-pgsql";
+import rEnt from "../entities/role.js";
 import rpEnt from "../entities/role-cache.js";
 
 /**
@@ -64,8 +65,8 @@ function getOne(id) {
 }
 
 function deleteArchived(date) {
-  return execute('DELETE FROM role WHERE archived = true AND "archivedAt" < $1', [date], null)
-    .then((r) => r.rowCount || 0);
+  const q = rEnt.query.deleteArchive();
+  return execute(q, [date], null).then((r) => r.rowCount || 0);
 }
 
 export default {
