@@ -213,7 +213,7 @@ export const ROUTES: Routes = [
   },
   {
     path: "",
-    redirectTo: `/${AppPaths.ROUTES}`,
+    redirectTo: `/${AppPaths.CONSUMERS}`,
     pathMatch: "full",
   },
   {
