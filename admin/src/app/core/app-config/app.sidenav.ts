@@ -3,15 +3,6 @@ import { MenuItem } from "primeng/api";
 
 export const SIDENAV: MenuItem[] = [
   {
-    id: "routes",
-    label: $localize`:@@Admin_RoutesNav:Routes`,
-    routerLink: `/${AppPaths.ROUTES}`,
-    icon: "pi pi-directions",
-    data: {
-      functionality: "routes",
-    },
-  },
-  {
     id: "consumers",
     label: $localize`:@@Admin_ConsumersNav:Consumers`,
     routerLink: `/${AppPaths.CONSUMERS}`,
@@ -21,40 +12,66 @@ export const SIDENAV: MenuItem[] = [
     },
   },
   {
-    id: "services",
-    label: $localize`:@@Admin_ServicesNav:Services`,
-    routerLink: `/${AppPaths.SERVICES}`,
-    icon: "pi pi-server",
-    data: {
-      functionality: "services",
-    },
-  },
-  {
-    id: "apis",
-    label: $localize`:@@Admin_ApisNav:Resources`,
-    routerLink: `/${AppPaths.RESOURCES}`,
-    icon: "pi pi-box",
-    data: {
-      functionality: "resources",
-    },
-  },
-  {
-    id: "cors",
-    label: $localize`:@@Admin_CorsNav:Cors`,
-    routerLink: `/${AppPaths.CORS}`,
-    icon: "pi pi-shield",
-    data: {
-      functionality: "cors",
-    },
-  },
-  {
-    id: "operations",
-    label: $localize`:@@Admin_OperationsNav:Operations`,
-    routerLink: `/${AppPaths.OPERATIONS}`,
-    icon: "pi pi-bolt",
-    data: {
-      functionality: "operations",
-    },
+    id: "routing",
+    label: $localize`:@@Admin_RoutingNav:Routing`,
+    routerLink: `/${AppPaths.ROUTES}`,
+    icon: "pi pi-directions",
+    items: [
+      {
+        id: "routes",
+        label: $localize`:@@Admin_RoutesNav:Routes`,
+        routerLink: `/${AppPaths.ROUTES}`,
+        icon: "pi pi-directions",
+        data: {
+          functionality: "routes",
+        },
+      },
+      {
+        id: "services",
+        label: $localize`:@@Admin_ServicesNav:Services`,
+        routerLink: `/${AppPaths.SERVICES}`,
+        icon: "pi pi-server",
+        data: {
+          functionality: "services",
+        },
+      },
+      {
+        id: "apis",
+        label: $localize`:@@Admin_ApisNav:Resources`,
+        routerLink: `/${AppPaths.RESOURCES}`,
+        icon: "pi pi-box",
+        data: {
+          functionality: "resources",
+        },
+      },
+      {
+        id: "operations",
+        label: $localize`:@@Admin_OperationsNav:Operations`,
+        routerLink: `/${AppPaths.OPERATIONS}`,
+        icon: "pi pi-bolt",
+        data: {
+          functionality: "operations",
+        },
+      },
+      {
+        id: "scopes",
+        label: $localize`:@@Admin_ScopesNav:Scopes`,
+        routerLink: `/${AppPaths.SCOPES}`,
+        icon: "pi pi-filter",
+        data: {
+          functionality: "scopes",
+        },
+      },
+      {
+        id: "fields",
+        label: $localize`:@@Admin_FieldsNav:Fields`,
+        routerLink: `/${AppPaths.FIELDS}`,
+        icon: "pi pi-list",
+        data: {
+          functionality: "fields",
+        },
+      },
+    ],
   },
   {
     id: "roles",
@@ -80,24 +97,15 @@ export const SIDENAV: MenuItem[] = [
           functionality: "permissions",
         },
       },
-      {
-        id: "scopes",
-        label: $localize`:@@Admin_ScopesNav:Scopes`,
-        routerLink: `/${AppPaths.SCOPES}`,
-        icon: "pi pi-filter",
-        data: {
-          functionality: "scopes",
-        },
-      },
-      {
-        id: "fields",
-        label: $localize`:@@Admin_FieldsNav:Fields`,
-        routerLink: `/${AppPaths.FIELDS}`,
-        icon: "pi pi-list",
-        data: {
-          functionality: "fields",
-        },
-      },
     ],
+  },
+  {
+    id: "cors",
+    label: $localize`:@@Admin_CorsNav:Cors`,
+    routerLink: `/${AppPaths.CORS}`,
+    icon: "pi pi-shield",
+    data: {
+      functionality: "cors",
+    },
   },
 ];
