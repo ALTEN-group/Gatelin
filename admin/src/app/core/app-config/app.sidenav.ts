@@ -15,7 +15,7 @@ export const SIDENAV: MenuItem[] = [
     id: "routing",
     label: $localize`:@@Admin_RoutingNav:Routing`,
     routerLink: `/${AppPaths.ROUTES}`,
-    icon: "pi pi-directions",
+    icon: "pi pi-share-alt",
     items: [
       {
         id: "routes",
@@ -77,7 +77,7 @@ export const SIDENAV: MenuItem[] = [
     id: "roles",
     label: $localize`:@@Admin_AuthorizationNav:Authorizations`,
     routerLink: `/${AppPaths.ROLES}`,
-    icon: "pi pi-id-card",
+    icon: "pi pi-key",
     items: [
       {
         id: "roles",
