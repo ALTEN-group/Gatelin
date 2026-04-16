@@ -34,7 +34,7 @@ function get(tableName, schema = "public") {
  */
 function query(tableName, id, schema = "public") {
   const sql = `
-    SELECT id, tstamp, operation, "consumerId", "consumerName"
+    SELECT id, tstamp, operation, "consumerId", "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1 
       AND "tableName" = $2

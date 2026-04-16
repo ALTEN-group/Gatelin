@@ -184,6 +184,8 @@ services:
       PWD_LOWERCASE_POLICY: ${GATELIN_PWD_LOWERCASE_LEGACY}
       PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
     depends_on:
+      postgres:
+        condition: service_healthy
       gatelin_migration:
         condition: service_completed_successfully
       ms_role_mock:
