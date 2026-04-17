@@ -1,1 +1,0 @@
--- colors view removed; color table no longer exists

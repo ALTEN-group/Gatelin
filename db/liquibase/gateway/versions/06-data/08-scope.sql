@@ -2,7 +2,7 @@
 -- Each scope name matches a resource name and is linked to the getPreferences route (id=50)
 -- The scope value is matched against the URL segment immediately after the resource name in checkAcl
 
-INSERT INTO scope ("routeId", name, archived, "creatorId", "creatorName") VALUES
+INSERT INTO scopes ("routeId", name, archived, "creatorId", "creatorName") VALUES
 (50, 'session',     false, -1, 'system'),
 (50, 'consumers',   false, -1, 'system'),
 (50, 'routes',      false, -1, 'system'),

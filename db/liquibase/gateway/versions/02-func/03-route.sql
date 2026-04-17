@@ -14,8 +14,8 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         ARRAY(SELECT json_array_elements_text(NEW.methods))::method[],
         NEW."isProtected",
         NEW.locked,
-        NEW."consumerId",
-        NEW."consumerName"
+        NEW."creatorId",
+        NEW."creatorName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -30,8 +30,8 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         methods = COALESCE(ARRAY(SELECT json_array_elements_text(NEW.methods))::method[], methods),
         "isProtected" = COALESCE(NEW."isProtected", "isProtected"),
         locked = COALESCE(NEW.locked, locked),
-        "updaterId" = NEW."consumerId",
-        "updaterName" = NEW."consumerName",
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

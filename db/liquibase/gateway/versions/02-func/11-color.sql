@@ -1,1 +1,0 @@
--- iud_color() function removed; color table no longer exists

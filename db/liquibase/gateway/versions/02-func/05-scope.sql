@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS '
       VALUES (
         NEW."routeId",
         NEW.name,
-        NEW."consumerId",
-        NEW."consumerName"
+        NEW."creatorId",
+        NEW."creatorName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -19,8 +19,8 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS '
       SET
         "routeId" = COALESCE(NEW."routeId", "routeId"),
         name = COALESCE(NEW.name, name),
-        "updaterId" = NEW."consumerId",
-        "updaterName" = NEW."consumerName",
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

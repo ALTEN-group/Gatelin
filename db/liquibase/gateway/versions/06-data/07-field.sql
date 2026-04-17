@@ -2,7 +2,7 @@
 --  1=session, 2=consumers, 3=routes, 4=services, 5=resources
 --  6=operations, 7=cors, 8=fields, 9=scopes, 10=roles, 11=permissions, 12=preferences, 13=users
 
-INSERT INTO field ("resourceId", name, locked, "creatorId", "creatorName") VALUES
+INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALUES
 
 -- consumers (resourceId=2)
 (2, 'id',           true,  -1, 'system'),

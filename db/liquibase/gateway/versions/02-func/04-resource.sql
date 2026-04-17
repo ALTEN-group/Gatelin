@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
         NEW."serviceId",
         NEW.name,
         NEW.locked,
-        NEW."consumerId",
-        NEW."consumerName"
+        NEW."creatorId",
+        NEW."creatorName"
       )
       RETURNING id INTO NEW.id;
       RETURN NEW;
@@ -21,8 +21,8 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS '
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
         name = COALESCE(NEW.name, name),
         locked = COALESCE(NEW.locked, locked),
-        "updaterId" = NEW."consumerId",
-        "updaterName" = NEW."consumerName",
+        "updaterId" = NEW."updaterId",
+        "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 

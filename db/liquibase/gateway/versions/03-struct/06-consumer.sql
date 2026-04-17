@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS consumer (
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "creatorId" INT,
+  "creatorName" TEXT,
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
+  "updaterId" INT,
+  "updaterName" TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_consumer_user_id ON consumer("userId");

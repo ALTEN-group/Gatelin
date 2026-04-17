@@ -1,7 +1,7 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
-export default new SQLEntity("cors_list", [
+export default new SQLEntity("cors", [
   {
     key: "id",
     type: "integer",

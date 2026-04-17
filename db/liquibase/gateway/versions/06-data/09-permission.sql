@@ -24,7 +24,7 @@
 --   1=Super admin  2=Admin  3=User  4=Guest
 --
 
-INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
+INSERT INTO permissions ("roleId", "routeId", "operationId", fields) VALUES
 
 -- ============================================================
 -- Super admin (1): full access, no field restrictions
@@ -164,5 +164,4 @@ INSERT INTO permission ("roleId", "routeId", "operationId", fields) VALUES
 -- ============================================================
 (4,  1,  4, NULL),  -- refreshToken
 (4,  3,  8, NULL)   -- signOut
-
-ON CONFLICT DO NOTHING;
+;

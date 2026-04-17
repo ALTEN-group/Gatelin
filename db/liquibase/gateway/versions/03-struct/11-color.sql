@@ -1,1 +1,0 @@
--- color table removed; color is now a VARCHAR(7) property on the role table

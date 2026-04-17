@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW role_cache AS
       ) FILTER (WHERE pp."routeId" IS NOT NULL),
       '[]'::jsonb
     ) AS permissions
-  FROM roles r
+  FROM role r
   LEFT JOIN (
     SELECT
       "roleId",

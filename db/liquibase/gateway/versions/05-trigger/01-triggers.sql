@@ -23,35 +23,17 @@ AFTER INSERT OR UPDATE OR DELETE ON "resource"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
--- Create INSTEAD OF trigger on services view
-CREATE TRIGGER services_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON "services"
-FOR EACH ROW
-EXECUTE PROCEDURE iud_service();
-
 -- Apply history trigger to service table
 CREATE TRIGGER service_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "service"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
 
--- Create INSTEAD OF trigger on cors_list view
-CREATE TRIGGER cors_list_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON "cors_list"
-FOR EACH ROW
-EXECUTE PROCEDURE iud_cors();
-
 -- Apply history trigger to cors table
 CREATE TRIGGER cors_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "cors"
 FOR EACH ROW 
 EXECUTE PROCEDURE change_trigger();
-
--- Create INSTEAD OF trigger on operations view
-CREATE TRIGGER operations_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON "operations"
-FOR EACH ROW
-EXECUTE PROCEDURE iud_operation();
 
 -- Apply history trigger to operation table
 CREATE TRIGGER operation_history_trigger 
@@ -89,12 +71,6 @@ INSTEAD OF INSERT OR UPDATE OR DELETE ON "preferences"
 FOR EACH ROW
 EXECUTE PROCEDURE iud_preference();
 
-
--- INSTEAD OF trigger on roles view
-CREATE TRIGGER roles_iud_trigger
-INSTEAD OF INSERT OR UPDATE OR DELETE ON "roles"
-FOR EACH ROW
-EXECUTE PROCEDURE iud_role();
 
 -- History trigger on role table
 CREATE TRIGGER role_history_trigger

@@ -9,7 +9,9 @@ CREATE OR REPLACE VIEW consumers AS
     c.archived,
     c."archivedAt",
     c."createdAt",
+    c."creatorId",
+    c."creatorName",
     c."updatedAt",
-    NULL::INT  AS "consumerId",
-    NULL::TEXT AS "consumerName"
+    c."updaterId",
+    c."updaterName"
   FROM consumer AS c ORDER BY c.id ASC;

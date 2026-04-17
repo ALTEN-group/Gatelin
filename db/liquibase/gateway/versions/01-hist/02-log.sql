@@ -16,9 +16,14 @@ DECLARE
   v_consumer_id INT;
   v_consumer_name TEXT;
 BEGIN
-  -- Extract consumer ID and name directly from JSON records
-  v_consumer_id := (record_new->>''consumerId'')::INT;
-  v_consumer_name := record_new->>''consumerName'';
+  -- Extract audit identity from creator (INSERT) or updater (UPDATE/DELETE)
+  IF p_operation = ''INSERT'' THEN
+    v_consumer_id   := (record_new->>''creatorId'')::INT;
+    v_consumer_name := record_new->>''creatorName'';
+  ELSE
+    v_consumer_id   := (record_new->>''updaterId'')::INT;
+    v_consumer_name := record_new->>''updaterName'';
+  END IF;
 
   -- Validate that consumer information is provided
   IF v_consumer_id IS NULL THEN
