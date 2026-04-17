@@ -18,7 +18,7 @@
     <sqlFile path="insert-example-routes.sql"/>
   </changeSet>
   <changeSet id="data-02" author="lcluber">
-    <comment>Example history records (one INSERT + one UPDATE per entity table)</comment>
+    <comment>Example UPDATE statements on views to exercise INSTEAD OF trigger → table write → change_trigger → log.history</comment>
     <sqlFile path="insert-example-history.sql"/>
   </changeSet>
 

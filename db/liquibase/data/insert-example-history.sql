@@ -1,37 +1,95 @@
--- Example history data: one UPDATE record per entity table.
--- INSERT records are already produced automatically by change_trigger when the seed data runs.
--- These UPDATE records simulate a subsequent change to a meaningful field made after the initial seed.
+-- Example history data: UPDATE statements on views to exercise the full trigger chain.
+-- Each UPDATE goes through the INSTEAD OF trigger → underlying table write → change_trigger → log.history.
+-- consumerId=-1 / consumerName='system' is passed via the virtual columns on each view.
 
-INSERT INTO log.history ("schemaName", "tableName", operation, "consumerId", "consumerName", record) VALUES
+-- service id=1: pattern corrected, locked set to true
+UPDATE services SET
+  pattern = 'gatay',
+  locked = true,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE services SET
+  pattern = 'gateway',
+  locked = true,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
--- service id=1: pattern corrected from "gw" to "gateway", locked set to true
-('public', 'service', 'UPDATE', -1, 'system',
- '{"id":1,"name":"gatelin","pattern":"gateway","locked":true,"archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
 
 -- resource id=1 (session): locked set to true
-('public', 'resource', 'UPDATE', -1, 'system',
- '{"id":1,"serviceId":1,"name":"session","locked":true,"archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
+UPDATE resources SET
+  locked = false,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE resources SET
+  locked = true,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
 -- operation id=1 (read): description refined
-('public', 'operation', 'UPDATE', -1, 'system',
- '{"id":1,"name":"read","description":"Retrieve a single resource","archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
+UPDATE operations SET
+  description = 'Retrieve a resource',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE operations SET
+  description = 'Retrieve a single resource',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+
 
 -- cors id=1: port suffix removed from origin
-('public', 'cors', 'UPDATE', -1, 'system',
- '{"id":1,"name":"capacitor://localhost","archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
+UPDATE cors_list SET
+  name = 'capacito://localhost',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE cors_list SET
+  name = 'capacitor://localhost',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
 -- route id=1 (refreshToken): description expanded
-('public', 'route', 'UPDATE', -1, 'system',
- '{"id":1,"resourceId":1,"pattern":"","name":"refreshToken","description":"Refresh a token or Sign in with a refresh token","methods":["PUT","OPTIONS"],"isProtected":true,"locked":true,"archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
+UPDATE routes SET
+  description = 'Refresh a token a refresh token',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE routes SET
+  description = 'Refresh a token or Sign in with a refresh token',
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
 -- field id=1 (consumers.id): locked set to true
-('public', 'field', 'UPDATE', -1, 'system',
- '{"id":1,"resourceId":2,"name":"id","locked":true,"archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb),
+UPDATE fields SET
+  locked = true,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+UPDATE fields SET
+  locked = false,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
--- scope id=1 (session): routeId updated from 55 to 50 after route renumbering
-('public', 'scope', 'UPDATE', -1, 'system',
- '{"id":1,"routeId":50,"name":"session","archived":false,"archivedAt":null,"creatorId":-1,"creatorName":"system","updaterId":-1,"updaterName":"system","createdAt":"2026-01-01T00:00:00","updatedAt":"2026-02-01T00:00:00"}'::jsonb)
+-- scope id=1 (session): routeId updated to 50
+UPDATE scopes SET
+  "routeId" = 50,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
+-- scope id=1 (session): routeId updated to 50
+UPDATE scopes SET
+  "routeId" = 49,
+  "consumerId" = -1,
+  "consumerName" = 'system'
+WHERE id = 1;
 
-;
 
 ANALYZE;
