@@ -4,7 +4,7 @@ export interface GatewayRole extends ArchiveInfo {
   id: number | null;
   name: string;
   description: string;
-  colorCode: string;
+  color: string;
   active: boolean;
 }
 
@@ -12,7 +12,7 @@ export const gatewayRoleFactory = (): GatewayRole => ({
   id: null,
   name: "",
   description: "",
-  colorCode: "",
+  color: "",
   active: true,
   ...new ArchiveInfo(),
 });

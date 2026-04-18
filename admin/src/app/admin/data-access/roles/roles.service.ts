@@ -1,6 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
-import { ROLE_COLUMNS } from "app/admin/data-access/roles/role.conf";
+import { buildRoleColumns } from "app/admin/data-access/roles/role.conf";
 import {
   GatewayRole,
   gatewayRoleFactory,
@@ -13,6 +14,7 @@ const rolesEndpoint: string = "gateway/roles";
   providedIn: "root",
 })
 export class GatewayRolesService {
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly crud = new CrudRepository<GatewayRole>().with({
     endpoint: rolesEndpoint,
   });
@@ -26,7 +28,7 @@ export class GatewayRolesService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = ROLE_COLUMNS;
+  public readonly config = buildRoleColumns(this.sanitizer);
   public readonly entityFactory = gatewayRoleFactory;
 
   public getAndCacheAll(): Observable<GatewayRole[]> {

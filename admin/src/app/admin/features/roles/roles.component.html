@@ -7,6 +7,15 @@
     [tableTitle]="tableInformation.title"
     [customRowStyles]="tableInformation.customRowStyles"
     [filterLevel]="tableInformation.filterLevel"
-    [isDefaultEditionDisabled]="true"
-    (rowClicked)="onRoleClick($event)"
+    [customActionsTemplate]="customActionsCell"
 />
+
+<ng-template #customActionsCell let-rowData>
+  <p-button
+    icon="pi pi-directions"
+    i18n-title="@@Roles_ConsultPermissions"
+    title="Consult permissions"
+    (onClick)="goToPermissions(rowData)"
+  />
+
+</ng-template>
