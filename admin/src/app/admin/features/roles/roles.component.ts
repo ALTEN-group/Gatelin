@@ -5,11 +5,12 @@ import { TableComponent } from "@dwtechs/crud-builder";
 import { GatewayRole } from "app/admin/data-access/roles/role.model";
 import { GatewayRolesService } from "app/admin/data-access/roles/roles.service";
 import { AppPaths } from "app/app.routes";
+import { ButtonModule } from "primeng/button";
 
 @Component({
   selector: "adm-roles",
   templateUrl: "./roles.component.html",
-  imports: [TableComponent],
+  imports: [TableComponent, ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RolesComponent {
@@ -24,7 +25,7 @@ export class RolesComponent {
 
   public readonly tableInformation = TABLES.roles;
 
-  public onRoleClick(role: GatewayRole): void {
+  public goToPermissions(role: GatewayRole): void {
     this.router.navigate([AppPaths.PERMISSIONS], {
       queryParams: { roleId: role.id },
     });

@@ -1,15 +1,17 @@
-@if (showRoleSelect) {
+<div class="permissions-container">
+
   <p-select
     [options]="roles"
     [(ngModel)]="selectedRole"
     (onChange)="onRoleSelect($event.value)"
-    optionLabel="name"
+    [showClear]="true"
     placeholder="Select a role"
     i18n-placeholder="@@Permissions_SelectRole"
-  />
-}
+  >
+    <ng-template #item let-role>{{ role.id }} - {{ role.name }}</ng-template>
+    <ng-template #selectedItem let-role>{{ role.id }} - {{ role.name }}</ng-template>
+  </p-select>
 
-@if (roleId()) {
   <tbl-table
     [config]="config"
     [httpCalls]="permHttpCalls"
@@ -20,4 +22,5 @@
     [forceReload]="forceReload()"
     [filterLevel]="tableInformation.filterLevel"
   />
-}
+
+</div>

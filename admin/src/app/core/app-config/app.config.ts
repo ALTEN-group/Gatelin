@@ -60,6 +60,7 @@ export function provideAppConfig() {
       useValue: (raw: unknown): HistorizedData<unknown> => {
         const r = raw as any;
         return {
+          id: r.id,
           tstamp: r.tstamp,
           operation: r.operation,
           updaterId: r.consumerId,

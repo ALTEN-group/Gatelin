@@ -1,0 +1,11 @@
+.permissions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  p-select {
+    align-self: flex-end;
+    width: 200px;
+  }
+}

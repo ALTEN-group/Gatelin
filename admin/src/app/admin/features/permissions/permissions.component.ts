@@ -21,6 +21,7 @@ import { TableLazyLoadEvent } from "primeng/table";
 @Component({
   selector: "adm-permissions",
   templateUrl: "./permissions.component.html",
+  styleUrl: "./permissions.component.scss",
   imports: [TableComponent, SelectModule, FormsModule],
   providers: [ConfigHelper],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,8 +37,6 @@ export class PermissionsComponent {
     if (qp) return Number(qp);
     return (this.route.snapshot.data["roleId"] as number | undefined) ?? null;
   })();
-
-  public readonly showRoleSelect = this.routeRoleId === null;
 
   public readonly roles: GatewayRole[] =
     this.route.snapshot.data["roles"] ?? [];
@@ -55,7 +54,7 @@ export class PermissionsComponent {
   public readonly permHttpCalls: Calls<Permission> = {
     get: (e: TableLazyLoadEvent) => {
       const id = this.roleId();
-      return this.permissionsService.getByRole(id!, e);
+      return this.permissionsService.getByRole(id, e);
     },
     create: this.permissionsService.httpCalls.create,
     update: this.permissionsService.httpCalls.update,
