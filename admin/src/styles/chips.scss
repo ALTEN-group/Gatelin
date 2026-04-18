@@ -9,6 +9,10 @@
     color: var(--primary-font-color);
 }
 
+tbl-table-cell .p-chip {
+    padding: 0 5px !important;
+}
+
 .p-chip.green {
     background: var(--p-green-500);
     color: #fff;

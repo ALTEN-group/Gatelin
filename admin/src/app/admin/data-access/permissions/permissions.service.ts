@@ -27,9 +27,10 @@ export class PermissionsService {
     PERMISSION_COLUMNS(payload);
 
   public getByRole(
-    roleId: number,
+    roleId: number | null,
     event: TableLazyLoadEvent,
   ): Observable<RowsAndCount<Permission>> {
+    if (roleId === null) return this.crud.get(event);
     return this.crud.get({
       ...event,
       filters: {
