@@ -6,12 +6,14 @@ import {
   viewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { MenuItem } from "primeng/api";
 import { PanelModule } from "primeng/panel";
 import { PanelMenu, PanelMenuModule } from "primeng/panelmenu";
+import { filter, map, startWith } from "rxjs";
 
 @Component({
   selector: "adm-sidenav",
@@ -25,45 +27,52 @@ import { PanelMenu, PanelMenuModule } from "primeng/panelmenu";
 export class SidenavComponent {
   private readonly aclService = inject(AclService);
   public readonly sidenavService = inject(SidenavService);
+  private readonly router = inject(Router);
 
   public readonly panelMenu = viewChild("panelMenu", { read: PanelMenu });
   private readonly baseSideNavItems = this.sidenavService.baseSideNavItems;
 
+  private readonly activeUrl = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.url),
+      startWith(this.router.url),
+    ),
+  );
+
   public readonly sideNavItems = computed<MenuItem[]>(() => {
-    const activeUrl = this.sidenavService.activeUrl();
+    const activeUrl = this.activeUrl();
     const alertKeys = this.sidenavService.alertKeys();
     if (!activeUrl) return this.baseSideNavItems;
-    const url = this.parseUrl(activeUrl);
-    return this.getSidenavItems(url, alertKeys);
+    return this.getSidenavItems(activeUrl, alertKeys);
   });
 
-  private parseUrl(url: string): string[] {
-    const urlWithoutRootSlash = url.replace("/", "");
-    if (!urlWithoutRootSlash) return [];
-    return urlWithoutRootSlash.split("/");
-  }
-
-  private getSidenavItems(url: string[], alertKeys: Set<string>): MenuItem[] {
+  private getSidenavItems(
+    activeUrl: string,
+    alertKeys: Set<string>,
+  ): MenuItem[] {
     return this.baseSideNavItems.map((item) =>
-      this.recursivelyGetExpandedAndVisible(item, url, alertKeys),
+      this.recursivelyGetExpandedAndVisible(item, activeUrl, alertKeys),
     );
   }
 
   private recursivelyGetExpandedAndVisible(
     item: MenuItem,
-    url: string[],
+    activeUrl: string,
     alertKeys: Set<string>,
-    index = 0,
   ): MenuItem {
     const children = item.items?.map((child) =>
-      this.recursivelyGetExpandedAndVisible(child, url, alertKeys, index + 1),
+      this.recursivelyGetExpandedAndVisible(child, activeUrl, alertKeys),
     );
     const areAllChildrenHidden = children?.every((child) => !child.visible);
+    const hasActiveDescendant =
+      children?.some((child) => child.expanded) ?? false;
+    const isActive = item.routerLink === activeUrl || hasActiveDescendant;
     return {
       ...item,
       ...this.getExpandedAndVisible(
         item,
-        url[index],
+        isActive,
         alertKeys,
         areAllChildrenHidden,
       ),
@@ -73,11 +82,11 @@ export class SidenavComponent {
 
   private getExpandedAndVisible(
     item: MenuItem,
-    path: string,
+    isActive: boolean,
     alertKeys: Set<string>,
     forceHidden = false,
   ): Pick<MenuItem, "expanded" | "visible" | "icon"> {
-    const expanded = item.id === path;
+    const expanded = isActive;
     const visible = forceHidden
       ? false
       : this.hasAccess(item.data?.functionality) && item.visible !== false;
