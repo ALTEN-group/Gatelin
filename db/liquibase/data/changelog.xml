@@ -27,7 +27,7 @@
   </changeSet>
   <changeSet id="data-03" author="lcluber">
     <comment>Example history: second update pass across all tables (distinct timestamp)</comment>
-    <sqlFile path="04-insert-example-good-data.sql"/>
+    <sqlFile path="04-insert-example-fixed-data.sql"/>
   </changeSet>
 
 </databaseChangeLog>
