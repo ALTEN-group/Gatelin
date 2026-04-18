@@ -12,7 +12,7 @@ export class RolesService {
   private readonly http = inject(HttpClient);
 
   private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
-  private readonly endPoint: string = `${this.apiPrefix}roles/roles/`;
+  private readonly endPoint: string = `${this.apiPrefix}gateway/roles/`;
 
   // Roles cache
   private _roles: Role[] | null = null;
@@ -21,7 +21,7 @@ export class RolesService {
   }
 
   private readonly httpSearch = (payload?: TableLazyLoadEvent) =>
-    this.http.post<RowsAndCount<Role>>(`${this.endPoint}search`, payload);
+    this.http.post<RowsAndCount<Role>>(`${this.endPoint}search`, payload ?? {});
 
   private storeRoles(roles: Role[]): void {
     this._roles = roles;

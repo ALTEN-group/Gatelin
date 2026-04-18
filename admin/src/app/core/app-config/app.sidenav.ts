@@ -97,15 +97,15 @@ export const SIDENAV: MenuItem[] = [
           functionality: "permissions",
         },
       },
+      {
+        id: "cors",
+        label: $localize`:@@Admin_CorsNav:Cors`,
+        routerLink: `/${AppPaths.CORS}`,
+        icon: "pi pi-shield",
+        data: {
+          functionality: "cors",
+        },
+      },
     ],
-  },
-  {
-    id: "cors",
-    label: $localize`:@@Admin_CorsNav:Cors`,
-    routerLink: `/${AppPaths.CORS}`,
-    icon: "pi pi-shield",
-    data: {
-      functionality: "cors",
-    },
   },
 ];

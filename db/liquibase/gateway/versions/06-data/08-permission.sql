@@ -14,7 +14,7 @@
 --   41=searchRoles      42=getRoleHistory   43=addRoles         44=updateRoles      45=archiveRoles
 --   46=searchPermissions 47=addPermissions 48=updatePermissions 49=deletePermissions
 --   50=getPreferences   51=syncPreferences
---   52=getBasicUserInfo 53=getUserPreferences 54=syncUserPreferences
+--   52=getBasicUserInfo
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -81,8 +81,6 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields) VALUES
 (1, 50,  2, NULL),  -- getPreferences      → list
 (1, 51, 12, NULL),  -- syncPreferences     → bulk sync
 (1, 52,  1, NULL),  -- getBasicUserInfo    → read
-(1, 53,  2, NULL),  -- getUserPreferences  → list
-(1, 54, 12, NULL),  -- syncUserPreferences → bulk sync
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -138,8 +136,6 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields) VALUES
 (2, 50,  2, NULL),  -- getPreferences
 (2, 51, 12, NULL),  -- syncPreferences
 (2, 52,  1, NULL),  -- getBasicUserInfo
-(2, 53,  2, NULL),  -- getUserPreferences
-(2, 54, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -156,8 +152,6 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields) VALUES
 (3, 41,  2, ARRAY['id', 'name', 'description', 'color']),  -- searchRoles
 (3, 50,  2, NULL),  -- getPreferences
 (3, 52,  1, NULL),  -- getBasicUserInfo
-(3, 53,  2, NULL),  -- getUserPreferences
-(3, 54, 12, NULL),  -- syncUserPreferences
 
 -- ============================================================
 -- Guest (4): session routes only

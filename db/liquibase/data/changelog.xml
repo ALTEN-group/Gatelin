@@ -13,13 +13,21 @@
     </changeSet>
   -->
 
+  <changeSet id="data-00" author="lcluber">
+    <comment>Default CORS origins</comment>
+    <sqlFile path="01-insert-cors.sql"/>
+  </changeSet>
   <changeSet id="data-01" author="lcluber">
     <comment>Example services, resources, operations and routes</comment>
-    <sqlFile path="insert-example-routes.sql"/>
+    <sqlFile path="02-insert-example-routes.sql"/>
   </changeSet>
   <changeSet id="data-02" author="lcluber">
-    <comment>Example UPDATE statements on views to exercise INSTEAD OF trigger → table write → change_trigger → log.history</comment>
-    <sqlFile path="insert-example-history.sql"/>
+    <comment>Example history: first update pass across all tables</comment>
+    <sqlFile path="03-insert-example-wrong-data.sql"/>
+  </changeSet>
+  <changeSet id="data-03" author="lcluber">
+    <comment>Example history: second update pass across all tables (distinct timestamp)</comment>
+    <sqlFile path="04-insert-example-good-data.sql"/>
   </changeSet>
 
 </databaseChangeLog>

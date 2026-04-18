@@ -65,10 +65,7 @@ INSERT INTO routes ("resourceId", pattern, name, description, methods, "isProtec
 (12, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  '["GET","OPTIONS"]', true, true, -1, 'system'),
 (12, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', '["PUT","OPTIONS"]', true, true, -1, 'system'),
 -- users
-(13, '/me',                    'getBasicUserInfo',    'Get authenticated user basic info', '["GET","OPTIONS"]', true, true, -1, 'system'),
-(13, '/(?<resource>[\w\-]+)', 'getUserPreferences',  'Get user preferences',              '["GET","OPTIONS"]', true, true, -1, 'system'),
-(13, '/(?<resource>[\w\-]+)', 'syncUserPreferences', 'Sync user preferences',             '["PUT","OPTIONS"]', true, true, -1, 'system')
-
+(13, '/me',                    'getBasicUserInfo',    'Get authenticated user basic info', '["GET","OPTIONS"]', true, true, -1, 'system')
 ;
 
 -- route IDs follow insertion order above (SERIAL)
@@ -136,10 +133,8 @@ INSERT INTO route_operation ("routeId", "operationId") VALUES
 -- preferences:    50=getPreferences, 51=syncPreferences
 (50, 2),
 (51, 12),
--- users:          52=getBasicUserInfo, 53=getUserPreferences, 54=syncUserPreferences
-(52, 1),
-(53, 2),
-(54, 12)
+-- users:          52=getBasicUserInfo
+(52, 1)
 
 ;
 

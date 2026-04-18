@@ -38,7 +38,7 @@ export class AuthenticationService {
         const { accessToken, refreshToken, permissions } = res;
         this.saveTokens(accessToken, refreshToken);
         this.authenticate();
-        if (permissions) this.aclService.storeAccessLevels(permissions);
+        this.aclService.storeAccessLevels(permissions);
       }),
       this.getUserBasics(),
       tap(() => this.redirectToApp()),

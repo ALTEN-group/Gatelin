@@ -6,185 +6,221 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
   <!-- history -->
-  <changeSet id="0.1.0-01" author="lcluber">
+  <changeSet id="01-hist-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/01-hist/01-struct.sql"/>
   </changeSet>
-  <changeSet id="0.1.0-02" author="lcluber">
+  <changeSet id="01-hist-02" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/01-hist/02-log.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.0-03" author="lcluber">
+  <changeSet id="01-hist-03" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/01-hist/03-del.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.0-04" author="lcluber">
+  <changeSet id="01-hist-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/01-hist/04-get.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.0-05" author="lcluber">
+  <changeSet id="01-hist-05" author="lcluber">
     <comment>Functional index on log.history record id for fast entity history lookups</comment>
     <sqlFile path="versions/01-hist/05-index.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- functions -->
-  <changeSet id="0.1.1-01" author="lcluber">
+  <changeSet id="02-func-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/01-delete.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-02" author="lcluber">
+  <changeSet id="02-func-02" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/02-set-archived.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-03" author="lcluber">
+  <changeSet id="02-func-03" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/03-route.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-04" author="lcluber">
+  <changeSet id="02-func-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/04-resource.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-05" author="lcluber">
+  <changeSet id="02-func-05" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/05-scope.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-06" author="lcluber">
+  <changeSet id="02-func-06" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/06-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-07" author="lcluber">
+  <changeSet id="02-func-07" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/02-func/07-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-08" author="lcluber">
+  <changeSet id="02-func-08" author="lcluber">
     <comment>Consumer iud trigger function</comment>
     <sqlFile path="versions/02-func/08-consumer.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.1-09" author="lcluber">
+  <changeSet id="02-func-09" author="lcluber">
     <comment>Permission iud trigger function</comment>
     <sqlFile path="versions/02-func/09-permission.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- structures -->
-  <changeSet id="0.1.2-01" author="lcluber">
+  <changeSet id="03-struct-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/01-cors.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-02" author="lcluber">
+  <changeSet id="03-struct-02" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/02-service.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-03" author="lcluber">
+  <changeSet id="03-struct-03" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/03-resource.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-04" author="lcluber">
+  <changeSet id="03-struct-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/04-operation.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-05" author="lcluber">
+  <changeSet id="03-struct-05" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/05-route.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-06" author="lcluber">
+  <changeSet id="03-struct-06" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/06-consumer.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-07" author="lcluber">
+  <changeSet id="03-struct-07" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/07-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-08" author="lcluber">
+  <changeSet id="03-struct-08" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/08-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-09" author="lcluber">
+  <changeSet id="03-struct-09" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/03-struct/09-scope.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-10" author="lcluber">
+  <changeSet id="03-struct-10" author="lcluber">
     <comment>Permission table with FKs to route and operation</comment>
     <sqlFile path="versions/03-struct/10-permission.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.2-12" author="lcluber">
+  <changeSet id="03-struct-11" author="lcluber">
     <comment>Role table with FK to color</comment>
-    <sqlFile path="versions/03-struct/12-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/11-role.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- views -->
-  <changeSet id="0.1.3-01" author="lcluber">
+  <changeSet id="04-view-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/01-route.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-02" author="lcluber">
+  <changeSet id="04-view-02" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/02-resource.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-03" author="lcluber">
+  <changeSet id="04-view-03" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/03-scope.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-04" author="lcluber">
+  <changeSet id="04-view-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/04-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-08" author="lcluber">
+  <changeSet id="04-view-05" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/05-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-11" author="lcluber">
+  <changeSet id="04-view-06" author="lcluber">
     <comment>Consumers view</comment>
     <sqlFile path="versions/04-view/06-consumer.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-12" author="lcluber">
+  <changeSet id="04-view-07" author="lcluber">
     <comment>Permissions views</comment>
     <sqlFile path="versions/04-view/07-permissions.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.3-13" author="lcluber">
-    <comment>All INSTEAD OF and history triggers</comment>
-    <sqlFile path="versions/05-trigger/01-triggers.sql" splitStatements="false"/>
+  <changeSet id="05-trig-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/01-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/02-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/03-service.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/04-cors.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/05-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/06-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-07" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/07-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-08" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/08-preference.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-09" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/09-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-10" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/10-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-11" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/11-permission.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- data -->
-  <changeSet id="0.1.4-01" author="lcluber">
+  <changeSet id="06-data-01" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/01-cors.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/01-service.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-02" author="lcluber">
+  <changeSet id="06-data-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/02-service.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/02-operation.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-03" author="lcluber">
+  <changeSet id="06-data-03" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/03-operation.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/03-resource.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-04" author="lcluber">
+  <changeSet id="06-data-04" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/04-resource.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/04-route.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-05" author="lcluber">
+  <changeSet id="06-data-05" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/05-route.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/05-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-06" author="lcluber">
+  <changeSet id="06-data-06" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/06-preference.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/06-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-07" author="lcluber">
+  <changeSet id="06-data-07" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/07-field.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/07-scope.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-08" author="lcluber">
-    <comment></comment>
-    <sqlFile path="versions/06-data/08-scope.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="0.1.4-09" author="lcluber">
+  <changeSet id="06-data-08" author="lcluber">
     <comment>Insert default permission data</comment>
-    <sqlFile path="versions/06-data/09-permission.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/08-permission.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="0.1.4-10" author="lcluber">
+  <changeSet id="06-data-09" author="lcluber">
     <comment>Default role data</comment>
-    <sqlFile path="versions/06-data/10-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/09-role.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>
