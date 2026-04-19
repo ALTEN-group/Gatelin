@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
@@ -14,6 +15,7 @@ const routesApi: string = "gateway/routes";
   providedIn: "root",
 })
 export class RoutesService {
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly crud = new CrudRepository<Route>().with({
     endpoint: routesApi,
   });
@@ -28,7 +30,7 @@ export class RoutesService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    ROUTE_COLUMNS(payload);
+    ROUTE_COLUMNS(payload, this.sanitizer);
   public readonly entityFactory = routeFactory;
 
   public getAndCacheAll(): Observable<Route[]> {
