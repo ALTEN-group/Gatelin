@@ -5,7 +5,7 @@ export interface Permission extends ArchiveInfo {
   roleId: number | null;
   routeId: number | null;
   routeName: string;
-  operationId: number | null;
+  operationId: number[] | null;
   operationName: string;
   fields: string[] | null;
 }
@@ -17,7 +17,7 @@ export const permissionFactory = (
   roleId,
   routeId: null,
   routeName: "",
-  operationId: null,
+  operationId: [],
   operationName: "",
   fields: null,
   archived: false,

@@ -22,19 +22,24 @@ CREATE OR REPLACE VIEW role_cache AS
   ) pp ON pp."roleId" = r.id
   GROUP BY r.id, r.archived;
 
--- Management view: joins route and operation names for display in the admin datagrid
+-- Management view: groups by (roleId, routeId), ordered by service then resource
 CREATE OR REPLACE VIEW permissions AS
   SELECT
-    p.id,
+    MIN(p.id)                                           AS id,
     p."roleId",
     p."routeId",
-    rt.name AS "routeName",
-    p."operationId",
-    o.name  AS "operationName",
-    p.fields,
+    svc.name                                            AS "serviceName",
+    res.name                                            AS "resourceName",
+    rt.name                                             AS "routeName",
+    array_agg(p."operationId" ORDER BY p."operationId") AS "operationId",
+    array_agg(o.name         ORDER BY p."operationId") AS "operationName",
+    (array_agg(p.fields ORDER BY p."operationId") FILTER (WHERE p.fields IS NOT NULL))[1] AS fields,
     false::BOOLEAN    AS archived,
     NULL::TIMESTAMP   AS "archivedAt"
   FROM permission p
-  LEFT JOIN route     rt ON rt.id = p."routeId"
-  LEFT JOIN operation o  ON o.id  = p."operationId"
-  ORDER BY p."roleId" ASC, p."routeId" ASC;
+  LEFT JOIN route     rt  ON rt.id  = p."routeId"
+  LEFT JOIN resource  res ON res.id = rt."resourceId"
+  LEFT JOIN service   svc ON svc.id = res."serviceId"
+  LEFT JOIN operation o   ON o.id   = p."operationId"
+  GROUP BY p."roleId", p."routeId", svc.id, svc.name, res.id, res.name, rt.name
+  ORDER BY p."roleId" ASC, svc.name ASC, res.name ASC, rt.name ASC;

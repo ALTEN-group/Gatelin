@@ -82,7 +82,7 @@ export const PERMISSION_COLUMNS: (
   {
     key: "operationId",
     label: "Operation",
-    controlType: CONTROL_TYPES.SELECT,
+    controlType: CONTROL_TYPES.MULTISELECT,
     options: toSelectItems<Operation>(data.operations, "name"),
     controlOptions: {
       validators: [required],
