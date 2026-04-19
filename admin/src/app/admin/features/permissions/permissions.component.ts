@@ -8,7 +8,12 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
-import { Calls, ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import {
+  Calls,
+  ConfigHelper,
+  NO_ROWS_AND_COUNT,
+  TableComponent,
+} from "@dwtechs/crud-builder";
 import {
   Permission,
   permissionFactory,
@@ -17,6 +22,7 @@ import { PermissionsService } from "app/admin/data-access/permissions/permission
 import { GatewayRole } from "app/admin/data-access/roles/role.model";
 import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
+import { of } from "rxjs";
 
 @Component({
   selector: "adm-permissions",
@@ -54,6 +60,7 @@ export class PermissionsComponent {
   public readonly permHttpCalls: Calls<Permission> = {
     get: (e: TableLazyLoadEvent) => {
       const id = this.roleId();
+      if (id === null) return of(NO_ROWS_AND_COUNT);
       return this.permissionsService.getByRole(id, e);
     },
     create: this.permissionsService.httpCalls.create,

@@ -169,10 +169,6 @@ export const ROUTES: Routes = [
       breadcrumb: $localize`:@@Admin_RolesNav:Roles`,
       functionality: "roles",
     },
-    resolve: {
-      routes: routesResolver,
-      operations: operationsResolver,
-    },
   },
   {
     path: AppPaths.PERMISSIONS,
