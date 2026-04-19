@@ -23,12 +23,23 @@ function buildMethodChipRenderer(
     methods.map((m) => [m.name, m.color]),
   );
   return (cellValue: unknown) => {
-    const names = Array.isArray(cellValue)
-      ? (cellValue as string[])
-      : String(cellValue ?? "")
-          .split(", ")
-          .map((n) => n.trim())
-          .filter(Boolean);
+    let names: string[];
+    if (Array.isArray(cellValue)) {
+      names = cellValue as string[];
+    } else {
+      const raw = String(cellValue ?? "").trim();
+      // Handle PostgreSQL array literal: {GET,POST,OPTIONS}
+      const pgArray = raw.match(/^\{(.*)\}$/);
+      names = pgArray
+        ? pgArray[1]
+            .split(",")
+            .map((n) => n.trim())
+            .filter(Boolean)
+        : raw
+            .split(", ")
+            .map((n) => n.trim())
+            .filter(Boolean);
+    }
     return names
       .map((name) => {
         const color = colorMap.get(name);
@@ -218,6 +229,10 @@ export const ROUTE_COLUMNS: (
     label: "Methods",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
+    options: data.methods.map((m: Method) => ({
+      label: m.name,
+      value: m.name,
+    })),
     controlOptions: {
       hidden: true,
     },
