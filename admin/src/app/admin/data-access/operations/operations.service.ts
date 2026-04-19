@@ -1,6 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
-import { OPERATION_COLUMNS } from "app/admin/data-access/operations/operation.conf";
+import { buildOperationColumns } from "app/admin/data-access/operations/operation.conf";
 import {
   Operation,
   operationFactory,
@@ -13,6 +14,7 @@ const operationsEndpoint: string = "gateway/operations";
   providedIn: "root",
 })
 export class OperationsService {
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly crud = new CrudRepository<Operation>().with({
     endpoint: operationsEndpoint,
   });
@@ -26,7 +28,7 @@ export class OperationsService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = OPERATION_COLUMNS;
+  public readonly config = buildOperationColumns(this.sanitizer);
   public readonly entityFactory = operationFactory;
 
   public getAndCacheAll(): Observable<Operation[]> {

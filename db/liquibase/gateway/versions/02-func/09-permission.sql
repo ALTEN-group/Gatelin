@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
       INSERT INTO permission ("roleId", "routeId", "operationId", fields)
-      SELECT NEW."roleId", NEW."routeId", op_id, NEW.fields
+      SELECT NEW."roleId", NEW."routeId", op_id, NEW.fields::text[]
       FROM unnest(NEW."operationId") AS op_id;
       RETURN NEW;
 
@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS '
         COALESCE(NEW."roleId",  OLD."roleId"),
         COALESCE(NEW."routeId", OLD."routeId"),
         op_id,
-        NEW.fields
+        NEW.fields::text[]
       FROM unnest(NEW."operationId") AS op_id;
       RETURN NEW;
 

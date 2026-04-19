@@ -4,12 +4,14 @@ export interface Operation extends ArchiveInfo {
   id: number | null;
   name: string;
   description: string;
+  color: string | null;
 }
 
 export const operationFactory = (): Operation => ({
   id: null,
   name: "",
   description: "",
+  color: null,
   creatorId: null,
   creatorName: null,
   createdAt: null,
