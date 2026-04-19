@@ -5,19 +5,31 @@
 CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
   BEGIN
     IF TG_OP = ''INSERT'' THEN
-      INSERT INTO route ("resourceId", name, description, pattern, methods, "isProtected", locked, "creatorId", "creatorName")
+      INSERT INTO route ("resourceId", name, description, pattern, "isProtected", locked, "creatorId", "creatorName")
       VALUES (
         NEW."resourceId",
         NEW.name,
         NEW.description,
         NEW.pattern,
-        ARRAY(SELECT json_array_elements_text(NEW.methods))::method[],
         NEW."isProtected",
         NEW.locked,
         NEW."creatorId",
         NEW."creatorName"
       )
       RETURNING id INTO NEW.id;
+
+      IF NEW.operations IS NOT NULL THEN
+        INSERT INTO route_operation ("routeId", "operationId")
+        SELECT NEW.id, o
+        FROM unnest(NEW.operations) AS o;
+      END IF;
+
+      IF NEW."methodIds" IS NOT NULL THEN
+        INSERT INTO route_method ("routeId", "methodId")
+        SELECT NEW.id, m
+        FROM unnest(NEW."methodIds") AS m;
+      END IF;
+
       RETURN NEW;
 
     ELSIF TG_OP = ''UPDATE'' THEN
@@ -27,13 +39,26 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS '
         name = COALESCE(NEW.name, name),
         description = COALESCE(NEW.description, description),
         pattern = COALESCE(NEW.pattern, pattern),
-        methods = COALESCE(ARRAY(SELECT json_array_elements_text(NEW.methods))::method[], methods),
         "isProtected" = COALESCE(NEW."isProtected", "isProtected"),
         locked = COALESCE(NEW.locked, locked),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()
       WHERE id = NEW.id;
+
+      IF NEW.operations IS NOT NULL THEN
+        DELETE FROM route_operation WHERE "routeId" = NEW.id;
+        INSERT INTO route_operation ("routeId", "operationId")
+        SELECT NEW.id, o
+        FROM unnest(NEW.operations) AS o;
+      END IF;
+
+      IF NEW."methodIds" IS NOT NULL THEN
+        DELETE FROM route_method WHERE "routeId" = NEW.id;
+        INSERT INTO route_method ("routeId", "methodId")
+        SELECT NEW.id, m
+        FROM unnest(NEW."methodIds") AS m;
+      END IF;
 
       PERFORM set_archived(''route'', OLD.id, NEW.archived, OLD.archived);
 

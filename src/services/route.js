@@ -7,7 +7,7 @@ import { stripTrailingSlash } from "../utils/url.js";
 /**
  * @typedef {Object} RouteConfig
  * @property {string} url - The URL pattern to match (prefix with ~ for regex)
- * @property {string[]} methods - Array of allowed HTTP methods
+ * @property {string[]} methodNames - Array of allowed HTTP method names
  */
 
 /** @type {RouteConfig[]|null} */
@@ -48,7 +48,7 @@ function init() {
       return { ...row, _regex: new RegExp(row.url) };
     });
     serviceBaseUrls = new Map(
-      [...serviceNames].map((name) => [name, `${san}${name}${ep}`])
+      [...serviceNames].map((name) => [name, `${san}${name}${ep}`]),
     );
   });
 }
@@ -73,7 +73,7 @@ function getOne(requestUrl, requestMethod) {
   const actualUrl = stripTrailingSlash(requestUrl);
   // Find the first route that matches the URL and method
   return routes.find(
-    (r) => r._regex.test(actualUrl) && r.methods.includes(requestMethod),
+    (r) => r._regex.test(actualUrl) && r.methodNames?.includes(requestMethod),
   );
 }
 

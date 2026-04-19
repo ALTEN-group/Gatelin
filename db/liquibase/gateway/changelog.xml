@@ -110,6 +110,10 @@
     <comment>Role table with FK to color</comment>
     <sqlFile path="versions/03-struct/11-role.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="03-struct-12" author="lcluber">
+    <comment>Method color lookup table</comment>
+    <sqlFile path="versions/03-struct/12-method.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- views -->
   <changeSet id="04-view-01" author="lcluber">
@@ -199,28 +203,32 @@
     <sqlFile path="versions/06-data/03-resource.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-04" author="lcluber">
-    <comment></comment>
-    <sqlFile path="versions/06-data/04-route.sql" splitStatements="false"/>
+    <comment>Default method color data</comment>
+    <sqlFile path="versions/06-data/04-method.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-05" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/05-preference.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/05-route.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-06" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/06-field.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/06-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-07" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/07-scope.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/07-field.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-08" author="lcluber">
-    <comment>Insert default permission data</comment>
-    <sqlFile path="versions/06-data/08-permission.sql" splitStatements="false"/>
+    <comment></comment>
+    <sqlFile path="versions/06-data/08-scope.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-09" author="lcluber">
+    <comment>Insert default permission data</comment>
+    <sqlFile path="versions/06-data/09-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-10" author="lcluber">
     <comment>Default role data</comment>
-    <sqlFile path="versions/06-data/09-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/10-role.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>

@@ -3,6 +3,7 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
+import { methodsResolver } from "app/admin/data-access/methods/methods.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { gatewayRolesResolver } from "app/admin/data-access/roles/roles.resolver";
@@ -20,6 +21,7 @@ export const AppPaths = {
   RESOURCES: "resources",
   CORS: "cors",
   OPERATIONS: "operations",
+  METHODS: "methods",
   FIELDS: "fields",
   SCOPES: "scopes",
   ROLES: "roles",
@@ -52,6 +54,7 @@ export const ROUTES: Routes = [
       operations: operationsResolver,
       services: serviceResolver,
       resources: resourcesResolver,
+      methods: methodsResolver,
     },
   },
   {
@@ -123,6 +126,22 @@ export const ROUTES: Routes = [
     data: {
       breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
       functionality: "operations",
+    },
+  },
+  {
+    path: AppPaths.METHODS,
+    loadComponent: () =>
+      import("./admin/features/methods/methods.component").then(
+        (m) => m.MethodsComponent,
+      ),
+    title: "Methods",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_MethodsNav:Methods`,
+      functionality: "methods",
+    },
+    resolve: {
+      methods: methodsResolver,
     },
   },
   {

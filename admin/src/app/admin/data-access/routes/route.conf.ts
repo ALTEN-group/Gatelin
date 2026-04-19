@@ -10,11 +10,77 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
+import { Method } from "app/admin/data-access/methods/method.model";
 import { Operation } from "app/admin/data-access/operations/operation.model";
 import { Resource } from "app/admin/data-access/resources/resource.model";
-import { METHODS } from "app/admin/data-access/routes/methods";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { Service } from "app/admin/data-access/services/service.model";
+
+function buildMethodChipRenderer(
+  methods: Method[],
+): (cellValue: unknown) => string {
+  const colorMap = new Map<string, string | null>(
+    methods.map((m) => [m.name, m.color]),
+  );
+  return (cellValue: unknown) => {
+    const names = Array.isArray(cellValue)
+      ? (cellValue as string[])
+      : String(cellValue ?? "")
+          .split(", ")
+          .map((n) => n.trim())
+          .filter(Boolean);
+    return names
+      .map((name) => {
+        const color = colorMap.get(name);
+        const style = color ? ` style="background:${color};color:#fff"` : "";
+        const escaped = name.replace(
+          /[<>&"']/g,
+          (c) =>
+            ({
+              "<": "&lt;",
+              ">": "&gt;",
+              "&": "&amp;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c] ?? c,
+        );
+        return `<span class="p-chip"${style}>${escaped}</span>`;
+      })
+      .join(" ");
+  };
+}
+
+function buildOperationChipRenderer(
+  operations: Operation[],
+): (cellValue: unknown) => string {
+  const colorMap = new Map<string, string | null>(
+    operations.map((op) => [op.name, op.color]),
+  );
+  return (cellValue: unknown) => {
+    const names = String(cellValue ?? "")
+      .split(", ")
+      .map((n) => n.trim())
+      .filter(Boolean);
+    return names
+      .map((name) => {
+        const color = colorMap.get(name);
+        const style = color ? ` style="background:${color};color:#fff"` : "";
+        const escaped = name.replace(
+          /[<>&"']/g,
+          (c) =>
+            ({
+              "<": "&lt;",
+              ">": "&gt;",
+              "&": "&amp;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c] ?? c,
+        );
+        return `<span class="p-chip"${style}>${escaped}</span>`;
+      })
+      .join(" ");
+  };
+}
 
 export const ROUTE_COLUMNS: (
   payload: ActivatedRouteSnapshot,
@@ -111,6 +177,7 @@ export const ROUTE_COLUMNS: (
     },
     columnOptions: {
       filterType: CONTROL_TYPES.MULTISELECT,
+      customCellRenderer: buildOperationChipRenderer(data.operations),
     },
   },
   {
@@ -132,15 +199,31 @@ export const ROUTE_COLUMNS: (
     },
   },
   {
-    key: "methods",
+    key: "methodIds",
     label: "Methods",
     controlType: CONTROL_TYPES.MULTISELECT,
-    options: METHODS.map((m) => ({
-      label: m,
-      value: m,
+    options: data.methods.map((m: Method) => ({
+      label: m.name,
+      value: m.id,
     })),
     controlOptions: {
       validators: [required],
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
+    key: "methodNames",
+    label: "Methods",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+      customCellRenderer: buildMethodChipRenderer(data.methods),
     },
   },
   {

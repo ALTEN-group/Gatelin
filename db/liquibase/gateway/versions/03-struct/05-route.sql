@@ -1,12 +1,9 @@
-CREATE TYPE method AS ENUM ('GET', 'PATCH', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS');
-
 CREATE TABLE IF NOT EXISTS route (
 	id SERIAL PRIMARY KEY,
   "resourceId" INT NOT NULL,
   pattern varchar(50) NOT NULL,
   name varchar(50) NULL,
   description varchar(100) NULL,
-  methods method[] NOT NULL,
   "isProtected" BOOLEAN DEFAULT FALSE,
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,

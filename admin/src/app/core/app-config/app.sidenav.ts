@@ -54,6 +54,15 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
+        id: "methods",
+        label: $localize`:@@Admin_MethodsNav:Methods`,
+        routerLink: `/${AppPaths.METHODS}`,
+        icon: "pi pi-code",
+        data: {
+          functionality: "methods",
+        },
+      },
+      {
         id: "scopes",
         label: $localize`:@@Admin_ScopesNav:Scopes`,
         routerLink: `/${AppPaths.SCOPES}`,

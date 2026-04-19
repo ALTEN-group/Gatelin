@@ -11,10 +11,11 @@ export interface Route extends ArchiveInfo {
   resourceName: string;
   operationId: number | null;
   operationName: string;
+  methodIds: number[];
+  methodNames: string[];
   name: string;
   description: string;
   pattern: string;
-  methods: Array<"GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS">;
   isProtected: boolean;
   locked: boolean;
 }
@@ -33,10 +34,11 @@ export const routeFactory = (): Route => ({
   resourceName: "",
   operationId: null,
   operationName: "",
+  methodIds: [],
+  methodNames: [],
   name: "",
   description: "",
   pattern: "",
-  methods: [],
   isProtected: false,
   locked: false,
   ...new ArchiveInfo(),
