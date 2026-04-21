@@ -64,6 +64,10 @@
     <comment>Permission iud trigger function</comment>
     <sqlFile path="versions/02-func/09-permission.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="02-func-10" author="lcluber">
+    <comment>Method before update trigger function: restricts updates to color only</comment>
+    <sqlFile path="versions/02-func/10-method.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- structures -->
   <changeSet id="03-struct-01" author="lcluber">
@@ -187,6 +191,10 @@
   <changeSet id="05-trig-11" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/05-trig/11-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-12" author="lcluber">
+    <comment>Method triggers: restrict updates to color only and history logging</comment>
+    <sqlFile path="versions/05-trig/12-method.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- data -->

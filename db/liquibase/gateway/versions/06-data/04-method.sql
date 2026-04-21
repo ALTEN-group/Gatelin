@@ -1,8 +1,8 @@
 --
--- method_color default inserts
+-- method default inserts
 --
 
-INSERT INTO method_color (name, color, "creatorId", "creatorName") VALUES
+INSERT INTO method (name, color, "creatorId", "creatorName") VALUES
 ('GET',     '#10B981', -1, 'system'),
 ('POST',    '#3B82F6', -1, 'system'),
 ('PUT',     '#F97316', -1, 'system'),

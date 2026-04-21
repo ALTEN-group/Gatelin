@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS permission (
   "routeId"     INT NOT NULL,
   "operationId" INT NOT NULL,
   fields        TEXT[],
+  scopes        TEXT[],
   CONSTRAINT permission_unique UNIQUE ("roleId", "routeId", "operationId"),
   CHECK ("roleId">=0),
   CHECK ("routeId">=0),

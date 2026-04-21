@@ -1,9 +1,7 @@
-CREATE TABLE IF NOT EXISTS method_color (
+CREATE TABLE IF NOT EXISTS method (
   id SERIAL PRIMARY KEY,
   name VARCHAR(10) NOT NULL UNIQUE,
   color VARCHAR(7) NOT NULL,
-  archived BOOLEAN DEFAULT FALSE,
-  "archivedAt" TIMESTAMP,
   "creatorId" INT,
   "creatorName" TEXT,
   "updaterId" INT,
@@ -21,7 +19,7 @@ CREATE TABLE IF NOT EXISTS route_method (
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT fk_route_method_method
-    FOREIGN KEY ("methodId") REFERENCES method_color (id)
+    FOREIGN KEY ("methodId") REFERENCES method (id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

@@ -28,7 +28,7 @@ create or replace view routes AS
   LEFT JOIN route_operation ro ON ro."routeId" = r.id
   LEFT JOIN operation o ON o.id = ro."operationId"
   LEFT JOIN route_method rm ON rm."routeId" = r.id
-  LEFT JOIN method_color mc ON mc.id = rm."methodId"
+  LEFT JOIN method mc ON mc.id = rm."methodId"
   GROUP BY r.id, b."serviceId", s.name, b.name, s.pattern, r."resourceId"
   ORDER BY r.id ASC
 ;

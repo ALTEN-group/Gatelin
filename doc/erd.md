@@ -7,15 +7,18 @@ caption: Entity Relationship Diagram - Routes & ACL
 
 erDiagram
 
-  route }o--|| resource : ""
-  resource }o--|| service : ""
+  service ||--o{ resource : ""
+  role ||--o{ permission : ""
+  resource ||--o{ field : ""
+  resource ||--|{ route : ""
+  route ||--o{ scope : ""
+  route }o--|{ route_method : ""
+  route_method }|--|| method : ""
   route }o--|{ route_operation : ""
   route_operation }|--|| operation : ""
-  resource ||--o{ field : ""
-  scope }o--|| route : ""
+  
   permission }o--|| route : ""
   permission }o--|| operation : ""
-  permission }o--|| role : ""
 
   role {
     int id PK
@@ -38,6 +41,7 @@ erDiagram
     int routeId FK
     int operationId FK
     text[] fields
+    text[] scopes
   }
 
   service {
@@ -76,11 +80,27 @@ erDiagram
     varchar pattern
     varchar name
     varchar description
-    method[] methods
     boolean isProtected
     boolean locked
     boolean archived
     timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  route_method {
+    int routeId FK
+    int methodId FK
+  }
+
+  method {
+    int id PK
+    varchar name UK
+    varchar color
     int creatorId
     text creatorName
     int updaterId
