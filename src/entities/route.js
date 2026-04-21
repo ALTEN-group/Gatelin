@@ -88,9 +88,9 @@ export default new SQLEntity("routes", [
   },
   {
     key: "operationName",
-    type: "string",
+    type: "array",
     min: 1,
-    max: 200,
+    max: 13,
     isTypeChecked: true,
     isFilterable: false,
     requiredFor: [],

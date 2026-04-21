@@ -67,13 +67,13 @@ INSERT INTO routes ("resourceId", pattern, name, description, "isProtected", loc
 -- preferences
 (12, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  true, true, ARRAY[2],  ARRAY[1,7], -1, 'system'),
 (12, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', true, true, ARRAY[12], ARRAY[3,7], -1, 'system'),
--- users
-(13, '/me', 'getBasicUserInfo', 'Get authenticated user basic info', true, true, ARRAY[1], ARRAY[1,7], -1, 'system'),
--- methods (resourceId=14)
-(14, '/search',  'searchMethods',  'Search methods',  true, false, ARRAY[2,3], ARRAY[2,7], -1, 'system'),
-(14, '',         'addMethods',     'Add methods',     true, false, ARRAY[7],   ARRAY[2,7], -1, 'system'),
-(14, '',         'updateMethods',  'Update methods',  true, false, ARRAY[5],   ARRAY[3,7], -1, 'system'),
-(14, '/archive', 'archiveMethods', 'Archive methods', true, false, ARRAY[9],   ARRAY[2,7], -1, 'system')
+-- methods (resourceId=13)
+(13, '/search',  'searchMethods',  'Search methods',  true, false, ARRAY[2,3], ARRAY[2,7], -1, 'system'),
+(13, '',         'addMethods',     'Add methods',     true, false, ARRAY[7],   ARRAY[2,7], -1, 'system'),
+(13, '',         'updateMethods',  'Update methods',  true, false, ARRAY[5],   ARRAY[3,7], -1, 'system'),
+(13, '/archive', 'archiveMethods', 'Archive methods', true, false, ARRAY[9],   ARRAY[2,7], -1, 'system'),
+-- users (resourceId=14)
+(14, '/me', 'getBasicUserInfo', 'Get authenticated user basic info', true, true, ARRAY[1], ARRAY[1,7], -1, 'system')
 ;
 
 ANALYZE;

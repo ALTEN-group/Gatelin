@@ -36,7 +36,13 @@ CREATE OR REPLACE VIEW permissions AS
     array_agg(p."operationId" ORDER BY p."operationId")  AS "operationId",
     array_agg(o.name          ORDER BY p."operationId")  AS "operationName",
     (array_agg(p.fields ORDER BY p."operationId") FILTER (WHERE p.fields IS NOT NULL))[1] AS fields,
-    (array_agg(p.scopes ORDER BY p."operationId") FILTER (WHERE p.scopes IS NOT NULL))[1] AS scopes
+    (array_agg(p.scopes ORDER BY p."operationId") FILTER (WHERE p.scopes IS NOT NULL))[1] AS scopes,
+    MIN(p."creatorId")   AS "creatorId",
+    MIN(p."creatorName") AS "creatorName",
+    MAX(p."updaterId")   AS "updaterId",
+    MAX(p."updaterName") AS "updaterName",
+    MIN(p."createdAt")   AS "createdAt",
+    MAX(p."updatedAt")   AS "updatedAt"
   FROM permission p
   LEFT JOIN route     rt  ON rt.id  = p."routeId"
   LEFT JOIN resource  res ON res.id = rt."resourceId"

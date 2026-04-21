@@ -6,13 +6,16 @@ create or replace view routes AS
   r."resourceId",
   b.name as "resourceName",
   array_agg(DISTINCT ro."operationId") FILTER (WHERE ro."operationId" IS NOT NULL) as operations,
-  string_agg(DISTINCT o.name, ', ' ORDER BY o.name) as "operationName",
+  array_agg(DISTINCT o.name) FILTER (WHERE o.name IS NOT NULL) as "operationName",
   r.pattern,
-  '/' || COALESCE(s.pattern, '') || '/' || b.name || r.pattern as "url",
+  CASE WHEN COALESCE(s.pattern, '') = ''
+    THEN '/' || b.name || r.pattern
+    ELSE '/' || s.pattern || '/' || b.name || r.pattern
+  END as "url",
   r.name,
   r.description,
   COALESCE(array_agg(DISTINCT rm."methodId") FILTER (WHERE rm."methodId" IS NOT NULL), ARRAY[]::int[]) as "methodIds",
-  COALESCE(array_agg(mc.name ORDER BY mc.id) FILTER (WHERE mc.name IS NOT NULL), ARRAY[]::text[]) as "methodNames",
+  COALESCE(array_agg(DISTINCT mc.name) FILTER (WHERE mc.name IS NOT NULL), ARRAY[]::text[]) as "methodNames",
   r."isProtected",
   r.locked,
   r.archived,

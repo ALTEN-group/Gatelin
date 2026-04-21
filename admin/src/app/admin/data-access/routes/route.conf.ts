@@ -1,7 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
-import { buildColoredChipCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
+import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
   CONTROL_TYPES,
   createArchivedConfig,
@@ -92,7 +92,7 @@ export const ROUTE_COLUMNS: (
     {
       key: "operationId",
       label: "Operation",
-      controlType: CONTROL_TYPES.SELECT,
+      controlType: CONTROL_TYPES.MULTISELECT,
       options: toSelectItems<Operation>(data.operations, "name"),
       controlOptions: {
         validators: [required],
@@ -114,8 +114,10 @@ export const ROUTE_COLUMNS: (
       },
       columnOptions: {
         filterType: CONTROL_TYPES.MULTISELECT,
-        customCellRenderer: buildColoredChipCellRenderer(sanitizer, (cellValue) => {
-          const op = (data.operations as Operation[]).find((o) => o.name === cellValue);
+        customCellRenderer: buildColoredChipsCellRenderer(sanitizer, (name) => {
+          const op = (data.operations as Operation[]).find(
+            (o) => o.name === name,
+          );
           return op ? { label: op.name, color: op.color } : undefined;
         }),
       },
@@ -156,7 +158,7 @@ export const ROUTE_COLUMNS: (
     {
       key: "methodNames",
       label: "Methods",
-      controlType: CONTROL_TYPES.MULTISELECT,
+      controlType: CONTROL_TYPES.SELECT,
       options: data.methods.map((m: Method) => ({
         label: m.name,
         value: m.name,
@@ -166,7 +168,14 @@ export const ROUTE_COLUMNS: (
       },
       columnOptions: {
         filterType: CONTROL_TYPES.MULTISELECT,
-        valueAsChip: true,
+        customCellRenderer: buildColoredChipsCellRenderer(sanitizer, (name) => {
+          const method = (data.methods as Method[]).find(
+            (m) => m.name === name,
+          );
+          return method
+            ? { label: method.name, color: method.color }
+            : undefined;
+        }),
       },
     },
     {
