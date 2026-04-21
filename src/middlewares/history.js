@@ -44,6 +44,36 @@ function query(tableName, id, schema = "public") {
   return execute(sql, [schema, tableName, id], null);
 }
 
+function getByField(tableName, field, schema = "public") {
+  return function (req, res, next) {
+    const value = req.params[field];
+    if (!value) return next({ status: 400, msg: `Missing ${field}` });
+
+    queryByField(tableName, field, value, schema)
+      .then((r) => {
+        const { rowCount, rows } = r;
+        if (!rowCount) return next({ status: 404, msg: "history not found" });
+        res.locals.rows = rows;
+        res.locals.total = rowCount;
+        next();
+      })
+      .catch((err) => next(err));
+  };
+}
+
+function queryByField(tableName, field, value, schema = "public") {
+  const sql = `
+    SELECT id, tstamp, operation, "consumerId", "consumerName", record
+    FROM log.history
+    WHERE "schemaName" = $1
+      AND "tableName" = $2
+      AND CAST(record->>'${field}' AS INT) = $3
+    ORDER BY tstamp ASC
+  `;
+  return execute(sql, [schema, tableName, value], null);
+}
+
 export default {
   get,
+  getByField,
 };

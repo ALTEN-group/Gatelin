@@ -47,6 +47,7 @@ erDiagram
   }
 
   permissions["permissions VIEW"] {
+    int[] ids "array of permission IDs (one per operation)"
     int roleId
     int serviceId
     varchar serviceName
