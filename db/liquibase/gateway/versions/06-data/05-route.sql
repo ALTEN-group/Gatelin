@@ -72,8 +72,14 @@ INSERT INTO routes ("resourceId", pattern, name, description, "isProtected", loc
 (13, '',         'addMethods',     'Add methods',     true, false, ARRAY[7],   ARRAY[2,7], -1, 'system'),
 (13, '',         'updateMethods',  'Update methods',  true, false, ARRAY[5],   ARRAY[3,7], -1, 'system'),
 (13, '/archive', 'archiveMethods', 'Archive methods', true, false, ARRAY[9],   ARRAY[2,7], -1, 'system'),
--- users (resourceId=14)
-(14, '/me', 'getBasicUserInfo', 'Get authenticated user basic info', true, true, ARRAY[1], ARRAY[1,7], -1, 'system')
+-- applications (resourceId=14)
+(14, '/search',             'searchApplications',    'Search applications',          true, false, ARRAY[2,3], ARRAY[2,7], -1, 'system'),
+(14, '/(?<id>\d+)/history', 'getApplicationHistory', 'Manage application history',   true, false, ARRAY[2],   ARRAY[1,7], -1, 'system'),
+(14, '',                    'addApplications',       'Add applications',             true, false, ARRAY[7],   ARRAY[2,7], -1, 'system'),
+(14, '',                    'updateApplications',    'Update applications',          true, false, ARRAY[5],   ARRAY[3,7], -1, 'system'),
+(14, '/archive',            'archiveApplications',   'Archive applications',         true, false, ARRAY[9],   ARRAY[2,7], -1, 'system'),
+-- users (resourceId=15)
+(15, '/me', 'getBasicUserInfo', 'Get authenticated user basic info', true, true, ARRAY[1], ARRAY[1,7], -1, 'system')
 ;
 
 ANALYZE;

@@ -98,15 +98,6 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
-        id: "applications",
-        label: $localize`:@@Admin_ApplicationsNav:Applications`,
-        routerLink: `/${AppPaths.APPLICATIONS}`,
-        icon: "pi pi-th-large",
-        data: {
-          functionality: "applications",
-        },
-      },
-      {
         id: "permissions",
         label: $localize`:@@Admin_PermissionsNav:Permissions`,
         routerLink: `/${AppPaths.PERMISSIONS}`,
@@ -125,5 +116,14 @@ export const SIDENAV: MenuItem[] = [
         },
       },
     ],
+  },
+  {
+    id: "applications",
+    label: $localize`:@@Admin_ApplicationsNav:Applications`,
+    routerLink: `/${AppPaths.APPLICATIONS}`,
+    icon: "pi pi-th-large",
+    data: {
+      functionality: "applications",
+    },
   },
 ];
