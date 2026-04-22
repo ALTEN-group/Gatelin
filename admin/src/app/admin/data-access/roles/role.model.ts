@@ -2,6 +2,8 @@ import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 export interface GatewayRole extends ArchiveInfo {
   id: number | null;
+  appId: number | null;
+  appName: string;
   name: string;
   description: string;
   color: string;
@@ -10,6 +12,8 @@ export interface GatewayRole extends ArchiveInfo {
 
 export const gatewayRoleFactory = (): GatewayRole => ({
   id: null,
+  appId: null,
+  appName: "",
   name: "",
   description: "",
   color: "",

@@ -3,6 +3,7 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
+import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
 import { methodsResolver } from "app/admin/data-access/methods/methods.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
@@ -26,6 +27,7 @@ export const AppPaths = {
   SCOPES: "scopes",
   ROLES: "roles",
   PERMISSIONS: "permissions",
+  APPLICATIONS: "applications",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
@@ -187,6 +189,22 @@ export const ROUTES: Routes = [
     data: {
       breadcrumb: $localize`:@@Admin_RolesNav:Roles`,
       functionality: "roles",
+    },
+    resolve: {
+      applications: gatewayApplicationsResolver,
+    },
+  },
+  {
+    path: AppPaths.APPLICATIONS,
+    loadComponent: () =>
+      import("./admin/features/applications/applications.component").then(
+        (m) => m.ApplicationsComponent,
+      ),
+    title: "Applications",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ApplicationsNav:Applications`,
+      functionality: "applications",
     },
   },
   {

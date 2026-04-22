@@ -1,9 +1,7 @@
-CREATE TABLE IF NOT EXISTS role (
+CREATE TABLE IF NOT EXISTS application (
   id SERIAL PRIMARY KEY,
-  name varchar(50) NOT NULL,
-  description varchar(100) NULL,
-  color VARCHAR(7) NULL,
-  active BOOLEAN DEFAULT FALSE,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(100) NULL,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "creatorId" INT,
@@ -11,5 +9,5 @@ CREATE TABLE IF NOT EXISTS role (
   "updaterId" INT,
   "updaterName" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "updatedAt" TIMESTAMP NULL
 );

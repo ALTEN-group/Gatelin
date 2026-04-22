@@ -13,6 +13,7 @@ const tableKeys = [
   "roles",
   "colors",
   "permissions",
+  "applications",
 ] as const; // Extend as needed
 
 type AppTable = (typeof tableKeys)[number];
@@ -138,6 +139,15 @@ export const TABLES: Record<AppTable, TableInfo> = {
     title: $localize`:@@TableLabels_Permissions:Permissions`,
     key: "permissions",
     functionalityKey: "permissions",
+    editionDialogSize: "s",
+    customRowStyles: defaultRowStyles,
+    filterLevel: "advanced",
+  },
+  applications: {
+    label: $localize`:@@TableLabels_Application:Application`,
+    title: $localize`:@@TableLabels_Applications:Applications`,
+    key: "applications",
+    functionalityKey: "applications",
     editionDialogSize: "s",
     customRowStyles: defaultRowStyles,
     filterLevel: "advanced",

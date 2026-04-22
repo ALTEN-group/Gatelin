@@ -1,5 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { buildRoleColumns } from "app/admin/data-access/roles/role.conf";
 import {
@@ -28,7 +29,8 @@ export class GatewayRolesService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = buildRoleColumns(this.sanitizer);
+  public readonly config = (payload: ActivatedRouteSnapshot) =>
+    buildRoleColumns(this.sanitizer, payload);
   public readonly entityFactory = gatewayRoleFactory;
 
   public getAndCacheAll(): Observable<GatewayRole[]> {

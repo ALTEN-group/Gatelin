@@ -1,4 +1,6 @@
 import { DomSanitizer } from "@angular/platform-browser";
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -10,45 +12,69 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
+import { GatewayApplication } from "app/admin/data-access/applications/application.model";
 import { GatewayRole } from "app/admin/data-access/roles/role.model";
 
-export function buildRoleColumns(
+export const buildRoleColumns = (
   sanitizer: DomSanitizer,
-): StrictCrudItemOptions<GatewayRole>[] {
-  return [
-    ID_CONFIG,
-    {
-      key: "name",
-      label: "Nom",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [required, minlength(1), maxlength(50)],
-      },
+  { data }: ActivatedRouteSnapshot,
+): StrictCrudItemOptions<GatewayRole>[] => [
+  ID_CONFIG,
+  {
+    key: "appId",
+    label: $localize`:@@Roles_Application:Application`,
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<GatewayApplication>(data.applications, "name"),
+    controlOptions: {
+      validators: [required],
     },
-    {
-      key: "description",
-      label: "Description",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [maxlength(100)],
-      },
+    columnOptions: {
+      isHardHidden: true,
     },
-    {
-      key: "color",
-      label: "Couleur",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      columnOptions: {
-        customCellRenderer: buildColorCellRenderer(sanitizer),
-      },
+  },
+  {
+    key: "appName",
+    label: $localize`:@@Roles_Application:Application`,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      hidden: true,
     },
-    {
-      key: "active",
-      label: "Actif",
-      controlType: CONTROL_TYPES.CHECKBOX,
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
     },
-    ...createArchivedConfig(),
-  ];
-}
+  },
+  {
+    key: "name",
+    label: $localize`:@@Roles_Name:Nom`,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [required, minlength(1), maxlength(50)],
+    },
+  },
+  {
+    key: "description",
+    label: $localize`:@@Roles_Description:Description`,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [maxlength(100)],
+    },
+  },
+  {
+    key: "color",
+    label: $localize`:@@Roles_Color:Couleur`,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    columnOptions: {
+      customCellRenderer: buildColorCellRenderer(sanitizer),
+    },
+  },
+  {
+    key: "active",
+    label: $localize`:@@Roles_Active:Actif`,
+    controlType: CONTROL_TYPES.CHECKBOX,
+  },
+  ...createArchivedConfig(),
+];

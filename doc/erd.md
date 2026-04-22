@@ -8,6 +8,7 @@ caption: Entity Relationship Diagram - Routes & ACL
 erDiagram
 
   service ||--o{ resource : ""
+  application ||--o{ role : ""
   role ||--o{ permission : ""
   resource ||--o{ field : ""
   resource ||--|{ route : ""
@@ -22,10 +23,25 @@ erDiagram
 
   role {
     int id PK
+    int appId FK
     varchar name
     varchar description
     varchar color
     boolean active
+    boolean archived
+    timestamp archivedAt
+    int creatorId
+    text creatorName
+    int updaterId
+    text updaterName
+    timestamp createdAt
+    timestamp updatedAt
+  }
+
+  application {
+    int id PK
+    varchar name UK
+    text description
     boolean archived
     timestamp archivedAt
     int creatorId

@@ -111,12 +111,16 @@
     <sqlFile path="versions/03-struct/10-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-11" author="lcluber">
-    <comment>Role table with FK to color</comment>
-    <sqlFile path="versions/03-struct/11-role.sql" splitStatements="false"/>
+    <comment>Application table</comment>
+    <sqlFile path="versions/03-struct/11-application.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-12" author="lcluber">
-    <comment>Method color lookup table</comment>
-    <sqlFile path="versions/03-struct/12-method.sql" splitStatements="false"/>
+    <comment>Role table with FK to application</comment>
+    <sqlFile path="versions/03-struct/12-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-13" author="lcluber">
+    <comment>Method lookup table</comment>
+    <sqlFile path="versions/03-struct/13-method.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- views -->
@@ -147,6 +151,10 @@
   <changeSet id="04-view-07" author="lcluber">
     <comment>Permissions views</comment>
     <sqlFile path="versions/04-view/07-permissions.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-08" author="lcluber">
+    <comment>Roles view with application name</comment>
+    <sqlFile path="versions/04-view/08-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="05-trig-01" author="lcluber">
     <comment></comment>
@@ -235,8 +243,12 @@
     <sqlFile path="versions/06-data/09-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-10" author="lcluber">
+    <comment>Default application data</comment>
+    <sqlFile path="versions/06-data/10-application.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-11" author="lcluber">
     <comment>Default role data</comment>
-    <sqlFile path="versions/06-data/10-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/11-role.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>

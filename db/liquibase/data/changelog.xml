@@ -29,5 +29,9 @@
     <comment>Example history: second update pass across all tables (distinct timestamp)</comment>
     <sqlFile path="04-insert-example-fixed-data.sql"/>
   </changeSet>
+  <changeSet id="data-04" author="lcluber">
+    <comment>eBoutique test applications</comment>
+    <sqlFile path="05-insert-example-applications.sql"/>
+  </changeSet>
 
 </databaseChangeLog>
