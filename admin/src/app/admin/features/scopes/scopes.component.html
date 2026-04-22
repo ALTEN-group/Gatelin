@@ -1,3 +1,8 @@
+<p class="info-message" i18n="@@Scopes_Info">
+  Scopes allow you to restrict permissions at a finer level within a route.
+  They only need to be declared for routes where you want to grant different permissions depending on the context or data subset.
+  For example, the <strong>GET /preferences</strong> route uses scopes to control which resource's preferences a role can retrieve — a <strong>routes</strong> scope grants access to route datagrid preferences, while a <strong>roles</strong> scope grants access to role datagrid preferences. Each role is then given only the scopes it needs.
+</p>
 <tbl-table 
     [config]="config"
     [httpCalls]="httpCalls"
