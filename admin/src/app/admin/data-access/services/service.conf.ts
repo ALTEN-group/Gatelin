@@ -1,3 +1,5 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
   createArchivedConfig,
@@ -8,13 +10,40 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
+import { GatewayApplication } from "app/admin/data-access/applications/application.model";
 import { Service } from "app/admin/data-access/services/service.model";
 
-export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
+export const buildServiceColumns = (
+  { data }: ActivatedRouteSnapshot,
+): StrictCrudItemOptions<Service>[] => [
   ID_CONFIG,
   {
+    key: "appId",
+    label: $localize`:@@Services_Application:Application`,
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<GatewayApplication>(data.applications, "name"),
+    controlOptions: {
+      validators: [required],
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
+    key: "appName",
+    label: $localize`:@@Services_Application:Application`,
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+    },
+  },
+  {
     key: "name",
-    label: "Nom",
+    label: $localize`:@@Services_Name:Nom`,
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
@@ -23,16 +52,16 @@ export const SERVICE_COLUMNS: StrictCrudItemOptions<Service>[] = [
   },
   {
     key: "pattern",
-    label: "Pattern",
+    label: $localize`:@@Services_Pattern:Pattern`,
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
-      validators: [required, minlength(1), maxlength(20)],
+      validators: [minlength(1), maxlength(20)],
     },
   },
   {
     key: "locked",
-    label: "Verrouillé",
+    label: $localize`:@@Services_Locked:Verrouillé`,
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...createArchivedConfig(),

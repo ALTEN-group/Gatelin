@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
-import { SERVICE_COLUMNS } from "app/admin/data-access/services/service.conf";
+import { buildServiceColumns } from "app/admin/data-access/services/service.conf";
 import {
   Service,
   serviceFactory,
@@ -30,7 +31,8 @@ export class ServicesService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = SERVICE_COLUMNS;
+  public readonly config = (payload: ActivatedRouteSnapshot) =>
+    buildServiceColumns(payload);
   public readonly entityFactory = serviceFactory;
 
   private _all$: Observable<Service[]> | null = null;

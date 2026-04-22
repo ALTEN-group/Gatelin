@@ -83,6 +83,9 @@ export const ROUTES: Routes = [
       ),
     title: "Services",
     canActivate: [aclGuard()],
+    resolve: {
+      applications: gatewayApplicationsResolver,
+    },
     data: {
       breadcrumb: $localize`:@@Admin_ServicesNav:Services`,
       functionality: "services",

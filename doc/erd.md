@@ -7,6 +7,7 @@ caption: Entity Relationship Diagram - Routes & ACL
 
 erDiagram
 
+  application ||--o{ service : ""
   service ||--o{ resource : ""
   application ||--o{ role : ""
   role ||--o{ permission : ""
@@ -62,6 +63,7 @@ erDiagram
 
   service {
     int id PK
+    int appId FK
     varchar name
     text pattern
     boolean locked
