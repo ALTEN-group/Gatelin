@@ -10,8 +10,8 @@ import { stripTrailingSlash } from "../utils/url.js";
  * @property {string[]} methodNames - Array of allowed HTTP method names
  */
 
-/** @type {RouteConfig[]|null} */
-let routes = null;
+/** @type {Map<string, RouteConfig[]>} method → routes that accept that method */
+let routesByMethod = new Map();
 
 /** @type {Map<string, string>} */
 let serviceBaseUrls = new Map();
@@ -42,11 +42,22 @@ function init() {
   const san = `${SERVER_SCHEME}${APP_NAME}-`;
   const ep = `-${ENV_NAME}:${PORT}`;
   return execute(query, args, null).then((r) => {
+    // Collect unique service names to build base URLs later
     const serviceNames = new Set();
-    routes = r.rows.map((row) => {
+    // Reset the method index: each key is an HTTP method (GET, POST…),
+    // each value is the subset of routes that accept that method
+    routesByMethod = new Map();
+    for (const row of r.rows) {
       serviceNames.add(row.serviceName);
-      return { ...row, _regex: new RegExp(row.url) };
-    });
+      // Pre-compile the URL pattern once at startup instead of on every request
+      const route = { ...row, _regex: new RegExp(row.url) };
+      // A route can accept several methods (e.g. GET + HEAD), so index it
+      // under each one — getOne() will only scan the relevant bucket
+      for (const method of row.methodNames ?? []) {
+        if (!routesByMethod.has(method)) routesByMethod.set(method, []);
+        routesByMethod.get(method).push(route);
+      }
+    }
     serviceBaseUrls = new Map(
       [...serviceNames].map((name) => [name, `${san}${name}${ep}`]),
     );
@@ -68,13 +79,12 @@ function init() {
  * getOne('/api/users/abc', 'GET') // returns undefined (no match)
  */
 function getOne(requestUrl, requestMethod) {
-  if (!routes) return undefined;
+  const candidates = routesByMethod.get(requestMethod);
+  if (!candidates) return undefined;
   // Normalize URL by removing trailing slash for consistent matching
   const actualUrl = stripTrailingSlash(requestUrl);
-  // Find the first route that matches the URL and method
-  return routes.find(
-    (r) => r._regex.test(actualUrl) && r.methodNames?.includes(requestMethod),
-  );
+  // Find the first route that matches the URL within the method bucket
+  return candidates.find((r) => r._regex.test(actualUrl));
 }
 
 function getServiceBaseUrl(serviceName) {

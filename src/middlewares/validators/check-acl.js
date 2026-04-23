@@ -35,18 +35,20 @@ function filterFields(item, allowed) {
   );
 }
 
-function findMatchingPermission(roles, routeId, routeOperations, scopeSegment) {
+function findMatchingPermission(roles, routeId, routeOperations, req, resourceName) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
 
-    const perm = role.permissions.find(
-      (p) =>
-        p.route === routeId &&
-        p.operations.some((op) => routeOperations.includes(op)),
-    );
+    // O(1) lookup by routeId instead of array scan
+    const perm = role.permissions.get(routeId);
     if (!perm) continue;
+    if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
     if (perm.scopes) {
+      // Only parse URL segments when this permission actually uses scopes
+      const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
+      const resourceIndex = urlSegments.indexOf(resourceName);
+      const scopeSegment = resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
       const scopeValues = scopeService.getValues(perm.scopes);
       if (!scopeValues.includes(scopeSegment)) continue;
     }
@@ -69,15 +71,12 @@ export default function checkAcl(req, res, next) {
   // of the resource name (e.g. "preferences") to identify the scope segment that
   // follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
   // scopeSegment is used to match scope-restricted permissions (perm.scopes).
-  const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
-  const resourceIndex = urlSegments.indexOf(r.resourceName);
-  const scopeSegment =
-    resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
   const perm = findMatchingPermission(
     c.roles,
     r.id,
     r.operations,
-    scopeSegment,
+    req,
+    r.resourceName,
   );
   if (!perm) return next({ statusCode: 403, message: "Forbidden" });
 

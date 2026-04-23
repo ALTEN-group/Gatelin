@@ -38,10 +38,16 @@ function init() {
         role.id,
         {
           ...role,
-          permissions: role.permissions?.map((p) => ({
-            ...p,
-            _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
-          })) ?? [],
+          // Index permissions by routeId for O(1) lookup in checkAcl
+          permissions: new Map(
+            (role.permissions ?? []).map((p) => [
+              p.route,
+              {
+                ...p,
+                _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+              },
+            ])
+          ),
         },
       ])
     );
