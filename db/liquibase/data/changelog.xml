@@ -37,5 +37,9 @@
     <comment>eBoutique test roles</comment>
     <sqlFile path="06-insert-example-roles.sql"/>
   </changeSet>
+  <changeSet id="data-06" author="lcluber">
+    <comment>eBoutique test services</comment>
+    <sqlFile path="07-insert-example-services.sql"/>
+  </changeSet>
 
 </databaseChangeLog>
