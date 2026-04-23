@@ -14,8 +14,8 @@ INSERT INTO resources ("serviceId", name, locked, "creatorId", "creatorName") VA
 (1, 'scopes', true, -1, 'system'),
 (1, 'roles', true, -1, 'system'),
 (1, 'permissions', true, -1, 'system'),
-(1, 'preferences', true, -1, 'system'),
 (1, 'methods', true, -1, 'system'),
 (1, 'applications', true, -1, 'system'),
+(1, 'preferences', true, -1, 'system'),
 (2, 'users', true, -1, 'system')
 ;

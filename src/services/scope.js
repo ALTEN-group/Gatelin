@@ -42,4 +42,10 @@ function getValues(ids) {
 export default {
   init,
   getValues,
+  deleteArchived,
 };
+
+function deleteArchived(date) {
+  const q = sEnt.query.deleteArchive();
+  return execute(q, [date], null).then((r) => r.rowCount || 0);
+}

@@ -8,13 +8,15 @@ import operationSvc from "../services/operation.js";
 import resourceSvc from "../services/resource.js";
 import routeSvc from "../services/route.js";
 import roleSvc from "../services/role.js";
+import applicationSvc from "../services/application.js";
+import scopeSvc from "../services/scope.js";
 
 /**
  * Cron job to delete archived entities from the database.
  * All entities must be archived for at least 2 months before deletion.
  * Runs once daily at 2:00 AM.
  *
- * Deletes archived records from: consumers, services, cors, operations, resources, and routes.
+ * Deletes archived records from: consumers, services, CORS origins, operations, resources, routes, roles, applications, and scopes.
  *
  * Cron schedule format: "second minute hour day month weekday"
  * Current schedule: "0 0 2 * * *" means every day at 2:00 AM
@@ -43,6 +45,8 @@ export function startDeleteArchivedEntitiesJob() {
         { name: "resources", service: resourceSvc },
         { name: "routes", service: routeSvc },
         { name: "roles", service: roleSvc },
+        { name: "applications", service: applicationSvc },
+        { name: "scopes", service: scopeSvc },
       ];
 
       let totalDeleted = 0;

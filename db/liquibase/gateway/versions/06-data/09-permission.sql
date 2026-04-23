@@ -12,11 +12,11 @@
 --   31=searchFields     32=getFieldHistory  33=updateFields     34=addFields        35=archiveFields
 --   36=searchScopes     37=getScopeHistory  38=updateScopes     39=addScopes        40=archiveScopes
 --   41=searchRoles      42=getRoleHistory   43=addRoles         44=updateRoles      45=archiveRoles
---   46=searchPermissions 47=addPermissions 48=updatePermissions 49=deletePermissions
---   50=getPreferences   51=syncPreferences
---   52=searchMethods    53=addMethods       54=updateMethods    55=archiveMethods
---   56=searchApplications 57=getApplicationHistory 58=addApplications 59=updateApplications 60=archiveApplications
---   61=getBasicUserInfo
+--   46=searchPermissions 47=getPermissionHistory 48=addPermissions 49=updatePermissions 50=deletePermissions
+--   51=searchMethods    52=updateMethods
+--   53=searchApplications 54=getApplicationHistory 55=addApplications 56=updateApplications 57=archiveApplications
+--   58=getPreferences   59=syncPreferences
+--   60=getBasicUserInfo
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -76,21 +76,20 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "creatorId"
 (1, 44,  ARRAY[5], NULL, -1, 'system'),  -- updateRoles         → bulk update
 (1, 45,  ARRAY[9], NULL, -1, 'system'),  -- archiveRoles        → bulk archive
 (1, 46,  ARRAY[2,3], NULL, -1, 'system'), -- searchPermissions  → list + export
-(1, 47,  ARRAY[7], NULL, -1, 'system'),  -- addPermissions      → bulk create
-(1, 48,  ARRAY[5], NULL, -1, 'system'),  -- updatePermissions   → bulk update
-(1, 49,  ARRAY[9], NULL, -1, 'system'),  -- deletePermissions   → bulk archive
-(1, 50,  ARRAY[2], NULL, -1, 'system'),  -- getPreferences      → list
-(1, 51,  ARRAY[12], NULL, -1, 'system'), -- syncPreferences     → bulk sync
-(1, 52,  ARRAY[2,3], NULL, -1, 'system'), -- searchMethods           → list + export
-(1, 53,  ARRAY[7], NULL, -1, 'system'),  -- addMethods              → bulk create
-(1, 54,  ARRAY[5], NULL, -1, 'system'),  -- updateMethods           → bulk update
-(1, 55,  ARRAY[9], NULL, -1, 'system'),  -- archiveMethods          → bulk archive
-(1, 56,  ARRAY[2,3], NULL, -1, 'system'), -- searchApplications     → list + export
-(1, 57,  ARRAY[2], NULL, -1, 'system'),  -- getApplicationHistory   → list
-(1, 58,  ARRAY[7], NULL, -1, 'system'),  -- addApplications         → bulk create
-(1, 59,  ARRAY[5], NULL, -1, 'system'),  -- updateApplications      → bulk update
-(1, 60,  ARRAY[9], NULL, -1, 'system'),  -- archiveApplications     → bulk archive
-(1, 61,  ARRAY[1], NULL, -1, 'system'),  -- getBasicUserInfo        → read
+(1, 47,  ARRAY[2], NULL, -1, 'system'),   -- getPermissionHistory → list
+(1, 48,  ARRAY[7], NULL, -1, 'system'),   -- addPermissions      → bulk create
+(1, 49,  ARRAY[5], NULL, -1, 'system'),   -- updatePermissions   → bulk update
+(1, 50,  ARRAY[9], NULL, -1, 'system'),   -- deletePermissions   → bulk archive
+(1, 51,  ARRAY[2,3], NULL, -1, 'system'), -- searchMethods           → list + export
+(1, 52,  ARRAY[5], NULL, -1, 'system'),   -- updateMethods           → bulk update
+(1, 53,  ARRAY[2,3], NULL, -1, 'system'), -- searchApplications     → list + export
+(1, 54,  ARRAY[2], NULL, -1, 'system'),   -- getApplicationHistory   → list
+(1, 55,  ARRAY[7], NULL, -1, 'system'),   -- addApplications         → bulk create
+(1, 56,  ARRAY[5], NULL, -1, 'system'),   -- updateApplications      → bulk update
+(1, 57,  ARRAY[9], NULL, -1, 'system'),   -- archiveApplications     → bulk archive
+(1, 58,  ARRAY[2], NULL, -1, 'system'),   -- getPreferences          → list
+(1, 59,  ARRAY[12], NULL, -1, 'system'),  -- syncPreferences         → bulk sync
+(1, 60,  ARRAY[1], NULL, -1, 'system'),   -- getBasicUserInfo        → read
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -139,22 +138,21 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "creatorId"
 (2, 43,  ARRAY[7], ARRAY['name', 'description', 'color'], -1, 'system'),  -- addRoles
 (2, 44,  ARRAY[5], ARRAY['name', 'description', 'color'], -1, 'system'),  -- updateRoles
 (2, 45,  ARRAY[9], NULL, -1, 'system'),  -- archiveRoles
-(2, 46,  ARRAY[2], NULL, -1, 'system'),  -- searchPermissions
-(2, 47,  ARRAY[7], NULL, -1, 'system'),  -- addPermissions
-(2, 48,  ARRAY[5], NULL, -1, 'system'),  -- updatePermissions
-(2, 49,  ARRAY[9], NULL, -1, 'system'),  -- deletePermissions
-(2, 50,  ARRAY[2], NULL, -1, 'system'),  -- getPreferences
-(2, 51,  ARRAY[12], NULL, -1, 'system'), -- syncPreferences
-(2, 52,  ARRAY[2,3], NULL, -1, 'system'), -- searchMethods
-(2, 53,  ARRAY[7], ARRAY['name', 'color'], -1, 'system'),  -- addMethods
-(2, 54,  ARRAY[5], ARRAY['name', 'color'], -1, 'system'),  -- updateMethods
-(2, 55,  ARRAY[9], NULL, -1, 'system'),  -- archiveMethods
-(2, 56,  ARRAY[2,3], NULL, -1, 'system'), -- searchApplications
-(2, 57,  ARRAY[2], NULL, -1, 'system'),  -- getApplicationHistory
-(2, 58,  ARRAY[7], ARRAY['name', 'url', 'appId'], -1, 'system'),  -- addApplications
-(2, 59,  ARRAY[5], ARRAY['name', 'url', 'appId'], -1, 'system'),  -- updateApplications
-(2, 60,  ARRAY[9], NULL, -1, 'system'),  -- archiveApplications
-(2, 61,  ARRAY[1], NULL, -1, 'system'),  -- getBasicUserInfo
+(2, 46,  ARRAY[2], NULL, -1, 'system'),   -- searchPermissions
+(2, 47,  ARRAY[2], NULL, -1, 'system'),   -- getPermissionHistory
+(2, 48,  ARRAY[7], NULL, -1, 'system'),   -- addPermissions
+(2, 49,  ARRAY[5], NULL, -1, 'system'),   -- updatePermissions
+(2, 50,  ARRAY[9], NULL, -1, 'system'),   -- deletePermissions
+(2, 51,  ARRAY[2,3], NULL, -1, 'system'), -- searchMethods
+(2, 52,  ARRAY[5], ARRAY['name', 'color'], -1, 'system'),  -- updateMethods
+(2, 53,  ARRAY[2,3], NULL, -1, 'system'), -- searchApplications
+(2, 54,  ARRAY[2], NULL, -1, 'system'),   -- getApplicationHistory
+(2, 55,  ARRAY[7], ARRAY['name', 'url', 'appId'], -1, 'system'),  -- addApplications
+(2, 56,  ARRAY[5], ARRAY['name', 'url', 'appId'], -1, 'system'),  -- updateApplications
+(2, 57,  ARRAY[9], NULL, -1, 'system'),   -- archiveApplications
+(2, 58,  ARRAY[2], NULL, -1, 'system'),   -- getPreferences
+(2, 59,  ARRAY[12], NULL, -1, 'system'),  -- syncPreferences
+(2, 60,  ARRAY[1], NULL, -1, 'system'),   -- getBasicUserInfo
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -169,8 +167,8 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "creatorId"
 (3, 31,  ARRAY[2], ARRAY['id', 'resourceId', 'name'], -1, 'system'),  -- searchFields
 (3, 36,  ARRAY[2], ARRAY['id', 'value'], -1, 'system'),  -- searchScopes
 (3, 41,  ARRAY[2], ARRAY['id', 'name', 'description', 'color'], -1, 'system'),  -- searchRoles
-(3, 50,  ARRAY[2], NULL, -1, 'system'),  -- getPreferences
-(3, 61,  ARRAY[1], NULL, -1, 'system'),  -- getBasicUserInfo
+(3, 58,  ARRAY[2], NULL, -1, 'system'),  -- getPreferences
+(3, 60,  ARRAY[1], NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- Guest (4): session routes only
