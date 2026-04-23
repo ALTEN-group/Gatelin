@@ -15,12 +15,8 @@ CREATE TABLE IF NOT EXISTS permission (
   CHECK ("roleId">=0),
   CHECK ("routeId">=0),
   CHECK ("operationId">=0),
-  CONSTRAINT fk_permission_route
-    FOREIGN KEY ("routeId") REFERENCES route (id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT fk_permission_operation
-    FOREIGN KEY ("operationId") REFERENCES operation (id)
+  CONSTRAINT fk_permission_route_operation
+    FOREIGN KEY ("routeId", "operationId") REFERENCES route_operation ("routeId", "operationId")
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

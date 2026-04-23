@@ -8,8 +8,8 @@ caption: Entity Relationship Diagram - Routes & ACL
 erDiagram
 
   application ||--o{ service : ""
-  service ||--o{ resource : ""
   application ||--o{ role : ""
+  service ||--o{ resource : ""
   role ||--o{ permission : ""
   resource ||--o{ field : ""
   resource ||--|{ route : ""
@@ -19,8 +19,7 @@ erDiagram
   route }o--|{ route_operation : ""
   route_operation }|--|| operation : ""
   
-  permission }o--|| route : ""
-  permission }o--|| operation : ""
+  permission }o--|| route_operation : ""
 
   role {
     int id PK
