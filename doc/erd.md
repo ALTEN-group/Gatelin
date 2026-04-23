@@ -12,14 +12,19 @@ erDiagram
   service ||--o{ resource : ""
   role ||--o{ permission : ""
   resource ||--o{ field : ""
-  resource ||--|{ route : ""
+  resource ||--o{ route : ""
   route ||--o{ scope : ""
-  route }o--|{ route_method : ""
-  route_method }|--|| method : ""
-  route }o--|{ route_operation : ""
-  route_operation }|--|| operation : ""
-  
-  permission }o--|| route_operation : ""
+  route }o--|{ method : ""
+  route }o--|{ operation : ""
+
+  permission }o--|| route : ""
+  permission }o--|| operation : ""
+
+  application {
+    int id PK
+    varchar name UK
+    text description
+  }
 
   role {
     int id PK
@@ -28,31 +33,11 @@ erDiagram
     varchar description
     varchar color
     boolean active
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
-  }
-
-  application {
-    int id PK
-    varchar name UK
-    text description
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
+    boolean locked
   }
 
   permission {
+    int id PK
     int roleId FK
     int routeId FK
     int operationId FK
@@ -66,14 +51,6 @@ erDiagram
     varchar name
     text pattern
     boolean locked
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   resource {
@@ -81,14 +58,6 @@ erDiagram
     int serviceId FK
     varchar name
     boolean locked
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   route {
@@ -99,50 +68,18 @@ erDiagram
     varchar description
     boolean isProtected
     boolean locked
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
-  }
-
-  route_method {
-    int routeId FK
-    int methodId FK
   }
 
   method {
     int id PK
     varchar name UK
     varchar color
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
-  }
-
-  route_operation {
-    int routeId FK
-    int operationId FK
   }
 
   operation {
     int id PK
     varchar name UK
     text description
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   field {
@@ -150,28 +87,12 @@ erDiagram
     int resourceId FK
     text name
     boolean locked
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   scope {
     int id PK
     int routeId FK
     varchar name UK
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 ```
 
@@ -183,19 +104,12 @@ caption: Entity Relationship Diagram - Consumer & Preferences
 erDiagram
 
   consumer }o--|| user : "(external)"
+  consumer }o--|{ role : "(denormalized int[])"
   preference }o--|| user : "(external)"
 
   cors {
     int id PK
     varchar name
-    boolean archived
-    timestamp archivedAt
-    int creatorId
-    text creatorName
-    int updaterId
-    text updaterName
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   consumer {
@@ -205,10 +119,6 @@ erDiagram
     varchar accessToken UK
     varchar refreshToken UK
     int[] roles "array of role IDs"
-    boolean archived
-    timestamp archivedAt
-    timestamp createdAt
-    timestamp updatedAt
   }
 
   preference {
@@ -221,6 +131,10 @@ erDiagram
   }
 
   user {
+
+  }
+
+  role {
 
   }
 ```

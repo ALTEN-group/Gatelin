@@ -12,6 +12,7 @@ import {
 } from "@dwtechs/crud-builder";
 import { Field } from "app/admin/data-access/fields/field.model";
 import { Resource } from "app/admin/data-access/resources/resource.model";
+import { Service } from "app/admin/data-access/services/service.model";
 
 export const FIELD_COLUMNS: (
   payload: ActivatedRouteSnapshot,
@@ -37,6 +38,22 @@ export const FIELD_COLUMNS: (
     options: data.resources.map((r: Resource) => ({
       label: r.name,
       value: r.name,
+    })),
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+    },
+  },
+  {
+    key: "serviceName",
+    label: "Service",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    options: data.services.map((s: Service) => ({
+      label: s.name,
+      value: s.name,
     })),
     controlOptions: {
       hidden: true,

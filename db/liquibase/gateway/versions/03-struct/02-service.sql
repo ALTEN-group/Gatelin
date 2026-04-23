@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS "service" (
 	id SERIAL PRIMARY KEY,
-  "appId" INT NULL,
+  "appId" INT NOT NULL,
   CONSTRAINT fk_service_application FOREIGN KEY ("appId") REFERENCES application(id) ON DELETE RESTRICT ON UPDATE CASCADE,
 	name varchar(20) NOT NULL,
   pattern TEXT,

@@ -4,6 +4,7 @@ export interface Scope extends ArchiveInfo {
   id: number | null;
   routeId: number | null;
   routeName: string;
+  resourceName: string;
   name: string;
 }
 
@@ -11,6 +12,7 @@ export const scopeFactory = (): Scope => ({
   id: null,
   routeId: null,
   routeName: "",
+  resourceName: "",
   name: "",
   ...new ArchiveInfo(),
 });

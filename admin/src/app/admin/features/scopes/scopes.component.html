@@ -1,15 +1,30 @@
-<p class="info-message" i18n="@@Scopes_Info">
-  Scopes allow you to restrict permissions at a finer level within a route.
-  They only need to be declared for routes where you want to grant different permissions depending on the context or data subset.
-  For example, the <strong>GET /preferences</strong> route uses scopes to control which resource's preferences a role can retrieve — a <strong>routes</strong> scope grants access to route datagrid preferences, while a <strong>roles</strong> scope grants access to role datagrid preferences. Each role is then given only the scopes it needs.
-</p>
-<tbl-table 
-    [config]="config"
-    [httpCalls]="httpCalls"
-    [entityFactory]="entityFactory"
-    [entityId]="tableInformation.key"
-    [entityLabel]="tableInformation.label"
-    [tableTitle]="tableInformation.title"
-    [customRowStyles]="tableInformation.customRowStyles"
-    [filterLevel]="tableInformation.filterLevel"
-/>
+<div class="scopes-container">
+
+  <p-select
+    [options]="applications"
+    [(ngModel)]="selectedApp"
+    (onChange)="onAppSelect()"
+    [showClear]="true"
+    optionLabel="name"
+    placeholder="Filter by application"
+    i18n-placeholder="@@Scopes_SelectApp"
+  />
+
+  <p class="info-message" i18n="@@Scopes_Info">
+    Scopes allow you to restrict permissions at a finer level within a route.
+    They only need to be declared for routes where you want to grant different permissions depending on the context or data subset.
+    For example, the <strong>GET /preferences</strong> route uses scopes to control which resource's preferences a role can retrieve — a <strong>routes</strong> scope grants access to route datagrid preferences, while a <strong>roles</strong> scope grants access to role datagrid preferences. Each role is then given only the scopes it needs.
+  </p>
+  <tbl-table
+      [config]="config"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.key"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [customRowStyles]="tableInformation.customRowStyles"
+      [filterLevel]="tableInformation.filterLevel"
+      [forceReload]="forceReload()"
+  />
+
+</div>

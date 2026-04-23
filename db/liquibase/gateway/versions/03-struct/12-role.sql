@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS role (
   description varchar(100) NULL,
   color VARCHAR(7) NULL,
   active BOOLEAN DEFAULT FALSE,
+  locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "creatorId" INT,

@@ -10,6 +10,7 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
+import { Resource } from "app/admin/data-access/resources/resource.model";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { Scope } from "app/admin/data-access/scopes/scope.model";
 
@@ -35,6 +36,22 @@ export const SCOPE_COLUMNS: (
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     options: data.routes.map((r: Route) => ({
+      label: r.name,
+      value: r.name,
+    })),
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+    },
+  },
+  {
+    key: "resourceName",
+    label: "Resource",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    options: data.resources.map((r: Resource) => ({
       label: r.name,
       value: r.name,
     })),

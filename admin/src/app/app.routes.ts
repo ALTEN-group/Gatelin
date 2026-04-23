@@ -163,6 +163,8 @@ export const ROUTES: Routes = [
     },
     resolve: {
       resources: resourcesResolver,
+      services: serviceResolver,
+      applications: gatewayApplicationsResolver,
     },
   },
   {
@@ -179,6 +181,9 @@ export const ROUTES: Routes = [
     },
     resolve: {
       routes: routesResolver,
+      resources: resourcesResolver,
+      services: serviceResolver,
+      applications: gatewayApplicationsResolver,
     },
   },
   {
