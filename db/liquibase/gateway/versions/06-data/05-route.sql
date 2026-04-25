@@ -7,7 +7,7 @@ INSERT INTO routes ("resourceId", pattern, name, description, "isProtected", loc
 
 -- sessions
 (1, '',  'refreshToken', 'Refresh a token or Sign in with a refresh token', true,  true,  ARRAY[4],    ARRAY[3],   -1, 'system'),
-(1, '',  'signIn',       'Sign in a user with email & password',             false, true,  ARRAY[6],    ARRAY[2],   -1, 'system'),
+(1, '',  'signIn',       'Sign in a user with email & password',             true, true,  ARRAY[6],    ARRAY[2],   -1, 'system'),
 (1, '',  'signOut',      'Sign out a user',                                  true,  true,  ARRAY[8],    ARRAY[5],   -1, 'system'),
 -- consumers
 (2, '/search',  'getConsumers',     'Search consumers',   true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),

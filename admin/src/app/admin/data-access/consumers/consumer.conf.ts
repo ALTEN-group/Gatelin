@@ -111,6 +111,6 @@ export const CONSUMER_COLUMNS: (
         validators: [required],
       },
     },
-    ...customArchivedConfig(),
+    ...customArchivedConfig({ archived: "80px", archivedAt: "80px" }),
   ];
 };

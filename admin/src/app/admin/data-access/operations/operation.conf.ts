@@ -1,5 +1,8 @@
 import { DomSanitizer } from "@angular/platform-browser";
-import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
+import {
+  auditConfig,
+  defaultArchivedConfig,
+} from "@core/utils/archived-config/archived-config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -45,5 +48,6 @@ export function buildOperationColumns(
       },
     },
     ...defaultArchivedConfig(),
+    ...auditConfig(),
   ];
 }

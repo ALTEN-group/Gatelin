@@ -1,5 +1,8 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
+import {
+  auditConfig,
+  defaultArchivedConfig,
+} from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -77,4 +80,5 @@ export const FIELD_COLUMNS: (
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...defaultArchivedConfig(),
+  ...auditConfig(),
 ];

@@ -86,4 +86,18 @@ export default new SQLEntity("preference", [
     normalizer: null,
     validator: null,
   },
+  {
+    key: "locked",
+    type: "boolean",
+    min: null,
+    max: null,
+    isTypeChecked: true,
+    isFilterable: true,
+    requiredFor: [],
+    operations: ["SELECT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
 ]);

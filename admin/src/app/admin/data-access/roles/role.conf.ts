@@ -1,6 +1,9 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
+import {
+  auditConfig,
+  defaultArchivedConfig,
+} from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
@@ -77,4 +80,5 @@ export const buildRoleColumns = (
     controlType: CONTROL_TYPES.CHECKBOX,
   },
   ...defaultArchivedConfig(),
+  ...auditConfig(),
 ];

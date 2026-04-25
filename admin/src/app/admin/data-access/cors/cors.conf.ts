@@ -1,4 +1,7 @@
-import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
+import {
+  auditConfig,
+  defaultArchivedConfig,
+} from "@core/utils/archived-config/archived-config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -23,4 +26,5 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
     },
   },
   ...defaultArchivedConfig(),
+  ...auditConfig(),
 ];

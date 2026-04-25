@@ -21,7 +21,7 @@ export function injectFilters(req, res, next) {
 
   req.body = {
     filters: {
-      userId: { value: userId, matchMode: "equals" },
+      userId: { value: [-1, userId], matchMode: "in" },
       resource: { value: resource, matchMode: "equals" },
     },
     sortField: "name",

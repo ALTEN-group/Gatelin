@@ -42,7 +42,9 @@ export class ScopesComponent {
   private readonly resources: Resource[] =
     this.route.snapshot.data["resources"] ?? [];
 
-  public readonly selectedApp = signal<GatewayApplication | null>(null);
+  public readonly selectedApp = signal<GatewayApplication | null>(
+    this.applications[0] ?? null,
+  );
   private readonly reloadTrigger = signal(0);
   public readonly forceReload = this.reloadTrigger.asReadonly();
 
