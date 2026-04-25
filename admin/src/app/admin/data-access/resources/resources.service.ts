@@ -8,7 +8,7 @@ import {
 } from "app/admin/data-access/resources/resource.model";
 import { Observable } from "rxjs";
 
-const resourcesEndpoint: string = "gateway/resources";
+const resourcesEndpoint: string = "resources";
 
 @Injectable({
   providedIn: "root",

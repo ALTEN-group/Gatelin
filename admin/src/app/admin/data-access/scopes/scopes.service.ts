@@ -4,7 +4,7 @@ import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { SCOPE_COLUMNS } from "app/admin/data-access/scopes/scope.conf";
 import { Scope, scopeFactory } from "app/admin/data-access/scopes/scope.model";
 
-const scopesEndpoint: string = "gateway/scopes";
+const scopesEndpoint: string = "scopes";
 
 @Injectable({
   providedIn: "root",

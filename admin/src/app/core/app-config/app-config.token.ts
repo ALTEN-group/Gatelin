@@ -7,7 +7,8 @@ export interface AppConfig {
   appKey: string;
   storageKeys: { [key: string]: string };
   sidenavItems: MenuItem[];
-  apiPrefix: string;
+  apiGateway: string;
+  apiUsers: string;
   env: Partial<Environment>;
 }
 
@@ -16,7 +17,8 @@ const defaultValue: AppConfig = {
   appKey: "",
   storageKeys: {},
   sidenavItems: [],
-  apiPrefix: "/api/",
+  apiGateway: "/api/",
+  apiUsers: "/api/users/",
   env: {},
 };
 

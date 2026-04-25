@@ -9,7 +9,7 @@ import {
 } from "app/admin/data-access/roles/role.model";
 import { Observable } from "rxjs";
 
-const rolesEndpoint: string = "gateway/roles";
+const rolesEndpoint: string = "roles";
 
 @Injectable({
   providedIn: "root",

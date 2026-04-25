@@ -8,7 +8,7 @@ import {
 } from "app/admin/data-access/operations/operation.model";
 import { Observable } from "rxjs";
 
-const operationsEndpoint: string = "gateway/operations";
+const operationsEndpoint: string = "operations";
 
 @Injectable({
   providedIn: "root",

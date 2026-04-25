@@ -11,6 +11,7 @@ import { CustomTitleStrategyService } from "@core/app-config/custom-title-strate
 import { AuthenticationService } from "@core/auth/auth.service";
 import {
   APP_FORM_CONFIG,
+  APP_CONFIG as CRUD_APP_CONFIG,
   FormTokenData,
   HistorizedData,
   HISTORY_MAPPER,
@@ -34,7 +35,8 @@ export const CONFIG: AppConfig = {
   appKey: APP_KEY,
   storageKeys: AppStorageKey,
   sidenavItems: SIDENAV,
-  apiPrefix: environment.apiGateway,
+  apiGateway: environment.apiGateway,
+  apiUsers: environment.apiUsers,
   env: environment,
 };
 
@@ -53,6 +55,15 @@ export function provideAppConfig() {
     }),
     { provide: LOCALE_ID, useValue: "fr" },
     { provide: APP_CONFIG, useValue: CONFIG },
+    {
+      provide: CRUD_APP_CONFIG,
+      useValue: {
+        title: CONFIG.title,
+        appKey: CONFIG.appKey,
+        storageKeys: CONFIG.storageKeys,
+        apiPrefix: environment.apiGateway,
+      },
+    },
     { provide: APP_FORM_CONFIG, useValue: FORM_CONFIG }, // remove if no @form
     { provide: TitleStrategy, useClass: CustomTitleStrategyService }, // remove if no custom titles
     {

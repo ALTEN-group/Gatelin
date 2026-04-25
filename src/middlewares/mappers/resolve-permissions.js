@@ -15,7 +15,7 @@ export function resolvePermissions(_req, res, next) {
   const permMap = new Map();
 
   for (const id of roleIds) {
-    const perms = roleSvc.getOne(id)?.permissions ?? [];
+    const perms = roleSvc.getOne(id)?.permissions?.values() ?? [];
     for (const p of perms) {
       if (permMap.has(p.route)) {
         const existing = permMap.get(p.route);

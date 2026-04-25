@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
@@ -6,7 +6,7 @@ import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
 import { Route, routeFactory } from "app/admin/data-access/routes/route.model";
 import { Observable } from "rxjs";
 
-const routesApi: string = "gateway/routes";
+const routesApi: string = "routes";
 
 /**
  * Service to manage gateway routes

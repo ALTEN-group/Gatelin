@@ -69,7 +69,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   const refreshToken = (err: HttpErrorResponse) => {
     const isRefreshTokenRequest =
-      req.url.includes("gateway/sessions") && req.method === "PUT";
+      req.url.includes("sessions") && req.method === "PUT";
     if (isRefreshTokenRequest) {
       return redirectToLogin(err);
     }

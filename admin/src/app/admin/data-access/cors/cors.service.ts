@@ -3,7 +3,7 @@ import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { CORS_COLUMNS } from "app/admin/data-access/cors/cors.conf";
 import { Cors, corsFactory } from "app/admin/data-access/cors/cors.model";
 
-const corsEndpoint: string = "gateway/cors";
+const corsEndpoint: string = "cors";
 
 @Injectable({
   providedIn: "root",

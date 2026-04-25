@@ -1,4 +1,4 @@
-INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
+INSERT INTO preference ("userId", resource, name, conf, "isActive", "creatorId", "creatorName") VALUES
 
 -- routes
 (3, 'routes', 'Compact', '[
@@ -22,7 +22,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",   "isVisible":false},
   {"key":"archived",      "isVisible":false},
   {"key":"archivedAt",    "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'routes', 'Archives', '[
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
@@ -44,7 +44,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",   "isVisible":false},
   {"key":"archived",      "isVisible":true},
   {"key":"archivedAt",    "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'routes', 'Audit', '[
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
@@ -66,7 +66,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",   "isVisible":true},
   {"key":"archived",      "isVisible":false},
   {"key":"archivedAt",    "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- consumers
 (3, 'consumers', 'Compact', '[
@@ -82,7 +82,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'consumers', 'Archives', '[
   {"key":"id",           "isVisible":false},
   {"key":"userId",       "isVisible":true},
@@ -96,7 +96,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":true},
   {"key":"archivedAt",   "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'consumers', 'Audit', '[
   {"key":"id",           "isVisible":false},
   {"key":"userId",       "isVisible":true},
@@ -110,7 +110,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":true},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- services
 (3, 'services', 'Compact', '[
@@ -124,7 +124,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":false},
   {"key":"archived",   "isVisible":false},
   {"key":"archivedAt", "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'services', 'Archives', '[
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
@@ -136,7 +136,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":false},
   {"key":"archived",   "isVisible":true},
   {"key":"archivedAt", "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'services', 'Audit', '[
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
@@ -148,7 +148,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":true},
   {"key":"archived",   "isVisible":false},
   {"key":"archivedAt", "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- resources
 (3, 'resources', 'Compact', '[
@@ -163,7 +163,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'resources', 'Archives', '[
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
@@ -176,7 +176,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'resources', 'Audit', '[
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
@@ -189,7 +189,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- cors
 (3, 'cors', 'Compact', '[
@@ -201,7 +201,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":false},
   {"key":"archived",   "isVisible":false},
   {"key":"archivedAt", "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'cors', 'Archives', '[
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
@@ -211,7 +211,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":false},
   {"key":"archived",   "isVisible":true},
   {"key":"archivedAt", "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'cors', 'Audit', '[
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
@@ -221,7 +221,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName","isVisible":true},
   {"key":"archived",   "isVisible":false},
   {"key":"archivedAt", "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- operations
 (3, 'operations', 'Compact', '[
@@ -234,7 +234,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'operations', 'Archives', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
@@ -245,7 +245,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'operations', 'Audit', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
@@ -256,7 +256,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- fields
 (3, 'fields', 'Compact', '[
@@ -271,7 +271,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'fields', 'Archives', '[
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
@@ -284,7 +284,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":false},
   {"key":"archived",     "isVisible":true},
   {"key":"archivedAt",   "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'fields', 'Audit', '[
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
@@ -297,7 +297,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName",  "isVisible":true},
   {"key":"archived",     "isVisible":false},
   {"key":"archivedAt",   "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- scopes
 (3, 'scopes', 'Compact', '[
@@ -311,7 +311,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'scopes', 'Archives', '[
   {"key":"id",          "isVisible":false},
   {"key":"routeId",     "isVisible":false},
@@ -323,7 +323,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'scopes', 'Audit', '[
   {"key":"id",          "isVisible":false},
   {"key":"routeId",     "isVisible":false},
@@ -335,7 +335,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', false),
+]', false, -1, 'system'),
 
 -- roles
 (3, 'roles', 'Compact', '[
@@ -350,7 +350,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', true),
+]', true, -1, 'system'),
 (3, 'roles', 'Archives', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
@@ -363,7 +363,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":false},
   {"key":"archived",    "isVisible":true},
   {"key":"archivedAt",  "isVisible":true}
-]', false),
+]', false, -1, 'system'),
 (3, 'roles', 'Audit', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
@@ -376,7 +376,7 @@ INSERT INTO preferences ("userId", resource, name, conf, "isActive") VALUES
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
-]', false)
+]', false, -1, 'system')
 
 ;
 

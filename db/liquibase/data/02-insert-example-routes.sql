@@ -6,10 +6,20 @@
 --   operations: read, list, export, update, bulk update, create, bulk create,
 --               archive, bulk archive, delete, bulk delete, bulk sync, execute
 
+-- Add the application this service belongs to (idempotent)
+INSERT INTO application (name, description, "creatorId", "creatorName") VALUES
+  ('eBoutique', 'eBoutique web & mobile app', -1, 'system')
+ON CONFLICT DO NOTHING;
+
 -- Add your own service
-INSERT INTO "service" (name, pattern, locked, "creatorId", "creatorName") VALUES
-  ('ms-product', 'products', false, -1, 'system')
-;
+INSERT INTO "service" ("appId", name, pattern, locked, "creatorId", "creatorName")
+SELECT a.id, v.name, v.pattern, v.locked, -1, 'system'
+FROM application a,
+(VALUES
+  ('ms-product', 'products', false)
+) AS v(name, pattern, locked)
+WHERE a.name = 'eBoutique'
+ON CONFLICT DO NOTHING;
 
 -- Add resources for your service
 INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VALUES

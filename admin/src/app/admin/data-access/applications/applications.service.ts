@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { buildApplicationColumns } from "app/admin/data-access/applications/application.conf";
 import {
-    GatewayApplication,
-    gatewayApplicationFactory,
+  GatewayApplication,
+  gatewayApplicationFactory,
 } from "app/admin/data-access/applications/application.model";
 import { Observable } from "rxjs";
 
-const applicationsEndpoint: string = "gateway/applications";
+const applicationsEndpoint: string = "applications";
 
 @Injectable({
   providedIn: "root",

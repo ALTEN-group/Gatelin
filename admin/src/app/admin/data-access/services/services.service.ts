@@ -8,7 +8,7 @@ import {
 } from "app/admin/data-access/services/service.model";
 import { map, Observable, shareReplay, tap } from "rxjs";
 
-const servicesApi: string = "gateway/services";
+const servicesApi: string = "services";
 
 @Injectable({
   providedIn: "root",

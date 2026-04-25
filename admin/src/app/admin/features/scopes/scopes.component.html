@@ -3,7 +3,7 @@
   <p-select
     [options]="applications"
     [(ngModel)]="selectedApp"
-    (onChange)="onAppSelect()"
+    (onChange)="onAppSelect($event.value)"
     [showClear]="true"
     optionLabel="name"
     placeholder="Filter by application"
@@ -25,6 +25,7 @@
       [customRowStyles]="tableInformation.customRowStyles"
       [filterLevel]="tableInformation.filterLevel"
       [forceReload]="forceReload()"
+      [isPreferencesModeEnabled]="true"
   />
 
 </div>

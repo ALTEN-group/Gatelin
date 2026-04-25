@@ -6,7 +6,7 @@ import { Permission } from "app/admin/data-access/permissions/permission.model";
 import { TableLazyLoadEvent } from "primeng/table";
 import { Observable } from "rxjs";
 
-const permissionsEndpoint: string = "gateway/permissions";
+const permissionsEndpoint: string = "permissions";
 
 @Injectable({
   providedIn: "root",

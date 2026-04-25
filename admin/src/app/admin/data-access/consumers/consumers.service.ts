@@ -7,7 +7,7 @@ import {
   consumerFactory,
 } from "app/admin/data-access/consumers/consumer.model";
 
-const consumersApi: string = "gateway/consumers";
+const consumersApi: string = "consumers";
 
 /**
  * Service to manage API consumers

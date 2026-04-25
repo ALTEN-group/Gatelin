@@ -8,7 +8,7 @@ import {
 } from "app/admin/data-access/methods/method.model";
 import { Observable } from "rxjs";
 
-const methodsEndpoint: string = "gateway/methods";
+const methodsEndpoint: string = "methods";
 
 @Injectable({
   providedIn: "root",

@@ -11,8 +11,8 @@ import { catchError, map, Observable, of, tap } from "rxjs";
 export class RolesService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
-  private readonly endPoint: string = `${this.apiPrefix}gateway/roles/`;
+  private readonly apiPrefix = inject(APP_CONFIG).apiGateway;
+  private readonly endPoint: string = `${this.apiPrefix}roles/`;
 
   // Roles cache
   private _roles: Role[] | null = null;

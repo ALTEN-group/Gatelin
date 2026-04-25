@@ -19,10 +19,11 @@ export class AuthenticationService {
   private readonly tokenService = inject(TokenService);
   private readonly aclService = inject(AclService);
 
-  private readonly apiPrefix = inject(APP_CONFIG).apiPrefix;
+  private readonly apiPrefix = inject(APP_CONFIG).apiGateway;
+  private readonly apiUsers = inject(APP_CONFIG).apiUsers;
 
-  private readonly sessionApi: string = `${this.apiPrefix}gateway/sessions`;
-  private readonly meApi: string = `${this.apiPrefix}users/users/me`;
+  private readonly sessionApi: string = `${this.apiPrefix}sessions`;
+  private readonly meApi: string = `${this.apiUsers}users/me`;
 
   private readonly _isAuthenticated = signal(false);
   public readonly isAuthenticated = this._isAuthenticated.asReadonly();

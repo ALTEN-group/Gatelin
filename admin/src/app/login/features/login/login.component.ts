@@ -56,7 +56,7 @@ export class LoginComponent implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly routingListener = inject(RoutingListener);
 
-  public readonly userServerUrl = inject(APP_CONFIG).apiPrefix;
+  public readonly userServerUrl = inject(APP_CONFIG).apiGateway;
 
   public isPasswordHidden = true;
   public isLoading = false;

@@ -53,7 +53,7 @@
     <sqlFile path="versions/02-func/06-field.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-07" author="lcluber">
-    <comment></comment>
+    <comment>Preference limit trigger function</comment>
     <sqlFile path="versions/02-func/07-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-08" author="lcluber">
@@ -143,10 +143,6 @@
   <changeSet id="04-view-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/04-view/04-field.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="04-view-05" author="lcluber">
-    <comment></comment>
-    <sqlFile path="versions/04-view/05-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-06" author="lcluber">
     <comment>Consumers view</comment>
