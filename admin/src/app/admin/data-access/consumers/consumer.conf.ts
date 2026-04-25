@@ -116,6 +116,19 @@ export const CONSUMER_COLUMNS: (
       labelAt: "Archivé le",
       archived: "Archivé",
       active: "Actif",
-    }),
+    }).map((col, i) =>
+      i === 0
+        ? {
+            ...col,
+            columnOptions: {
+              ...col.columnOptions,
+              customCellRenderer: (cellValue: unknown) =>
+                cellValue
+                  ? `<i class="pi pi-times red"></i>`
+                  : `<i class="pi pi-check green"></i>`,
+            },
+          }
+        : col,
+    ),
   ];
 };
