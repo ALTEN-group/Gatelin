@@ -117,8 +117,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     filterLevel: "advanced",
   },
   roles: {
-    label: $localize`:@@TableLabels_Role:Rôle`,
-    title: $localize`:@@TableLabels_Roles:Rôles`,
+    label: $localize`:@@TableLabels_Role:Role`,
+    title: $localize`:@@TableLabels_Roles:Roles`,
     key: "roles",
     functionalityKey: "roles",
     editionDialogSize: "s",
@@ -126,8 +126,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     filterLevel: "advanced",
   },
   colors: {
-    label: $localize`:@@TableLabels_Color:Couleur`,
-    title: $localize`:@@TableLabels_Colors:Couleurs`,
+    label: $localize`:@@TableLabels_Color:Color`,
+    title: $localize`:@@TableLabels_Colors:Colors`,
     key: "colors",
     functionalityKey: "colors",
     editionDialogSize: "s",

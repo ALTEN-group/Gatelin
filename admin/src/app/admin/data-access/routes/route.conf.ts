@@ -1,10 +1,10 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -188,6 +188,6 @@ export const ROUTE_COLUMNS: (
       label: "Locked",
       controlType: CONTROL_TYPES.CHECKBOX,
     },
-    ...createArchivedConfig(),
+    ...defaultArchivedConfig(),
   ];
 };

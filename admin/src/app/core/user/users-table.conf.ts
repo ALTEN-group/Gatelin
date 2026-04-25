@@ -51,7 +51,7 @@ export const USERS_TABLE_CONF: (
     key: "lastName",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
-    label: "Nom",
+    label: "Name",
     columnOptions: {},
     controlOptions: {
       width: "33.3%",
@@ -61,7 +61,7 @@ export const USERS_TABLE_CONF: (
     key: "nickname",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
-    label: "Surnom",
+    label: "Nickname",
     columnOptions: {
       isSoftHidden: true,
     },
@@ -72,7 +72,7 @@ export const USERS_TABLE_CONF: (
   {
     key: "roles" as any,
     controlType: CONTROL_TYPES.MULTISELECT,
-    label: "Rôles",
+    label: "Roles",
     options: getRolesOptions(payload.data.roles),
     columnOptions: {},
   },

@@ -1,8 +1,8 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -13,9 +13,9 @@ import {
 import { GatewayApplication } from "app/admin/data-access/applications/application.model";
 import { Service } from "app/admin/data-access/services/service.model";
 
-export const buildServiceColumns = (
-  { data }: ActivatedRouteSnapshot,
-): StrictCrudItemOptions<Service>[] => [
+export const buildServiceColumns = ({
+  data,
+}: ActivatedRouteSnapshot): StrictCrudItemOptions<Service>[] => [
   ID_CONFIG,
   {
     key: "appId",
@@ -43,7 +43,7 @@ export const buildServiceColumns = (
   },
   {
     key: "name",
-    label: $localize`:@@Services_Name:Nom`,
+    label: $localize`:@@Services_Name:Name`,
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
@@ -64,5 +64,5 @@ export const buildServiceColumns = (
     label: $localize`:@@Services_Locked:Verrouillé`,
     controlType: CONTROL_TYPES.CHECKBOX,
   },
-  ...createArchivedConfig(),
+  ...defaultArchivedConfig(),
 ];

@@ -1,7 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -47,6 +47,6 @@ export function buildMethodColumns(
         customCellRenderer: buildColorCellRenderer(sanitizer),
       },
     },
-    ...createArchivedConfig(),
+    ...defaultArchivedConfig(),
   ];
 }

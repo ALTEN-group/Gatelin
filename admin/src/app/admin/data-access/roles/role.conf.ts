@@ -1,10 +1,10 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -46,7 +46,7 @@ export const buildRoleColumns = (
   },
   {
     key: "name",
-    label: $localize`:@@Roles_Name:Nom`,
+    label: $localize`:@@Roles_Name:Name`,
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
@@ -76,5 +76,5 @@ export const buildRoleColumns = (
     label: $localize`:@@Roles_Active:Actif`,
     controlType: CONTROL_TYPES.CHECKBOX,
   },
-  ...createArchivedConfig(),
+  ...defaultArchivedConfig(),
 ];

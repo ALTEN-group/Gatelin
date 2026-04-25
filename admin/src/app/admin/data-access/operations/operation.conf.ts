@@ -1,8 +1,8 @@
 import { DomSanitizer } from "@angular/platform-browser";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -19,7 +19,7 @@ export function buildOperationColumns(
     ID_CONFIG,
     {
       key: "name",
-      label: "Nom",
+      label: "Name",
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       controlOptions: {
@@ -44,6 +44,6 @@ export function buildOperationColumns(
         customCellRenderer: buildColorCellRenderer(sanitizer),
       },
     },
-    ...createArchivedConfig(),
+    ...defaultArchivedConfig(),
   ];
 }

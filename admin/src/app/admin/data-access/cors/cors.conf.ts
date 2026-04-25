@@ -1,6 +1,6 @@
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -14,7 +14,7 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
   ID_CONFIG,
   {
     key: "name",
-    label: "Nom",
+    label: "Name",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
@@ -22,5 +22,5 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
       minWidth: "100%",
     },
   },
-  ...createArchivedConfig(),
+  ...defaultArchivedConfig(),
 ];

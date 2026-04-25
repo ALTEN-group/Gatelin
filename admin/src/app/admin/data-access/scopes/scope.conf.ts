@@ -1,8 +1,8 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -64,12 +64,12 @@ export const SCOPE_COLUMNS: (
   },
   {
     key: "name",
-    label: "Nom",
+    label: "Name",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
       validators: [required, minlength(1), maxlength(50)],
     },
   },
-  ...createArchivedConfig(),
+  ...defaultArchivedConfig(),
 ];

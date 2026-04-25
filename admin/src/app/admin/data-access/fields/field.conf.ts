@@ -1,8 +1,8 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -64,7 +64,7 @@ export const FIELD_COLUMNS: (
   },
   {
     key: "name",
-    label: "Nom",
+    label: "Name",
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
     controlOptions: {
@@ -73,8 +73,8 @@ export const FIELD_COLUMNS: (
   },
   {
     key: "locked",
-    label: "Verrouillé",
+    label: "Locked",
     controlType: CONTROL_TYPES.CHECKBOX,
   },
-  ...createArchivedConfig(),
+  ...defaultArchivedConfig(),
 ];

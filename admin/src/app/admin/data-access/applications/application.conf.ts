@@ -1,12 +1,12 @@
+import { defaultArchivedConfig } from "@core/utils/archived-config/archived-config";
 import {
-    CONTROL_TYPES,
-    createArchivedConfig,
-    ID_CONFIG,
-    INPUT_TYPES,
-    maxlength,
-    minlength,
-    required,
-    StrictCrudItemOptions,
+  CONTROL_TYPES,
+  ID_CONFIG,
+  INPUT_TYPES,
+  maxlength,
+  minlength,
+  required,
+  StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
 import { GatewayApplication } from "app/admin/data-access/applications/application.model";
 
@@ -15,7 +15,7 @@ export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplicat
     ID_CONFIG,
     {
       key: "name",
-      label: $localize`:@@Applications_Name:Nom`,
+      label: $localize`:@@Applications_Name:Name`,
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       controlOptions: {
@@ -31,6 +31,6 @@ export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplicat
         validators: [maxlength(100)],
       },
     },
-    ...createArchivedConfig(),
+    ...defaultArchivedConfig(),
   ];
 }

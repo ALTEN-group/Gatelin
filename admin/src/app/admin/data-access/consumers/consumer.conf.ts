@@ -1,8 +1,8 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
+import { customArchivedConfig } from "@core/utils/archived-config/archived-config";
 import {
   CONTROL_TYPES,
-  createArchivedConfig,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -54,7 +54,7 @@ export const CONSUMER_COLUMNS: (
     },
     {
       key: "nickname",
-      label: "Nom",
+      label: "Name",
       controlType: CONTROL_TYPES.INPUT,
       columnOptions: {
         defaultWidth: "100px",
@@ -88,7 +88,7 @@ export const CONSUMER_COLUMNS: (
     },
     {
       key: "roles",
-      label: "Rôles",
+      label: "Roles",
       controlType: CONTROL_TYPES.MULTISELECT,
       options: activeRoles.map((r) => ({
         value: r.id,
@@ -111,24 +111,6 @@ export const CONSUMER_COLUMNS: (
         validators: [required],
       },
     },
-    ...createArchivedConfig({
-      label: "Actif",
-      labelAt: "Archivé le",
-      archived: "Archivé",
-      active: "Actif",
-    }).map((col, i) =>
-      i === 0
-        ? {
-            ...col,
-            columnOptions: {
-              ...col.columnOptions,
-              customCellRenderer: (cellValue: unknown) =>
-                cellValue
-                  ? `<i class="pi pi-times red"></i>`
-                  : `<i class="pi pi-check green"></i>`,
-            },
-          }
-        : col,
-    ),
+    ...customArchivedConfig(),
   ];
 };
