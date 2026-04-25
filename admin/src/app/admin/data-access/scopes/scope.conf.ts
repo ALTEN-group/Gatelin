@@ -1,8 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
-import {
-  auditConfig,
-  defaultArchivedConfig,
-} from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -74,6 +72,6 @@ export const SCOPE_COLUMNS: (
       validators: [required, minlength(1), maxlength(50)],
     },
   },
-  ...defaultArchivedConfig(),
-  ...auditConfig(),
+  ...ARCHIVED_CONFIG,
+  ...AUDIT_CONFIG,
 ];

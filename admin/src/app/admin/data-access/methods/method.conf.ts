@@ -1,5 +1,5 @@
 import { DomSanitizer } from "@angular/platform-browser";
-import { defaultArchivedConfig } from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -47,6 +47,6 @@ export function buildMethodColumns(
         customCellRenderer: buildColorCellRenderer(sanitizer),
       },
     },
-    ...defaultArchivedConfig(),
+    ...ARCHIVED_CONFIG,
   ];
 }

@@ -1,7 +1,5 @@
-import {
-  auditConfig,
-  defaultArchivedConfig,
-} from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -25,6 +23,6 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
       minWidth: "100%",
     },
   },
-  ...defaultArchivedConfig(),
-  ...auditConfig(),
+  ...ARCHIVED_CONFIG,
+  ...AUDIT_CONFIG,
 ];

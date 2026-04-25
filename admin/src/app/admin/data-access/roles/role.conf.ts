@@ -1,9 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import {
-  auditConfig,
-  defaultArchivedConfig,
-} from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
@@ -79,6 +77,6 @@ export const buildRoleColumns = (
     label: $localize`:@@Roles_Active:Actif`,
     controlType: CONTROL_TYPES.CHECKBOX,
   },
-  ...defaultArchivedConfig(),
-  ...auditConfig(),
+  ...ARCHIVED_CONFIG,
+  ...AUDIT_CONFIG,
 ];

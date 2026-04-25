@@ -1,9 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import {
-  auditConfig,
-  defaultArchivedConfig,
-} from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { LOCKED_CONFIG } from "@core/utils/field-config/locked.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
@@ -188,7 +186,7 @@ export const ROUTE_COLUMNS: (
       controlType: CONTROL_TYPES.CHECKBOX,
     },
     LOCKED_CONFIG,
-    ...defaultArchivedConfig(),
-    ...auditConfig(),
+    ...ARCHIVED_CONFIG,
+    ...AUDIT_CONFIG,
   ];
 };
