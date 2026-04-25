@@ -9,4 +9,6 @@
     [customRowStyles]="tableInformation.customRowStyles"
     [filterLevel]="tableInformation.filterLevel"
     [isPreferencesModeEnabled]="true"
+    [isDefaultEditionDisabled]="true"
+    (rowClicked)="onRowClicked($event)"
 />

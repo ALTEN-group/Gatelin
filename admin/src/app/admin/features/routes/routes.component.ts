@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  viewChild,
+} from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
 import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import { Route } from "app/admin/data-access/routes/route.model";
 import { RoutesService } from "app/admin/data-access/routes/routes.service";
 
 /**
@@ -24,4 +30,14 @@ export class RoutesComponent {
   public readonly httpCalls = this.routesService.httpCalls;
 
   public readonly tableInformation = TABLES.routes;
+
+  public readonly table = viewChild.required(TableComponent);
+
+  public onRowClicked(row: Route): void {
+    const table = this.table();
+    table.editedEntry = { ...row };
+    table.isCreation.set(false);
+    table.isReadonly.set(row.locked);
+    table.isEntryEditionDialogDisplayed.set(true);
+  }
 }

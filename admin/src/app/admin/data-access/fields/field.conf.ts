@@ -2,7 +2,8 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import {
   auditConfig,
   defaultArchivedConfig,
-} from "@core/utils/archived-config/archived-config";
+} from "@core/utils/field-config/archived.config";
+import { LOCKED_CONFIG } from "@core/utils/field-config/locked.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -74,11 +75,7 @@ export const FIELD_COLUMNS: (
       validators: [required, minlength(1), maxlength(50)],
     },
   },
-  {
-    key: "locked",
-    label: "Locked",
-    controlType: CONTROL_TYPES.CHECKBOX,
-  },
+  LOCKED_CONFIG,
   ...defaultArchivedConfig(),
   ...auditConfig(),
 ];

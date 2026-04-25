@@ -2,7 +2,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import {
   auditConfig,
   defaultArchivedConfig,
-} from "@core/utils/archived-config/archived-config";
+} from "@core/utils/field-config/archived.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,

@@ -26,6 +26,8 @@
       [filterLevel]="tableInformation.filterLevel"
       [forceReload]="forceReload()"
       [isPreferencesModeEnabled]="true"
+      [isDefaultEditionDisabled]="true"
+      (rowClicked)="onRowClicked($event)"
   />
 
 </div>

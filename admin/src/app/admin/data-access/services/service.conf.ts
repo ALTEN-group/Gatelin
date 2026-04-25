@@ -2,7 +2,8 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import {
   auditConfig,
   defaultArchivedConfig,
-} from "@core/utils/archived-config/archived-config";
+} from "@core/utils/field-config/archived.config";
+import { LOCKED_CONFIG } from "@core/utils/field-config/locked.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -62,11 +63,7 @@ export const buildServiceColumns = ({
       validators: [minlength(1), maxlength(20)],
     },
   },
-  {
-    key: "locked",
-    label: $localize`:@@Services_Locked:Verrouillé`,
-    controlType: CONTROL_TYPES.CHECKBOX,
-  },
+  LOCKED_CONFIG,
   ...defaultArchivedConfig(),
   ...auditConfig(),
 ];

@@ -15,6 +15,7 @@ import {
   FormTokenData,
   HistorizedData,
   HISTORY_MAPPER,
+  provideCrudLabels,
 } from "@dwtechs/crud-builder";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
@@ -80,6 +81,12 @@ export function provideAppConfig() {
         };
       },
     },
+    provideCrudLabels({
+      checkbox: {
+        no: $localize`:@@Crud_Labels_Checkbox_No:No`,
+        yes: $localize`:@@Crud_Labels_Checkbox_Yes:Yes`,
+      },
+    }),
   ]);
 }
 

@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import {
   auditConfig,
   defaultArchivedConfig,
-} from "@core/utils/archived-config/archived-config";
+} from "@core/utils/field-config/archived.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,

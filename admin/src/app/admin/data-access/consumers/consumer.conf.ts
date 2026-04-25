@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
-import { customArchivedConfig } from "@core/utils/archived-config/archived-config";
+import { customArchivedConfig } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,

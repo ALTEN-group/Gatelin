@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   signal,
+  viewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -46,6 +47,16 @@ export class FieldsComponent {
   public readonly config = this.configHelper.getConfig(this.fieldsService);
   public readonly entityFactory = this.fieldsService.entityFactory;
   public readonly tableInformation = TABLES.fields;
+
+  public readonly table = viewChild.required(TableComponent);
+
+  public onRowClicked(row: Field): void {
+    const table = this.table();
+    table.editedEntry = { ...row };
+    table.isCreation.set(false);
+    table.isReadonly.set(row.locked);
+    table.isEntryEditionDialogDisplayed.set(true);
+  }
 
   public readonly httpCalls: Calls<Field> = {
     ...this.fieldsService.httpCalls,

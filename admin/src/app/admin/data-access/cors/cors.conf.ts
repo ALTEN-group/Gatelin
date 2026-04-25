@@ -1,7 +1,7 @@
 import {
   auditConfig,
   defaultArchivedConfig,
-} from "@core/utils/archived-config/archived-config";
+} from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
