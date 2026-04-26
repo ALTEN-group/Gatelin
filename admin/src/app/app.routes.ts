@@ -231,6 +231,8 @@ export const ROUTES: Routes = [
       roles: gatewayRolesResolver,
       routes: routesResolver,
       operations: operationsResolver,
+      resources: resourcesResolver,
+      services: serviceResolver,
     },
   },
   {
