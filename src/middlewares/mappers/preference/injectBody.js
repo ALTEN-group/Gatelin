@@ -25,11 +25,15 @@ export function injectBody(req, res, next) {
 
   const rows = Array.isArray(req.body.rows) ? req.body.rows : [];
 
-  req.body.rows = rows.map((row) => ({
-    ...row,
-    userId,
-    resource,
-  }));
+  // Filter out system defaults (userId === -1) so they are never upserted
+  // under the current user's account when the frontend sends them back wholesale.
+  req.body.rows = rows
+    .filter((row) => row.userId !== -1)
+    .map((row) => ({
+      ...row,
+      userId,
+      resource,
+    }));
 
   // Scope the sync operation to the current user's own preferences only.
   // Without this filter, syncArraySubstack would SELECT all rows for the resource
