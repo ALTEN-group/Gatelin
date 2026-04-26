@@ -8,12 +8,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
-import {
-  Calls,
-  ConfigHelper,
-  NO_ROWS_AND_COUNT,
-  TableComponent,
-} from "@dwtechs/crud-builder";
+import { Calls, ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
 import {
   Permission,
   permissionFactory,
@@ -22,7 +17,6 @@ import { PermissionsService } from "app/admin/data-access/permissions/permission
 import { GatewayRole } from "app/admin/data-access/roles/role.model";
 import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
-import { of } from "rxjs";
 
 @Component({
   selector: "adm-permissions",
@@ -37,22 +31,20 @@ export class PermissionsComponent {
   private readonly configHelper = inject(ConfigHelper<PermissionsService>);
   private readonly route = inject(ActivatedRoute);
 
-  /** roleId from query params or static route data, null means show select */
-  private readonly routeRoleId: number | null = (() => {
-    const qp = this.route.snapshot.queryParamMap.get("roleId");
-    if (qp) return Number(qp);
-    return (this.route.snapshot.data["roleId"] as number | undefined) ?? null;
-  })();
-
   public readonly roles: GatewayRole[] =
     this.route.snapshot.data["roles"] ?? [];
+
   public readonly selectedRole = signal<GatewayRole | null>(
-    this.roles[0] ?? null,
+    (() => {
+      const qp = this.route.snapshot.queryParamMap.get("roleId");
+      const routeRoleId = qp
+        ? Number(qp)
+        : ((this.route.snapshot.data["roleId"] as number | undefined) ?? null);
+      return this.roles.find((r) => r.id === routeRoleId) ?? null;
+    })(),
   );
 
-  public readonly roleId = computed(
-    () => this.routeRoleId ?? this.selectedRole()?.id ?? null,
-  );
+  public readonly roleId = computed(() => this.selectedRole()?.id ?? null);
 
   private readonly reloadTrigger = signal(0);
   public readonly forceReload = this.reloadTrigger.asReadonly();
@@ -60,11 +52,8 @@ export class PermissionsComponent {
   public readonly config = this.configHelper.getConfig(this.permissionsService);
 
   public readonly permHttpCalls: Calls<Permission> = {
-    get: (e: TableLazyLoadEvent) => {
-      const id = this.roleId();
-      if (id === null) return of(NO_ROWS_AND_COUNT);
-      return this.permissionsService.getByRole(id, e);
-    },
+    get: (e: TableLazyLoadEvent) =>
+      this.permissionsService.getByRole(this.roleId(), e),
     create: this.permissionsService.httpCalls.create,
     update: this.permissionsService.httpCalls.update,
     archive: this.permissionsService.httpCalls.archive,
@@ -75,7 +64,7 @@ export class PermissionsComponent {
 
   public readonly tableInformation = TABLES.permissions;
 
-  public onRoleSelect(role: GatewayRole): void {
+  public onRoleSelect(role: GatewayRole | null): void {
     this.selectedRole.set(role);
     this.reloadTrigger.update((c) => c + 1);
   }

@@ -7,6 +7,7 @@
     [showClear]="true"
     placeholder="Select a role"
     i18n-placeholder="@@Permissions_SelectRole"
+    appendTo="body"
   >
     <ng-template #item let-role>{{ role.id }} - {{ role.name }}</ng-template>
     <ng-template #selectedItem let-role>{{ role.id }} - {{ role.name }}</ng-template>

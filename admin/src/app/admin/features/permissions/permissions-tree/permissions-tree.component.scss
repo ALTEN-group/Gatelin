@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.permissions-tree-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  p-select {
+    align-self: flex-end;
+    width: 200px;
+  }
+}
+
+p-treetable {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.permissions-tree__center-col {
+  text-align: center;
+  width: 5rem;
+}
+
+.permissions-tree__label--service {
+  font-weight: 700;
+}
+
+.permissions-tree__label--resource {
+  font-weight: 500;
+}
+
+.permissions-tree__label--route {
+  font-weight: 400;
+}
+
+.permissions-tree__values {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.permissions-tree__placeholder {
+  color: var(--text-color-secondary);
+  font-style: italic;
+  padding: 1rem 0;
+}

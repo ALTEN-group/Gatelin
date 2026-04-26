@@ -1,0 +1,66 @@
+<div class="permissions-tree-container">
+
+  <p-select
+    [options]="roles"
+    [(ngModel)]="selectedRole"
+    (onChange)="onRoleSelect($event.value)"
+    [showClear]="true"
+    placeholder="Select a role"
+    i18n-placeholder="@@Permissions_SelectRole"
+    appendTo="body"
+  >
+    <ng-template #item let-role>{{ role.id }} - {{ role.name }}</ng-template>
+    <ng-template #selectedItem let-role>{{ role.id }} - {{ role.name }}</ng-template>
+  </p-select>
+
+  @if (selectedRoleId() === null) {
+    <p class="permissions-tree__placeholder" i18n="@@PermissionsTree_SelectRolePlaceholder">
+      Please select a role to view its permissions.
+    </p>
+  } @else {
+  <p-treetable
+    [value]="treeNodes()"
+    [loading]="isLoading()"
+    [scrollable]="true"
+    scrollHeight="flex"
+  >
+    <ng-template #header>
+      <tr>
+        <th i18n="@@PermissionsTree_RouteCol">Route</th>
+        <th class="permissions-tree__center-col" i18n="@@PermissionsTree_ActiveCol">Active</th>
+        <th i18n="@@PermissionsTree_FieldsCol">Fields</th>
+        <th i18n="@@PermissionsTree_ScopeCol">Scope</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-rowNode let-rowData="rowData">
+      <tr [ttRow]="rowNode">
+        <td>
+          <p-treeTableToggler [rowNode]="rowNode" />
+          <span [class]="'permissions-tree__label--' + rowData.type">{{ rowData.name }}</span>
+        </td>
+        <td class="permissions-tree__center-col">
+          @if (rowData.type === 'route') {
+            <p-checkbox
+              [ngModel]="getPerm(rowData) !== undefined"
+              [binary]="true"
+              (onChange)="onToggle(rowData, $event.checked)"
+            />
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'route') {
+            <span class="permissions-tree__values">{{ getPerm(rowData)?.fields?.join(', ') }}</span>
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'route') {
+            <span class="permissions-tree__values">{{ getPerm(rowData)?.scopes?.join(', ') }}</span>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-treetable>
+  }
+
+</div>

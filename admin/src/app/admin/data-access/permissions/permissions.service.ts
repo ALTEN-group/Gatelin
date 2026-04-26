@@ -39,4 +39,8 @@ export class PermissionsService {
       },
     });
   }
+
+  public getAll(): Observable<RowsAndCount<Permission>> {
+    return this.crud.getAll();
+  }
 }
