@@ -100,8 +100,8 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "creatorId"
 (2,  5,  ARRAY[9], NULL, -1, 'system'),  -- archiveConsumers
 (2,  6,  ARRAY[2], NULL, -1, 'system'),  -- searchRoutes
 (2,  7,  ARRAY[2], NULL, -1, 'system'),  -- getRouteHistory
-(2,  8,  ARRAY[5], ARRAY['name', 'description', 'pattern', 'methods', 'isProtected'], -1, 'system'),  -- updateRoutes
-(2,  9,  ARRAY[7], ARRAY['serviceId', 'resourceId', 'pattern', 'name', 'description', 'methods', 'isProtected'], -1, 'system'),  -- addRoutes
+(2,  8,  ARRAY[5], ARRAY['name', 'description', 'pattern', 'methods', 'protected'], -1, 'system'),  -- updateRoutes
+(2,  9,  ARRAY[7], ARRAY['serviceId', 'resourceId', 'pattern', 'name', 'description', 'methods', 'protected'], -1, 'system'),  -- addRoutes
 (2, 10,  ARRAY[9], NULL, -1, 'system'),  -- archiveRoutes
 (2, 11,  ARRAY[2], NULL, -1, 'system'),  -- searchServices
 (2, 12,  ARRAY[2], NULL, -1, 'system'),  -- getServiceHistory

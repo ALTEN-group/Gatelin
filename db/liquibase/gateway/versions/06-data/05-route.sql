@@ -3,11 +3,11 @@
 -- methodIds:  1=GET  2=POST  3=PUT   4=PATCH  5=DELETE      6=HEAD  7=OPTIONS
 -- Note: OPTIONS is handled statically by corsMiddleware before checkRoute — not stored in methodIds
 
-INSERT INTO routes ("resourceId", pattern, name, description, "isProtected", locked, operations, "methodIds", "creatorId", "creatorName") VALUES
+INSERT INTO routes ("resourceId", pattern, name, description, protected, locked, operations, "methodIds", "creatorId", "creatorName") VALUES
 
 -- sessions
 (1, '',  'refreshToken', 'Refresh a token or Sign in with a refresh token', true,  true,  ARRAY[4],    ARRAY[3],   -1, 'system'),
-(1, '',  'signIn',       'Sign in a user with email & password',             true, true,  ARRAY[6],    ARRAY[2],   -1, 'system'),
+(1, '',  'signIn',       'Sign in a user with email & password',             false, true,  ARRAY[6],    ARRAY[2],   -1, 'system'),
 (1, '',  'signOut',      'Sign out a user',                                  true,  true,  ARRAY[8],    ARRAY[5],   -1, 'system'),
 -- consumers
 (2, '/search',  'getConsumers',     'Search consumers',   true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
@@ -55,26 +55,26 @@ INSERT INTO routes ("resourceId", pattern, name, description, "isProtected", loc
 (9, '',                    'addScopes',       'Add scopes',           true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
 (9, '/archive',            'archiveScopes',   'Archive scopes',       true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
 -- roles
-(10, '/search',             'searchRoles',    'Search roles',        true, false, ARRAY[2,3], ARRAY[2],   -1, 'system'),
-(10, '/(?<id>\d+)/history', 'getRoleHistory', 'Manage role history', true, false, ARRAY[2],   ARRAY[1],   -1, 'system'),
-(10, '',                    'addRoles',       'Add roles',           true, false, ARRAY[7],   ARRAY[2],   -1, 'system'),
-(10, '',                    'updateRoles',    'Update roles',        true, false, ARRAY[5],   ARRAY[3],   -1, 'system'),
-(10, '/archive',            'archiveRoles',   'Archive roles',       true, false, ARRAY[9],   ARRAY[2],   -1, 'system'),
+(10, '/search',             'searchRoles',    'Search roles',        true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
+(10, '/(?<id>\d+)/history', 'getRoleHistory', 'Manage role history', true, true, ARRAY[2],   ARRAY[1],   -1, 'system'),
+(10, '',                    'addRoles',       'Add roles',           true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
+(10, '',                    'updateRoles',    'Update roles',        true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
+(10, '/archive',            'archiveRoles',   'Archive roles',       true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
 -- permissions
-(11, '/search',                       'searchPermissions',    'Search permissions',          true, false, ARRAY[2,3], ARRAY[2],   -1, 'system'),
-(11, '/history/route/(?<routeId>\d+)', 'getPermissionHistory', 'Get permission history by route', true, false, ARRAY[2],   ARRAY[1],   -1, 'system'),
-(11, '',                              'addPermissions',       'Add permissions',             true, false, ARRAY[7],   ARRAY[2],   -1, 'system'),
-(11, '',                              'updatePermissions',    'Update permissions',          true, false, ARRAY[5],   ARRAY[3],   -1, 'system'),
-(11, '/archive',                      'deletePermissions',    'Delete permissions',          true, false, ARRAY[9],   ARRAY[2],   -1, 'system'),
+(11, '/search',                       'searchPermissions',    'Search permissions',          true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
+(11, '/history/route/(?<routeId>\d+)', 'getPermissionHistory', 'Get permission history by route', true, true, ARRAY[2],   ARRAY[1],   -1, 'system'),
+(11, '',                              'addPermissions',       'Add permissions',             true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
+(11, '',                              'updatePermissions',    'Update permissions',          true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
+(11, '/archive',                      'deletePermissions',    'Delete permissions',          true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
 -- methods (resourceId=12)
-(12, '/search', 'searchMethods', 'Search methods', true, false, ARRAY[2,3], ARRAY[2],   -1, 'system'),
-(12, '',        'updateMethods', 'Update methods', true, false, ARRAY[5],   ARRAY[3],   -1, 'system'),
+(12, '/search', 'searchMethods', 'Search methods', true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
+(12, '',        'updateMethods', 'Update methods', true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
 -- applications (resourceId=13)
-(13, '/search',             'searchApplications',    'Search applications',          true, false, ARRAY[2,3], ARRAY[2],   -1, 'system'),
-(13, '/(?<id>\d+)/history', 'getApplicationHistory', 'Manage application history',   true, false, ARRAY[2],   ARRAY[1],   -1, 'system'),
-(13, '',                    'addApplications',       'Add applications',             true, false, ARRAY[7],   ARRAY[2],   -1, 'system'),
-(13, '',                    'updateApplications',    'Update applications',          true, false, ARRAY[5],   ARRAY[3],   -1, 'system'),
-(13, '/archive',            'archiveApplications',   'Archive applications',         true, false, ARRAY[9],   ARRAY[2],   -1, 'system'),
+(13, '/search',             'searchApplications',    'Search applications',          true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
+(13, '/(?<id>\d+)/history', 'getApplicationHistory', 'Manage application history',   true, true, ARRAY[2],   ARRAY[1],   -1, 'system'),
+(13, '',                    'addApplications',       'Add applications',             true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
+(13, '',                    'updateApplications',    'Update applications',          true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
+(13, '/archive',            'archiveApplications',   'Archive applications',         true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
 -- preferences (resourceId=14)
 (14, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  true, true, ARRAY[2],  ARRAY[1],   -1, 'system'),
 (14, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', true, true, ARRAY[12], ARRAY[3],   -1, 'system'),

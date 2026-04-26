@@ -35,7 +35,13 @@ function filterFields(item, allowed) {
   );
 }
 
-function findMatchingPermission(roles, routeId, routeOperations, req, resourceName) {
+function findMatchingPermission(
+  roles,
+  routeId,
+  routeOperations,
+  req,
+  resourceName,
+) {
   for (const id of roles) {
     const role = roleService.getOne(id);
     if (!role) continue;
@@ -46,9 +52,13 @@ function findMatchingPermission(roles, routeId, routeOperations, req, resourceNa
     if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
     if (perm.scopes) {
       // Only parse URL segments when this permission actually uses scopes
-      const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
+      const urlSegments = req.originalUrl
+        .split("?")[0]
+        .split("/")
+        .filter(Boolean);
       const resourceIndex = urlSegments.indexOf(resourceName);
-      const scopeSegment = resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+      const scopeSegment =
+        resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
       const scopeValues = scopeService.getValues(perm.scopes);
       if (!scopeValues.includes(scopeSegment)) continue;
     }
@@ -59,7 +69,7 @@ function findMatchingPermission(roles, routeId, routeOperations, req, resourceNa
 
 export default function checkAcl(req, res, next) {
   const r = res.locals.route;
-  if (!r.isProtected) return next(); // if no jwt required for this route
+  if (!r.protected) return next(); // if no jwt required for this route
 
   const c = res.locals.consumer;
   log.debug(

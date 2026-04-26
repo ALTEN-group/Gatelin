@@ -185,7 +185,7 @@ export default new SQLEntity("routes", [
     validator: null,
   },
   {
-    key: "isProtected",
+    key: "protected",
     type: "boolean",
     min: null,
     max: null,

@@ -46,7 +46,9 @@ export class PermissionsComponent {
 
   public readonly roles: GatewayRole[] =
     this.route.snapshot.data["roles"] ?? [];
-  public readonly selectedRole = signal<GatewayRole | null>(null);
+  public readonly selectedRole = signal<GatewayRole | null>(
+    this.roles[0] ?? null,
+  );
 
   public readonly roleId = computed(
     () => this.routeRoleId ?? this.selectedRole()?.id ?? null,

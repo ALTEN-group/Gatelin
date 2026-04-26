@@ -2,6 +2,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- routes
 (-1, 'routes', 'Default', '[
+  {"key":"locked",        "isVisible":true},
+  {"key":"protected",     "isVisible":true},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -14,8 +16,6 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"description",   "isVisible":true},
   {"key":"methodIds",     "isVisible":false},
   {"key":"methodNames",   "isVisible":true},
-  {"key":"isProtected",   "isVisible":true},
-  {"key":"locked",        "isVisible":true},
   {"key":"createdAt",     "isVisible":false},
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
@@ -24,6 +24,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'routes', 'Compact', '[
+  {"key":"locked",        "isVisible":false},
+  {"key":"protected",     "isVisible":true},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -36,8 +38,6 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"description",   "isVisible":false},
   {"key":"methodIds",     "isVisible":false},
   {"key":"methodNames",   "isVisible":true},
-  {"key":"isProtected",   "isVisible":true},
-  {"key":"locked",        "isVisible":false},
   {"key":"createdAt",     "isVisible":false},
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
@@ -46,6 +46,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'routes', 'Archives', '[
+  {"key":"locked",        "isVisible":false},
+  {"key":"protected",     "isVisible":true},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -58,8 +60,6 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"description",   "isVisible":false},
   {"key":"methodIds",     "isVisible":false},
   {"key":"methodNames",   "isVisible":true},
-  {"key":"isProtected",   "isVisible":true},
-  {"key":"locked",        "isVisible":false},
   {"key":"createdAt",     "isVisible":false},
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
@@ -68,6 +68,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'routes', 'Audit', '[
+  {"key":"locked",        "isVisible":false},
+  {"key":"protected",     "isVisible":false},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -80,8 +82,6 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"description",   "isVisible":false},
   {"key":"methodIds",     "isVisible":false},
   {"key":"methodNames",   "isVisible":false},
-  {"key":"isProtected",   "isVisible":false},
-  {"key":"locked",        "isVisible":false},
   {"key":"createdAt",     "isVisible":true},
   {"key":"creatorName",   "isVisible":true},
   {"key":"updatedAt",     "isVisible":true},
@@ -136,12 +136,12 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- services
 (-1, 'services', 'Default', '[
+  {"key":"locked",     "isVisible":true},
   {"key":"id",         "isVisible":false},
   {"key":"appId",      "isVisible":false},
   {"key":"appName",    "isVisible":true},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
-  {"key":"locked",     "isVisible":true},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -150,10 +150,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'services', 'Compact', '[
+  {"key":"locked",     "isVisible":false},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
-  {"key":"locked",     "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -162,10 +162,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'services', 'Archives', '[
+  {"key":"locked",     "isVisible":false},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
-  {"key":"locked",     "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -174,10 +174,10 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'services', 'Audit', '[
+  {"key":"locked",     "isVisible":false},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":false},
-  {"key":"locked",     "isVisible":false},
   {"key":"createdAt",  "isVisible":true},
   {"key":"creatorName","isVisible":true},
   {"key":"updatedAt",  "isVisible":true},
@@ -188,11 +188,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- resources
 (-1, 'resources', 'Default', '[
+  {"key":"locked",      "isVisible":true},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
-  {"key":"locked",      "isVisible":true},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
@@ -201,11 +201,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'resources', 'Compact', '[
+  {"key":"locked",      "isVisible":false},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
-  {"key":"locked",      "isVisible":false},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
@@ -214,11 +214,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'resources', 'Archives', '[
+  {"key":"locked",      "isVisible":false},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
-  {"key":"locked",      "isVisible":false},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
@@ -227,11 +227,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'resources', 'Audit', '[
+  {"key":"locked",      "isVisible":false},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
   {"key":"name",        "isVisible":true},
-  {"key":"locked",      "isVisible":false},
   {"key":"createdAt",   "isVisible":true},
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
@@ -331,12 +331,12 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- fields
 (-1, 'fields', 'Default', '[
+  {"key":"locked",       "isVisible":true},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"serviceName",  "isVisible":true},
   {"key":"name",         "isVisible":true},
-  {"key":"locked",       "isVisible":true},
   {"key":"createdAt",    "isVisible":false},
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
@@ -345,11 +345,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'fields', 'Compact', '[
+  {"key":"locked",       "isVisible":false},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
-  {"key":"locked",       "isVisible":false},
   {"key":"createdAt",    "isVisible":false},
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
@@ -358,11 +358,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Archives', '[
+  {"key":"locked",       "isVisible":false},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
-  {"key":"locked",       "isVisible":false},
   {"key":"createdAt",    "isVisible":false},
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
@@ -371,11 +371,11 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Audit', '[
+  {"key":"locked",       "isVisible":false},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
-  {"key":"locked",       "isVisible":false},
   {"key":"createdAt",    "isVisible":true},
   {"key":"creatorName",  "isVisible":true},
   {"key":"updatedAt",    "isVisible":true},

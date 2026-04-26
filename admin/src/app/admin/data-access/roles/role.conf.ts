@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import { buildActiveCellRenderer } from "@core/utils/renderers/active.renderer";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -76,6 +77,9 @@ export const buildRoleColumns = (
     key: "active",
     label: $localize`:@@Roles_Active:Actif`,
     controlType: CONTROL_TYPES.CHECKBOX,
+    columnOptions: {
+      customCellRenderer: buildActiveCellRenderer(),
+    },
   },
   ...ARCHIVED_CONFIG,
   ...AUDIT_CONFIG,

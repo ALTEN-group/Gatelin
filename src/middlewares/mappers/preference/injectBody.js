@@ -31,5 +31,13 @@ export function injectBody(req, res, next) {
     resource,
   }));
 
+  // Scope the sync operation to the current user's own preferences only.
+  // Without this filter, syncArraySubstack would SELECT all rows for the resource
+  // (including system defaults with userId=-1) and delete any not present in the payload.
+  req.body.filters = {
+    userId: { value: userId, matchMode: "equals" },
+    resource: { value: resource, matchMode: "equals" },
+  };
+
   next();
 }

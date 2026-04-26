@@ -18,7 +18,7 @@ create or replace view routes AS
   r.description,
   COALESCE(array_agg(DISTINCT rm."methodId") FILTER (WHERE rm."methodId" IS NOT NULL), ARRAY[]::int[]) as "methodIds",
   COALESCE(array_agg(DISTINCT mc.name) FILTER (WHERE mc.name IS NOT NULL), ARRAY[]::text[]) as "methodNames",
-  r."isProtected",
+  r.protected,
   r.locked,
   r.archived,
   r."updatedAt",

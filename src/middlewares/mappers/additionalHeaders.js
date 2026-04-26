@@ -2,7 +2,7 @@
 import { log } from "@dwtechs/winstan";
 
 export default function updateHeaderWithConsumer(req, res, next) {
-  if (!res.locals.route.isProtected) return next(); // if no jwt protection for this route
+  if (!res.locals.route.protected) return next(); // if no jwt protection for this route
 
   const dat = res.locals.tokens.decodedAccess;
   log.debug(

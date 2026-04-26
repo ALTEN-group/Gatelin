@@ -27,7 +27,7 @@ INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALU
 (3, 'description',   false, -1, 'system'),
 (3, 'methodIds',     true,  -1, 'system'),
 (3, 'methodNames',   false, -1, 'system'),
-(3, 'isProtected',   false, -1, 'system'),
+(3, 'protected',     false, -1, 'system'),
 (3, 'locked',        true,  -1, 'system'),
 (3, 'archived',      true,  -1, 'system'),
 (3, 'archivedAt',    true,  -1, 'system'),

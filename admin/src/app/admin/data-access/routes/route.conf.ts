@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { LOCKED_CONFIG } from "@core/utils/field-config/locked.config";
+import { PROTECTED_CONFIG } from "@core/utils/field-config/protected.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
@@ -180,11 +181,7 @@ export const ROUTE_COLUMNS: (
         }),
       },
     },
-    {
-      key: "isProtected",
-      label: "Protected",
-      controlType: CONTROL_TYPES.CHECKBOX,
-    },
+    PROTECTED_CONFIG,
     LOCKED_CONFIG,
     ...ARCHIVED_CONFIG,
     ...AUDIT_CONFIG,

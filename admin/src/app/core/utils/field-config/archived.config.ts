@@ -9,7 +9,13 @@ const activeRenderer = (v: unknown) =>
 // Default archived config with "Archived" label and check for archived, times for active
 export const ARCHIVED_CONFIG = createArchivedConfig().map((col) =>
   col.key === "archived"
-    ? { ...col, customCellRenderer: archivedRenderer }
+    ? {
+        ...col,
+        columnOptions: {
+          ...(col.columnOptions || {}),
+          customCellRenderer: archivedRenderer,
+        },
+      }
     : col,
 );
 
@@ -21,6 +27,9 @@ export const ACTIVE_CONFIG = createArchivedConfig({
   active: "Active",
 }).map((col) => ({
   ...col,
-  columnOptions: { ...(col.columnOptions || {}), defaultWidth: "80px" },
-  ...(col.key === "archived" ? { customCellRenderer: activeRenderer } : {}),
+  columnOptions: {
+    ...(col.columnOptions || {}),
+    defaultWidth: "80px",
+    ...(col.key === "archived" ? { customCellRenderer: activeRenderer } : {}),
+  },
 }));

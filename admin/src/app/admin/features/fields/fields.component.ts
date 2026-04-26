@@ -40,7 +40,9 @@ export class FieldsComponent {
   private readonly services: Service[] =
     this.route.snapshot.data["services"] ?? [];
 
-  public readonly selectedApp = signal<GatewayApplication | null>(null);
+  public readonly selectedApp = signal<GatewayApplication | null>(
+    this.applications[0] ?? null,
+  );
   private readonly reloadTrigger = signal(0);
   public readonly forceReload = this.reloadTrigger.asReadonly();
 

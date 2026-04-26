@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS route (
   pattern varchar(50) NOT NULL,
   name varchar(50) NULL,
   description varchar(100) NULL,
-  "isProtected" BOOLEAN DEFAULT FALSE,
+  protected BOOLEAN DEFAULT FALSE,
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,

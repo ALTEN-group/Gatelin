@@ -31,7 +31,8 @@ import csmerSvc from "../../services/consumer.js";
  * // req.consumer - complete consumer object from cache
  */
 export default async function checkConsumer(req, res, next) {
-  const at = res.locals.tokens.access;
+  const at = res.locals.tokens?.access;
+  if (!at) return next({ status: 401, message: "Unauthorized" });
   log.debug(() => `checkConsumer(accessToken=${at})`);
   const c = csmerSvc.getOne(at);
 

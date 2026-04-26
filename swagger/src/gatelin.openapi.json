@@ -154,7 +154,7 @@
             },
             "example": ["GET"]
           },
-          "isProtected": {
+          "protected": {
             "type": "boolean",
             "description": "Whether the route requires JWT authentication"
           },
@@ -167,7 +167,7 @@
             "description": "Whether the route is archived"
           }
         },
-        "required": ["serviceId", "resourceId", "operationId", "pattern", "name", "description", "methods", "isProtected"]
+        "required": ["serviceId", "resourceId", "operationId", "pattern", "name", "description", "methods", "protected"]
       },
       "service": {
         "type": "object",
