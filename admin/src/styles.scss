@@ -55,6 +55,10 @@ body {
     color: var(--green-500);
   }
 
+  .muted {
+    opacity: 0.2;
+  }
+
   // .red,
   .pi.red {
     color: var(--error-color);

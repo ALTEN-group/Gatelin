@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
-import { ACTIVE_CONFIG } from "@core/utils/field-config/archived.config";
+import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -111,6 +111,6 @@ export const CONSUMER_COLUMNS: (
         validators: [required],
       },
     },
-    ...ACTIVE_CONFIG,
+    ...ARCHIVED_CONFIG,
   ];
 };

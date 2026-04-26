@@ -2,8 +2,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- routes
 (-1, 'routes', 'Default', '[
-  {"key":"locked",        "isVisible":true},
-  {"key":"protected",     "isVisible":true},
+  {"key":"locked",        "isVisible":true,  "defaultWidth":"60px"},
+  {"key":"protected",     "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -24,8 +24,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'routes', 'Compact', '[
-  {"key":"locked",        "isVisible":false},
-  {"key":"protected",     "isVisible":true},
+  {"key":"locked",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"protected",     "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -46,8 +46,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'routes', 'Archives', '[
-  {"key":"locked",        "isVisible":false},
-  {"key":"protected",     "isVisible":true},
+  {"key":"locked",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"protected",     "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -68,8 +68,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",    "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'routes', 'Audit', '[
-  {"key":"locked",        "isVisible":false},
-  {"key":"protected",     "isVisible":false},
+  {"key":"locked",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"protected",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",            "isVisible":false},
   {"key":"serviceId",     "isVisible":false},
   {"key":"serviceName",   "isVisible":true},
@@ -93,8 +93,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 -- consumers
 (-1, 'consumers', 'Default', '[
   {"key":"id",           "isVisible":false},
-  {"key":"userId",       "isVisible":true},
-  {"key":"nickname",     "isVisible":true},
+  {"key":"userId",       "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"nickname",     "isVisible":true,  "defaultWidth":"100px"},
   {"key":"accessToken",  "isVisible":true, "defaultWidth":"300px"},
   {"key":"refreshToken", "isVisible":true, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
@@ -107,8 +107,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 ]', true, true, -1, 'system'),
 (-1, 'consumers', 'Compact', '[
   {"key":"id",           "isVisible":false},
-  {"key":"userId",       "isVisible":true},
-  {"key":"nickname",     "isVisible":true},
+  {"key":"userId",       "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"nickname",     "isVisible":true,  "defaultWidth":"100px"},
   {"key":"accessToken",  "isVisible":false, "defaultWidth":"300px"},
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
@@ -121,8 +121,8 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 ]', false, true, -1, 'system'),
 (-1, 'consumers', 'Archives', '[
   {"key":"id",           "isVisible":false},
-  {"key":"userId",       "isVisible":true},
-  {"key":"nickname",     "isVisible":true},
+  {"key":"userId",       "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"nickname",     "isVisible":true,  "defaultWidth":"100px"},
   {"key":"accessToken",  "isVisible":false, "defaultWidth":"300px"},
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
@@ -136,7 +136,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- services
 (-1, 'services', 'Default', '[
-  {"key":"locked",     "isVisible":true},
+  {"key":"locked",     "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",         "isVisible":false},
   {"key":"appId",      "isVisible":false},
   {"key":"appName",    "isVisible":true},
@@ -150,7 +150,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'services', 'Compact', '[
-  {"key":"locked",     "isVisible":false},
+  {"key":"locked",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
@@ -162,7 +162,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'services', 'Archives', '[
-  {"key":"locked",     "isVisible":false},
+  {"key":"locked",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
@@ -174,7 +174,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'services', 'Audit', '[
-  {"key":"locked",     "isVisible":false},
+  {"key":"locked",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",         "isVisible":false},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":false},
@@ -188,7 +188,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- resources
 (-1, 'resources', 'Default', '[
-  {"key":"locked",      "isVisible":true},
+  {"key":"locked",      "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
@@ -201,7 +201,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'resources', 'Compact', '[
-  {"key":"locked",      "isVisible":false},
+  {"key":"locked",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
@@ -214,7 +214,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'resources', 'Archives', '[
-  {"key":"locked",      "isVisible":false},
+  {"key":"locked",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
@@ -227,7 +227,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'resources', 'Audit', '[
-  {"key":"locked",      "isVisible":false},
+  {"key":"locked",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"serviceId",   "isVisible":false},
   {"key":"serviceName", "isVisible":true},
@@ -331,7 +331,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- fields
 (-1, 'fields', 'Default', '[
-  {"key":"locked",       "isVisible":true},
+  {"key":"locked",       "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -345,7 +345,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'fields', 'Compact', '[
-  {"key":"locked",       "isVisible":false},
+  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -358,7 +358,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Archives', '[
-  {"key":"locked",       "isVisible":false},
+  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -371,7 +371,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Audit', '[
-  {"key":"locked",       "isVisible":false},
+  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
