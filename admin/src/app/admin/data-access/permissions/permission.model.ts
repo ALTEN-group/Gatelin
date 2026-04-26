@@ -8,6 +8,7 @@ export interface Permission extends ArchiveInfo {
   operationId: number[] | null;
   operationName: string;
   fields: string[] | null;
+  scopes: string[] | null;
   serviceId: number | null;
   serviceName: string | null;
   resourceId: number | null;
@@ -24,6 +25,7 @@ export const permissionFactory = (
   operationId: [],
   operationName: "",
   fields: null,
+  scopes: null,
   serviceId: null,
   serviceName: null,
   resourceId: null,

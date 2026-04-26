@@ -107,6 +107,15 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
+        id: "permissions-tree",
+        label: $localize`:@@Admin_PermissionsTreeNav:Permissions Tree`,
+        routerLink: `/${AppPaths.PERMISSIONS_TREE}`,
+        icon: "pi pi-sitemap",
+        data: {
+          functionality: "permissions",
+        },
+      },
+      {
         id: "cors",
         label: $localize`:@@Admin_CorsNav:Cors`,
         routerLink: `/${AppPaths.CORS}`,
