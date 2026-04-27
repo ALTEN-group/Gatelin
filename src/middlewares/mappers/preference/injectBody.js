@@ -25,23 +25,30 @@ export function injectBody(req, res, next) {
 
   const rows = Array.isArray(req.body.rows) ? req.body.rows : [];
 
-  // Filter out system defaults (userId === -1) so they are never upserted
-  // under the current user's account when the frontend sends them back wholesale.
-  req.body.rows = rows
-    .filter((row) => row.userId !== -1)
-    .map((row) => ({
-      ...row,
-      userId,
-      resource,
-    }));
+  if (rows.length === 0) {
+    log.debug(() => `injectPreferenceBody: empty rows, skipping`);
+    return res.json({
+      rows: [],
+      sync: { inserted: 0, updated: 0, deleted: 0 },
+    });
+  }
 
-  // Scope the sync operation to the current user's own preferences only.
-  // Without this filter, syncArraySubstack would SELECT all rows for the resource
-  // (including system defaults with userId=-1) and delete any not present in the payload.
-  req.body.filters = {
-    userId: { value: userId, matchMode: "equals" },
-    resource: { value: resource, matchMode: "equals" },
-  };
+  // Include all rows (locked or not).
+  // - locked=true rows are system defaults: antity-pgsql ignores the 'locked' and 'id'
+  //   fields during INSERT (they are SELECT-only), so they will be created as user-owned
+  //   copies with the DB default locked=false.
+  // - locked=false rows are existing user preferences: they will be updated.
+  // The upsert conflict target (userId, resource, name) handles both cases safely.
+  req.body.rows = rows.map((row) => ({
+    ...row,
+    userId,
+    resource,
+  }));
+
+  // Use upsert conflict resolution: INSERT the row if (userId, resource, name) doesn't
+  // exist yet, otherwise UPDATE it. This avoids the duplicate key error that sync caused
+  // when frontend sent back system default rows with IDs not in the user's scope.
+  req.body.conflictTarget = ["userId", "resource", "name"];
 
   next();
 }

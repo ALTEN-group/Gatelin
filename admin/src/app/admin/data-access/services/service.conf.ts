@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
-import { LOCKED_CONFIG } from "@core/utils/field-config/locked.config";
+import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -61,7 +61,7 @@ export const buildServiceColumns = ({
       validators: [minlength(1), maxlength(20)],
     },
   },
-  LOCKED_CONFIG,
+  CORE_CONFIG,
   ...ARCHIVED_CONFIG,
   ...AUDIT_CONFIG,
 ];

@@ -4,7 +4,7 @@ CREATE OR REPLACE VIEW services AS
   app.name AS "appName",
   s.name,
   s.pattern,
-  s.locked,
+  s.core,
   s.archived,
   s."archivedAt",
   s."updatedAt",

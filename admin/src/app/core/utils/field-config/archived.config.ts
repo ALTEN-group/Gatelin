@@ -10,8 +10,10 @@ export const ARCHIVED_CONFIG = createArchivedConfig().map((col) =>
   col.key === "archived"
     ? {
         ...col,
+        label: "🗄️",
         columnOptions: {
           ...(col.columnOptions || {}),
+          defaultWidth: "60px",
           customCellRenderer: archivedRenderer,
         },
       }

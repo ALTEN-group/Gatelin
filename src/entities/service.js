@@ -73,7 +73,7 @@ export default new SQLEntity("services", [
     validator: null,
   },
   {
-    key: "locked",
+    key: "core",
     type: "boolean",
     min: null,
     max: null,

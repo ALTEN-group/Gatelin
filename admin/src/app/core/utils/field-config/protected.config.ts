@@ -9,6 +9,7 @@ export const PROTECTED_CONFIG: StrictCrudItemOptions<{
   controlType: CONTROL_TYPES.CHECKBOX,
   columnOptions: {
     defaultWidth: "60px",
+    filterType: CONTROL_TYPES.CHECKBOX,
     customCellRenderer: buildProtectedCellRenderer(),
   },
 };

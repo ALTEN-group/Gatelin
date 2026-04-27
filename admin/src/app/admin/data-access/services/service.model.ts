@@ -6,7 +6,7 @@ export interface Service extends ArchiveInfo {
   appName: string;
   name: string;
   pattern: string;
-  locked: boolean;
+  core: boolean;
 }
 
 export const serviceFactory = (): Service => ({
@@ -15,6 +15,6 @@ export const serviceFactory = (): Service => ({
   appName: "",
   name: "",
   pattern: "",
-  locked: false,
+  core: false,
   ...new ArchiveInfo(),
 });
