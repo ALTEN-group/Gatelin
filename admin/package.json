@@ -21,7 +21,7 @@
     "@angular/router": "21.2.8",
     "@angular/service-worker": "21.2.8",
     "@dwtechs/checkard": "3.6.0",
-    "@dwtechs/crud-builder": "file:./dwtechs-crud-builder-1.0.3.tgz",
+    "@dwtechs/crud-builder": "file:./dwtechs-crud-builder-1.0.4.tgz",
     "@dwtechs/csvx": "0.3.1",
     "@dwtechs/ctrltab": "3.0.1",
     "@lcluber/frameratjs": "1.1.0",
