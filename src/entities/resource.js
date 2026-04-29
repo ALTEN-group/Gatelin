@@ -59,7 +59,7 @@ export default new SQLEntity("resources", [
     validator: null,
   },
   {
-    key: "locked",
+    key: "core",
     type: "boolean",
     min: null,
     max: null,

@@ -145,5 +145,21 @@ export const PERMISSION_COLUMNS: (
         hidden: true,
       },
     },
+    {
+      key: "scopes",
+      label: "Scopes",
+      controlType: CONTROL_TYPES.TEXTAREA,
+      controlOptions: {
+        hidden: true,
+      },
+    },
+    {
+      key: "conditions",
+      label: "Conditions",
+      controlType: CONTROL_TYPES.TEXTAREA,
+      controlOptions: {
+        hidden: true,
+      },
+    },
   ];
 };

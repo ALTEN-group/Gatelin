@@ -12,17 +12,17 @@ INSERT INTO application (name, description, "creatorId", "creatorName") VALUES
 ON CONFLICT DO NOTHING;
 
 -- Add your own service
-INSERT INTO "service" ("appId", name, pattern, locked, "creatorId", "creatorName")
-SELECT a.id, v.name, v.pattern, v.locked, -1, 'system'
+INSERT INTO "service" ("appId", name, pattern, core, "creatorId", "creatorName")
+SELECT a.id, v.name, v.pattern, v.core, -1, 'system'
 FROM application a,
 (VALUES
   ('ms-product', 'products', false)
-) AS v(name, pattern, locked)
+) AS v(name, pattern, core)
 WHERE a.name = 'eBoutique'
 ON CONFLICT DO NOTHING;
 
 -- Add resources for your service
-INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VALUES
+INSERT INTO resource ("serviceId", name, core, "creatorId", "creatorName") VALUES
   ((SELECT id FROM "service" WHERE name='ms-product'), 'products',   false, -1, 'system'),
   ((SELECT id FROM "service" WHERE name='ms-product'), 'categories', false, -1, 'system')
 ;
@@ -34,7 +34,7 @@ INSERT INTO resource ("serviceId", name, locked, "creatorId", "creatorName") VAL
 --   12=bulk sync   13=execute
 -- method IDs from seeded data: 1=GET 2=POST 3=PUT 4=PATCH 5=DELETE 6=HEAD
 -- Note: OPTIONS is handled statically by corsMiddleware — not stored in methodIds
-INSERT INTO routes ("resourceId", pattern, name, description, protected, locked, operations, "methodIds", "creatorId", "creatorName") VALUES
+INSERT INTO routes ("resourceId", pattern, name, description, protected, core, operations, "methodIds", "creatorId", "creatorName") VALUES
   -- products resource
   ((SELECT id FROM resource WHERE name='products' AND "serviceId"=(SELECT id FROM "service" WHERE name='ms-product')),
    '/search',  'searchProducts', 'Search products',  true,  false, ARRAY[2],  ARRAY[2], -1, 'system'),

@@ -3,7 +3,7 @@
 -- methodIds:  1=GET  2=POST  3=PUT   4=PATCH  5=DELETE      6=HEAD  7=OPTIONS
 -- Note: OPTIONS is handled statically by corsMiddleware before checkRoute — not stored in methodIds
 
-INSERT INTO routes ("resourceId", pattern, name, description, protected, locked, operations, "methodIds", "creatorId", "creatorName") VALUES
+INSERT INTO routes ("resourceId", pattern, name, description, protected, core, operations, "methodIds", "creatorId", "creatorName") VALUES
 
 -- sessions
 (1, '',  'refreshToken', 'Refresh a token or Sign in with a refresh token', true,  true,  ARRAY[4],    ARRAY[3],   -1, 'system'),

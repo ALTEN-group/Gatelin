@@ -2,7 +2,7 @@
 -- resource default inserts
 --
 
-INSERT INTO resources ("serviceId", name, locked, "creatorId", "creatorName") VALUES
+INSERT INTO resources ("serviceId", name, core, "creatorId", "creatorName") VALUES
 (1, 'session', true, -1, 'system'),
 (1, 'consumers', true, -1, 'system'),
 (1, 'routes', true, -1, 'system'),

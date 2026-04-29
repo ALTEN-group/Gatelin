@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS route (
   name varchar(50) NULL,
   description varchar(100) NULL,
   protected BOOLEAN DEFAULT FALSE,
-  locked BOOLEAN DEFAULT FALSE,
+  core BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "creatorId" INT,

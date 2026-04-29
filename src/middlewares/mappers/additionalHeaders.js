@@ -14,6 +14,9 @@ export default function updateHeaderWithConsumer(req, res, next) {
     "x-consumer-id": dat.iss,
     "x-consumer-name": c.nickname,
   };
+  if (req.aclConditions?.length)
+    req.additionalHeaders["x-acl-conditions"] = JSON.stringify(req.aclConditions);
+
   log.debug(() => `updateHeaders(${JSON.stringify(req.additionalHeaders)})`);
   next();
 }

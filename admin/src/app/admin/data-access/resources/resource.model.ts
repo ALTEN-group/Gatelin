@@ -5,7 +5,7 @@ export interface Resource extends ArchiveInfo {
   serviceId: number | null;
   serviceName: string;
   name: string;
-  locked: boolean;
+  core: boolean;
 }
 
 export const resourceFactory = (): Resource => ({
@@ -13,6 +13,6 @@ export const resourceFactory = (): Resource => ({
   serviceId: null,
   serviceName: "",
   name: "",
-  locked: false,
+  core: false,
   ...new ArchiveInfo(),
 });

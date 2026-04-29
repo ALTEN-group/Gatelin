@@ -199,7 +199,7 @@ export default new SQLEntity("routes", [
     validator: null,
   },
   {
-    key: "locked",
+    key: "core",
     type: "boolean",
     min: null,
     max: null,

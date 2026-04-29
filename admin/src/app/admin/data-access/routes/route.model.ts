@@ -17,7 +17,7 @@ export interface Route extends ArchiveInfo {
   description: string;
   pattern: string;
   protected: boolean;
-  locked: boolean;
+  core: boolean;
 }
 
 /**
@@ -40,6 +40,6 @@ export const routeFactory = (): Route => ({
   description: "",
   pattern: "",
   protected: false,
-  locked: false,
+  core: false,
   ...new ArchiveInfo(),
 });

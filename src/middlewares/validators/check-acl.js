@@ -50,19 +50,29 @@ function findMatchingPermission(
     const perm = role.permissions.get(routeId);
     if (!perm) continue;
     if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
-    if (perm.scopes) {
-      // Only parse URL segments when this permission actually uses scopes
-      const urlSegments = req.originalUrl
-        .split("?")[0]
-        .split("/")
-        .filter(Boolean);
-      const resourceIndex = urlSegments.indexOf(resourceName);
-      const scopeSegment =
-        resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
-      const scopeValues = scopeService.getValues(perm.scopes);
-      if (!scopeValues.includes(scopeSegment)) continue;
+
+    let conditions = null;
+    if (isArray(perm.scopes, '!0')) {
+      const urlScopes = scopeService.getValues(perm.scopes);
+      if (isArray(urlScopes, '!0')) {
+        // Only parse URL segments when this permission actually uses URL scopes
+        const urlSegments = req.originalUrl
+          .split("?")[0]
+          .split("/")
+          .filter(Boolean);
+        const resourceIndex = urlSegments.indexOf(resourceName);
+        const scopeSegment =
+          resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+        if (!urlScopes.includes(scopeSegment)) continue;
+      }
     }
-    return perm;
+    if (isArray(perm.conditions, '!0')) {
+      conditions = perm.conditions.map((c) => {
+        const colon = c.indexOf(":");
+        return { field: c.slice(0, colon), value: c.slice(colon + 1) };
+      });
+    }
+    return { perm, conditions };
   }
   return null;
 }
@@ -81,14 +91,17 @@ export default function checkAcl(req, res, next) {
   // of the resource name (e.g. "preferences") to identify the scope segment that
   // follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
   // scopeSegment is used to match scope-restricted permissions (perm.scopes).
-  const perm = findMatchingPermission(
+  const result = findMatchingPermission(
     c.roles,
     r.id,
     r.operations,
     req,
     r.resourceName,
   );
-  if (!perm) return next({ statusCode: 403, message: "Forbidden" });
+  if (!result) return next({ statusCode: 403, message: "Forbidden" });
+
+  const { perm, conditions } = result;
+  if (conditions) req.aclConditions = conditions;
 
   const allowed = perm._fieldsSet;
 

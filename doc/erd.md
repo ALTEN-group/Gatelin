@@ -24,6 +24,7 @@ erDiagram
     int id PK
     varchar name UK
     text description
+    boolean core
   }
 
   role {
@@ -43,6 +44,7 @@ erDiagram
     int operationId FK
     text[] fields
     text[] scopes
+    text[] conditions
   }
 
   service {
@@ -50,14 +52,14 @@ erDiagram
     int appId FK
     varchar name
     text pattern
-    boolean locked
+    boolean core
   }
 
   resource {
     int id PK
     int serviceId FK
     varchar name
-    boolean locked
+    boolean core
   }
 
   route {
@@ -67,7 +69,7 @@ erDiagram
     varchar name
     varchar description
     boolean isProtected
-    boolean locked
+    boolean core
   }
 
   method {

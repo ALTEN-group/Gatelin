@@ -156,5 +156,19 @@ export default new SQLEntity("permissions", [
     normalizer: null,
     validator: null,
   },
+  {
+    key: "conditions",
+    type: "array",
+    min: null,
+    max: null,
+    isTypeChecked: false,
+    isFilterable: false,
+    requiredFor: [],
+    operations: ["SELECT", "INSERT", "UPDATE"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
 ]);
 

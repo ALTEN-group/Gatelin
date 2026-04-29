@@ -30,13 +30,18 @@ function init() {
 }
 
 /**
- * Resolves an array of scope IDs to their corresponding keyword values.
+ * Returns the scope names for an array of scope IDs.
+ * Used for URL path segment matching in ACL checks.
  *
  * @param {number[]} ids - Array of scope IDs from a permission
- * @return {string[]} Array of scope value strings
+ * @return {string[]} Array of scope name strings
  */
 function getValues(ids) {
-  return ids.map((id) => scopes.get(id)).filter(Boolean);
+  return ids.reduce((acc, id) => {
+    const name = scopes.get(id);
+    if (name) acc.push(name);
+    return acc;
+  }, []);
 }
 
 export default {

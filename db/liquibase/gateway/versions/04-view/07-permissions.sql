@@ -5,7 +5,7 @@ CREATE OR REPLACE VIEW role_cache AS
     r.archived,
     COALESCE(
       jsonb_agg(
-        jsonb_build_object('route', pp."routeId", 'operations', pp.ops, 'fields', pp.fields, 'scopes', pp.scopes)
+        jsonb_build_object('route', pp."routeId", 'operations', pp.ops, 'fields', pp.fields, 'scopes', pp.scopes, 'conditions', pp.conditions)
         ORDER BY pp."routeId"
       ) FILTER (WHERE pp."routeId" IS NOT NULL),
       '[]'::jsonb
@@ -17,7 +17,8 @@ CREATE OR REPLACE VIEW role_cache AS
       "routeId",
       array_agg("operationId" ORDER BY "operationId") AS ops,
       (array_agg(fields ORDER BY "operationId") FILTER (WHERE fields IS NOT NULL))[1] AS fields,
-      (array_agg(scopes ORDER BY "operationId") FILTER (WHERE scopes IS NOT NULL))[1] AS scopes
+      (array_agg(scopes ORDER BY "operationId") FILTER (WHERE scopes IS NOT NULL))[1] AS scopes,
+      (array_agg(conditions ORDER BY "operationId") FILTER (WHERE conditions IS NOT NULL))[1] AS conditions
     FROM permission
     GROUP BY "roleId", "routeId"
   ) pp ON pp."roleId" = r.id
@@ -37,6 +38,7 @@ CREATE OR REPLACE VIEW permissions AS
     array_agg(o.name          ORDER BY p."operationId")  AS "operationName",
     (array_agg(p.fields ORDER BY p."operationId") FILTER (WHERE p.fields IS NOT NULL))[1] AS fields,
     (array_agg(p.scopes ORDER BY p."operationId") FILTER (WHERE p.scopes IS NOT NULL))[1] AS scopes,
+    (array_agg(p.conditions ORDER BY p."operationId") FILTER (WHERE p.conditions IS NOT NULL))[1] AS conditions,
     MIN(p."creatorId")   AS "creatorId",
     MIN(p."creatorName") AS "creatorName",
     MAX(p."updaterId")   AS "updaterId",

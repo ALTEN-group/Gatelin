@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS permission (
   "operationId" INT NOT NULL,
   fields        TEXT[],
   scopes        TEXT[],
+  conditions    TEXT[],
   "creatorId"   INT,
   "creatorName" TEXT,
   "updaterId"   INT,
