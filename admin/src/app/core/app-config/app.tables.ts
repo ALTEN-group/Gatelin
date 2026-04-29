@@ -30,7 +30,11 @@ type TableInfo = {
 
 const defaultRowStyles = (row: ArchiveInfo) => {
   return {
-    opacity: row.archived ? "0.2" : (row as any).locked ? "0.5" : "1",
+    opacity: row.archived
+      ? "0.2"
+      : (row as any).locked || (row as any).core
+        ? "0.5"
+        : "1",
   };
 };
 
