@@ -158,7 +158,7 @@ export default new SQLEntity("permissions", [
   },
   {
     key: "conditions",
-    type: "array",
+    type: "object",
     min: null,
     max: null,
     isTypeChecked: false,

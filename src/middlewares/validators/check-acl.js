@@ -67,10 +67,7 @@ function findMatchingPermission(
       }
     }
     if (isArray(perm.conditions, '!0')) {
-      conditions = perm.conditions.map((c) => {
-        const colon = c.indexOf(":");
-        return { field: c.slice(0, colon), value: c.slice(colon + 1) };
-      });
+      conditions = perm.conditions;
     }
     return { perm, conditions };
   }

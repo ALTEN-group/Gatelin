@@ -44,7 +44,7 @@ erDiagram
     int operationId FK
     text[] fields
     text[] scopes
-    text[] conditions
+    json conditions
   }
 
   service {
