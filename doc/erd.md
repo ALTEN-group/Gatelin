@@ -19,6 +19,7 @@ erDiagram
 
   permission }o--|| route : ""
   permission }o--|| operation : ""
+  permission }o--o{ condition : "(conditionIds int[])"
 
   application {
     int id PK
@@ -44,7 +45,15 @@ erDiagram
     int operationId FK
     text[] fields
     text[] scopes
-    json conditions
+    int[] conditionIds
+  }
+
+  condition {
+    int id PK
+    varchar name UK
+    int fieldId FK
+    varchar op
+    text value
   }
 
   service {

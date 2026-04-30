@@ -43,6 +43,7 @@ import role from "./routes/role.js";
 import permission from "./routes/permission.js";
 import method from "./routes/method.js";
 import application from "./routes/application.js";
+import condition from "./routes/condition.js";
 
 const s = "/gateway/";
 
@@ -67,6 +68,7 @@ app.use(`${s}roles`, ...cr, role, send);
 app.use(`${s}permissions`, ...cr, permission, send);
 app.use(`${s}methods`, ...cr, method, send);
 app.use(`${s}applications`, ...cr, application, send);
+app.use(`${s}conditions`, ...cr, condition, send);
 app.use("/", ...cr, proxy);
 
 // Performance measurement ends

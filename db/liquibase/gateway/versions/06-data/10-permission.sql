@@ -102,7 +102,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 -- ============================================================
 (2,  1,  ARRAY[4], NULL, NULL, -1, 'system'),  -- refreshToken
 (2,  3,  ARRAY[8], NULL, NULL, -1, 'system'),  -- signOut
-(2,  4,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getConsumers
+(2,  4,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- getConsumers
 (2,  5,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveConsumers
 (2,  6,  ARRAY[2], NULL, NULL, -1, 'system'),  -- searchRoutes
 (2,  7,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getRouteHistory
@@ -178,8 +178,8 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (3, 31,  ARRAY[2], ARRAY['id', 'resourceId', 'name'], NULL, -1, 'system'),  -- searchFields
 (3, 36,  ARRAY[2], ARRAY['id', 'value'], NULL, -1, 'system'),  -- searchScopes
 (3, 41,  ARRAY[2], ARRAY['id', 'name', 'description', 'color'], NULL, -1, 'system'),  -- searchRoles
-(3, 63,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getPreferences
-(3, 65,  ARRAY[1], NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(3, 63,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Own preferences')], -1, 'system'),  -- getPreferences
+(3, 65,  ARRAY[1], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Own user record')],  -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- Guest (4): session routes only

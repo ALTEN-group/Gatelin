@@ -13,14 +13,23 @@ CREATE OR REPLACE VIEW role_cache AS
   FROM role r
   LEFT JOIN (
     SELECT
-      "roleId",
-      "routeId",
-      array_agg("operationId" ORDER BY "operationId") AS ops,
-      (array_agg(fields ORDER BY "operationId") FILTER (WHERE fields IS NOT NULL))[1] AS fields,
-      (array_agg(scopes ORDER BY "operationId") FILTER (WHERE scopes IS NOT NULL))[1] AS scopes,
-      (array_agg(conditions ORDER BY "operationId") FILTER (WHERE conditions IS NOT NULL))[1] AS conditions
-    FROM permission
-    GROUP BY "roleId", "routeId"
+      p."roleId",
+      p."routeId",
+      array_agg(p."operationId" ORDER BY p."operationId") AS ops,
+      (array_agg(p.fields ORDER BY p."operationId") FILTER (WHERE p.fields IS NOT NULL))[1] AS fields,
+      (array_agg(p.scopes ORDER BY p."operationId") FILTER (WHERE p.scopes IS NOT NULL))[1] AS scopes,
+      (array_agg(cond_agg.conditions ORDER BY p."operationId") FILTER (WHERE cond_agg.conditions IS NOT NULL))[1] AS conditions
+    FROM permission p
+    LEFT JOIN LATERAL (
+      SELECT jsonb_agg(
+        jsonb_build_object('field', f.name, 'op', c.op, 'value', c.value)
+        ORDER BY c.id
+      ) AS conditions
+      FROM unnest(p."conditionIds") AS cid
+      JOIN condition c ON c.id = cid
+      JOIN field f ON f.id = c."fieldId"
+    ) cond_agg ON TRUE
+    GROUP BY p."roleId", p."routeId"
   ) pp ON pp."roleId" = r.id
   GROUP BY r.id, r.archived;
 
@@ -38,7 +47,8 @@ CREATE OR REPLACE VIEW permissions AS
     array_agg(o.name          ORDER BY p."operationId")  AS "operationName",
     (array_agg(p.fields ORDER BY p."operationId") FILTER (WHERE p.fields IS NOT NULL))[1] AS fields,
     (array_agg(p.scopes ORDER BY p."operationId") FILTER (WHERE p.scopes IS NOT NULL))[1] AS scopes,
-    (array_agg(p.conditions ORDER BY p."operationId") FILTER (WHERE p.conditions IS NOT NULL))[1] AS conditions,
+    (array_agg(p."conditionIds" ORDER BY p."operationId") FILTER (WHERE p."conditionIds" IS NOT NULL))[1] AS "conditionIds",
+    (array_agg(cond_agg.conditions ORDER BY p."operationId") FILTER (WHERE cond_agg.conditions IS NOT NULL))[1] AS conditions,
     MIN(p."creatorId")   AS "creatorId",
     MIN(p."creatorName") AS "creatorName",
     MAX(p."updaterId")   AS "updaterId",
@@ -46,6 +56,15 @@ CREATE OR REPLACE VIEW permissions AS
     MIN(p."createdAt")   AS "createdAt",
     MAX(p."updatedAt")   AS "updatedAt"
   FROM permission p
+  LEFT JOIN LATERAL (
+    SELECT jsonb_agg(
+      jsonb_build_object('field', f.name, 'op', c.op, 'value', c.value)
+      ORDER BY c.id
+    ) AS conditions
+    FROM unnest(p."conditionIds") AS cid
+    JOIN condition c ON c.id = cid
+    JOIN field f ON f.id = c."fieldId"
+  ) cond_agg ON TRUE
   LEFT JOIN route     rt  ON rt.id  = p."routeId"
   LEFT JOIN resource  res ON res.id = rt."resourceId"
   LEFT JOIN service   svc ON svc.id = res."serviceId"

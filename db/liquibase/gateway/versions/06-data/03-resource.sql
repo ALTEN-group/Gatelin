@@ -16,6 +16,7 @@ INSERT INTO resources ("serviceId", name, core, "creatorId", "creatorName") VALU
 (1, 'permissions', true, -1, 'system'),
 (1, 'methods', true, -1, 'system'),
 (1, 'applications', true, -1, 'system'),
+(1, 'conditions', true, -1, 'system'),
 (1, 'preferences', true, -1, 'system'),
 (2, 'users', true, -1, 'system')
 ;

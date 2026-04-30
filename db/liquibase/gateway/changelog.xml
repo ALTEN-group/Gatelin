@@ -126,6 +126,10 @@
     <comment>Method lookup table</comment>
     <sqlFile path="versions/03-struct/13-method.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="03-struct-14" author="lcluber">
+    <comment>Condition table with FK to field</comment>
+    <sqlFile path="versions/03-struct/14-condition.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- views -->
   <changeSet id="04-view-01" author="lcluber">
@@ -210,10 +214,6 @@
   </changeSet>
 
   <!-- data -->
-  <changeSet id="06-data-10" author="lcluber">
-    <comment>Default application data</comment>
-    <sqlFile path="versions/06-data/10-application.sql" splitStatements="false"/>
-  </changeSet>
   <changeSet id="06-data-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/01-service.sql" splitStatements="false"/>
@@ -247,12 +247,20 @@
     <sqlFile path="versions/06-data/08-scope.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-09" author="lcluber">
-    <comment>Insert default permission data</comment>
-    <sqlFile path="versions/06-data/09-permission.sql" splitStatements="false"/>
+    <comment>Insert default condition data</comment>
+    <sqlFile path="versions/06-data/09-condition.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-11" author="lcluber">
+  <changeSet id="06-data-10-permission" author="lcluber">
+    <comment>Insert default permission data</comment>
+    <sqlFile path="versions/06-data/10-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-11-application" author="lcluber">
+    <comment>Default application data</comment>
+    <sqlFile path="versions/06-data/11-application.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-12" author="lcluber">
     <comment>Default role data</comment>
-    <sqlFile path="versions/06-data/11-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/12-role.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS permission (
   "operationId" INT NOT NULL,
   fields        TEXT[],
   scopes        TEXT[],
-  conditions    JSON,
+  "conditionIds" INT[],
   "creatorId"   INT,
   "creatorName" TEXT,
   "updaterId"   INT,

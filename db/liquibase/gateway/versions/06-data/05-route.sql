@@ -75,11 +75,17 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, o
 (13, '',                    'addApplications',       'Add applications',             true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
 (13, '',                    'updateApplications',    'Update applications',          true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
 (13, '/archive',            'archiveApplications',   'Archive applications',         true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
--- preferences (resourceId=14)
-(14, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  true, true, ARRAY[2],  ARRAY[1],   -1, 'system'),
-(14, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', true, true, ARRAY[12], ARRAY[3],   -1, 'system'),
--- users (resourceId=15)
-(15, '/me', 'getBasicUserInfo', 'Get authenticated user basic info for the admin', true, true, ARRAY[1], ARRAY[1],   -1, 'system')
+-- conditions (resourceId=14)
+(14, '/search',             'searchConditions',    'Search conditions',        true, true, ARRAY[2,3], ARRAY[2],   -1, 'system'),
+(14, '/(?<id>\d+)/history', 'getConditionHistory', 'Manage condition history', true, true, ARRAY[2],   ARRAY[1],   -1, 'system'),
+(14, '',                    'updateConditions',    'Update conditions',        true, true, ARRAY[5],   ARRAY[3],   -1, 'system'),
+(14, '',                    'addConditions',       'Add conditions',           true, true, ARRAY[7],   ARRAY[2],   -1, 'system'),
+(14, '/archive',            'archiveConditions',   'Archive conditions',       true, true, ARRAY[9],   ARRAY[2],   -1, 'system'),
+-- preferences (resourceId=15)
+(15, '/(?<resource>[\w\-]+)', 'getPreferences',  'Get preferences for the authenticated consumer',  true, true, ARRAY[2],  ARRAY[1],   -1, 'system'),
+(15, '/(?<resource>[\w\-]+)', 'syncPreferences', 'Sync preferences for the authenticated consumer', true, true, ARRAY[12], ARRAY[3],   -1, 'system'),
+-- users (resourceId=16)
+(16, '/me', 'getBasicUserInfo', 'Get authenticated user basic info for the admin', true, true, ARRAY[1], ARRAY[1],   -1, 'system')
 ;
 
 ANALYZE;

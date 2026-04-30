@@ -1,6 +1,7 @@
 -- Resource IDs:
 --  1=session, 2=consumers, 3=routes, 4=services, 5=resources
---  6=operations, 7=cors, 8=fields, 9=scopes, 10=roles, 11=permissions, 12=preferences, 13=users
+--  6=operations, 7=cors, 8=fields, 9=scopes, 10=roles, 11=permissions
+--  12=methods, 13=applications, 14=conditions, 15=preferences, 16=users
 
 INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALUES
 
@@ -85,7 +86,20 @@ INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALU
 (10, 'createdAt',   true,  -1, 'system'),
 (10, 'creatorName', true,  -1, 'system'),
 (10, 'updatedAt',   true,  -1, 'system'),
-(10, 'updaterName', true,  -1, 'system')
+(10, 'updaterName', true,  -1, 'system'),
+
+-- preferences (resourceId=15)
+(15, 'id',          true,  -1, 'system'),
+(15, 'consumerId',  true,  -1, 'system'),
+(15, 'resource',    false, -1, 'system'),
+(15, 'name',        false, -1, 'system'),
+(15, 'conf',        false, -1, 'system'),
+(15, 'isActive',    false, -1, 'system'),
+
+-- users (resourceId=16)
+(16, 'id',       true,  -1, 'system'),
+(16, 'email',    false, -1, 'system'),
+(16, 'username', false, -1, 'system')
 
 ;
 
