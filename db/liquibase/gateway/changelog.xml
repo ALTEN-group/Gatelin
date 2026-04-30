@@ -8,7 +8,7 @@
   <!-- history -->
   <changeSet id="01-hist-01" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/01-hist/01-struct.sql"/>
+    <sqlFile path="versions/01-hist/01-struct.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="01-hist-02" author="lcluber">
     <comment></comment>
@@ -78,17 +78,13 @@
     <comment></comment>
     <sqlFile path="versions/03-struct/01-cors.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="03-struct-11" author="lcluber">
-    <comment>Application table</comment>
-    <sqlFile path="versions/03-struct/11-application.sql" splitStatements="false"/>
-  </changeSet>
   <changeSet id="03-struct-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/02-service.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/02-consumer.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-03" author="lcluber">
-    <comment></comment>
-    <sqlFile path="versions/03-struct/03-resource.sql" splitStatements="false"/>
+    <comment>Application table</comment>
+    <sqlFile path="versions/03-struct/03-application.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-04" author="lcluber">
     <comment></comment>
@@ -96,27 +92,31 @@
   </changeSet>
   <changeSet id="03-struct-05" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/05-route.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/05-service.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-06" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/06-consumer.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/06-resource.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-07" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/07-preference.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/07-route.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-08" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/08-field.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/08-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-09" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/03-struct/09-scope.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/09-field.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-10" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/10-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-11" author="lcluber">
     <comment>Permission table with FKs to route and operation</comment>
-    <sqlFile path="versions/03-struct/10-permission.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/11-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-12" author="lcluber">
     <comment>Role table with FK to application</comment>
@@ -214,49 +214,49 @@
   </changeSet>
 
   <!-- data -->
+  <changeSet id="06-data-11-application" author="lcluber">
+    <comment>Default application data</comment>
+    <sqlFile path="versions/06-data/01-application.sql" splitStatements="false"/>
+  </changeSet>
   <changeSet id="06-data-01" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/01-service.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/02-service.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/02-operation.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/03-operation.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-03" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/03-resource.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/04-resource.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-04" author="lcluber">
     <comment>Default method color data</comment>
-    <sqlFile path="versions/06-data/04-method.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/05-method.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-05" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/05-route.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/06-route.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-06" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/06-preference.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/07-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-07" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/07-field.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/08-field.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-08" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/06-data/08-scope.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/09-scope.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-09" author="lcluber">
     <comment>Insert default condition data</comment>
-    <sqlFile path="versions/06-data/09-condition.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/10-condition.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-10-permission" author="lcluber">
     <comment>Insert default permission data</comment>
-    <sqlFile path="versions/06-data/10-permission.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="06-data-11-application" author="lcluber">
-    <comment>Default application data</comment>
-    <sqlFile path="versions/06-data/11-application.sql" splitStatements="false"/>
+    <sqlFile path="versions/06-data/11-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-12" author="lcluber">
     <comment>Default role data</comment>

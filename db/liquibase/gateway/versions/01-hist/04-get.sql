@@ -11,17 +11,17 @@ CREATE OR REPLACE FUNCTION get_history(
   tstamp TIMESTAMP,
   "consumerId" INT,
   "consumerName" TEXT
-) AS '
+) AS $$
 BEGIN
   RETURN QUERY
-  SELECT DISTINCT ON (CAST(record->>''id'' AS INT), lh.operation) 
-    CAST(record->>''id'' AS INT) AS id,
+  SELECT DISTINCT ON (CAST(record->>'id' AS INT), lh.operation) 
+    CAST(record->>'id' AS INT) AS id,
     lh.operation,
     lh.tstamp,
     lh."consumerId",
     lh."consumerName"
   FROM log.history lh
   WHERE (lh."schemaName", lh."tableName") = (p_schema_name, p_table_name)
-  ORDER BY CAST(record->>''id'' AS INT), lh.operation, lh.tstamp DESC;
+  ORDER BY CAST(record->>'id' AS INT), lh.operation, lh.tstamp DESC;
 END;
-' LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
