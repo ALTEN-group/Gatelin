@@ -21,10 +21,7 @@ export class MethodsService {
 
   public readonly httpCalls: Calls<Method> = {
     get: this.crud.get,
-    create: this.crud.create,
     update: this.crud.update,
-    archive: this.crud.archive,
-    restore: this.crud.restore,
   };
 
   public readonly config = buildMethodColumns(this.sanitizer);

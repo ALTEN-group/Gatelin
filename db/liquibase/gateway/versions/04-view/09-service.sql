@@ -3,6 +3,7 @@ CREATE OR REPLACE VIEW services AS
   s."appId",
   app.name AS "appName",
   s.name,
+  s.description,
   s.pattern,
   s.core,
   s.archived,

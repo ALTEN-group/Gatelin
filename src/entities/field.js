@@ -73,7 +73,7 @@ export default new SQLEntity("fields", [
     validator: null,
   },
   {
-    key: "locked",
+    key: "core",
     type: "boolean",
     min: null,
     max: null,

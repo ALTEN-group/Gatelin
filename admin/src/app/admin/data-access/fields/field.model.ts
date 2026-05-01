@@ -6,7 +6,7 @@ export interface Field extends ArchiveInfo {
   resourceName: string;
   serviceName: string;
   name: string;
-  locked: boolean;
+  core: boolean;
 }
 
 export const fieldFactory = (): Field => ({
@@ -15,6 +15,6 @@ export const fieldFactory = (): Field => ({
   resourceName: "",
   serviceName: "",
   name: "",
-  locked: false,
+  core: false,
   ...new ArchiveInfo(),
 });

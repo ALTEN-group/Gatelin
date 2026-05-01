@@ -1,4 +1,4 @@
-INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALUES
+INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   -- consumers (2)
   (2,  'id',           true,  -1, 'system'),
   (2,  'userId',       true,  -1, 'system'),
@@ -22,14 +22,14 @@ INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALU
   (3,  'methodIds',     true,  -1, 'system'),
   (3,  'methodNames',   false, -1, 'system'),
   (3,  'protected',     false, -1, 'system'),
-  (3,  'locked',        true,  -1, 'system'),
+  (3,  'core',          true,  -1, 'system'),
   (3,  'archived',      true,  -1, 'system'),
   (3,  'archivedAt',    true,  -1, 'system'),
   -- services (4)
   (4,  'id',         true,  -1, 'system'),
   (4,  'name',       false, -1, 'system'),
   (4,  'pattern',    false, -1, 'system'),
-  (4,  'locked',     true,  -1, 'system'),
+  (4,  'core',       true,  -1, 'system'),
   (4,  'archived',   true,  -1, 'system'),
   (4,  'archivedAt', true,  -1, 'system'),
   -- resources (5)
@@ -37,7 +37,7 @@ INSERT INTO fields ("resourceId", name, locked, "creatorId", "creatorName") VALU
   (5,  'serviceId',   true,  -1, 'system'),
   (5,  'serviceName', true,  -1, 'system'),
   (5,  'name',        false, -1, 'system'),
-  (5,  'locked',      true,  -1, 'system'),
+  (5,  'core',        true,  -1, 'system'),
   (5,  'archived',    true,  -1, 'system'),
   (5,  'archivedAt',  true,  -1, 'system'),
   -- operations (6)

@@ -56,7 +56,7 @@ export class FieldsComponent {
     const table = this.table();
     table.editedEntry = { ...row };
     table.isCreation.set(false);
-    table.isReadonly.set(row.locked);
+    table.isReadonly.set(row.core);
     table.isEntryEditionDialogDisplayed.set(true);
   }
 

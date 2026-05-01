@@ -4,11 +4,13 @@
 CREATE OR REPLACE FUNCTION iud_service() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO service ("appId", name, pattern, "creatorId", "creatorName")
+      INSERT INTO service ("appId", name, description, pattern, core, "creatorId", "creatorName")
       VALUES (
         NEW."appId",
         NEW.name,
+        NEW.description,
         NEW.pattern,
+        COALESCE(NEW.core, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -20,6 +22,7 @@ CREATE OR REPLACE FUNCTION iud_service() RETURNS trigger AS $$
       SET
         "appId" = COALESCE(NEW."appId", "appId"),
         name = COALESCE(NEW.name, name),
+        description = COALESCE(NEW.description, description),
         pattern = COALESCE(NEW.pattern, pattern),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",

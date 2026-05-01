@@ -4,6 +4,7 @@ import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
 import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
+import { fieldsResolver } from "app/admin/data-access/fields/fields.resolver";
 import { methodsResolver } from "app/admin/data-access/methods/methods.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
@@ -29,6 +30,7 @@ export const AppPaths = {
   PERMISSIONS: "permissions",
   PERMISSIONS_TREE: "permissions-tree",
   APPLICATIONS: "applications",
+  CONDITIONS: "conditions",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
 } as const;
@@ -214,6 +216,22 @@ export const ROUTES: Routes = [
     data: {
       breadcrumb: $localize`:@@Admin_ApplicationsNav:Applications`,
       functionality: "applications",
+    },
+  },
+  {
+    path: AppPaths.CONDITIONS,
+    loadComponent: () =>
+      import("./admin/features/conditions/conditions.component").then(
+        (m) => m.ConditionsComponent,
+      ),
+    title: "Conditions",
+    canActivate: [aclGuard()],
+    data: {
+      breadcrumb: $localize`:@@Admin_ConditionsNav:Conditions`,
+      functionality: "conditions",
+    },
+    resolve: {
+      fields: fieldsResolver,
     },
   },
   {

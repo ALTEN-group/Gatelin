@@ -65,21 +65,27 @@ export const BASE_ACLS: AclsMapping = {
   },
   permissions: {
     get: 46, // searchPermissions
-    create: 47, // addPermissions
-    update: 48, // updatePermissions
-    archive: 49, // deletePermissions
+    getHistory: 47, // getPermissionHistory
+    create: 48, // addPermissions
+    update: 49, // updatePermissions
+    archive: 50, // deletePermissions
   },
   methods: {
-    get: 52, // searchMethods
-    create: 53, // addMethods
-    update: 54, // updateMethods
-    archive: 55, // archiveMethods
+    get: 51, // searchMethods
+    update: 52, // updateMethods
   },
   applications: {
-    get: 56, // searchApplications
-    getHistory: 57, // getApplicationHistory
-    create: 58, // addApplications
-    update: 59, // updateApplications
-    archive: 60, // archiveApplications
+    get: 53, // searchApplications
+    getHistory: 54, // getApplicationHistory
+    create: 55, // addApplications
+    update: 56, // updateApplications
+    archive: 57, // archiveApplications
+  },
+  conditions: {
+    get: 58, // searchConditions
+    getHistory: 59, // getConditionHistory
+    update: 60, // updateConditions
+    create: 61, // addConditions
+    archive: 62, // archiveConditions
   },
 };

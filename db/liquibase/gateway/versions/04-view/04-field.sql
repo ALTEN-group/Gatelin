@@ -5,7 +5,7 @@ CREATE OR REPLACE VIEW fields AS
     r.name AS "resourceName",
     s.name AS "serviceName",
     f.name,
-    f.locked,
+    f.core,
     f.archived,
     f."archivedAt",
     f."updatedAt",

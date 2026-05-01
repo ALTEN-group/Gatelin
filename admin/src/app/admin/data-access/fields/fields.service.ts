@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { FIELD_COLUMNS } from "app/admin/data-access/fields/field.conf";
 import { Field, fieldFactory } from "app/admin/data-access/fields/field.model";
+import { Observable } from "rxjs";
 
 const fieldsEndpoint: string = "fields";
 
@@ -26,4 +27,8 @@ export class FieldsService {
   public readonly config = (payload: ActivatedRouteSnapshot) =>
     FIELD_COLUMNS(payload);
   public readonly entityFactory = fieldFactory;
+
+  public getAndCacheAll(): Observable<Field[]> {
+    return this.crud.getAndCacheAll();
+  }
 }

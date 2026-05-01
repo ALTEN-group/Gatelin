@@ -4,10 +4,12 @@
 CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO resource ("serviceId", name, "creatorId", "creatorName")
+      INSERT INTO resource ("serviceId", name, description, core, "creatorId", "creatorName")
       VALUES (
         NEW."serviceId",
         NEW.name,
+        NEW.description,
+        COALESCE(NEW.core, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -19,6 +21,7 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS $$
       SET
         "serviceId" = COALESCE(NEW."serviceId", "serviceId"),
         name = COALESCE(NEW.name, name),
+        description = COALESCE(NEW.description, description),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()

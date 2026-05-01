@@ -3,6 +3,7 @@ create or replace view resources AS
   r."serviceId",
   s.name as "serviceName",
   r.name,
+  r.description,
   r.core,
   r.archived,
   r."updatedAt",

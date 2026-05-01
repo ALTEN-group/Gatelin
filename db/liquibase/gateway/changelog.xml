@@ -72,6 +72,10 @@
     <comment>Service iud trigger function</comment>
     <sqlFile path="versions/02-func/11-service.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="02-func-12" author="lcluber">
+    <comment>Condition iud trigger function</comment>
+    <sqlFile path="versions/02-func/12-condition.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- structures -->
   <changeSet id="03-struct-01" author="lcluber">
@@ -164,6 +168,10 @@
     <comment>Services view with application name</comment>
     <sqlFile path="versions/04-view/09-service.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="04-view-10" author="lcluber">
+    <comment>Conditions view with field name</comment>
+    <sqlFile path="versions/04-view/10-condition.sql" splitStatements="false"/>
+  </changeSet>
   <changeSet id="05-trig-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/05-trig/01-route.sql" splitStatements="false"/>
@@ -212,49 +220,53 @@
     <comment>Method triggers: restrict updates to color only and history logging</comment>
     <sqlFile path="versions/05-trig/12-method.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="05-trig-13" author="lcluber">
+    <comment>Condition triggers: iud on view and history logging</comment>
+    <sqlFile path="versions/05-trig/13-condition.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- data -->
-  <changeSet id="06-data-11-application" author="lcluber">
+  <changeSet id="06-data-01" author="lcluber">
     <comment>Default application data</comment>
     <sqlFile path="versions/06-data/01-application.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-01" author="lcluber">
+  <changeSet id="06-data-02" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/02-service.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-02" author="lcluber">
+  <changeSet id="06-data-03" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/03-operation.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-03" author="lcluber">
+  <changeSet id="06-data-04" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/04-resource.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-04" author="lcluber">
+  <changeSet id="06-data-05" author="lcluber">
     <comment>Default method color data</comment>
     <sqlFile path="versions/06-data/05-method.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-05" author="lcluber">
+  <changeSet id="06-data-06" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/06-route.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-06" author="lcluber">
+  <changeSet id="06-data-07" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/07-preference.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-07" author="lcluber">
+  <changeSet id="06-data-08" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/08-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-08" author="lcluber">
+  <changeSet id="06-data-09" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/06-data/09-scope.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-09" author="lcluber">
+  <changeSet id="06-data-10" author="lcluber">
     <comment>Insert default condition data</comment>
     <sqlFile path="versions/06-data/10-condition.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-10-permission" author="lcluber">
+  <changeSet id="06-data-11" author="lcluber">
     <comment>Insert default permission data</comment>
     <sqlFile path="versions/06-data/11-permission.sql" splitStatements="false"/>
   </changeSet>

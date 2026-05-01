@@ -331,7 +331,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- fields
 (-1, 'fields', 'Default', '[
-  {"key":"locked",       "isVisible":true,  "defaultWidth":"60px"},
+  {"key":"core",         "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -345,7 +345,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'fields', 'Compact', '[
-  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
+  {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -358,7 +358,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Archives', '[
-  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
+  {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -371,7 +371,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",   "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'fields', 'Audit', '[
-  {"key":"locked",       "isVisible":false, "defaultWidth":"60px"},
+  {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
@@ -489,6 +489,64 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"updaterName", "isVisible":true},
   {"key":"archived",    "isVisible":false},
   {"key":"archivedAt",  "isVisible":false}
+]', false, true, -1, 'system'),
+
+-- conditions
+(-1, 'conditions', 'Default', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"fieldId",    "isVisible":false},
+  {"key":"fieldName",  "isVisible":true},
+  {"key":"op",         "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"value",      "isVisible":true},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
+]', true, true, -1, 'system'),
+(-1, 'conditions', 'Compact', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"fieldId",    "isVisible":false},
+  {"key":"fieldName",  "isVisible":true},
+  {"key":"op",         "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"value",      "isVisible":true},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
+]', false, true, -1, 'system'),
+(-1, 'conditions', 'Archives', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"fieldId",    "isVisible":false},
+  {"key":"fieldName",  "isVisible":true},
+  {"key":"op",         "isVisible":true,  "defaultWidth":"80px"},
+  {"key":"value",      "isVisible":true},
+  {"key":"createdAt",  "isVisible":false},
+  {"key":"creatorName","isVisible":false},
+  {"key":"updatedAt",  "isVisible":false},
+  {"key":"updaterName","isVisible":false},
+  {"key":"archived",   "isVisible":true},
+  {"key":"archivedAt", "isVisible":true}
+]', false, true, -1, 'system'),
+(-1, 'conditions', 'Audit', '[
+  {"key":"id",         "isVisible":false},
+  {"key":"name",       "isVisible":true},
+  {"key":"fieldId",    "isVisible":false},
+  {"key":"fieldName",  "isVisible":true},
+  {"key":"op",         "isVisible":false},
+  {"key":"value",      "isVisible":false},
+  {"key":"createdAt",  "isVisible":true},
+  {"key":"creatorName","isVisible":true},
+  {"key":"updatedAt",  "isVisible":true},
+  {"key":"updaterName","isVisible":true},
+  {"key":"archived",   "isVisible":false},
+  {"key":"archivedAt", "isVisible":false}
 ]', false, true, -1, 'system')
 
 ;

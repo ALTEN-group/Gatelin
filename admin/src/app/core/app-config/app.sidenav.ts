@@ -116,6 +116,15 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
+        id: "conditions",
+        label: $localize`:@@Admin_ConditionsNav:Conditions`,
+        routerLink: `/${AppPaths.CONDITIONS}`,
+        icon: "pi pi-filter-slash",
+        data: {
+          functionality: "conditions",
+        },
+      },
+      {
         id: "cors",
         label: $localize`:@@Admin_CorsNav:Cors`,
         routerLink: `/${AppPaths.CORS}`,

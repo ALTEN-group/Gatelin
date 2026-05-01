@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS condition (
   name          VARCHAR(100) NOT NULL UNIQUE,
   "fieldId"     INT NOT NULL,
   op            VARCHAR(10)  NOT NULL,
+  CONSTRAINT chk_condition_op CHECK (op IN ('=', '!=', '<', '>', '<=', '>=')),
   value         TEXT         NOT NULL,
   CONSTRAINT fk_condition_field
     FOREIGN KEY ("fieldId") REFERENCES field (id)

@@ -4,10 +4,11 @@
 CREATE OR REPLACE FUNCTION iud_field() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO field ("resourceId", name, "creatorId", "creatorName")
+      INSERT INTO field ("resourceId", name, core, "creatorId", "creatorName")
       VALUES (
         NEW."resourceId",
         NEW.name,
+        COALESCE(NEW.core, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )

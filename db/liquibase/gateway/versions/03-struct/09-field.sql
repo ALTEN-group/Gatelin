@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS field (
   id           SERIAL PRIMARY KEY,
   "resourceId" INT  NOT NULL,
   name         TEXT NOT NULL,
-  locked       BOOLEAN DEFAULT FALSE,
+  core         BOOLEAN DEFAULT FALSE,
   archived     BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "creatorId"  INT,
