@@ -5,13 +5,14 @@
 CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO route ("resourceId", name, description, pattern, protected, "creatorId", "creatorName")
+      INSERT INTO route ("resourceId", name, description, pattern, protected, core, "creatorId", "creatorName")
       VALUES (
         NEW."resourceId",
         NEW.name,
         NEW.description,
         NEW.pattern,
         NEW.protected,
+        COALESCE(NEW.core, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )

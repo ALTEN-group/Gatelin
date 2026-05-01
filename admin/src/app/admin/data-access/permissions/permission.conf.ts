@@ -144,6 +144,10 @@ export const PERMISSION_COLUMNS: (
       controlOptions: {
         hidden: true,
       },
+      columnOptions: {
+        valueAsChip: true,
+        defaultWidth: "200px",
+      },
     },
     {
       key: "scopes",
@@ -151,6 +155,10 @@ export const PERMISSION_COLUMNS: (
       controlType: CONTROL_TYPES.TEXTAREA,
       controlOptions: {
         hidden: true,
+      },
+      columnOptions: {
+        valueAsChip: true,
+        defaultWidth: "200px",
       },
     },
     {

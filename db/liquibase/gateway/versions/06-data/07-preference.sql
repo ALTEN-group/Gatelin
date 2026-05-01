@@ -242,8 +242,9 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- cors
 (-1, 'cors', 'Default', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"name",       "isVisible":true},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":true},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -252,8 +253,9 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'cors', 'Compact', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"name",       "isVisible":true},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -262,8 +264,9 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'cors', 'Archives', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"name",       "isVisible":true},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
@@ -272,8 +275,9 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt", "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'cors', 'Audit', '[
-  {"key":"id",         "isVisible":false},
-  {"key":"name",       "isVisible":true},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
   {"key":"createdAt",  "isVisible":true},
   {"key":"creatorName","isVisible":true},
   {"key":"updatedAt",  "isVisible":true},
@@ -547,6 +551,56 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"updaterName","isVisible":true},
   {"key":"archived",   "isVisible":false},
   {"key":"archivedAt", "isVisible":false}
+]', false, true, -1, 'system'),
+
+-- applications
+(-1, 'applications', 'Default', '[
+  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":true},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', true, true, -1, 'system'),
+(-1, 'applications', 'Compact', '[
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
+]', false, true, -1, 'system'),
+(-1, 'applications', 'Archives', '[
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
+  {"key":"createdAt",   "isVisible":false},
+  {"key":"creatorName", "isVisible":false},
+  {"key":"updatedAt",   "isVisible":false},
+  {"key":"updaterName", "isVisible":false},
+  {"key":"archived",    "isVisible":true},
+  {"key":"archivedAt",  "isVisible":true}
+]', false, true, -1, 'system'),
+(-1, 'applications', 'Audit', '[
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
+  {"key":"id",          "isVisible":false},
+  {"key":"name",        "isVisible":true},
+  {"key":"description", "isVisible":false},
+  {"key":"createdAt",   "isVisible":true},
+  {"key":"creatorName", "isVisible":true},
+  {"key":"updatedAt",   "isVisible":true},
+  {"key":"updaterName", "isVisible":true},
+  {"key":"archived",    "isVisible":false},
+  {"key":"archivedAt",  "isVisible":false}
 ]', false, true, -1, 'system')
 
 ;

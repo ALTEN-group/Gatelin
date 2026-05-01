@@ -14,6 +14,7 @@ import { GatewayApplication } from "app/admin/data-access/applications/applicati
 export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplication>[] {
   return [
     ID_CONFIG,
+    CORE_CONFIG,
     {
       key: "name",
       label: $localize`:@@Applications_Name:Name`,
@@ -32,7 +33,6 @@ export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplicat
         validators: [maxlength(100)],
       },
     },
-    CORE_CONFIG,
     ...ARCHIVED_CONFIG,
   ];
 }

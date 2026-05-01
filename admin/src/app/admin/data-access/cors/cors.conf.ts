@@ -23,6 +23,15 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
       minWidth: "100%",
     },
   },
+  {
+    key: "description",
+    label: "Description",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    controlOptions: {
+      validators: [maxlength(100)],
+    },
+  },
   ...ARCHIVED_CONFIG,
   ...AUDIT_CONFIG,
 ];
