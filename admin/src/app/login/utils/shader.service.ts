@@ -10,7 +10,12 @@ export class ShaderService {
   list: IAssets = {
     shaders: {
       folder: "shader",
-      files: [{ name: "vertex.glsl" }, { name: "fragment.glsl" }],
+      files: [
+        { name: "vertex.glsl" },
+        { name: "fragment.glsl" },
+        { name: "vertex-light.glsl" },
+        { name: "fragment-light.glsl" },
+      ],
     },
   };
   loader: Loader = new Loader(
@@ -30,7 +35,15 @@ export class ShaderService {
     return this.loader.getContent("vertex.glsl") as string;
   }
 
+  public get vertexLightShader(): string {
+    return this.loader.getContent("vertex-light.glsl") as string;
+  }
+
   public get fragmentShader(): string {
     return this.loader.getContent("fragment.glsl") as string;
+  }
+
+  public get fragmentLightShader(): string {
+    return this.loader.getContent("fragment-light.glsl") as string;
   }
 }

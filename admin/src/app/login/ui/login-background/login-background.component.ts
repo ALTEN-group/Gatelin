@@ -58,9 +58,14 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
   }
 
   private start() {
+    const isDark = document.documentElement.classList.contains("dark");
     this.quad.addProgram(
-      this.shaderService.vertexShader,
-      this.shaderService.fragmentShader,
+      isDark
+        ? this.shaderService.vertexShader
+        : this.shaderService.vertexLightShader,
+      isDark
+        ? this.shaderService.fragmentShader
+        : this.shaderService.fragmentLightShader,
       null as unknown as Material,
     );
     this.animation.start();

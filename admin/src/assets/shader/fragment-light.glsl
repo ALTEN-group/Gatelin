@@ -42,7 +42,7 @@ float Line(vec2 p, vec2 a, vec2 b) {
 }
 
 void main() { 
-  vec2 uv = (gl_FragCoord.xy - .5 * uScreenResolution.xy) / uScreenResolution.y; //-0.5 to 0.5
+  vec2 uv = (gl_FragCoord.xy - .5 * uScreenResolution.xy) / uScreenResolution.y;
   float m = 0.;
   uv *= 5.;
   vec2 gv = fract(uv)-.5;
@@ -66,12 +66,6 @@ void main() {
   m += Line(gv, p[1], p[5]);
   m += Line(gv, p[7], p[3]);
   m += Line(gv, p[7], p[5]);
-
-  // Glowing dots at each node position
-  for(int i=0; i<9; i++) {
-    float dd = length(gv - p[i]);
-    m += (1. - S(.0, .025, dd)) * 1.5;
-  }
 
   gl_FragColor = baseColor * m;
 
