@@ -5,6 +5,7 @@ CREATE OR REPLACE VIEW scopes AS
     r.name AS "routeName",
     res.name AS "resourceName",
     s.name,
+    s.core,
     s.archived,
     s."archivedAt",
     s."updatedAt",

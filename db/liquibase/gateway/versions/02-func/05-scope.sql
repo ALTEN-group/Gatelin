@@ -4,10 +4,11 @@
 CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO scope ("routeId", name, "creatorId", "creatorName")
+      INSERT INTO scope ("routeId", name, core, "creatorId", "creatorName")
       VALUES (
         NEW."routeId",
         NEW.name,
+        COALESCE(NEW.core, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS $$
       SET
         "routeId" = COALESCE(NEW."routeId", "routeId"),
         name = COALESCE(NEW.name, name),
+        core = COALESCE(NEW.core, core),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()

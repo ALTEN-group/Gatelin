@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS scope (
   id           SERIAL PRIMARY KEY,
   "routeId"    INT NOT NULL,
   name         VARCHAR(50) NOT NULL UNIQUE,
+  core         BOOLEAN DEFAULT FALSE,
   archived     BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "creatorId"  INT,

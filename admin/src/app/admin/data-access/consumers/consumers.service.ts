@@ -22,7 +22,6 @@ export class ConsumersService {
 
   public readonly httpCalls: Calls<Consumer> = {
     get: this.crud.get,
-    update: this.crud.update,
     archive: this.crud.archive,
     restore: this.crud.restore,
     getHistory: this.crud.getHistory,

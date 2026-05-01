@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -19,6 +20,7 @@ export const SCOPE_COLUMNS: (
   payload: ActivatedRouteSnapshot,
 ) => StrictCrudItemOptions<Scope>[] = ({ data }) => [
   ID_CONFIG,
+  CORE_CONFIG,
   {
     key: "routeId",
     label: "Route",
