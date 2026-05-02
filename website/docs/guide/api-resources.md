@@ -1,11 +1,11 @@
-# Services
+# Resources
 
-Services represent the backend microservices that routes can forward requests to.
+Resources represent data entities from backend services (e.g. `users`, `orders`). They are used in the permission system to define the scope of access for a given role and route.
 
-## Search Services
+## Search Resources
 
 ```
-POST /gateway/services/search
+POST /gateway/resources/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -14,6 +14,7 @@ Authorization: Bearer <access_token>
   "first": 0,
   "rows": 10,
   "sortField": "id",
+  "sortOrder": "ASC",
   "filters": {
     "name": {
       "value": "user",
@@ -23,46 +24,54 @@ Authorization: Bearer <access_token>
 }
 ```
 
-## Get Service History
+## Get Resource History
 
 ```
-GET /gateway/services/:id/history
+GET /gateway/resources/:id/history
 Authorization: Bearer <access_token>
 ```
 
-## Create Service
+## Create Resource
 
 ```
-POST /gateway/services
+POST /gateway/resources
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "user",
+  "serviceId": 1,
+  "serviceName": "user",
+  "name": "users",
   "creatorId": 1,
   "creatorName": "admin"
 }
 ```
 
-## Update Service
+**Response (201 Created)**
+
+## Update Resource
 
 ```
-PUT /gateway/services
+PUT /gateway/resources
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
   "id": 1,
-  "name": "user-service",
+  "serviceId": 1,
+  "serviceName": "user",
+  "name": "profiles",
   "updaterId": 1,
   "updaterName": "admin"
 }
 ```
 
-## Archive Services
+**Response (200 OK)**
+
+## Archive Resources
 
 ```
-POST /gateway/services/archive
+POST /gateway/resources/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

@@ -17,7 +17,7 @@ Gatelin is an API Gateway that acts as a single entry point for a microservices 
 ## Health Check
 
 ```
-GET /gatelin/health
+GET /gateway/health
 ```
 
 Returns service health status.

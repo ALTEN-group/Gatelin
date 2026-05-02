@@ -5,7 +5,7 @@ CORS origins are stored in the database and dynamically applied without requirin
 ## Search CORS Origins
 
 ```
-POST /gatelin/cors/search
+POST /gateway/cors/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -23,10 +23,17 @@ Authorization: Bearer <access_token>
 }
 ```
 
+## Get CORS History
+
+```
+GET /gateway/cors/:id/history
+Authorization: Bearer <access_token>
+```
+
 ## Add CORS Origin
 
 ```
-POST /gatelin/cors
+POST /gateway/cors
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -42,7 +49,7 @@ Authorization: Bearer <access_token>
 ## Update CORS Origin
 
 ```
-PUT /gatelin/cors
+PUT /gateway/cors
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -56,11 +63,16 @@ Authorization: Bearer <access_token>
 
 **Response (200 OK):** The CORS whitelist is automatically updated.
 
-## Delete CORS Origin
+## Archive CORS Origins
 
 ```
-DELETE /gatelin/cors?id=1,2,3
+POST /gateway/cors/archive
+Content-Type: application/json
 Authorization: Bearer <access_token>
+
+{
+  "ids": [1, 2, 3]
+}
 ```
 
 **Response (204 No Content):** Origins are removed from the CORS whitelist immediately.

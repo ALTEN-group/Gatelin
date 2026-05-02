@@ -1,0 +1,83 @@
+# Permissions
+
+Permissions define which operations a role is allowed to perform on a given route. They are stored directly in the gateway database and loaded into memory at startup.
+
+## Search Permissions
+
+```
+POST /gateway/permissions/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "roleId",
+  "sortOrder": "ASC",
+  "filters": {
+    "roleId": {
+      "value": 2,
+      "matchMode": "equals"
+    }
+  }
+}
+```
+
+## Get Permission History by Route
+
+```
+GET /gateway/permissions/history/route/:routeId
+Authorization: Bearer <access_token>
+```
+
+## Add Permissions
+
+Permissions are added in bulk — one entry per role/route/operation combination.
+
+```
+POST /gateway/permissions
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+[
+  {
+    "roleId": 2,
+    "routeId": 5,
+    "conditionId": 1
+  }
+]
+```
+
+**Response (201 Created)**
+
+## Update Permissions
+
+```
+PUT /gateway/permissions
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+[
+  {
+    "id": 10,
+    "conditionId": 2
+  }
+]
+```
+
+**Response (200 OK)**
+
+## Delete Permissions
+
+```
+DELETE /gateway/permissions
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "ids": [10, 11, 12]
+}
+```
+
+**Response (204 No Content)**

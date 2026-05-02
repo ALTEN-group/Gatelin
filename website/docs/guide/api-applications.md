@@ -1,11 +1,11 @@
-# Services
+# Applications
 
-Services represent the backend microservices that routes can forward requests to.
+Applications represent client applications consuming the gateway. They are used for registration and access control purposes.
 
-## Search Services
+## Search Applications
 
 ```
-POST /gateway/services/search
+POST /gateway/applications/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -14,55 +14,62 @@ Authorization: Bearer <access_token>
   "first": 0,
   "rows": 10,
   "sortField": "id",
+  "sortOrder": "ASC",
   "filters": {
     "name": {
-      "value": "user",
+      "value": "admin",
       "matchMode": "contains"
     }
   }
 }
 ```
 
-## Get Service History
+## Get Application History
 
 ```
-GET /gateway/services/:id/history
+GET /gateway/applications/:id/history
 Authorization: Bearer <access_token>
 ```
 
-## Create Service
+## Create Application
 
 ```
-POST /gateway/services
+POST /gateway/applications
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "user",
+  "name": "admin-panel",
+  "description": "Internal admin interface",
   "creatorId": 1,
   "creatorName": "admin"
 }
 ```
 
-## Update Service
+**Response (201 Created)**
+
+## Update Application
 
 ```
-PUT /gateway/services
+PUT /gateway/applications
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
   "id": 1,
-  "name": "user-service",
+  "name": "admin-panel",
+  "description": "Updated description",
   "updaterId": 1,
   "updaterName": "admin"
 }
 ```
 
-## Archive Services
+**Response (200 OK)**
+
+## Archive Applications
 
 ```
-POST /gateway/services/archive
+POST /gateway/applications/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

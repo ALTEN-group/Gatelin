@@ -5,7 +5,7 @@ Routes define how incoming requests are matched and forwarded to services.
 ## Search Routes
 
 ```
-POST /gatelin/routes/search
+POST /gateway/routes/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -24,10 +24,17 @@ Authorization: Bearer <access_token>
 }
 ```
 
+## Get Route History
+
+```
+GET /gateway/routes/:id/history
+Authorization: Bearer <access_token>
+```
+
 ## Create Route
 
 ```
-POST /gatelin/routes
+POST /gateway/routes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -61,7 +68,7 @@ Authorization: Bearer <access_token>
 ## Update Route
 
 ```
-PUT /gatelin/routes
+PUT /gateway/routes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -81,11 +88,16 @@ Authorization: Bearer <access_token>
 
 **Response (200 OK):** The route cache is automatically updated.
 
-## Delete Route
+## Archive Routes
 
 ```
-DELETE /gatelin/routes?id=1,2,3
+POST /gateway/routes/archive
+Content-Type: application/json
 Authorization: Bearer <access_token>
+
+{
+  "ids": [1, 2, 3]
+}
 ```
 
 **Response (204 No Content):** Routes are removed from cache immediately.

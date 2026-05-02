@@ -1,11 +1,11 @@
-# Services
+# Operations
 
-Services represent the backend microservices that routes can forward requests to.
+Operations represent action types (e.g. `read`, `write`, `delete`) used in the permission system to define what a role is allowed to do on a resource.
 
-## Search Services
+## Search Operations
 
 ```
-POST /gateway/services/search
+POST /gateway/operations/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -14,55 +14,64 @@ Authorization: Bearer <access_token>
   "first": 0,
   "rows": 10,
   "sortField": "id",
+  "sortOrder": "ASC",
   "filters": {
     "name": {
-      "value": "user",
+      "value": "read",
       "matchMode": "contains"
     }
   }
 }
 ```
 
-## Get Service History
+## Get Operation History
 
 ```
-GET /gateway/services/:id/history
+GET /gateway/operations/:id/history
 Authorization: Bearer <access_token>
 ```
 
-## Create Service
+## Create Operation
 
 ```
-POST /gateway/services
+POST /gateway/operations
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "user",
+  "name": "read",
+  "description": "Read access",
+  "color": "#4B0082",
   "creatorId": 1,
   "creatorName": "admin"
 }
 ```
 
-## Update Service
+**Response (201 Created)**
+
+## Update Operation
 
 ```
-PUT /gateway/services
+PUT /gateway/operations
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
   "id": 1,
-  "name": "user-service",
+  "name": "read",
+  "description": "Read-only access",
+  "color": "#0000FF",
   "updaterId": 1,
   "updaterName": "admin"
 }
 ```
 
-## Archive Services
+**Response (200 OK)**
+
+## Archive Operations
 
 ```
-POST /gateway/services/archive
+POST /gateway/operations/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

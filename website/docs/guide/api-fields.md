@@ -1,11 +1,11 @@
-# Services
+# Fields
 
-Services represent the backend microservices that routes can forward requests to.
+Fields represent database columns or entity properties used to build conditions in the permission system.
 
-## Search Services
+## Search Fields
 
 ```
-POST /gateway/services/search
+POST /gateway/fields/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -14,55 +14,60 @@ Authorization: Bearer <access_token>
   "first": 0,
   "rows": 10,
   "sortField": "id",
+  "sortOrder": "ASC",
   "filters": {
     "name": {
-      "value": "user",
+      "value": "archived",
       "matchMode": "contains"
     }
   }
 }
 ```
 
-## Get Service History
+## Get Field History
 
 ```
-GET /gateway/services/:id/history
+GET /gateway/fields/:id/history
 Authorization: Bearer <access_token>
 ```
 
-## Create Service
+## Create Field
 
 ```
-POST /gateway/services
+POST /gateway/fields
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "user",
+  "name": "consumers.archived",
   "creatorId": 1,
   "creatorName": "admin"
 }
 ```
 
-## Update Service
+**Response (201 Created)**
+
+## Update Field
 
 ```
-PUT /gateway/services
+PUT /gateway/fields
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
   "id": 1,
-  "name": "user-service",
+  "name": "consumers.active",
   "updaterId": 1,
   "updaterName": "admin"
 }
 ```
 
-## Archive Services
+**Response (200 OK)**
+
+## Archive Fields
 
 ```
-POST /gateway/services/archive
+POST /gateway/fields/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

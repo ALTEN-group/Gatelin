@@ -1,11 +1,13 @@
-# Consumers
+# Sessions & Consumers
 
-Consumer endpoints manage authentication — login, token refresh, and logout.
+## Sessions
 
-## Login
+Session endpoints manage authentication — login, token refresh, and logout.
+
+### Login
 
 ```
-POST /gatelin/consumers
+POST /gateway/sessions
 Content-Type: application/json
 
 {
@@ -25,10 +27,10 @@ Content-Type: application/json
 }
 ```
 
-## Refresh Tokens
+### Refresh Tokens
 
 ```
-PUT /gatelin/consumers
+PUT /gateway/sessions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -45,11 +47,51 @@ Authorization: Bearer <access_token>
 }
 ```
 
-## Logout
+### Logout
 
 ```
-DELETE /gatelin/consumers
+DELETE /gateway/sessions
 Authorization: Bearer <access_token>
+```
+
+**Response (204 No Content)**
+
+## Consumers
+
+Admin endpoints for managing consumer sessions stored in the database.
+
+### Search Consumers
+
+```
+POST /gateway/consumers/search
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "pagination": true,
+  "first": 0,
+  "rows": 10,
+  "sortField": "id",
+  "sortOrder": "ASC",
+  "filters": {
+    "archived": {
+      "value": false,
+      "matchMode": "equals"
+    }
+  }
+}
+```
+
+### Archive Consumers
+
+```
+POST /gateway/consumers/archive
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "ids": [1, 2, 3]
+}
 ```
 
 **Response (204 No Content)**
