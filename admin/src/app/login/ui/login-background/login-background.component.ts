@@ -44,7 +44,7 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
       this.scene.addMesh(this.quad);
       this.animation = new Player(this.render);
       this.animation.setScope(this);
-      this.animation.capFPS(24);
+      this.animation.capFPS(14);
       this.shaderService.load().then((response: boolean) => {
         if (response) {
           this.start();
