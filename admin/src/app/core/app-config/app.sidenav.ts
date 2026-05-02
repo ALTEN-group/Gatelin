@@ -45,24 +45,6 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
-        id: "operations",
-        label: $localize`:@@Admin_OperationsNav:Operations`,
-        routerLink: `/${AppPaths.OPERATIONS}`,
-        icon: "pi pi-bolt",
-        data: {
-          functionality: "operations",
-        },
-      },
-      {
-        id: "methods",
-        label: $localize`:@@Admin_MethodsNav:Methods`,
-        routerLink: `/${AppPaths.METHODS}`,
-        icon: "pi pi-code",
-        data: {
-          functionality: "methods",
-        },
-      },
-      {
         id: "scopes",
         label: $localize`:@@Admin_ScopesNav:Scopes`,
         routerLink: `/${AppPaths.SCOPES}`,
@@ -78,6 +60,24 @@ export const SIDENAV: MenuItem[] = [
         icon: "pi pi-list",
         data: {
           functionality: "fields",
+        },
+      },
+      {
+        id: "operations",
+        label: $localize`:@@Admin_OperationsNav:Operations`,
+        routerLink: `/${AppPaths.OPERATIONS}`,
+        icon: "pi pi-bolt",
+        data: {
+          functionality: "operations",
+        },
+      },
+      {
+        id: "methods",
+        label: $localize`:@@Admin_MethodsNav:Methods`,
+        routerLink: `/${AppPaths.METHODS}`,
+        icon: "pi pi-code",
+        data: {
+          functionality: "methods",
         },
       },
     ],
