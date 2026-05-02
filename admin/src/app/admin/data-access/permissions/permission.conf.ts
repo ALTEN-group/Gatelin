@@ -10,6 +10,7 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
+import { Condition } from "app/admin/data-access/conditions/condition.model";
 import { Operation } from "app/admin/data-access/operations/operation.model";
 import { Permission } from "app/admin/data-access/permissions/permission.model";
 import { Resource } from "app/admin/data-access/resources/resource.model";
@@ -23,6 +24,12 @@ export const PERMISSION_COLUMNS: (
   const operationLookup = (name: string) => {
     const op = (data.operations as Operation[]).find((o) => o.name === name);
     return op ? { label: op.name, color: op.color } : undefined;
+  };
+  const conditionLookup = (name: unknown) => {
+    const cond = (data.conditions as Condition[]).find(
+      (c) => c.name === String(name),
+    );
+    return cond ? { label: cond.name, color: cond.color } : undefined;
   };
 
   return [
@@ -107,7 +114,7 @@ export const PERMISSION_COLUMNS: (
     },
     {
       key: "operationId",
-      label: "Operation",
+      label: "Operations",
       controlType: CONTROL_TYPES.MULTISELECT,
       options: toSelectItems<Operation>(data.operations, "name"),
       controlOptions: {
@@ -119,7 +126,7 @@ export const PERMISSION_COLUMNS: (
     },
     {
       key: "operationName",
-      label: "Operation",
+      label: "Operations",
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       options: data.operations.map((o: Operation) => ({
@@ -162,11 +169,33 @@ export const PERMISSION_COLUMNS: (
       },
     },
     {
-      key: "conditions",
+      key: "conditionId",
       label: "Conditions",
-      controlType: CONTROL_TYPES.TEXTAREA,
+      controlType: CONTROL_TYPES.MULTISELECT,
+      options: toSelectItems<Condition>(data.conditions, "name"),
+      columnOptions: {
+        isHardHidden: true,
+      },
+    },
+    {
+      key: "conditionName",
+      label: "Conditions",
+      controlType: CONTROL_TYPES.INPUT,
+      type: INPUT_TYPES.TEXT,
+      options: data.conditions.map((c: Condition) => ({
+        label: c.name,
+        value: c.name,
+      })),
       controlOptions: {
         hidden: true,
+      },
+      columnOptions: {
+        filterType: CONTROL_TYPES.MULTISELECT,
+        customCellRenderer: buildColoredChipsCellRenderer(
+          sanitizer,
+          conditionLookup,
+        ),
+        defaultWidth: "200px",
       },
     },
   ];

@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW conditions AS
     f.name AS "fieldName",
     c.op,
     c.value,
+    c.color,
     c.archived,
     c."archivedAt",
     c."updatedAt",

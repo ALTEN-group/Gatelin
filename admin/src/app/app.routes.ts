@@ -4,6 +4,7 @@ import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { rolesResolver } from "@core/roles/roles.resolver";
 import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
+import { conditionsResolver } from "app/admin/data-access/conditions/conditions.resolver";
 import { fieldsResolver } from "app/admin/data-access/fields/fields.resolver";
 import { methodsResolver } from "app/admin/data-access/methods/methods.resolver";
 import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
@@ -252,6 +253,7 @@ export const ROUTES: Routes = [
       operations: operationsResolver,
       resources: resourcesResolver,
       services: serviceResolver,
+      conditions: conditionsResolver,
     },
   },
   {

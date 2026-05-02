@@ -94,7 +94,7 @@ export const ROUTE_COLUMNS: (
     },
     {
       key: "operationId",
-      label: "Operation",
+      label: "Operations",
       controlType: CONTROL_TYPES.MULTISELECT,
       options: toSelectItems<Operation>(data.operations, "name"),
       controlOptions: {
@@ -106,7 +106,7 @@ export const ROUTE_COLUMNS: (
     },
     {
       key: "operationName",
-      label: "Operation",
+      label: "Operations",
       controlType: CONTROL_TYPES.SELECT,
       options: data.operations.map((o: Operation) => ({
         label: o.name,

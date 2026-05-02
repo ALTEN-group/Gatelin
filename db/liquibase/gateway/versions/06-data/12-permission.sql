@@ -27,7 +27,7 @@
 --   1=Super admin  2=Admin  3=User  4=Guest
 --
 
-INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionIds", "creatorId", "creatorName") VALUES
+INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionId", "creatorId", "creatorName") VALUES
 
 -- ============================================================
 -- Super admin (1): full access, no field restrictions
@@ -102,44 +102,44 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 -- ============================================================
 (2,  1,  ARRAY[4], NULL, NULL, -1, 'system'),  -- refreshToken
 (2,  3,  ARRAY[8], NULL, NULL, -1, 'system'),  -- signOut
-(2,  4,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- getConsumers
+(2,  4,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- getConsumers
 (2,  5,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveConsumers
-(2,  6,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchRoutes
+(2,  6,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchRoutes
 (2,  7,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getRouteHistory
 (2,  8,  ARRAY[5], ARRAY['name', 'description', 'pattern', 'methods', 'protected'], NULL, -1, 'system'),  -- updateRoutes
 (2,  9,  ARRAY[7], ARRAY['serviceId', 'resourceId', 'pattern', 'name', 'description', 'methods', 'protected'], NULL, -1, 'system'),  -- addRoutes
 (2, 10,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveRoutes
-(2, 11,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchServices
+(2, 11,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchServices
 (2, 12,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getServiceHistory
 (2, 13,  ARRAY[5], ARRAY['name', 'pattern'], NULL, -1, 'system'),  -- updateServices
 (2, 14,  ARRAY[7], ARRAY['name', 'pattern'], NULL, -1, 'system'),  -- addServices
 (2, 15,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveServices
-(2, 16,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchResources
+(2, 16,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchResources
 (2, 17,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getResourceHistory
 (2, 18,  ARRAY[5], ARRAY['serviceId', 'name'], NULL, -1, 'system'),  -- updateResources
 (2, 19,  ARRAY[7], ARRAY['serviceId', 'name'], NULL, -1, 'system'),  -- addResources
 (2, 20,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveResources
-(2, 21,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchOperations
+(2, 21,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchOperations
 (2, 22,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getOperationHistory
 (2, 23,  ARRAY[5], ARRAY['name', 'description'], NULL, -1, 'system'),  -- updateOperations
 (2, 24,  ARRAY[7], ARRAY['name', 'description'], NULL, -1, 'system'),  -- addOperations
 (2, 25,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveOperations
-(2, 26,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchCors
+(2, 26,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchCors
 (2, 27,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getCorsHistory
 (2, 28,  ARRAY[5], ARRAY['name'], NULL, -1, 'system'),  -- updateCors
 (2, 29,  ARRAY[7], ARRAY['name'], NULL, -1, 'system'),  -- addCors
 (2, 30,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveCors
-(2, 31,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchFields
+(2, 31,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchFields
 (2, 32,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getFieldHistory
 (2, 33,  ARRAY[5], ARRAY['name'], NULL, -1, 'system'),  -- updateFields
 (2, 34,  ARRAY[7], ARRAY['resourceId', 'name'], NULL, -1, 'system'),  -- addFields
 (2, 35,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveFields
-(2, 36,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchScopes
+(2, 36,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchScopes
 (2, 37,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getScopeHistory
 (2, 38,  ARRAY[5], ARRAY['value'], NULL, -1, 'system'),  -- updateScopes
 (2, 39,  ARRAY[7], ARRAY['value'], NULL, -1, 'system'),  -- addScopes
 (2, 40,  ARRAY[9], NULL, NULL, -1, 'system'),  -- archiveScopes
-(2, 41,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchRoles
+(2, 41,  ARRAY[2], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchRoles
 (2, 42,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getRoleHistory
 (2, 43,  ARRAY[7], ARRAY['name', 'description', 'color'], NULL, -1, 'system'),  -- addRoles
 (2, 44,  ARRAY[5], ARRAY['name', 'description', 'color'], NULL, -1, 'system'),  -- updateRoles
@@ -149,14 +149,14 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 48,  ARRAY[7], NULL, NULL, -1, 'system'),   -- addPermissions
 (2, 49,  ARRAY[5], NULL, NULL, -1, 'system'),   -- updatePermissions
 (2, 50,  ARRAY[9], NULL, NULL, -1, 'system'),   -- deletePermissions
-(2, 51,  ARRAY[2,3], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'), -- searchMethods
+(2, 51,  ARRAY[2,3], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'), -- searchMethods
 (2, 52,  ARRAY[5], ARRAY['name', 'color'], NULL, -1, 'system'),  -- updateMethods
-(2, 53,  ARRAY[2,3], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'), -- searchApplications
+(2, 53,  ARRAY[2,3], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'), -- searchApplications
 (2, 54,  ARRAY[2], NULL, NULL, -1, 'system'),   -- getApplicationHistory
 (2, 55,  ARRAY[7], ARRAY['name', 'url', 'appId'], NULL, -1, 'system'),  -- addApplications
 (2, 56,  ARRAY[5], ARRAY['name', 'url', 'appId'], NULL, -1, 'system'),  -- updateApplications
 (2, 57,  ARRAY[9], NULL, NULL, -1, 'system'),   -- archiveApplications
-(2, 58,  ARRAY[2,3], NULL, (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'), -- searchConditions
+(2, 58,  ARRAY[2,3], NULL, ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'), -- searchConditions
 (2, 59,  ARRAY[2], NULL, NULL, -1, 'system'),   -- getConditionHistory
 (2, 60,  ARRAY[5], ARRAY['name', 'fieldId', 'op', 'value'], NULL, -1, 'system'),  -- updateConditions
 (2, 61,  ARRAY[7], ARRAY['name', 'fieldId', 'op', 'value'], NULL, -1, 'system'),  -- addConditions
@@ -170,16 +170,16 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 -- ============================================================
 (3,  1,  ARRAY[4], NULL, NULL, -1, 'system'),  -- refreshToken
 (3,  3,  ARRAY[8], NULL, NULL, -1, 'system'),  -- signOut
-(3,  6,  ARRAY[2], ARRAY['id', 'serviceName', 'resourceName', 'url', 'name', 'description', 'methods'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchRoutes
-(3, 11,  ARRAY[2], ARRAY['id', 'name', 'pattern'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchServices
-(3, 16,  ARRAY[2], ARRAY['id', 'serviceName', 'name'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchResources
-(3, 21,  ARRAY[2], ARRAY['id', 'name', 'description'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchOperations
-(3, 26,  ARRAY[2], ARRAY['id', 'name'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchCors
-(3, 31,  ARRAY[2], ARRAY['id', 'resourceId', 'name'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchFields
-(3, 36,  ARRAY[2], ARRAY['id', 'value'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchScopes
-(3, 41,  ARRAY[2], ARRAY['id', 'name', 'description', 'color'], (SELECT id FROM condition WHERE name = 'Non-archived only'), -1, 'system'),  -- searchRoles
-(3, 63,  ARRAY[2], NULL, (SELECT id FROM condition WHERE name = 'Own preferences'), -1, 'system'),  -- getPreferences
-(3, 65,  ARRAY[1], NULL, (SELECT id FROM condition WHERE name = 'Own user record'),  -1, 'system'),  -- getBasicUserInfo
+(3,  6,  ARRAY[2], ARRAY['id', 'serviceName', 'resourceName', 'url', 'name', 'description', 'methods'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchRoutes
+(3, 11,  ARRAY[2], ARRAY['id', 'name', 'pattern'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchServices
+(3, 16,  ARRAY[2], ARRAY['id', 'serviceName', 'name'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchResources
+(3, 21,  ARRAY[2], ARRAY['id', 'name', 'description'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchOperations
+(3, 26,  ARRAY[2], ARRAY['id', 'name'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchCors
+(3, 31,  ARRAY[2], ARRAY['id', 'resourceId', 'name'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchFields
+(3, 36,  ARRAY[2], ARRAY['id', 'value'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchScopes
+(3, 41,  ARRAY[2], ARRAY['id', 'name', 'description', 'color'], ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')], -1, 'system'),  -- searchRoles
+(3, 63,  ARRAY[2], NULL, NULL, -1, 'system'),  -- getPreferences
+(3, 65,  ARRAY[1], NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- Guest (4): session routes only

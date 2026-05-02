@@ -6,6 +6,7 @@ import {
   Condition,
   conditionFactory,
 } from "app/admin/data-access/conditions/condition.model";
+import { Observable } from "rxjs";
 
 const conditionsEndpoint: string = "conditions";
 
@@ -29,4 +30,8 @@ export class ConditionsService {
   public readonly config = (payload: ActivatedRouteSnapshot) =>
     CONDITION_COLUMNS(payload);
   public readonly entityFactory = conditionFactory;
+
+  public getAndCacheAll(): Observable<Condition[]> {
+    return this.crud.getAndCacheAll();
+  }
 }

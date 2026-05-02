@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS condition (
   op            VARCHAR(10)  NOT NULL,
   CONSTRAINT chk_condition_op CHECK (op IN ('=', '!=', '<', '>', '<=', '>=')),
   value         TEXT         NOT NULL,
+  color         VARCHAR(7)   NULL,
   CONSTRAINT fk_condition_field
     FOREIGN KEY ("fieldId") REFERENCES field (id)
     ON DELETE RESTRICT

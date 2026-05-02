@@ -73,6 +73,6 @@ void main() {
     m += (1. - S(.0, .025, dd)) * 1.5;
   }
 
-  gl_FragColor = baseColor * m;
+  gl_FragColor = baseColor * m * 0.5;
 
 }

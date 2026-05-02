@@ -18,8 +18,10 @@ erDiagram
   route }o--|{ operation : ""
 
   permission }o--|| route : ""
-  permission }o--|| operation : ""
-  permission }o--o{ condition : "(conditionIds int[])"
+  permission ||--o{ permission_operation : ""
+  permission ||--o{ permission_condition : ""
+  permission_operation }o--|| operation : ""
+  permission_condition }o--|| condition : ""
 
   application {
     int id PK
@@ -42,10 +44,18 @@ erDiagram
     int id PK
     int roleId FK
     int routeId FK
-    int operationId FK
     text[] fields
     text[] scopes
-    int[] conditionIds
+  }
+
+  permission_operation {
+    int permissionId FK
+    int operationId FK
+  }
+
+  permission_condition {
+    int permissionId FK
+    int conditionId FK
   }
 
   condition {
@@ -54,6 +64,7 @@ erDiagram
     int fieldId FK
     varchar op
     text value
+    varchar color
   }
 
   service {
@@ -91,6 +102,7 @@ erDiagram
     int id PK
     varchar name UK
     text description
+    varchar color
   }
 
   field {

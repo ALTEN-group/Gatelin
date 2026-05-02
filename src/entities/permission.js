@@ -157,7 +157,7 @@ export default new SQLEntity("permissions", [
     validator: null,
   },
   {
-    key: "conditionIds",
+    key: "conditionId",
     type: "array",
     min: null,
     max: null,
@@ -171,12 +171,12 @@ export default new SQLEntity("permissions", [
     validator: null,
   },
   {
-    key: "conditions",
-    type: "object",
+    key: "conditionName",
+    type: "array",
     min: null,
     max: null,
     isTypeChecked: false,
-    isFilterable: false,
+    isFilterable: true,
     requiredFor: [],
     operations: ["SELECT"],
     isPrivate: false,
@@ -185,4 +185,3 @@ export default new SQLEntity("permissions", [
     validator: null,
   },
 ]);
-

@@ -5,26 +5,36 @@ export const mockCredentials = [
   {
     id: 1,
     userId: 1,
-    pwd: 'Admin1234!' // In real app, this would be hashed
+    pwd: "Admin1234!", // In real app, this would be hashed
   },
   {
     id: 2,
     userId: 2,
-    pwd: 'Test1234!'
+    pwd: "Test1234!",
   },
   {
     id: 3,
     userId: 3,
-    pwd: 'admin34!U'
+    pwd: "admin34!U",
   },
   {
     id: 4,
     userId: 4,
-    pwd: 'User1234!'
+    pwd: "User1234!",
   },
   {
     id: 5,
     userId: 5,
-    pwd: 'p@s5WOrd!99'
-  }
+    pwd: "p@s5WOrd!99",
+  },
+  {
+    id: 6,
+    userId: 6,
+    pwd: "EbSup3r!1",
+  },
+  {
+    id: 7,
+    userId: 7,
+    pwd: "EbAdm1n!1",
+  },
 ];

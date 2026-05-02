@@ -95,28 +95,6 @@ services:
     networks:
       - internal
 
-  ms_role_mock:
-    build:
-      context: ${PWD}/mocks/ms_role
-      dockerfile: dockerfile
-      args:
-        UID: ${UID}
-        GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NODE_ENV: ${NODE_ENV}
-    container_name: ${MSROLE_HOST}
-    hostname: ${MSROLE_HOST}
-    environment:
-      PORT: ${DEFAULT_PORT}
-    networks:
-      - internal
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/roles/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   ms_user_mock:
     build:
       context: ${PWD}/mocks/ms_user
@@ -131,10 +109,6 @@ services:
     hostname: ${MSUSER_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
-      MSROLE_SEARCH_URL: ${MSROLE_SEARCH_URL}
-    depends_on:
-      ms_role_mock:
-        condition: service_healthy
     networks:
       - internal
 
@@ -164,7 +138,6 @@ services:
       TZ: ${TZ}
       MSAUTH_VERIFY_URL: ${MSAUTH_VERIFY_URL}
       MSUSER_SEARCH_URL: ${MSUSER_SEARCH_URL}
-      MSROLE_SEARCH_URL: ${MSROLE_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
       DB_USER: ${GATELIN_DB_USER}
@@ -188,8 +161,6 @@ services:
         condition: service_healthy
       gatelin_migration:
         condition: service_completed_successfully
-      ms_role_mock:
-        condition: service_healthy
     networks:
       - internal
     labels:

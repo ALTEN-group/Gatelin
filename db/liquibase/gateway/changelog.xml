@@ -119,12 +119,12 @@
     <sqlFile path="versions/03-struct/10-scope.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-11" author="lcluber">
-    <comment>Permission table with FKs to route and operation</comment>
-    <sqlFile path="versions/03-struct/11-permission.sql" splitStatements="false"/>
+    <comment>Role table with FK to application</comment>
+    <sqlFile path="versions/03-struct/11-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-12" author="lcluber">
-    <comment>Role table with FK to application</comment>
-    <sqlFile path="versions/03-struct/12-role.sql" splitStatements="false"/>
+    <comment>Permission table with FKs to role and route</comment>
+    <sqlFile path="versions/03-struct/12-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-13" author="lcluber">
     <comment>Method lookup table</comment>
@@ -133,6 +133,14 @@
   <changeSet id="03-struct-14" author="lcluber">
     <comment>Condition table with FK to field</comment>
     <sqlFile path="versions/03-struct/14-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-15" author="lcluber">
+    <comment>permission_operation junction table</comment>
+    <sqlFile path="versions/03-struct/15-permission-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-16" author="lcluber">
+    <comment>permission_condition junction table</comment>
+    <sqlFile path="versions/03-struct/16-permission-condition.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- views -->
@@ -267,12 +275,12 @@
     <sqlFile path="versions/06-data/10-condition.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-11" author="lcluber">
-    <comment>Insert default permission data</comment>
-    <sqlFile path="versions/06-data/11-permission.sql" splitStatements="false"/>
+    <comment>Role seed data</comment>
+    <sqlFile path="versions/06-data/11-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="06-data-12" author="lcluber">
-    <comment>Default role data</comment>
-    <sqlFile path="versions/06-data/12-role.sql" splitStatements="false"/>
+    <comment>Permission seed data</comment>
+    <sqlFile path="versions/06-data/12-permission.sql" splitStatements="false"/>
   </changeSet>
 
 </databaseChangeLog>

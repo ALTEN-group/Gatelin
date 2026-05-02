@@ -79,11 +79,16 @@ See [tests/README.md](tests/README.md) for more details.
 
 ### Build production images
 
-```sh
-./scripts/build-prod.sh
-```
+Builds all four production images (`gateway`, `migration`, `admin`, `website`) from their respective `dockerfile.prod` files, using `docker/conf/.env.prod`. Each image is tagged as `dwtechs/gatelin-<service>:<version>` and `dwtechs/gatelin-<service>:latest`.
 
-Builds the production Docker image from `dockerfile.prod` using `docker/conf/.env.prod`. Tags the image as `dwtechs/gatelin:<version>` and `dwtechs/gatelin:latest`.
+```sh
+./scripts/build-prod.sh                   # build all images
+./scripts/build-prod.sh gateway           # gateway only
+./scripts/build-prod.sh migration         # migration only
+./scripts/build-prod.sh admin             # admin only
+./scripts/build-prod.sh website           # website only
+./scripts/build-prod.sh gateway migration # multiple targets
+```
 
 ### Start production environment
 

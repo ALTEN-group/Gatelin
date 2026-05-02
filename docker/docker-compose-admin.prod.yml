@@ -1,15 +1,40 @@
 name: ${APP_NAME}
 
+secrets:
+  apk_repository:
+    environment: APK_REPOSITORY
+  npmrc:
+    environment: NPMRC
+
 services:
-  gatelin:
+  admin:
     build:
-      context: ${PWD}
-      dockerfile: dockerfile
+      context: ${PWD}/admin
+      dockerfile: dockerfile.prod
+      secrets:
+        - apk_repository
+        - npmrc
       args:
+        NODE_VERSION: ${NODE_VERSION}
+        NGINX_VERSION: ${NGINX_VERSION}
+        TZ: ${TZ}
         UID: ${UID}
         GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NODE_ENV: ${NODE_ENV}
-    image: dwtechs/gatelin:${VERSION:-latest}
-    container_name: ${GATELIN_HOST}
+        NPMRC_PATH: ${HOME_PATH}.npmrc
+    image: dwtechs/gatelin-admin:${VERSION:-latest}
+    container_name: ${ADMIN_HOST}
+    hostname: ${ADMIN_HOST}
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin.entrypoints=web"
+      - "traefik.http.routers.admin.service=admin"
+      - "traefik.http.services.admin.loadbalancer.server.port=80"
+
+networks:
+  internal:
+    name: ${APP_NAME}-internal-${ENV_NAME}
+    driver: bridge
