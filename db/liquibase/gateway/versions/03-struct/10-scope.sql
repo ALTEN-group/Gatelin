@@ -5,12 +5,12 @@ CREATE TABLE IF NOT EXISTS scope (
   core         BOOLEAN DEFAULT FALSE,
   archived     BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
+  "createdAt"  TIMESTAMP DEFAULT NOW(),
   "creatorId"  INT,
   "creatorName" TEXT,
+  "updatedAt"  TIMESTAMP NULL,
   "updaterId"  INT,
   "updaterName" TEXT,
-  "createdAt"  TIMESTAMP DEFAULT NOW(),
-  "updatedAt"  TIMESTAMP NULL,
   CHECK ("routeId" >= 0),
   CONSTRAINT fk_scope_route
     FOREIGN KEY ("routeId") REFERENCES route (id)

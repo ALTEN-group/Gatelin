@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS condition (
     ON UPDATE CASCADE,
   archived      BOOLEAN DEFAULT FALSE,
   "archivedAt"  TIMESTAMP,
+  "createdAt"   TIMESTAMP DEFAULT NOW(),
   "creatorId"   INT,
   "creatorName" TEXT,
+  "updatedAt"   TIMESTAMP NULL,
   "updaterId"   INT,
-  "updaterName" TEXT,
-  "createdAt"   TIMESTAMP DEFAULT NOW(),
-  "updatedAt"   TIMESTAMP NULL
+  "updaterName" TEXT
 );

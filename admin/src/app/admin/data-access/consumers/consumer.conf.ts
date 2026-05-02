@@ -6,6 +6,7 @@ import {
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
+  min,
   minlength,
   required,
   StrictCrudItemOptions,
@@ -47,9 +48,9 @@ export const CONSUMER_COLUMNS: (
       columnOptions: {
         defaultWidth: "80px",
       },
-      type: INPUT_TYPES.TEXT,
+      type: INPUT_TYPES.NUMBER,
       controlOptions: {
-        validators: [required, minlength(3), maxlength(30)],
+        validators: [required, min(1)],
       },
     },
     {
@@ -67,10 +68,11 @@ export const CONSUMER_COLUMNS: (
     {
       key: "accessToken",
       label: "Access Token",
-      controlType: CONTROL_TYPES.TEXTAREA,
+      controlType: CONTROL_TYPES.INPUT,
       columnOptions: {
         defaultWidth: "100px",
       },
+      type: INPUT_TYPES.TEXT,
       controlOptions: {
         validators: [required, minlength(28), maxlength(8000)],
       },
@@ -78,10 +80,11 @@ export const CONSUMER_COLUMNS: (
     {
       key: "refreshToken",
       label: "Refresh Token",
-      controlType: CONTROL_TYPES.TEXTAREA,
+      controlType: CONTROL_TYPES.INPUT,
       columnOptions: {
         defaultWidth: "100px",
       },
+      type: INPUT_TYPES.TEXT,
       controlOptions: {
         validators: [required, minlength(28), maxlength(8000)],
       },

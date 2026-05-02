@@ -5,12 +5,12 @@ CREATE TABLE IF NOT EXISTS field (
   core         BOOLEAN DEFAULT FALSE,
   archived     BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
+  "createdAt"  TIMESTAMP DEFAULT NOW(),
   "creatorId"  INT,
   "creatorName" TEXT,
+  "updatedAt"  TIMESTAMP NULL,
   "updaterId"  INT,
   "updaterName" TEXT,
-  "createdAt"  TIMESTAMP DEFAULT NOW(),
-  "updatedAt"  TIMESTAMP NULL,
   CHECK ("resourceId" >= 0),
   CONSTRAINT fk_field_resource
     FOREIGN KEY ("resourceId") REFERENCES resource (id)

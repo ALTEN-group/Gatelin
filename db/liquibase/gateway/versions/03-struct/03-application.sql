@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS application (
   core BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
   "creatorId" INT,
   "creatorName" TEXT,
+  "updatedAt" TIMESTAMP NULL,
   "updaterId" INT,
-  "updaterName" TEXT,
-  "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP NULL
+  "updaterName" TEXT
 );

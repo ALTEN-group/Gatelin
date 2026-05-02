@@ -30,6 +30,7 @@
         <th class="permissions-tree__center-col" i18n="@@PermissionsTree_ActiveCol">Active</th>
         <th i18n="@@PermissionsTree_FieldsCol">Fields</th>
         <th i18n="@@PermissionsTree_ScopeCol">Scope</th>
+        <th i18n="@@PermissionsTree_ConditionCol">Conditions</th>
       </tr>
     </ng-template>
 
@@ -46,6 +47,11 @@
               [binary]="true"
               (onChange)="onToggle(rowData, $event.checked)"
             />
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'route') {
+            <span class="permissions-tree__values">{{ getPerm(rowData)?.conditionName?.join(', ') }}</span>
           }
         </td>
         <td>

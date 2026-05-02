@@ -6,11 +6,11 @@ CREATE TABLE preference (
   conf            JSONB       NOT NULL,
   "isActive"      BOOLEAN     NOT NULL DEFAULT false,
   locked          BOOLEAN     NOT NULL DEFAULT false,
+  "createdAt"     TIMESTAMP   DEFAULT NOW(),
   "creatorId"     INT         NULL,
   "creatorName"   TEXT        NULL,
+  "updatedAt"     TIMESTAMP   NULL,
   "updaterId"     INT         NULL,
   "updaterName"   TEXT        NULL,
-  "createdAt"     TIMESTAMP   DEFAULT NOW(),
-  "updatedAt"     TIMESTAMP   NULL,
   UNIQUE ("userId", resource, name)
 );

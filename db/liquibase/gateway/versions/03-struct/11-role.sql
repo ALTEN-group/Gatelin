@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS role (
   locked BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
   "creatorId" INT,
   "creatorName" TEXT,
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
   "updaterId" INT,
   "updaterName" TEXT,
-  "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW(),
   CHECK ("appId" >= 0),
   CONSTRAINT fk_role_application
     FOREIGN KEY ("appId") REFERENCES application (id)

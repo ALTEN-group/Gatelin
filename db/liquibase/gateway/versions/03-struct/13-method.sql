@@ -2,12 +2,12 @@ CREATE TABLE IF NOT EXISTS method (
   id SERIAL PRIMARY KEY,
   name VARCHAR(10) NOT NULL UNIQUE,
   color VARCHAR(7) NOT NULL,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
   "creatorId" INT,
   "creatorName" TEXT,
+  "updatedAt" TIMESTAMP NULL,
   "updaterId" INT,
-  "updaterName" TEXT,
-  "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP NULL
+  "updaterName" TEXT
 );
 
 CREATE TABLE IF NOT EXISTS route_method (

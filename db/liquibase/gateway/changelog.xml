@@ -135,13 +135,10 @@
     <sqlFile path="versions/03-struct/14-condition.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="03-struct-15" author="lcluber">
-    <comment>permission_operation junction table</comment>
-    <sqlFile path="versions/03-struct/15-permission-operation.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="03-struct-16" author="lcluber">
     <comment>permission_condition junction table</comment>
-    <sqlFile path="versions/03-struct/16-permission-condition.sql" splitStatements="false"/>
+    <sqlFile path="versions/03-struct/15-permission-condition.sql" splitStatements="false"/>
   </changeSet>
+
 
   <!-- views -->
   <changeSet id="04-view-01" author="lcluber">

@@ -7,12 +7,12 @@ CREATE TABLE IF NOT EXISTS resource (
   core BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
   "creatorId" INT,
   "creatorName" TEXT,
+  "updatedAt" TIMESTAMP NULL,
   "updaterId" INT,
   "updaterName" TEXT,
-  "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP NULL,
   CHECK ("serviceId">=0),
   CONSTRAINT fk_resource_service
 		FOREIGN KEY ("serviceId") REFERENCES service (id)

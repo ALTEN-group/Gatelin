@@ -5,46 +5,44 @@ CREATE OR REPLACE VIEW role_cache AS
     r.archived,
     COALESCE(
       jsonb_agg(
-        jsonb_build_object('route', p."routeId", 'operations', ops.ids, 'fields', p.fields, 'scopes', p.scopes, 'conditions', conds.data)
-        ORDER BY p."routeId"
-      ) FILTER (WHERE p."routeId" IS NOT NULL),
+        jsonb_build_object('route', rp."routeId", 'operations', rp.operation_ids, 'fields', rp.fields, 'scopes', rp.scopes, 'conditions', rp.conditions)
+        ORDER BY rp."routeId"
+      ) FILTER (WHERE rp."routeId" IS NOT NULL),
       '[]'::jsonb
     ) AS permissions
   FROM role r
-  LEFT JOIN permission p ON p."roleId" = r.id
   LEFT JOIN LATERAL (
-    SELECT array_agg(po."operationId" ORDER BY po."operationId") AS ids
-    FROM permission_operation po
-    WHERE po."permissionId" = p.id
-  ) ops ON TRUE
-  LEFT JOIN LATERAL (
-    SELECT jsonb_agg(
-      jsonb_build_object('field', f.name, 'op', c.op, 'value', c.value)
-      ORDER BY c.id
-    ) AS data
-    FROM permission_condition pc
-    JOIN condition c ON c.id = pc."conditionId"
-    JOIN field f ON f.id = c."fieldId"
-    WHERE pc."permissionId" = p.id
-  ) conds ON TRUE
+    SELECT
+      p."routeId",
+      MIN(p.fields) AS fields,
+      MIN(p.scopes) AS scopes,
+      array_agg(p."operationId" ORDER BY p."operationId") AS operation_ids,
+      jsonb_agg(DISTINCT jsonb_build_object('field', f.name, 'op', c.op, 'value', c.value)) FILTER (WHERE c.id IS NOT NULL) AS conditions
+    FROM permission p
+    LEFT JOIN permission_condition pc ON pc."permissionId" = p.id
+    LEFT JOIN condition c ON c.id = pc."conditionId"
+    LEFT JOIN field f ON f.id = c."fieldId"
+    WHERE p."roleId" = r.id
+    GROUP BY p."routeId"
+  ) rp ON TRUE
   GROUP BY r.id, r.archived;
 
--- Management view: one row per (roleId, routeId)
+-- Management view: one row per (roleId, routeId, operationId)
 CREATE OR REPLACE VIEW permissions AS
   SELECT
     p."roleId",
-    svc.id                   AS "serviceId",
-    svc.name                 AS "serviceName",
-    res.id                   AS "resourceId",
-    res.name                 AS "resourceName",
-    rt.id                    AS "routeId",
-    rt.name                  AS "routeName",
-    ops."operationId",
-    ops."operationName",
+    svc.id   AS "serviceId",
+    svc.name AS "serviceName",
+    res.id   AS "resourceId",
+    res.name AS "resourceName",
+    rt.id    AS "routeId",
+    rt.name  AS "routeName",
+    p."operationId",
+    o.name   AS "operationName",
     p.fields,
     p.scopes,
-    conds."conditionId",
-    conds."conditionName",
+    COALESCE(array_agg(DISTINCT pc."conditionId") FILTER (WHERE pc."conditionId" IS NOT NULL), ARRAY[]::int[])   AS "conditionId",
+    COALESCE(array_agg(DISTINCT c.name)           FILTER (WHERE c.name IS NOT NULL),           ARRAY[]::text[])  AS "conditionName",
     p."creatorId",
     p."creatorName",
     p."updaterId",
@@ -52,23 +50,11 @@ CREATE OR REPLACE VIEW permissions AS
     p."createdAt",
     p."updatedAt"
   FROM permission p
-  LEFT JOIN route     rt  ON rt.id  = p."routeId"
-  LEFT JOIN resource  res ON res.id = rt."resourceId"
-  LEFT JOIN service   svc ON svc.id = res."serviceId"
-  LEFT JOIN LATERAL (
-    SELECT
-      array_agg(po."operationId" ORDER BY po."operationId") AS "operationId",
-      array_agg(o.name           ORDER BY po."operationId") AS "operationName"
-    FROM permission_operation po
-    JOIN operation o ON o.id = po."operationId"
-    WHERE po."permissionId" = p.id
-  ) ops ON TRUE
-  LEFT JOIN LATERAL (
-    SELECT
-      array_agg(pc."conditionId" ORDER BY pc."conditionId") AS "conditionId",
-      array_agg(c.name           ORDER BY pc."conditionId") AS "conditionName"
-    FROM permission_condition pc
-    JOIN condition c ON c.id = pc."conditionId"
-    WHERE pc."permissionId" = p.id
-  ) conds ON TRUE
-  ORDER BY svc.name ASC, res.name ASC, rt.name ASC;
+  LEFT JOIN route               rt  ON rt.id  = p."routeId"
+  LEFT JOIN resource            res ON res.id = rt."resourceId"
+  LEFT JOIN service             svc ON svc.id = res."serviceId"
+  LEFT JOIN operation           o   ON o.id   = p."operationId"
+  LEFT JOIN permission_condition pc ON pc."permissionId" = p.id
+  LEFT JOIN condition            c  ON c.id   = pc."conditionId"
+  GROUP BY p.id, svc.id, svc.name, res.id, res.name, rt.id, rt.name, o.name
+  ORDER BY svc.name ASC, res.name ASC, rt.name ASC, p."operationId" ASC;

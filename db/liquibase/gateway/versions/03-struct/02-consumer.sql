@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS consumer (
   nickname varchar(30) NOT NULL,
   "accessToken" varchar(600) NOT NULL UNIQUE,
   "refreshToken" varchar(600) NOT NULL UNIQUE,
-  "roles" INT[] NOT NULL,
+  roles INT[] NOT NULL,
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "createdAt" TIMESTAMP DEFAULT NOW(),

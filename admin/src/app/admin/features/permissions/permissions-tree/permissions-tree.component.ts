@@ -64,7 +64,17 @@ export class PermissionsTreeComponent {
   readonly roles: GatewayRole[] = this.route.snapshot.data["roles"] ?? [];
   readonly routes: Route[] = this.route.snapshot.data["routes"] ?? [];
 
-  readonly selectedRole = signal<GatewayRole | null>(null);
+  readonly selectedRole = signal<GatewayRole | null>(
+    (() => {
+      const qp = this.route.snapshot.queryParamMap.get("roleId");
+      const routeRoleId = qp
+        ? Number(qp)
+        : ((this.route.snapshot.data["roleId"] as number | undefined) ?? null);
+      return (
+        this.roles.find((r) => r.id === routeRoleId) ?? this.roles[0] ?? null
+      );
+    })(),
+  );
   readonly selectedRoleId = computed(() => this.selectedRole()?.id ?? null);
 
   private readonly permissionsResource = rxResource<

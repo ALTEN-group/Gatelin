@@ -18,9 +18,8 @@ erDiagram
   route }o--|{ operation : ""
 
   permission }o--|| route : ""
-  permission ||--o{ permission_operation : ""
+  permission }o--|| operation : ""
   permission ||--o{ permission_condition : ""
-  permission_operation }o--|| operation : ""
   permission_condition }o--|| condition : ""
 
   application {
@@ -44,13 +43,9 @@ erDiagram
     int id PK
     int roleId FK
     int routeId FK
+    int operationId FK
     text[] fields
     text[] scopes
-  }
-
-  permission_operation {
-    int permissionId FK
-    int operationId FK
   }
 
   permission_condition {
