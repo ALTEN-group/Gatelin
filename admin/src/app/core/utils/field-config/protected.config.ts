@@ -5,11 +5,12 @@ export const PROTECTED_CONFIG: StrictCrudItemOptions<{
   protected: boolean;
 }> = {
   key: "protected",
-  label: "🔑",
+  label: "Protected",
   controlType: CONTROL_TYPES.CHECKBOX,
   columnOptions: {
     defaultWidth: "60px",
     filterType: CONTROL_TYPES.CHECKBOX,
     customCellRenderer: buildProtectedCellRenderer(),
+    customHeaderRenderer: () => "🔑",
   },
 };
