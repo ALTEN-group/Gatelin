@@ -15,13 +15,18 @@ erDiagram
   resource ||--o{ route : ""
   route ||--o{ scope : ""
   route }o--|{ method : ""
-  route }o--|{ operation : ""
+  route ||--o{ route_operation : ""
+  route_operation }o--|| operation : ""
 
   permission }o--|| route : ""
   permission }o--|| operation : ""
   permission ||--o{ permission_condition : ""
   permission_condition }o--|| condition : ""
 
+  route_operation {
+    int routeId FK
+    int operationId FK
+  }
   application {
     int id PK
     varchar name UK
@@ -83,8 +88,10 @@ erDiagram
     varchar pattern
     varchar name
     varchar description
-    boolean isProtected
+    boolean protected
     boolean core
+    boolean archived
+    timestamp archivedAt
   }
 
   method {
