@@ -1,6 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -18,6 +19,7 @@ export function buildOperationColumns(
 ): StrictCrudItemOptions<Operation>[] {
   return [
     ID_CONFIG,
+    CORE_CONFIG,
     {
       key: "name",
       label: "Name",
