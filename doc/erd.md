@@ -60,8 +60,8 @@ erDiagram
 
   condition {
     int id PK
-    varchar name UK
     int fieldId FK
+    varchar name UK
     varchar op
     text value
     varchar color
@@ -105,6 +105,7 @@ erDiagram
     varchar name UK
     text description
     varchar color
+    boolean core
   }
 
   field {

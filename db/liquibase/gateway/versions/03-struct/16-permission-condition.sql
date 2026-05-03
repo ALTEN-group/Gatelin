@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS permission_condition (
   "permissionId" INT NOT NULL,
   "conditionId"  INT NOT NULL,

@@ -5,6 +5,7 @@ export interface Operation extends ArchiveInfo {
   name: string;
   description: string;
   color: string | null;
+  core: boolean;
 }
 
 export const operationFactory = (): Operation => ({
@@ -12,6 +13,7 @@ export const operationFactory = (): Operation => ({
   name: "",
   description: "",
   color: null,
+  core: false,
   creatorId: null,
   creatorName: null,
   createdAt: null,

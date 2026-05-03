@@ -20,7 +20,6 @@ CREATE OR REPLACE FUNCTION iud_scope() RETURNS trigger AS $$
       SET
         "routeId" = COALESCE(NEW."routeId", "routeId"),
         name = COALESCE(NEW.name, name),
-        core = COALESCE(NEW.core, core),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()

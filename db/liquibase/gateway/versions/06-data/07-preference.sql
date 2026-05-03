@@ -288,6 +288,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 
 -- operations
 (-1, 'operations', 'Default', '[
+  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -300,6 +301,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', true, true, -1, 'system'),
 (-1, 'operations', 'Compact', '[
+  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -311,6 +313,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":false}
 ]', false, true, -1, 'system'),
 (-1, 'operations', 'Archives', '[
+  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -322,6 +325,7 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
   {"key":"archivedAt",  "isVisible":true}
 ]', false, true, -1, 'system'),
 (-1, 'operations', 'Audit', '[
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":false},
