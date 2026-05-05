@@ -1,14 +1,6 @@
 // @ts-check
 
 /** @type {Record<string, string>} Maps condition.op values to antity-pgsql matchModes */
-const OP_TO_MATCH_MODE = {
-  "=": "equals",
-  "!=": "notEquals",
-  "<": "lt",
-  "<=": "lte",
-  ">": "gt",
-  ">=": "gte",
-};
 
 /**
  * Middleware that injects ACL conditions set by check-acl into req.body.filters.
@@ -24,9 +16,7 @@ export default function applyAclConditions(req, _res, next) {
     req.body ??= {};
     req.body.filters ??= {};
     for (const { field, op, value } of req.aclConditions) {
-      const matchMode = OP_TO_MATCH_MODE[op];
-      if (matchMode)
-        req.body.filters[field] = [{ value, matchMode, operator: "and" }];
+      if (op) req.body.filters[field] = [{ value, op }];
     }
   }
   next();
