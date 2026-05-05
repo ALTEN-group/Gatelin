@@ -19,11 +19,14 @@ import routeSvc from "../services/route.js";
 export function forwardToService(req, res, next) {
   const method = req.method; // GET, POST, etc.
   const serviceName = res.locals.route.serviceName;
-  const route = req.url;
   const body = req.body;
 
+  // Normalize the URL to resolve any path traversal sequences before forwarding
+  const parsed = new URL(req.url, "http://placeholder");
+  const safeRoute = `${parsed.pathname}${parsed.search}`;
+
   // Look up pre-built base URL for this service
-  const url = `${routeSvc.getServiceBaseUrl(serviceName)}${route}`;
+  const url = `${routeSvc.getServiceBaseUrl(serviceName)}${safeRoute}`;
 
   // Forward request to target microservice
   http

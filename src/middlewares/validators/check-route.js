@@ -36,7 +36,8 @@ import routeSvc from "../../services/route.js";
 export default function checkRoute(req, res, next) {
   const u = req.originalUrl;
   const m = req.method;
-  log.debug(() => `checkRoute(url: ${u}, method: ${m})`);
+  const safeU = u.replace(/[\r\n\t]/g, "");
+  log.debug(() => `checkRoute(url: ${safeU}, method: ${m})`);
 
   const r = routeSvc.getOne(u, m);
   if (!r) return next({ statusCode: 404, message: "Route not found" });

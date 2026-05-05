@@ -14,13 +14,14 @@ export function corsMiddleware(req, res, next) {
 
   if (origin) {
     if (!corsSvc.has(origin))
-      return next({ statusCode: 403, message: `Origin ${origin} not allowed by CORS` });
+      return next({ statusCode: 403, message: "CORS policy violation" });
     res.setHeader("Access-Control-Allow-Origin", origin);
+    if (corsSvc.getCredentials(origin))
+      res.setHeader("Access-Control-Allow-Credentials", "true");
   }
 
   res.setHeader("Access-Control-Allow-Methods", METHODS);
   res.setHeader("Access-Control-Allow-Headers", HEADERS);
-  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
     res.statusCode = 204;

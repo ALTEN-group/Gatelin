@@ -29,22 +29,26 @@ export async function upsertRows(req, res, next) {
 
   const results = [];
 
-  // Handle inserts
-  if (rowsToInsert.length > 0) {
-    const { query, args } = pEnt.query.insertArray(rowsToInsert);
-    const result = await execute(query, args, null);
-    if (result.rows) {
-      results.push(...result.rows);
+  try {
+    // Handle inserts
+    if (rowsToInsert.length > 0) {
+      const { query, args } = pEnt.query.insertArray(rowsToInsert);
+      const result = await execute(query, args, null);
+      if (result.rows) {
+        results.push(...result.rows);
+      }
     }
-  }
 
-  // Handle updates
-  if (rowsToUpdate.length > 0) {
-    const { query, args } = pEnt.query.updateArray(rowsToUpdate);
-    const result = await execute(query, args, null);
-    if (result.rows) {
-      results.push(...result.rows);
+    // Handle updates
+    if (rowsToUpdate.length > 0) {
+      const { query, args } = pEnt.query.updateArray(rowsToUpdate);
+      const result = await execute(query, args, null);
+      if (result.rows) {
+        results.push(...result.rows);
+      }
     }
+  } catch (err) {
+    return next(err);
   }
 
   // Store results

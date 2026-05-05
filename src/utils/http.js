@@ -18,14 +18,17 @@ function query(verb, url, params, data, headers) {
   const time = logStart(method, url, params, data, headers);
 
   const fullUrl = params ? `${url}?${new URLSearchParams(params)}` : url;
-  const init = { method, headers: { "Content-Type": "application/json", ...headers } };
+  const init = {
+    method,
+    headers: { "Content-Type": "application/json", ...headers },
+  };
 
-  if (VerbsWithBody.includes(method) && data)
-    init.body = JSON.stringify(data);
+  if (VerbsWithBody.includes(method) && data) init.body = JSON.stringify(data);
 
   return fetch(fullUrl, init)
     .then(async (res) => {
-      const responseData = res.status !== 204 ? await res.json().catch(() => null) : null;
+      const responseData =
+        res.status !== 204 ? await res.json().catch(() => null) : null;
       if (!res.ok) {
         const err = new Error(`HTTP ${res.status}`);
         err.status = res.status;
@@ -52,8 +55,8 @@ function logStart(method, url, params, data, headers) {
   log.debug(() => {
     const p = JSON.stringify(params) || null;
     const d = JSON.stringify(data) || null;
-    const h = JSON.stringify(headers) || null;
-    return `${LOG_PREFIX} query : { method: '${method}', Url: '${url}', params: '${p}', data: '${d}', headers: '${h}'}`;
+    const headerKeys = headers ? Object.keys(headers).join(", ") : null;
+    return `${LOG_PREFIX} query : { method: '${method}', Url: '${url}', params: '${p}', data: '${d}', headers: [${headerKeys}]}`;
   });
   return Date.now();
 }
@@ -72,4 +75,3 @@ function logEnd(res, time) {
 export default {
   query,
 };
-

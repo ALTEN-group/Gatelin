@@ -49,8 +49,11 @@ function init() {
     routesByMethod = new Map();
     for (const row of r.rows) {
       serviceNames.add(row.serviceName);
+      // Anchor the pattern so a shorter prefix cannot match a more-privileged path
+      const rawPattern = row.url;
+      const anchored = `^${rawPattern.startsWith("^") ? rawPattern.slice(1) : rawPattern}${rawPattern.endsWith("$") ? "" : "$"}`;
       // Pre-compile the URL pattern once at startup instead of on every request
-      const route = { ...row, _regex: new RegExp(row.url) };
+      const route = { ...row, _regex: new RegExp(anchored) };
       // A route can accept several methods (e.g. GET + HEAD), so index it
       // under each one — getOne() will only scan the relevant bucket
       for (const method of row.methodNames ?? []) {
@@ -81,8 +84,9 @@ function init() {
 function getOne(requestUrl, requestMethod) {
   const candidates = routesByMethod.get(requestMethod);
   if (!candidates) return undefined;
-  // Normalize URL by removing trailing slash for consistent matching
-  const actualUrl = stripTrailingSlash(requestUrl);
+  // Strip query string and normalize URL by removing trailing slash for consistent matching
+  const pathOnly = requestUrl.split("?")[0];
+  const actualUrl = stripTrailingSlash(pathOnly);
   // Find the first route that matches the URL within the method bucket
   return candidates.find((r) => r._regex.test(actualUrl));
 }

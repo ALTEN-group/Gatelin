@@ -1,5 +1,7 @@
 import { execute } from "@dwtechs/antity-pgsql";
 
+const ALLOWED_HISTORY_FIELDS = new Set(["routeId"]);
+
 /**
  * Creates a history getter middleware for a specific table
  * @param {string} tableName - The name of the table to retrieve history for
@@ -62,6 +64,8 @@ function getByField(tableName, field, schema = "public") {
 }
 
 function queryByField(tableName, field, value, schema = "public") {
+  if (!ALLOWED_HISTORY_FIELDS.has(field))
+    throw new Error(`Invalid history field: ${field}`);
   const sql = `
     SELECT id, tstamp, operation, "consumerId", "consumerName", record
     FROM log.history
