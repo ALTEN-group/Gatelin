@@ -136,6 +136,8 @@ erDiagram
   cors {
     int id PK
     varchar name
+    varchar description
+    boolean credentials
   }
 
   consumer {
