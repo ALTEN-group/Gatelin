@@ -5,10 +5,11 @@ export default defineConfig({
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
   base: '/docs/',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/docs/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/docs/favicon.svg' }],
   ],
   themeConfig: {
     logo: '/logo.svg',
+    siteTitle: false,
     nav: [
       { text: 'Guide', link: '/guide/overview' },
       { text: 'API', link: '/guide/api' },
