@@ -33,7 +33,6 @@ export function buildMethodColumns(
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       controlOptions: {
-        // validators: [required, minlength(1), maxlength(10)],
         disabled: true,
       },
       columnOptions: {
