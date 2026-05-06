@@ -1,12 +1,10 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { disabledCellRenderer } from "@core/utils/renderers/disabled.renderer";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
   INPUT_TYPES,
-  maxlength,
-  minlength,
-  required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
 import { Method } from "app/admin/data-access/methods/method.model";
@@ -35,7 +33,11 @@ export function buildMethodColumns(
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       controlOptions: {
-        validators: [required, minlength(1), maxlength(10)],
+        // validators: [required, minlength(1), maxlength(10)],
+        disabled: true,
+      },
+      columnOptions: {
+        customCellRenderer: disabledCellRenderer,
       },
     },
     {
