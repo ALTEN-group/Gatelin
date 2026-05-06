@@ -4,6 +4,9 @@ export default defineConfig({
   title: 'Gatelin',
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
   base: '/docs/',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/docs/logo.svg' }],
+  ],
   themeConfig: {
     logo: '/logo.svg',
     nav: [
@@ -22,21 +25,40 @@ export default defineConfig({
       {
         text: 'API Reference',
         items: [
-          { text: 'Sessions & Consumers', link: '/guide/api' },
-          { text: 'Services', link: '/guide/api-services' },
-          { text: 'CORS', link: '/guide/api-cors' },
-          { text: 'Routes', link: '/guide/api-routes' },
-          { text: 'Roles', link: '/guide/api-roles' },
-          { text: 'Permissions', link: '/guide/api-permissions' },
-          { text: 'Resources', link: '/guide/api-resources' },
-          { text: 'Operations', link: '/guide/api-operations' },
-          { text: 'Scopes', link: '/guide/api-scopes' },
-          { text: 'Fields', link: '/guide/api-fields' },
-          { text: 'Methods', link: '/guide/api-methods' },
-          { text: 'Applications', link: '/guide/api-applications' },
-          { text: 'Conditions', link: '/guide/api-conditions' },
-          { text: 'Preferences', link: '/guide/api-preferences' },
+          { text: 'Sessions', link: '/guide/api-sessions' },
           { text: 'Proxy', link: '/guide/api-proxy' },
+          {
+            text: 'Routing',
+            collapsed: false,
+            items: [
+              { text: 'Applications', link: '/guide/api-applications' },
+              { text: 'Services', link: '/guide/api-services' },
+              { text: 'Resources', link: '/guide/api-resources' },
+              { text: 'Routes', link: '/guide/api-routes' },
+              { text: 'Methods', link: '/guide/api-methods' },
+              { text: 'Operations', link: '/guide/api-operations' },
+            ],
+          },
+          {
+            text: 'Authorizations',
+            collapsed: false,
+            items: [
+              { text: 'Roles', link: '/guide/api-roles' },
+              { text: 'Permissions', link: '/guide/api-permissions' },
+              { text: 'Scopes', link: '/guide/api-scopes' },
+              { text: 'Fields', link: '/guide/api-fields' },
+              { text: 'Conditions', link: '/guide/api-conditions' },
+              { text: 'CORS', link: '/guide/api-cors' },
+            ],
+          },
+          {
+            text: 'Admin',
+            collapsed: false,
+            items: [
+              { text: 'Consumers', link: '/guide/api-consumers' },
+              { text: 'Preferences', link: '/guide/api-preferences' },
+            ],
+          },
         ],
       },
       {

@@ -472,7 +472,7 @@ Client Response
 - **additionalHeaders**: Adds gateway-specific headers to forwarded requests
 
 
-## Use with Front end 
+## Use with Front end admin
 
 In a typical situation, here's how the frontend should use access tokens:
 

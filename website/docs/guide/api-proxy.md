@@ -1,6 +1,6 @@
 # Proxy (Request Forwarding)
 
-All requests not matching `/health`, `/gatelin/*` (admin endpoints), or `/consumers` are treated as proxy requests and forwarded to the appropriate microservice based on route configuration.
+All requests not matching any `/gateway/*` route are treated as proxy requests and forwarded to the appropriate microservice based on route configuration.
 
 ## Example
 

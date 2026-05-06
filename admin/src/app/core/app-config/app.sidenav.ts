@@ -27,6 +27,15 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
+        id: "applications",
+        label: $localize`:@@Admin_ApplicationsNav:Applications`,
+        routerLink: `/${AppPaths.APPLICATIONS}`,
+        icon: "pi pi-th-large",
+        data: {
+          functionality: "applications",
+        },
+      },
+      {
         id: "services",
         label: $localize`:@@Admin_ServicesNav:Services`,
         routerLink: `/${AppPaths.SERVICES}`,
@@ -42,24 +51,6 @@ export const SIDENAV: MenuItem[] = [
         icon: "pi pi-box",
         data: {
           functionality: "resources",
-        },
-      },
-      {
-        id: "scopes",
-        label: $localize`:@@Admin_ScopesNav:Scopes`,
-        routerLink: `/${AppPaths.SCOPES}`,
-        icon: "pi pi-filter",
-        data: {
-          functionality: "scopes",
-        },
-      },
-      {
-        id: "fields",
-        label: $localize`:@@Admin_FieldsNav:Fields`,
-        routerLink: `/${AppPaths.FIELDS}`,
-        icon: "pi pi-list",
-        data: {
-          functionality: "fields",
         },
       },
       {
@@ -116,12 +107,30 @@ export const SIDENAV: MenuItem[] = [
         },
       },
       {
+        id: "scopes",
+        label: $localize`:@@Admin_ScopesNav:Scopes`,
+        routerLink: `/${AppPaths.SCOPES}`,
+        icon: "pi pi-filter",
+        data: {
+          functionality: "scopes",
+        },
+      },
+      {
         id: "conditions",
         label: $localize`:@@Admin_ConditionsNav:Conditions`,
         routerLink: `/${AppPaths.CONDITIONS}`,
         icon: "pi pi-filter-slash",
         data: {
           functionality: "conditions",
+        },
+      },
+      {
+        id: "fields",
+        label: $localize`:@@Admin_FieldsNav:Fields`,
+        routerLink: `/${AppPaths.FIELDS}`,
+        icon: "pi pi-list",
+        data: {
+          functionality: "fields",
         },
       },
       {
@@ -134,14 +143,5 @@ export const SIDENAV: MenuItem[] = [
         },
       },
     ],
-  },
-  {
-    id: "applications",
-    label: $localize`:@@Admin_ApplicationsNav:Applications`,
-    routerLink: `/${AppPaths.APPLICATIONS}`,
-    icon: "pi pi-th-large",
-    data: {
-      functionality: "applications",
-    },
   },
 ];
