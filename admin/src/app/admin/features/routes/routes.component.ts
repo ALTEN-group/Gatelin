@@ -5,6 +5,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
 import { Route } from "app/admin/data-access/routes/route.model";
 import { RoutesService } from "app/admin/data-access/routes/routes.service";
@@ -40,4 +41,7 @@ export class RoutesComponent {
     table.isReadonly.set(row.core);
     table.isEntryEditionDialogDisplayed.set(true);
   }
+
+  public readonly rowStyles = (row: Route) =>
+    disabledRowRenderer(row, !!this.httpCalls.update);
 }

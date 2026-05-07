@@ -8,6 +8,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
+import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import {
   Calls,
   ConfigHelper,
@@ -81,6 +82,9 @@ export class FieldsComponent {
       return get(event);
     },
   };
+
+  public readonly rowStyles = (row: Field) =>
+    disabledRowRenderer(row, !!this.httpCalls.update);
 
   public onAppSelect(app: GatewayApplication | null): void {
     this.selectedApp.set(app);

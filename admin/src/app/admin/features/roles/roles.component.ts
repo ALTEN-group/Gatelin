@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
+import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import {
   ConfigHelper,
   provideCrudLabels,
@@ -41,4 +42,6 @@ export class RolesComponent {
       queryParams: { roleId: role.id },
     });
   }
+  public readonly rowStyles = (row: GatewayRole) =>
+    disabledRowRenderer(row, !!this.httpCalls.update);
 }

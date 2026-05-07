@@ -1,4 +1,4 @@
-import { ArchiveInfo, FilterLevel } from "@dwtechs/crud-builder";
+import { FilterLevel } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",
@@ -25,18 +25,7 @@ type TableInfo = {
   key: AppTable;
   functionalityKey: string;
   editionDialogSize: "xs" | "s" | "m" | "l";
-  customRowStyles: (row: ArchiveInfo) => { [key: string]: string };
   filterLevel: FilterLevel;
-};
-
-const defaultRowStyles = (row: ArchiveInfo) => {
-  return {
-    opacity: row.archived
-      ? "0.2"
-      : (row as any).locked || (row as any).core
-        ? "0.5"
-        : "1",
-  };
 };
 
 export const TABLES: Record<AppTable, TableInfo> = {
@@ -46,7 +35,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "routes",
     functionalityKey: "routes",
     editionDialogSize: "m",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   consumers: {
@@ -55,7 +43,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "consumers",
     functionalityKey: "consumers",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   services: {
@@ -64,7 +51,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "services",
     functionalityKey: "services",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   resources: {
@@ -73,7 +59,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "resources",
     functionalityKey: "resources",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   cors: {
@@ -82,7 +67,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "cors",
     functionalityKey: "cors",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   operations: {
@@ -91,7 +75,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "operations",
     functionalityKey: "operations",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   methods: {
@@ -100,7 +83,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "methods",
     functionalityKey: "methods",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   fields: {
@@ -109,7 +91,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "fields",
     functionalityKey: "fields",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   scopes: {
@@ -118,7 +99,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "scopes",
     functionalityKey: "scopes",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   roles: {
@@ -127,7 +107,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "roles",
     functionalityKey: "roles",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   colors: {
@@ -136,7 +115,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "colors",
     functionalityKey: "colors",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   permissions: {
@@ -145,7 +123,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "permissions",
     functionalityKey: "permissions",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   applications: {
@@ -154,7 +131,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "applications",
     functionalityKey: "applications",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
   conditions: {
@@ -163,7 +139,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     key: "conditions",
     functionalityKey: "conditions",
     editionDialogSize: "s",
-    customRowStyles: defaultRowStyles,
     filterLevel: "advanced",
   },
 } as const;

@@ -8,6 +8,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
+import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import { Calls, ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
 import {
   Permission,
@@ -68,4 +69,7 @@ export class PermissionsComponent {
     this.selectedRole.set(role);
     this.reloadTrigger.update((c) => c + 1);
   }
+
+  public readonly rowStyles = (row: Permission) =>
+    disabledRowRenderer(row, !!this.permHttpCalls.update);
 }
