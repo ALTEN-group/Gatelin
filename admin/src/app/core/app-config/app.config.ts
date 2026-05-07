@@ -86,6 +86,13 @@ export function provideAppConfig() {
         no: $localize`:@@Crud_Labels_Checkbox_No:No`,
         yes: $localize`:@@Crud_Labels_Checkbox_Yes:Yes`,
       },
+      tableRegular: {
+        currentPageReport: (
+          first: number,
+          last: number,
+          totalRecords: number,
+        ) => `Showing ${first} to ${last} of ${totalRecords} records`,
+      },
     }),
   ]);
 }

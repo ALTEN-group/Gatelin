@@ -112,6 +112,7 @@ export const CONSUMER_COLUMNS: (
       },
       controlOptions: {
         validators: [required],
+        width: "100%",
       },
     },
     ...ARCHIVED_CONFIG,
