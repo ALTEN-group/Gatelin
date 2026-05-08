@@ -1,4 +1,5 @@
-import { FilterLevel } from "@dwtechs/crud-builder";
+import { getHistoryFor } from "@core/utils/history/get-history.trigger";
+import { CrudItemBase, FilterLevel } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",
@@ -26,6 +27,8 @@ type TableInfo = {
   functionalityKey: string;
   editionDialogSize: "xs" | "s" | "m" | "l";
   filterLevel: FilterLevel;
+  isPreferencesModeEnabled: boolean;
+  showHistoryFor: (row: CrudItemBase) => boolean;
 };
 
 export const TABLES: Record<AppTable, TableInfo> = {
@@ -36,6 +39,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "routes",
     editionDialogSize: "m",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   consumers: {
     label: $localize`:@@TableLabels_Consumer:Consumer`,
@@ -44,6 +49,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "consumers",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   services: {
     label: $localize`:@@TableLabels_Service:Service`,
@@ -52,6 +59,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "services",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   resources: {
     label: $localize`:@@TableLabels_Resource:Resource`,
@@ -60,6 +69,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "resources",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   cors: {
     label: $localize`:@@TableLabels_Cors:CORS`,
@@ -68,6 +79,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "cors",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   operations: {
     label: $localize`:@@TableLabels_Operation:Opération`,
@@ -76,6 +89,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "operations",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   methods: {
     label: $localize`:@@TableLabels_Method:Method`,
@@ -84,6 +99,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "methods",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   fields: {
     label: $localize`:@@TableLabels_Field:Field`,
@@ -92,6 +109,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "fields",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   scopes: {
     label: $localize`:@@TableLabels_Scope:Scope`,
@@ -100,6 +119,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "scopes",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   roles: {
     label: $localize`:@@TableLabels_Role:Role`,
@@ -108,6 +129,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "roles",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   colors: {
     label: $localize`:@@TableLabels_Color:Color`,
@@ -116,6 +139,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "colors",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   permissions: {
     label: $localize`:@@TableLabels_Permission:Permission`,
@@ -124,6 +149,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "permissions",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   applications: {
     label: $localize`:@@TableLabels_Application:Application`,
@@ -132,6 +159,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "applications",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
   conditions: {
     label: $localize`:@@TableLabels_Condition:Condition`,
@@ -140,5 +169,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     functionalityKey: "conditions",
     editionDialogSize: "s",
     filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    showHistoryFor: getHistoryFor,
   },
 } as const;
