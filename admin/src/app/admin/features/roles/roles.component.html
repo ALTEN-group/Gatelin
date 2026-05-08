@@ -7,8 +7,9 @@
     [tableTitle]="tableInformation.title"
     [customRowStyles]="rowStyles"
     [filterLevel]="tableInformation.filterLevel"
+    [showHistoryFor]="tableInformation.showHistoryFor"
     [customActionsTemplate]="customActionsCell"
-    [isPreferencesModeEnabled]="true"
+    [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
 />
 
 <ng-template #customActionsCell let-rowData>
