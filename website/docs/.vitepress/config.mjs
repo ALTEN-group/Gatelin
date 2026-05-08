@@ -73,6 +73,7 @@ export default defineConfig({
         text: 'Deployment',
         items: [
           { text: 'Docker Compose', link: '/guide/deployment' },
+          { text: 'Integration', link: '/guide/integration' },
           { text: 'Security', link: '/guide/security' },
           { text: 'Troubleshooting', link: '/guide/troubleshooting' },
         ],
