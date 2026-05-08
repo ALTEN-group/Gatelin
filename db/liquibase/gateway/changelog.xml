@@ -233,6 +233,10 @@
     <comment>Condition triggers: iud on view and history logging</comment>
     <sqlFile path="versions/05-trig/13-condition.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="05-trig-14" author="lcluber">
+    <comment>Application triggers: iud on view and history logging</comment>
+    <sqlFile path="versions/05-trig/14-application.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- data -->
   <changeSet id="06-data-01" author="lcluber">
