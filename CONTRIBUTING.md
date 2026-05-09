@@ -77,12 +77,32 @@ See [tests/README.md](tests/README.md) for more details.
 
 ## Production
 
+### Images
+
+Gatelin ships two releasable images:
+
+| Image | Description |
+|---|---|
+| `dwtechs/gatelin` | The Node.js gateway service. Runs continuously as an API server. |
+| `dwtechs/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. The gateway will not start until this container completes successfully. |
+
+The `migration` image has the full Gatelin schema and core data baked in. Consumers can mount their own Gatelin registration data (services, routes, roles) at `/liquibase/data` without rebuilding the image — see [DB Migration](#db-migration) below.
+
+Two additional images exist for the Gatelin project itself but are not required by consumers:
+
+| Image | Description |
+|---|---|
+| `dwtechs/gatelin-admin` | Angular admin frontend. |
+| `dwtechs/gatelin-website` | Static documentation website. |
+
 ### Build production images
 
-Builds all four production images (`gateway`, `migration`, `admin`, `website`) from their respective `dockerfile.prod` files, using `docker/conf/.env.prod`. Each image is tagged as `dwtechs/gatelin-<service>:<version>` and `dwtechs/gatelin-<service>:latest`.
+Requires `docker/conf/.env.prod` to exist. Create it by copying `.env.dev.example` and filling in production values (passwords, secrets, versions).
+
+Builds production images from their respective `dockerfile.prod` files. Each image is tagged as `dwtechs/gatelin-<target>:<version>` and `dwtechs/gatelin-<target>:latest`, where `<version>` is read from `package.json`.
 
 ```sh
-./scripts/build-prod.sh                   # build all images
+./scripts/build-prod.sh                   # build all four images
 ./scripts/build-prod.sh gateway           # gateway only
 ./scripts/build-prod.sh migration         # migration only
 ./scripts/build-prod.sh admin             # admin only
@@ -99,3 +119,33 @@ Requires images to be built first (or pulled from the registry).
 ```
 
 Starts all services via `docker/docker-compose.prod.yml` using `docker/conf/.env.prod`.
+
+### DB Migration
+
+The `gatelin_migration` container is controlled by environment variables:
+
+| Variable | Values | Description |
+|---|---|---|
+| `UPDATE` | `1` / `0` | When `1`: creates the DB, applies all schema changesets, runs consumer data (if mounted), takes a snapshot, creates the gatelin DB user. This is the normal deploy mode. When `0` (and `ROLLBACK=0`): runs a diff between the live DB and the reference snapshot, generates a `.sql` diff changelog in `versions/generated/`, and syncs the changelog. Development tool only. |
+| `ROLLBACK` | integer > `1` | Rolls back the given number of changesets and takes a new snapshot. |
+| `LIQUIBASE_SNAPSHOT` | integer | Index of the snapshot file to use as baseline for diff operations. |
+| `LIQUIBASE_COMMAND_CONTEXTS` | e.g. `v1,oauth` | Liquibase contexts to activate during update. |
+
+When `UPDATE=1`, the container runs the following steps in order:
+1. Creates the database if it does not exist
+2. Applies all baked-in schema changesets (`gateway/versions/`)
+3. Applies consumer data from `/liquibase/data/changelog.xml` if the file exists
+4. Takes a JSON snapshot of the current schema
+5. Creates the Gatelin DB user with the correct grants
+
+**Adding consumer app data:** Mount a folder containing a `changelog.xml` to `/liquibase/data` in the migration container. That changelog is applied after the core schema, in the same transaction scope.
+
+```yaml
+gatelin_migration:
+  image: dwtechs/gatelin-migration:latest
+  volumes:
+    - ./db/gatelin/data:/liquibase/data
+  environment:
+    UPDATE: 1
+    # ...
+```

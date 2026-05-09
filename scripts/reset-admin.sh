@@ -57,6 +57,13 @@ else
   done
 fi
 
+# Remove dangling images left over from previous builds (<none>:<none>)
+echo -e ""
+echo -e "${YELLOW}🧹 Pruning dangling images...${NC}"
+docker image prune -f \
+  && echo -e "${GREEN}✓${NC} Dangling images pruned" \
+  || echo -e "${YELLOW}⚠${NC}  Nothing to prune"
+
 # Remove node_modules volume
 echo -e ""
 echo -e "${YELLOW}💾 Removing admin node_modules volume...${NC}"
