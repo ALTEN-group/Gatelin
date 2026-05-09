@@ -22,12 +22,10 @@
       [entityId]="tableInformation.key"
       [entityLabel]="tableInformation.label"
       [tableTitle]="tableInformation.title"
-      [customRowStyles]="rowStyles"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
       [filterLevel]="tableInformation.filterLevel"
       [forceReload]="forceReload()"
       [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
-      [isDefaultEditionDisabled]="true"
-      (rowClicked)="onRowClicked($event)"
   />
 
 </div>

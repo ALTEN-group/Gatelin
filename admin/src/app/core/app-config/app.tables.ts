@@ -1,5 +1,4 @@
-import { getHistoryFor } from "@core/utils/history/get-history.trigger";
-import { CrudItemBase, FilterLevel } from "@dwtechs/crud-builder";
+import { FilterLevel } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",
@@ -28,7 +27,7 @@ type TableInfo = {
   editionDialogSize: "xs" | "s" | "m" | "l";
   filterLevel: FilterLevel;
   isPreferencesModeEnabled: boolean;
-  showHistoryFor: (row: CrudItemBase) => boolean;
+  additionalReadonlyProperties: Record<string, boolean>;
 };
 
 export const TABLES: Record<AppTable, TableInfo> = {
@@ -40,7 +39,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "m",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   consumers: {
     label: $localize`:@@TableLabels_Consumer:Consumer`,
@@ -50,7 +49,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   services: {
     label: $localize`:@@TableLabels_Service:Service`,
@@ -60,7 +59,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   resources: {
     label: $localize`:@@TableLabels_Resource:Resource`,
@@ -70,7 +69,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   cors: {
     label: $localize`:@@TableLabels_Cors:CORS`,
@@ -80,7 +79,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   operations: {
     label: $localize`:@@TableLabels_Operation:Opération`,
@@ -90,7 +89,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   methods: {
     label: $localize`:@@TableLabels_Method:Method`,
@@ -100,7 +99,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   fields: {
     label: $localize`:@@TableLabels_Field:Field`,
@@ -110,7 +109,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   scopes: {
     label: $localize`:@@TableLabels_Scope:Scope`,
@@ -120,7 +119,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   roles: {
     label: $localize`:@@TableLabels_Role:Role`,
@@ -130,7 +129,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   colors: {
     label: $localize`:@@TableLabels_Color:Color`,
@@ -140,7 +139,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   permissions: {
     label: $localize`:@@TableLabels_Permission:Permission`,
@@ -150,7 +149,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   applications: {
     label: $localize`:@@TableLabels_Application:Application`,
@@ -160,7 +159,7 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
   conditions: {
     label: $localize`:@@TableLabels_Condition:Condition`,
@@ -170,6 +169,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    showHistoryFor: getHistoryFor,
+    additionalReadonlyProperties: { core: true },
   },
 } as const;

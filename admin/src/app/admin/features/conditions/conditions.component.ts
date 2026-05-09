@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
-import { Condition } from "app/admin/data-access/conditions/condition.model";
 import { ConditionsService } from "app/admin/data-access/conditions/conditions.service";
 
 @Component({
@@ -21,7 +19,4 @@ export class ConditionsComponent {
   public readonly entityFactory = this.conditionsService.entityFactory;
   public readonly httpCalls = this.conditionsService.httpCalls;
   public readonly tableInformation = TABLES.conditions;
-
-  public readonly rowStyles = (row: Condition) =>
-    disabledRowRenderer(row, !!this.httpCalls.update);
 }

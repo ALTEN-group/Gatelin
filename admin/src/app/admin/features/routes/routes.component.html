@@ -6,10 +6,7 @@
     [entityLabel]="tableInformation.label"
     [tableTitle]="tableInformation.title"
     [editionDialogSize]="tableInformation.editionDialogSize"
-    [customRowStyles]="rowStyles"
     [filterLevel]="tableInformation.filterLevel"
-    [showHistoryFor]="tableInformation.showHistoryFor"
     [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
-    [isDefaultEditionDisabled]="true"
-    (rowClicked)="onRowClicked($event)"
+    [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
 />

@@ -5,9 +5,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { disabledRowRenderer } from "@core/utils/renderers/disabled.renderer";
 import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
-import { Resource } from "app/admin/data-access/resources/resource.model";
 import { ResourcesService } from "app/admin/data-access/resources/resources.service";
 
 @Component({
@@ -30,15 +28,4 @@ export class ResourcesComponent {
   public readonly tableInformation = TABLES.resources;
 
   public readonly table = viewChild.required(TableComponent);
-
-  public onRowClicked(row: Resource): void {
-    const table = this.table();
-    table.editedEntry = { ...row };
-    table.isCreation.set(false);
-    table.isReadonly.set(row.core);
-    table.isEntryEditionDialogDisplayed.set(true);
-  }
-
-  public readonly rowStyles = (row: Resource) =>
-    disabledRowRenderer(row, !!this.httpCalls.update);
 }
