@@ -5,11 +5,18 @@ import {
   DestroyRef,
   inject,
   signal,
+  ViewEncapsulation,
 } from "@angular/core";
 import { rxResource, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { RowsAndCount } from "@dwtechs/crud-builder";
+import {
+  CONTROL_TYPES,
+  EditionDialogComponent,
+  RowsAndCount,
+} from "@dwtechs/crud-builder";
+import { Condition } from "app/admin/data-access/conditions/condition.model";
+import { Field } from "app/admin/data-access/fields/field.model";
 import {
   Permission,
   permissionFactory,
@@ -17,12 +24,15 @@ import {
 import { PermissionsService } from "app/admin/data-access/permissions/permissions.service";
 import { GatewayRole } from "app/admin/data-access/roles/role.model";
 import { Route } from "app/admin/data-access/routes/route.model";
+import { Scope } from "app/admin/data-access/scopes/scope.model";
 import { TreeNode } from "primeng/api";
 import { Checkbox } from "primeng/checkbox";
+import { Chip } from "primeng/chip";
 import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
 import { TreeTableModule } from "primeng/treetable";
 import { of } from "rxjs";
+import { GetPermPipe } from "./get-perm.pipe";
 
 interface ServiceNodeData {
   type: "service";
@@ -42,6 +52,9 @@ interface RouteNodeData {
   name: string;
   operationIds: number[];
   rolePerms: Record<number, Permission>;
+  availableFields: string[];
+  availableScopes: string[];
+  availableConditions: { id: number; name: string; color: string | null }[];
 }
 
 export type PermTreeNodeData =
@@ -53,8 +66,17 @@ export type PermTreeNodeData =
   selector: "adm-permissions-tree",
   templateUrl: "./permissions-tree.component.html",
   styleUrl: "./permissions-tree.component.scss",
-  imports: [TreeTableModule, Checkbox, FormsModule, SelectModule],
+  imports: [
+    TreeTableModule,
+    Checkbox,
+    FormsModule,
+    SelectModule,
+    Chip,
+    EditionDialogComponent,
+    GetPermPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class PermissionsTreeComponent {
   private readonly permissionsService = inject(PermissionsService);
@@ -63,6 +85,40 @@ export class PermissionsTreeComponent {
 
   readonly roles: GatewayRole[] = this.route.snapshot.data["roles"] ?? [];
   readonly routes: Route[] = this.route.snapshot.data["routes"] ?? [];
+  private readonly fieldsByResource: Map<number, string[]> = (() => {
+    const map = new Map<number, string[]>();
+    for (const f of (this.route.snapshot.data["fields"] as Field[]) ?? []) {
+      if (f.resourceId === null || f.archived) continue;
+      const names = map.get(f.resourceId) ?? [];
+      names.push(f.name);
+      map.set(f.resourceId, names);
+    }
+    return map;
+  })();
+
+  private readonly scopesByRoute: Map<number, string[]> = (() => {
+    const map = new Map<number, string[]>();
+    for (const s of (this.route.snapshot.data["scopes"] as Scope[]) ?? []) {
+      if (s.routeId === null || s.archived) continue;
+      const names = map.get(s.routeId) ?? [];
+      names.push(s.name);
+      map.set(s.routeId, names);
+    }
+    return map;
+  })();
+
+  private readonly allConditions: {
+    id: number;
+    name: string;
+    color: string | null;
+  }[] = ((this.route.snapshot.data["conditions"] as Condition[]) ?? [])
+    .filter((c) => c.id !== null && !c.archived)
+    .map((c) => ({ id: c.id as number, name: c.name, color: c.color }));
+
+  readonly conditionById: Map<number, { name: string; color: string | null }> =
+    new Map(
+      this.allConditions.map((c) => [c.id, { name: c.name, color: c.color }]),
+    );
 
   readonly selectedRole = signal<GatewayRole | null>(
     (() => {
@@ -76,6 +132,27 @@ export class PermissionsTreeComponent {
     })(),
   );
   readonly selectedRoleId = computed(() => this.selectedRole()?.id ?? null);
+
+  private readonly editingOriginalPerm = signal<Permission | null>(null);
+  readonly editedPermEntry = signal<Permission>(permissionFactory());
+  readonly dialogVisible = signal(false);
+  readonly dialogHeader = signal("");
+  readonly dialogConfig = signal<
+    {
+      key: string;
+      label: string;
+      controlType: (typeof CONTROL_TYPES)[keyof typeof CONTROL_TYPES];
+      options?: { label: string; value: unknown }[];
+    }[]
+  >([]);
+  readonly dialogFeatures = {
+    create: false,
+    update: true,
+    archive: false,
+    getHistory: false,
+    updateFiles: false,
+    restore: false,
+  };
 
   private readonly permissionsResource = rxResource<
     RowsAndCount<Permission>,
@@ -95,12 +172,21 @@ export class PermissionsTreeComponent {
 
   readonly treeNodes = computed<TreeNode<PermTreeNodeData>[]>(() => {
     const perms = this.permissionsResource.value()?.rows ?? [];
-    return this.buildTree(this.routes, perms);
+    return this.buildTree(
+      this.routes,
+      perms,
+      this.fieldsByResource,
+      this.scopesByRoute,
+      this.allConditions,
+    );
   });
 
   private buildTree(
     routes: Route[],
     perms: Permission[],
+    fieldsByResource: Map<number, string[]>,
+    scopesByRoute: Map<number, string[]>,
+    allConditions: { id: number; name: string; color: string | null }[],
   ): TreeNode<PermTreeNodeData>[] {
     // Build routeId → { roleId: Permission } map from existing permissions
     const permMap = new Map<number, Record<number, Permission>>();
@@ -161,6 +247,12 @@ export class PermissionsTreeComponent {
                 name: r.name,
                 operationIds: r.operationId,
                 rolePerms: permMap.get(r.id) ?? {},
+                availableFields:
+                  r.resourceId !== null
+                    ? (fieldsByResource.get(r.resourceId) ?? [])
+                    : [],
+                availableScopes: scopesByRoute.get(r.id) ?? [],
+                availableConditions: allConditions,
               },
               leaf: true,
             })),
@@ -169,11 +261,59 @@ export class PermissionsTreeComponent {
     }));
   }
 
-  getPerm(nodeData: PermTreeNodeData): Permission | undefined {
-    if (nodeData.type !== "route") return undefined;
+  onRowClick(nodeData: PermTreeNodeData): void {
+    if (nodeData.type !== "route") return;
     const roleId = this.selectedRoleId();
-    if (roleId === null) return undefined;
-    return nodeData.rolePerms[roleId];
+    if (roleId === null) return;
+    const perm = nodeData.rolePerms[roleId];
+    this.editingOriginalPerm.set(perm);
+    this.dialogHeader.set(nodeData.name);
+    this.dialogConfig.set([
+      {
+        key: "fields",
+        label: "Fields",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableFields.map((f) => ({ label: f, value: f })),
+      },
+      {
+        key: "scopes",
+        label: "Scopes",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableScopes.map((s) => ({ label: s, value: s })),
+      },
+      {
+        key: "conditionId",
+        label: "Conditions",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableConditions.map((c) => ({
+          label: c.name,
+          value: c.id,
+        })),
+      },
+    ]);
+    this.editedPermEntry.set({ ...perm });
+    this.dialogVisible.set(true);
+  }
+
+  onPermSaved(savedEntry: Permission | null): void {
+    const original = this.editingOriginalPerm();
+    if (!savedEntry || !original?.id) return;
+    const { update } = this.permissionsService.httpCalls;
+    if (!update) return;
+    const merged: Permission = {
+      ...original,
+      fields: savedEntry.fields?.length ? savedEntry.fields : null,
+      scopes: savedEntry.scopes?.length ? savedEntry.scopes : null,
+      conditionId: savedEntry.conditionId?.length
+        ? savedEntry.conditionId
+        : null,
+    };
+    update(merged)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.dialogVisible.set(false);
+        this.permissionsResource.reload();
+      });
   }
 
   onRoleSelect(role: GatewayRole | null): void {

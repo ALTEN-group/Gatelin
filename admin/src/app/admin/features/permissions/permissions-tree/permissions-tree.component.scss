@@ -1,7 +1,9 @@
-:host {
+adm-permissions-tree {
   display: block;
   height: 100%;
   overflow: hidden;
+
+  --p-treetable-body-cell-padding: 0 !important;
 }
 
 .permissions-tree-container {
@@ -23,6 +25,10 @@ p-treetable {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+
+  tr td:first-child {
+    width: 200px;
+  }
 }
 
 .permissions-tree__center-col {
@@ -45,6 +51,45 @@ p-treetable {
 .permissions-tree__values {
   font-size: 0.85rem;
   color: var(--text-color-secondary);
+}
+
+.permissions-tree__row--route {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--p-treetable-row-hover-background, rgba(0, 0, 0, 0.04));
+  }
+}
+
+.permissions-tree__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.permissions-tree__chip {
+  font-size: 0.75rem;
+  height: 1.4rem;
+}
+
+.perm-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
 }
 
 .permissions-tree__placeholder {

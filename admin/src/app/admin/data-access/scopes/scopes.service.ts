@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { SCOPE_COLUMNS } from "app/admin/data-access/scopes/scope.conf";
 import { Scope, scopeFactory } from "app/admin/data-access/scopes/scope.model";
+import { Observable } from "rxjs";
 
 const scopesEndpoint: string = "scopes";
 
@@ -26,4 +27,8 @@ export class ScopesService {
   public readonly config = (payload: ActivatedRouteSnapshot) =>
     SCOPE_COLUMNS(payload);
   public readonly entityFactory = scopeFactory;
+
+  public getAndCacheAll(): Observable<Scope[]> {
+    return this.crud.getAndCacheAll();
+  }
 }

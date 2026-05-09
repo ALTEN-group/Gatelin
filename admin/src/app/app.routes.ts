@@ -11,6 +11,7 @@ import { operationsResolver } from "app/admin/data-access/operations/operations.
 import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
 import { gatewayRolesResolver } from "app/admin/data-access/roles/roles.resolver";
 import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
+import { scopesResolver } from "app/admin/data-access/scopes/scopes.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 
 /**
@@ -271,6 +272,9 @@ export const ROUTES: Routes = [
     resolve: {
       roles: gatewayRolesResolver,
       routes: routesResolver,
+      fields: fieldsResolver,
+      scopes: scopesResolver,
+      conditions: conditionsResolver,
     },
   },
   {

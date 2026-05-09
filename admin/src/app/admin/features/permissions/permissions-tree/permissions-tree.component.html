@@ -35,15 +35,19 @@
     </ng-template>
 
     <ng-template #body let-rowNode let-rowData="rowData">
-      <tr [ttRow]="rowNode">
+      <tr
+        [ttRow]="rowNode"
+        [class.permissions-tree__row--route]="rowData.type === 'route'"
+        (click)="onRowClick(rowData)"
+      >
         <td>
           <p-treeTableToggler [rowNode]="rowNode" />
           <span [class]="'permissions-tree__label--' + rowData.type">{{ rowData.name }}</span>
         </td>
-        <td class="permissions-tree__center-col">
+        <td class="permissions-tree__center-col" (click)="$event.stopPropagation()">
           @if (rowData.type === 'route') {
             <p-checkbox
-              [ngModel]="getPerm(rowData) !== undefined"
+              [ngModel]="(rowData | getPerm:selectedRoleId()) !== undefined"
               [binary]="true"
               (onChange)="onToggle(rowData, $event.checked)"
             />
@@ -51,22 +55,54 @@
         </td>
         <td>
           @if (rowData.type === 'route') {
-            <span class="permissions-tree__values">{{ getPerm(rowData)?.conditionName?.join(', ') }}</span>
+            @let perm = rowData | getPerm:selectedRoleId();
+            <div class="permissions-tree__chips">
+              @for (field of (perm?.fields ?? []); track field) {
+                <p-chip [label]="field" styleClass="permissions-tree__chip" />
+              }
+            </div>
           }
         </td>
         <td>
           @if (rowData.type === 'route') {
-            <span class="permissions-tree__values">{{ getPerm(rowData)?.fields?.join(', ') }}</span>
+            @let perm = rowData | getPerm:selectedRoleId();
+            <div class="permissions-tree__chips">
+              @for (scope of (perm?.scopes ?? []); track scope) {
+                <p-chip [label]="scope" styleClass="permissions-tree__chip" />
+              }
+            </div>
           }
         </td>
         <td>
           @if (rowData.type === 'route') {
-            <span class="permissions-tree__values">{{ getPerm(rowData)?.scopes?.join(', ') }}</span>
+            @let perm = rowData | getPerm:selectedRoleId();
+            <div class="permissions-tree__chips">
+              @for (condId of (perm?.conditionId ?? []); track condId) {
+                @let cond = conditionById.get(condId);
+                <p-chip
+                  [label]="cond?.name ?? ''"
+                  styleClass="permissions-tree__chip"
+                  [style]="{'background': cond?.color ?? '', 'color': cond?.color ? '#fff' : ''}"
+                />
+              }
+            </div>
           }
         </td>
       </tr>
     </ng-template>
   </p-treetable>
   }
+
+  <crd-edition-dialog
+    [(editedEntry)]="editedPermEntry"
+    [config]="dialogConfig()"
+    [features]="dialogFeatures"
+    [isVisible]="dialogVisible()"
+    [isCreation]="false"
+    [customHeader]="dialogHeader()"
+    [size]="'s'"
+    (saved)="onPermSaved($event)"
+    (hide)="dialogVisible.set(false)"
+  />
 
 </div>
