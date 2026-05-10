@@ -33,34 +33,7 @@ import { TableLazyLoadEvent } from "primeng/table";
 import { TreeTableModule } from "primeng/treetable";
 import { of } from "rxjs";
 import { GetPermPipe } from "./get-perm.pipe";
-
-interface ServiceNodeData {
-  type: "service";
-  id: number;
-  name: string;
-}
-
-interface ResourceNodeData {
-  type: "resource";
-  id: number;
-  name: string;
-}
-
-interface RouteNodeData {
-  type: "route";
-  id: number;
-  name: string;
-  operationIds: number[];
-  rolePerms: Record<number, Permission>;
-  availableFields: string[];
-  availableScopes: string[];
-  availableConditions: { id: number; name: string; color: string | null }[];
-}
-
-export type PermTreeNodeData =
-  | ServiceNodeData
-  | ResourceNodeData
-  | RouteNodeData;
+import { PermTreeNodeData } from "./permissions-tree.model";
 
 @Component({
   selector: "adm-permissions-tree",
@@ -79,12 +52,13 @@ export type PermTreeNodeData =
   encapsulation: ViewEncapsulation.None,
 })
 export class PermissionsTreeComponent {
+  // ── injections ────────────────────────────────────────────────────────────
   private readonly permissionsService = inject(PermissionsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
 
-  readonly roles: GatewayRole[] = this.route.snapshot.data["roles"] ?? [];
-  readonly routes: Route[] = this.route.snapshot.data["routes"] ?? [];
+  // ── private data (route snapshot) ─────────────────────────────────────────
+  private readonly routes: Route[] = this.route.snapshot.data["routes"] ?? [];
   private readonly fieldsByResource: Map<number, string[]> = (() => {
     const map = new Map<number, string[]>();
     for (const f of (this.route.snapshot.data["fields"] as Field[]) ?? []) {
@@ -115,45 +89,17 @@ export class PermissionsTreeComponent {
     .filter((c) => c.id !== null && !c.archived)
     .map((c) => ({ id: c.id as number, name: c.name, color: c.color }));
 
-  readonly conditionById: Map<number, { name: string; color: string | null }> =
-    new Map(
-      this.allConditions.map((c) => [c.id, { name: c.name, color: c.color }]),
-    );
-
-  readonly selectedRole = signal<GatewayRole | null>(
-    (() => {
-      const qp = this.route.snapshot.queryParamMap.get("roleId");
-      const routeRoleId = qp
-        ? Number(qp)
-        : ((this.route.snapshot.data["roleId"] as number | undefined) ?? null);
-      return (
-        this.roles.find((r) => r.id === routeRoleId) ?? this.roles[0] ?? null
-      );
-    })(),
+  // ── public data (template-facing) ─────────────────────────────────────────
+  public readonly roles: GatewayRole[] =
+    this.route.snapshot.data["roles"] ?? [];
+  public readonly conditionById: Map<
+    number,
+    { name: string; color: string | null }
+  > = new Map(
+    this.allConditions.map((c) => [c.id, { name: c.name, color: c.color }]),
   );
-  readonly selectedRoleId = computed(() => this.selectedRole()?.id ?? null);
 
-  private readonly editingOriginalPerm = signal<Permission | null>(null);
-  readonly editedPermEntry = signal<Permission>(permissionFactory());
-  readonly dialogVisible = signal(false);
-  readonly dialogHeader = signal("");
-  readonly dialogConfig = signal<
-    {
-      key: string;
-      label: string;
-      controlType: (typeof CONTROL_TYPES)[keyof typeof CONTROL_TYPES];
-      options?: { label: string; value: unknown }[];
-    }[]
-  >([]);
-  readonly dialogFeatures = {
-    create: false,
-    update: true,
-    archive: false,
-    getHistory: false,
-    updateFiles: false,
-    restore: false,
-  };
-
+  // ── private resource ──────────────────────────────────────────────────────
   private readonly permissionsResource = rxResource<
     RowsAndCount<Permission>,
     number | null
@@ -168,9 +114,23 @@ export class PermissionsTreeComponent {
     },
   });
 
-  readonly isLoading = this.permissionsResource.isLoading;
-
-  readonly treeNodes = computed<TreeNode<PermTreeNodeData>[]>(() => {
+  // ── public state ──────────────────────────────────────────────────────────
+  public readonly selectedRole = signal<GatewayRole | null>(
+    (() => {
+      const qp = this.route.snapshot.queryParamMap.get("roleId");
+      const routeRoleId = qp
+        ? Number(qp)
+        : ((this.route.snapshot.data["roleId"] as number | undefined) ?? null);
+      return (
+        this.roles.find((r) => r.id === routeRoleId) ?? this.roles[0] ?? null
+      );
+    })(),
+  );
+  public readonly selectedRoleId = computed(
+    () => this.selectedRole()?.id ?? null,
+  );
+  public readonly isLoading = this.permissionsResource.isLoading;
+  public readonly treeNodes = computed<TreeNode<PermTreeNodeData>[]>(() => {
     const perms = this.permissionsResource.value()?.rows ?? [];
     return this.buildTree(
       this.routes,
@@ -181,6 +141,116 @@ export class PermissionsTreeComponent {
     );
   });
 
+  // ── dialog state ──────────────────────────────────────────────────────────
+  private readonly editingOriginalPerm = signal<Permission | null>(null);
+  public readonly editedPermEntry = signal<Permission>(permissionFactory());
+  public readonly dialogVisible = signal(false);
+  public readonly dialogHeader = signal("");
+  public readonly dialogConfig = signal<
+    {
+      key: string;
+      label: string;
+      controlType: (typeof CONTROL_TYPES)[keyof typeof CONTROL_TYPES];
+      options?: { label: string; value: unknown }[];
+    }[]
+  >([]);
+  public readonly dialogFeatures = {
+    create: false,
+    update: true,
+    archive: false,
+    getHistory: false,
+    updateFiles: false,
+    restore: false,
+  };
+
+  // ── public methods ────────────────────────────────────────────────────────
+  public onRoleSelect(role: GatewayRole | null): void {
+    this.selectedRole.set(role);
+  }
+
+  public onToggle(nodeData: PermTreeNodeData, checked: boolean): void {
+    if (nodeData.type !== "route") return;
+    const role = this.selectedRole();
+    if (role?.id === null || role?.id === undefined) return;
+
+    const { create, archive } = this.permissionsService.httpCalls;
+
+    if (checked) {
+      if (!create) return;
+      const perm: Permission = {
+        ...permissionFactory(role.id),
+        routeId: nodeData.id,
+        operationId: nodeData.operationIds,
+      };
+      create(perm)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.permissionsResource.reload());
+    } else {
+      if (!archive) return;
+      const existingPerm = nodeData.rolePerms[role.id];
+      if (!existingPerm?.id) return;
+      archive([existingPerm.id])
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.permissionsResource.reload());
+    }
+  }
+
+  public onRowClick(nodeData: PermTreeNodeData): void {
+    if (nodeData.type !== "route") return;
+    const roleId = this.selectedRoleId();
+    if (roleId === null) return;
+    const perm = nodeData.rolePerms[roleId];
+    this.editingOriginalPerm.set(perm);
+    this.dialogHeader.set(nodeData.name);
+    this.dialogConfig.set([
+      {
+        key: "fields",
+        label: "Fields",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableFields.map((f) => ({ label: f, value: f })),
+      },
+      {
+        key: "scopes",
+        label: "Scopes",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableScopes.map((s) => ({ label: s, value: s })),
+      },
+      {
+        key: "conditionId",
+        label: "Conditions",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: nodeData.availableConditions.map((c) => ({
+          label: c.name,
+          value: c.id,
+        })),
+      },
+    ]);
+    this.editedPermEntry.set({ ...perm });
+    this.dialogVisible.set(true);
+  }
+
+  public onPermSaved(savedEntry: Permission | null): void {
+    const original = this.editingOriginalPerm();
+    if (!savedEntry || !original) return;
+    const { update } = this.permissionsService.httpCalls;
+    if (!update) return;
+    const merged: Permission = {
+      ...original,
+      fields: savedEntry.fields?.length ? savedEntry.fields : null,
+      scopes: savedEntry.scopes?.length ? savedEntry.scopes : null,
+      conditionId: savedEntry.conditionId?.length
+        ? savedEntry.conditionId
+        : null,
+    };
+    update(merged)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.dialogVisible.set(false);
+        this.permissionsResource.reload();
+      });
+  }
+
+  // ── private methods ───────────────────────────────────────────────────────
   private buildTree(
     routes: Route[],
     perms: Permission[],
@@ -259,91 +329,5 @@ export class PermissionsTreeComponent {
         }),
       ),
     }));
-  }
-
-  onRowClick(nodeData: PermTreeNodeData): void {
-    if (nodeData.type !== "route") return;
-    const roleId = this.selectedRoleId();
-    if (roleId === null) return;
-    const perm = nodeData.rolePerms[roleId];
-    this.editingOriginalPerm.set(perm);
-    this.dialogHeader.set(nodeData.name);
-    this.dialogConfig.set([
-      {
-        key: "fields",
-        label: "Fields",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableFields.map((f) => ({ label: f, value: f })),
-      },
-      {
-        key: "scopes",
-        label: "Scopes",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableScopes.map((s) => ({ label: s, value: s })),
-      },
-      {
-        key: "conditionId",
-        label: "Conditions",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableConditions.map((c) => ({
-          label: c.name,
-          value: c.id,
-        })),
-      },
-    ]);
-    this.editedPermEntry.set({ ...perm });
-    this.dialogVisible.set(true);
-  }
-
-  onPermSaved(savedEntry: Permission | null): void {
-    const original = this.editingOriginalPerm();
-    if (!savedEntry || !original?.id) return;
-    const { update } = this.permissionsService.httpCalls;
-    if (!update) return;
-    const merged: Permission = {
-      ...original,
-      fields: savedEntry.fields?.length ? savedEntry.fields : null,
-      scopes: savedEntry.scopes?.length ? savedEntry.scopes : null,
-      conditionId: savedEntry.conditionId?.length
-        ? savedEntry.conditionId
-        : null,
-    };
-    update(merged)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.dialogVisible.set(false);
-        this.permissionsResource.reload();
-      });
-  }
-
-  onRoleSelect(role: GatewayRole | null): void {
-    this.selectedRole.set(role);
-  }
-
-  onToggle(nodeData: PermTreeNodeData, checked: boolean): void {
-    if (nodeData.type !== "route") return;
-    const role = this.selectedRole();
-    if (role?.id === null || role?.id === undefined) return;
-
-    const { create, archive } = this.permissionsService.httpCalls;
-
-    if (checked) {
-      if (!create) return;
-      const perm: Permission = {
-        ...permissionFactory(role.id),
-        routeId: nodeData.id,
-        operationId: nodeData.operationIds,
-      };
-      create(perm)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.permissionsResource.reload());
-    } else {
-      if (!archive) return;
-      const existingPerm = nodeData.rolePerms[role.id];
-      if (!existingPerm?.id) return;
-      archive([existingPerm.id])
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.permissionsResource.reload());
-    }
   }
 }

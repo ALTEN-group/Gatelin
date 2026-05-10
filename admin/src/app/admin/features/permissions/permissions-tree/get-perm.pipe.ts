@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 import { Permission } from "app/admin/data-access/permissions/permission.model";
-import { PermTreeNodeData } from "./permissions-tree.component";
+import { PermTreeNodeData } from "app/admin/features/permissions/permissions-tree/permissions-tree.model";
 
 @Pipe({
   name: "getPerm",
