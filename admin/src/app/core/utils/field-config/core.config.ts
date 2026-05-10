@@ -11,4 +11,13 @@ export const CORE_CONFIG: StrictCrudItemOptions<{ core: boolean }> = {
     customCellRenderer: buildLockedCellRenderer(),
     customHeaderRenderer: () => "🔒",
   },
+  controlOptions: {
+    disabled: true,
+  },
+  conditions: {
+    controlOptions: {
+      hidden: ({ model }: { model: { core: boolean } & { id?: number } }) =>
+        !model.id,
+    },
+  },
 };
