@@ -33,9 +33,9 @@ export default new SQLEntity("services", [
   {
     key: "appName",
     type: "string",
-    min: null,
-    max: null,
-    isTypeChecked: true,
+    min: 1,
+    max: 255,
+    isTypeChecked: false,
     isFilterable: true,
     requiredFor: [],
     operations: ["SELECT"],

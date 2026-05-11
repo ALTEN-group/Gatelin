@@ -5,6 +5,7 @@ import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
+  FormFieldInteractionEvent,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -26,6 +27,18 @@ export const buildServiceColumns = ({
     options: toSelectItems<GatewayApplication>(data.applications, "name"),
     controlOptions: {
       validators: [required],
+      action: (event: FormFieldInteractionEvent) => {
+        if (event.interactionType !== "valueChange") return;
+        const optionLabel = data.applications.find(
+          (app: GatewayApplication) => app.id === event.value,
+        )?.name;
+        return [
+          {
+            key: "appName",
+            value: optionLabel,
+          },
+        ];
+      },
     },
     columnOptions: {
       isHardHidden: true,

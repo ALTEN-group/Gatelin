@@ -74,6 +74,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       return redirectToLogin(err);
     }
     return authenticationService.refreshToken().pipe(
+      catchError(() => redirectToLogin(err)),
       switchMap((res) => {
         const token = tokenService.getAccessToken();
         if (!res || !token) {
@@ -82,7 +83,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         // Assign new token and replay the request
         return next(cloneReq(req, token));
       }),
-      catchError(() => redirectToLogin(err)),
     );
   };
 

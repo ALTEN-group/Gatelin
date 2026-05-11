@@ -47,9 +47,9 @@ export default new SQLEntity("conditions", [
   {
     key: "fieldName",
     type: "string",
-    min: null,
-    max: null,
-    isTypeChecked: true,
+    min: 1,
+    max: 255,
+    isTypeChecked: false,
     isFilterable: false,
     requiredFor: [],
     operations: ["SELECT"],
