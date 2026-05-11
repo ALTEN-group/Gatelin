@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
+import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -26,6 +27,7 @@ export const RESOURCE_COLUMNS: (
     options: toSelectItems<Service>(data.services, "name"),
     controlOptions: {
       validators: [required],
+      action: buildIdNameAction<Service>("serviceName", data.services, "name"),
     },
     columnOptions: {
       isHardHidden: true,

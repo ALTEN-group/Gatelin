@@ -10,6 +10,7 @@ export class SnackbarService {
     this.show({
       severity: "error",
       detail: message,
+      key: "bottomCenter",
     });
   }
 
@@ -24,6 +25,7 @@ export class SnackbarService {
   public displayInfo(message: string) {
     this.show({
       detail: message,
+      key: "topRight",
     });
   }
 

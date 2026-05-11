@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
+import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import {
   CONTROL_TYPES,
@@ -28,6 +29,7 @@ export const SCOPE_COLUMNS: (
     options: toSelectItems<Route>(data.routes, "name"),
     controlOptions: {
       validators: [required],
+      action: buildIdNameAction<Route>("routeName", data.routes, "name"),
     },
     columnOptions: {
       isHardHidden: true,

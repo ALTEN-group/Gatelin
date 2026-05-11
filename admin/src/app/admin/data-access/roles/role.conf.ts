@@ -2,6 +2,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildActiveCellRenderer } from "@core/utils/renderers/active.renderer";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
@@ -29,6 +30,11 @@ export const buildRoleColumns = (
     options: toSelectItems<GatewayApplication>(data.applications, "name"),
     controlOptions: {
       validators: [required],
+      action: buildIdNameAction<GatewayApplication>(
+        "appName",
+        data.applications,
+        "name",
+      ),
     },
     columnOptions: {
       isHardHidden: true,

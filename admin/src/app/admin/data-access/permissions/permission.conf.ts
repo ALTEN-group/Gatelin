@@ -1,6 +1,10 @@
 import { inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import {
+  buildIdNameAction,
+  buildIdsNamesAction,
+} from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
@@ -39,6 +43,13 @@ export const PERMISSION_COLUMNS: (
       label: "Service",
       controlType: CONTROL_TYPES.SELECT,
       options: toSelectItems<Service>(data.services, "name"),
+      controlOptions: {
+        action: buildIdNameAction<Service>(
+          "serviceName",
+          data.services,
+          "name",
+        ),
+      },
       columnOptions: {
         isHardHidden: true,
       },
@@ -64,6 +75,13 @@ export const PERMISSION_COLUMNS: (
       label: "Resource",
       controlType: CONTROL_TYPES.SELECT,
       options: toSelectItems<Resource>(data.resources, "name"),
+      controlOptions: {
+        action: buildIdNameAction<Resource>(
+          "resourceName",
+          data.resources,
+          "name",
+        ),
+      },
       columnOptions: {
         isHardHidden: true,
       },
@@ -91,6 +109,7 @@ export const PERMISSION_COLUMNS: (
       options: toSelectItems<Route>(data.routes, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdNameAction<Route>("routeName", data.routes, "name"),
       },
       columnOptions: {
         isHardHidden: true,
@@ -119,6 +138,11 @@ export const PERMISSION_COLUMNS: (
       options: toSelectItems<Operation>(data.operations, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdsNamesAction<Operation>(
+          "operationName",
+          data.operations,
+          "name",
+        ),
       },
       columnOptions: {
         isHardHidden: true,
@@ -173,8 +197,12 @@ export const PERMISSION_COLUMNS: (
       label: "Conditions",
       controlType: CONTROL_TYPES.MULTISELECT,
       options: toSelectItems<Condition>(data.conditions, "name"),
-      columnOptions: {
-        isHardHidden: true,
+      controlOptions: {
+        action: buildIdsNamesAction<Condition>(
+          "conditionName",
+          data.conditions,
+          "name",
+        ),
       },
     },
     {

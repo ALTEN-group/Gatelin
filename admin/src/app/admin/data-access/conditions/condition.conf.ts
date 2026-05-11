@@ -3,6 +3,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -50,6 +51,7 @@ export const CONDITION_COLUMNS: (
       })),
       controlOptions: {
         validators: [required],
+        action: buildIdNameAction<Field>("fieldName", data.fields, "name"),
       },
       columnOptions: {
         isHardHidden: true,

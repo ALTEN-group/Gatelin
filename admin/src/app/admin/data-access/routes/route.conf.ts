@@ -3,8 +3,15 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
 import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
+import {
+  buildIdNameAction,
+  buildIdsNamesAction,
+} from "@core/utils/field-config/on-select-action.config";
 import { PROTECTED_CONFIG } from "@core/utils/field-config/protected.config";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import {
+  toNamesSelectOptions,
+  toSelectItems,
+} from "@core/utils/primeng/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
   CONTROL_TYPES,
@@ -34,6 +41,11 @@ export const ROUTE_COLUMNS: (
       options: toSelectItems<Service>(data.services, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdNameAction<Service>(
+          "serviceName",
+          data.services,
+          "name",
+        ),
       },
       columnOptions: {
         isHardHidden: true,
@@ -44,10 +56,7 @@ export const ROUTE_COLUMNS: (
       label: "Service",
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
-      options: data.services.map((s: Service) => ({
-        label: s.name,
-        value: s.name,
-      })),
+      options: toNamesSelectOptions(data.services),
       controlOptions: {
         hidden: true,
       },
@@ -62,6 +71,11 @@ export const ROUTE_COLUMNS: (
       options: toSelectItems<Resource>(data.resources, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdNameAction<Resource>(
+          "resourceName",
+          data.resources,
+          "name",
+        ),
       },
       columnOptions: {
         isHardHidden: true,
@@ -72,10 +86,7 @@ export const ROUTE_COLUMNS: (
       label: "Resource",
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
-      options: data.resources.map((r: Resource) => ({
-        label: r.name,
-        value: r.name,
-      })),
+      options: toNamesSelectOptions(data.resources),
       controlOptions: {
         hidden: true,
       },
@@ -99,6 +110,11 @@ export const ROUTE_COLUMNS: (
       options: toSelectItems<Operation>(data.operations, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdsNamesAction<Operation>(
+          "operationName",
+          data.operations,
+          "name",
+        ),
       },
       columnOptions: {
         isHardHidden: true,
@@ -108,10 +124,7 @@ export const ROUTE_COLUMNS: (
       key: "operationName",
       label: "Operations",
       controlType: CONTROL_TYPES.SELECT,
-      options: data.operations.map((o: Operation) => ({
-        label: o.name,
-        value: o.name,
-      })),
+      options: toNamesSelectOptions(data.operations),
       controlOptions: {
         hidden: true,
       },
@@ -147,12 +160,14 @@ export const ROUTE_COLUMNS: (
       key: "methodIds",
       label: "Methods",
       controlType: CONTROL_TYPES.MULTISELECT,
-      options: data.methods.map((m: Method) => ({
-        label: m.name,
-        value: m.id,
-      })),
+      options: toSelectItems<Method>(data.methods, "name"),
       controlOptions: {
         validators: [required],
+        action: buildIdsNamesAction<Method>(
+          "methodNames",
+          data.methods,
+          "name",
+        ),
       },
       columnOptions: {
         isHardHidden: true,
@@ -162,10 +177,7 @@ export const ROUTE_COLUMNS: (
       key: "methodNames",
       label: "Methods",
       controlType: CONTROL_TYPES.SELECT,
-      options: data.methods.map((m: Method) => ({
-        label: m.name,
-        value: m.name,
-      })),
+      options: toNamesSelectOptions(data.methods),
       controlOptions: {
         hidden: true,
       },
