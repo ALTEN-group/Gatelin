@@ -14,12 +14,5 @@ export const operationFactory = (): Operation => ({
   description: "",
   color: null,
   core: false,
-  creatorId: null,
-  creatorName: null,
-  createdAt: null,
-  updaterId: null,
-  updaterName: null,
-  updatedAt: null,
-  archivedAt: null,
-  archived: false,
+  ...new ArchiveInfo(),
 });
