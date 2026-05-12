@@ -30,7 +30,6 @@ export const AppPaths = {
   SCOPES: "scopes",
   ROLES: "roles",
   PERMISSIONS: "permissions",
-  PERMISSIONS_TREE: "permissions-tree",
   APPLICATIONS: "applications",
   CONDITIONS: "conditions",
   NOT_FOUND: "not-found",
@@ -239,30 +238,9 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.PERMISSIONS,
     loadComponent: () =>
-      import("./admin/features/permissions/permissions.component").then(
-        (m) => m.PermissionsComponent,
+      import("./admin/features/permissions/permissions-tree.component").then(
+        (m) => m.PermissionsTreeComponent,
       ),
-    title: "Permissions",
-    canActivate: [aclGuard()],
-    data: {
-      breadcrumb: $localize`:@@Admin_PermissionsNav:Permissions`,
-      functionality: "permissions",
-    },
-    resolve: {
-      roles: gatewayRolesResolver,
-      routes: routesResolver,
-      operations: operationsResolver,
-      resources: resourcesResolver,
-      services: serviceResolver,
-      conditions: conditionsResolver,
-    },
-  },
-  {
-    path: AppPaths.PERMISSIONS_TREE,
-    loadComponent: () =>
-      import(
-        "./admin/features/permissions/permissions-tree/permissions-tree.component"
-      ).then((m) => m.PermissionsTreeComponent),
     title: "Permissions Tree",
     canActivate: [aclGuard()],
     data: {

@@ -22,6 +22,6 @@ export class CorsService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = CORS_COLUMNS;
+  public readonly config = CORS_COLUMNS();
   public readonly entityFactory = corsFactory;
 }

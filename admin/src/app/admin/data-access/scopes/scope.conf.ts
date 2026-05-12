@@ -52,6 +52,23 @@ export const SCOPE_COLUMNS: (
     },
   },
   {
+    key: "resourceId",
+    label: "Resource",
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<Resource>(data.resources, "name"),
+    controlOptions: {
+      validators: [required],
+      action: buildIdNameAction<Resource>(
+        "resourceName",
+        data.resources,
+        "name",
+      ),
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
     key: "resourceName",
     label: "Resource",
     controlType: CONTROL_TYPES.INPUT,

@@ -90,17 +90,8 @@ export const SIDENAV: MenuItem[] = [
       },
       {
         id: "permissions",
-        label: $localize`:@@Admin_PermissionsNav:Permissions`,
+        label: $localize`:@@Admin_PermissionsTreeNav:Permissions`,
         routerLink: `/${AppPaths.PERMISSIONS}`,
-        icon: "pi pi-lock",
-        data: {
-          functionality: "permissions",
-        },
-      },
-      {
-        id: "permissions-tree",
-        label: $localize`:@@Admin_PermissionsTreeNav:Permissions Tree`,
-        routerLink: `/${AppPaths.PERMISSIONS_TREE}`,
         icon: "pi pi-sitemap",
         data: {
           functionality: "permissions",

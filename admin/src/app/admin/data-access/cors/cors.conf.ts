@@ -11,7 +11,7 @@ import {
 } from "@dwtechs/crud-builder";
 import { Cors } from "app/admin/data-access/cors/cors.model";
 
-export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
+export const CORS_COLUMNS: () => StrictCrudItemOptions<Cors>[] = () => [
   ID_CONFIG,
   {
     key: "name",

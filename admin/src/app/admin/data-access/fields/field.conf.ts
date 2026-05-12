@@ -55,6 +55,19 @@ export const FIELD_COLUMNS: (
     },
   },
   {
+    key: "serviceId",
+    label: "Service",
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<Service>(data.services, "name"),
+    controlOptions: {
+      validators: [required],
+      action: buildIdNameAction<Service>("serviceName", data.services, "name"),
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
     key: "serviceName",
     label: "Service",
     controlType: CONTROL_TYPES.INPUT,
