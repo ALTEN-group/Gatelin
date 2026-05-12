@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Role } from "@core/roles/role.class";
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -115,6 +115,6 @@ export const CONSUMER_COLUMNS: (
         width: "100%",
       },
     },
-    ...ARCHIVED_CONFIG,
+    ...buildArchivedConfig(),
   ];
 };
