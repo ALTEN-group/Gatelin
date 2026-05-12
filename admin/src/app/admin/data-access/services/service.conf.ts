@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
-import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
@@ -68,6 +68,6 @@ export const buildServiceColumns = ({
     },
   },
   CORE_CONFIG,
-  ...ARCHIVED_CONFIG,
-  ...AUDIT_CONFIG,
+  ...buildArchivedConfig(),
+  ...buildAuditConfig(),
 ];

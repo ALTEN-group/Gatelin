@@ -1,7 +1,7 @@
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
-import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
 import { buildActiveCellRenderer } from "@core/utils/renderers/active.renderer";
@@ -87,6 +87,6 @@ export const buildRoleColumns = (
       customCellRenderer: buildActiveCellRenderer(),
     },
   },
-  ...ARCHIVED_CONFIG,
-  ...AUDIT_CONFIG,
+  ...buildArchivedConfig(),
+  ...buildAuditConfig(),
 ];

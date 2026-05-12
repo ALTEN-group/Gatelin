@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
-import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/primeng/to-select-items";
@@ -52,6 +52,23 @@ export const SCOPE_COLUMNS: (
     },
   },
   {
+    key: "resourceId",
+    label: "Resource",
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<Resource>(data.resources, "name"),
+    controlOptions: {
+      validators: [required],
+      action: buildIdNameAction<Resource>(
+        "resourceName",
+        data.resources,
+        "name",
+      ),
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
     key: "resourceName",
     label: "Resource",
     controlType: CONTROL_TYPES.INPUT,
@@ -76,6 +93,6 @@ export const SCOPE_COLUMNS: (
       validators: [required, minlength(1), maxlength(50)],
     },
   },
-  ...ARCHIVED_CONFIG,
-  ...AUDIT_CONFIG,
+  ...buildArchivedConfig(),
+  ...buildAuditConfig(),
 ];

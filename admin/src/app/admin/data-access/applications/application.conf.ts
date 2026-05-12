@@ -1,4 +1,4 @@
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import {
   CONTROL_TYPES,
@@ -33,6 +33,6 @@ export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplicat
         validators: [maxlength(100)],
       },
     },
-    ...ARCHIVED_CONFIG,
+    ...buildArchivedConfig(),
   ];
 }

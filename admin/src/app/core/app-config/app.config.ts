@@ -7,6 +7,7 @@ import {
 import { TitleStrategy } from "@angular/router";
 import { APP_CONFIG, AppConfig } from "@core/app-config/app-config.token";
 import { SIDENAV } from "@core/app-config/app.sidenav";
+import { CRUD_LABELS_CONFIG } from "@core/app-config/crud-labels";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
 import { AuthenticationService } from "@core/auth/auth.service";
 import {
@@ -81,23 +82,10 @@ export function provideAppConfig() {
         };
       },
     },
-    provideCrudLabels({
-      checkbox: {
-        no: $localize`:@@Crud_Labels_Checkbox_No:No`,
-        yes: $localize`:@@Crud_Labels_Checkbox_Yes:Yes`,
-      },
-      tableRegular: {
-        currentPageReport: (
-          first: number,
-          last: number,
-          totalRecords: number,
-        ) => `Showing ${first} to ${last} of ${totalRecords} records`,
-      },
-    }),
+    provideCrudLabels(CRUD_LABELS_CONFIG),
   ]);
 }
 
-// TODO: un petit loading spinner serait pas mal :)
 function checkToken(authService: AuthenticationService) {
   return authService.refreshToken().pipe(
     tap((success) => {

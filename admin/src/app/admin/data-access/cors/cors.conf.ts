@@ -1,5 +1,5 @@
-import { ARCHIVED_CONFIG } from "@core/utils/field-config/archived.config";
-import { AUDIT_CONFIG } from "@core/utils/field-config/audit.config";
+import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -11,7 +11,7 @@ import {
 } from "@dwtechs/crud-builder";
 import { Cors } from "app/admin/data-access/cors/cors.model";
 
-export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
+export const CORS_COLUMNS: () => StrictCrudItemOptions<Cors>[] = () => [
   ID_CONFIG,
   {
     key: "name",
@@ -32,6 +32,6 @@ export const CORS_COLUMNS: StrictCrudItemOptions<Cors>[] = [
       validators: [maxlength(100)],
     },
   },
-  ...ARCHIVED_CONFIG,
-  ...AUDIT_CONFIG,
+  ...buildArchivedConfig(),
+  ...buildAuditConfig(),
 ];
