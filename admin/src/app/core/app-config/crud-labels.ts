@@ -42,6 +42,7 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
     modeEdit: "Edit",
     cancel: "Cancel",
     close: "Close",
+    validate: "Submit",
   },
   form: {
     reset: "Reset",
@@ -67,5 +68,18 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
     selection: "Selection",
     cancel: "Cancel",
     export: "Export",
+  },
+  validators: {
+    invalid: "The entered value is invalid",
+    required: "This field is required",
+    unknownValue: "Please select one of the suggested values",
+    emailInvalid: "The email is invalid",
+    minlength:
+      "The entered value is too short ({requiredLength} characters minimum)",
+    maxlength:
+      "The entered value is too long ({requiredLength} characters maximum)",
+    max: "The value must be less than or equal to {max}",
+    min: "The value must be greater than or equal to {min}",
+    maxFileSize: "The file size exceeds the maximum allowed size",
   },
 };
