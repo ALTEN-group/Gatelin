@@ -3,6 +3,20 @@ import { SQLEntity } from "@dwtechs/antity-pgsql";
 
 export default new SQLEntity("permissions", [
   {
+    key: "id",
+    type: "integer",
+    min: null,
+    max: null,
+    isTypeChecked: true,
+    isFilterable: true,
+    requiredFor: [],
+    operations: ["SELECT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
+  {
     key: "roleId",
     type: "integer",
     min: 1,

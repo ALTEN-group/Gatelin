@@ -30,6 +30,7 @@ CREATE OR REPLACE VIEW role_cache AS
 -- Management view: one row per (roleId, routeId, operationId)
 CREATE OR REPLACE VIEW permissions AS
   SELECT
+    p.id,
     p."roleId",
     svc.id   AS "serviceId",
     svc.name AS "serviceName",

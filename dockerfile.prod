@@ -4,7 +4,8 @@ ARG NODE_VERSION=24.11.0-alpine3.22
 FROM node:${NODE_VERSION} AS deps
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci --only=production --loglevel=error --ignore-scripts --no-fund
+RUN npm ci --only=production --loglevel=error --ignore-scripts --no-fund \
+  && npm cache clean --force
 
 # Stage 2: final image
 FROM node:${NODE_VERSION}
@@ -21,6 +22,14 @@ ARG GID
 RUN deluser --remove-home node \
   && addgroup -S usergroup -g ${GID} \
   && adduser -G usergroup -S user -u ${UID}
+
+# Remove npm/npx/corepack — not needed at runtime (app uses `node --run`)
+RUN rm -rf /usr/local/lib/node_modules/npm \
+           /usr/local/lib/node_modules/corepack \
+           /usr/local/bin/npm \
+           /usr/local/bin/npx \
+           /usr/local/bin/corepack
+
 USER user
 
 WORKDIR /usr/src/app
