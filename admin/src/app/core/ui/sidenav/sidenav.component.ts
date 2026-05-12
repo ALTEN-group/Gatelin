@@ -37,6 +37,7 @@ export class SidenavComponent {
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       map((e) => e.url),
       startWith(this.router.url),
+      map((url) => url.split("?")[0]),
     ),
   );
 
