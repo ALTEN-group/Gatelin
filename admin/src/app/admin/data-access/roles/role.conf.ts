@@ -3,7 +3,10 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import {
+  toNamesSelectOptions,
+  toSelectItems,
+} from "@core/utils/primeng/to-select-items";
 import { buildActiveCellRenderer } from "@core/utils/renderers/active.renderer";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
@@ -45,6 +48,7 @@ export const buildRoleColumns = (
     label: $localize`:@@Roles_Application:Application`,
     controlType: CONTROL_TYPES.INPUT,
     type: INPUT_TYPES.TEXT,
+    options: toNamesSelectOptions(data.applications),
     controlOptions: {
       hidden: true,
     },
