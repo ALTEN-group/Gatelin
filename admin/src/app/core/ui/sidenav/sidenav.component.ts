@@ -44,8 +44,12 @@ export class SidenavComponent {
   public readonly sideNavItems = computed<MenuItem[]>(() => {
     const activeUrl = this.activeUrl();
     const alertKeys = this.sidenavService.alertKeys();
-    if (!activeUrl) return this.baseSideNavItems;
-    return this.getSidenavItems(activeUrl, alertKeys);
+    const isExpanded = this.sidenavService.isExpanded();
+    const items = activeUrl
+      ? this.getSidenavItems(activeUrl, alertKeys)
+      : this.baseSideNavItems;
+    if (isExpanded) return items;
+    return this.forceAllExpanded(items);
   });
 
   private getSidenavItems(
@@ -55,6 +59,14 @@ export class SidenavComponent {
     return this.baseSideNavItems.map((item) =>
       this.recursivelyGetExpandedAndVisible(item, activeUrl, alertKeys),
     );
+  }
+
+  private forceAllExpanded(items: MenuItem[]): MenuItem[] {
+    return items.map((item) => ({
+      ...item,
+      expanded: true,
+      items: item.items ? this.forceAllExpanded(item.items) : item.items,
+    }));
   }
 
   private recursivelyGetExpandedAndVisible(

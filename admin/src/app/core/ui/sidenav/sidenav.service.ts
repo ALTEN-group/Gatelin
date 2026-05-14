@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from "@angular/core";
+import { computed, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
@@ -68,8 +68,12 @@ export class SidenavService {
     });
   }
 
+  public readonly isExpanded = computed(
+    () => this._expanded() || this._pinned(),
+  );
+
   public getExpanded(): boolean {
-    return this._expanded() || this._pinned();
+    return this.isExpanded();
   }
 
   public getPinned(): boolean {
