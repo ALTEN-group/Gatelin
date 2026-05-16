@@ -16,6 +16,7 @@ import {
 } from "@dwtechs/crud-builder";
 import { Condition } from "app/admin/data-access/conditions/condition.model";
 import { Field } from "app/admin/data-access/fields/field.model";
+import { SelectItem } from "primeng/api";
 
 const OP_OPTIONS = [
   { label: "=", value: "=" },
@@ -45,10 +46,15 @@ export const CONDITION_COLUMNS: (
       key: "fieldId",
       label: "Field",
       controlType: CONTROL_TYPES.SELECT,
-      options: (data.fields as Field[]).map((f: Field) => ({
-        label: `${f.resourceName}.${f.name}`,
-        value: f.id,
-      })),
+      options: (data.fields as Field[])
+        .map((f: Field) => ({
+          label: `${f.resourceName}.${f.name}`,
+          value: f.id,
+        }))
+        .toSorted(
+          (a: SelectItem, b: SelectItem) =>
+            a.label?.localeCompare(b.label ?? "") ?? 0,
+        ),
       controlOptions: {
         validators: [required],
         action: buildIdNameAction<Field>("fieldName", data.fields, "name"),
@@ -62,10 +68,15 @@ export const CONDITION_COLUMNS: (
       label: "Field",
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
-      options: (data.fields as Field[]).map((f: Field) => ({
-        label: f.name,
-        value: f.name,
-      })),
+      options: (data.fields as Field[])
+        .map((f: Field) => ({
+          label: `${f.resourceName}.${f.name}`,
+          value: f.name,
+        }))
+        .toSorted(
+          (a: SelectItem, b: SelectItem) =>
+            a.label?.localeCompare(b.label ?? "") ?? 0,
+        ),
       controlOptions: {
         hidden: true,
       },
