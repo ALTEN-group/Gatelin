@@ -36,7 +36,7 @@ export default new SQLEntity("method", [
     min: 7,
     max: 7,
     isTypeChecked: true,
-    isFilterable: false,
+    isFilterable: true,
     requiredFor: [],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,

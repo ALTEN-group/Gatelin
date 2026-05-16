@@ -36,7 +36,7 @@ export default new SQLEntity("cors", [
     min: null,
     max: 100,
     isTypeChecked: true,
-    isFilterable: false,
+    isFilterable: true,
     requiredFor: [],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,

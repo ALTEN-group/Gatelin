@@ -78,7 +78,7 @@ export default new SQLEntity("roles", [
     min: 4,
     max: 7,
     isTypeChecked: true,
-    isFilterable: false,
+    isFilterable: true,
     requiredFor: [],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,

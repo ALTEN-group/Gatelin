@@ -123,19 +123,19 @@ export const ROUTE_COLUMNS: (
     {
       key: "operationName",
       label: "Operations",
-      controlType: CONTROL_TYPES.SELECT,
+      controlType: CONTROL_TYPES.MULTISELECT,
       options: toNamesSelectOptions(data.operations),
       controlOptions: {
         hidden: true,
       },
       columnOptions: {
-        filterType: CONTROL_TYPES.MULTISELECT,
         customCellRenderer: buildColoredChipsCellRenderer(sanitizer, (name) => {
           const op = (data.operations as Operation[]).find(
             (o) => o.name === name,
           );
           return op ? { label: op.name, color: op.color } : undefined;
         }),
+        tooltip: (value) => (value as string[]).join(", "),
       },
     },
     {
@@ -191,6 +191,7 @@ export const ROUTE_COLUMNS: (
             ? { label: method.name, color: method.color }
             : undefined;
         }),
+        tooltip: (value) => (value as string[]).join(", "),
       },
     },
     PROTECTED_CONFIG,

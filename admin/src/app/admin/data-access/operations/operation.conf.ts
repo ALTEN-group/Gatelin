@@ -33,9 +33,13 @@ export function buildOperationColumns(
       key: "description",
       label: "Description",
       controlType: CONTROL_TYPES.TEXTAREA,
+      type: INPUT_TYPES.TEXT,
       controlOptions: {
         validators: [maxlength(1000)],
         minWidth: "100%",
+      },
+      columnOptions: {
+        filterType: CONTROL_TYPES.INPUT,
       },
     },
     {
