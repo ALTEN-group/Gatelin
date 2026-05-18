@@ -9,6 +9,7 @@ import { APP_CONFIG, AppConfig } from "@core/app-config/app-config.token";
 import { SIDENAV } from "@core/app-config/app.sidenav";
 import { CRUD_LABELS_CONFIG } from "@core/app-config/crud-labels";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
+import { PrimeNgTranslations } from "@core/app-config/primeng-translations";
 import { AuthenticationService } from "@core/auth/auth.service";
 import {
   APP_FORM_CONFIG,
@@ -66,6 +67,7 @@ export function provideAppConfig() {
         apiPrefix: environment.apiGateway,
       },
     },
+    provideCrudLabels(CRUD_LABELS_CONFIG, PrimeNgTranslations),
     { provide: APP_FORM_CONFIG, useValue: FORM_CONFIG }, // remove if no @form
     { provide: TitleStrategy, useClass: CustomTitleStrategyService }, // remove if no custom titles
     {
@@ -82,7 +84,6 @@ export function provideAppConfig() {
         };
       },
     },
-    provideCrudLabels(CRUD_LABELS_CONFIG),
   ]);
 }
 
