@@ -73,6 +73,15 @@
       "consumer": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user account linked to this consumer session"
+          },
           "nickname": {
             "type": "string",
             "minLength": 3,
@@ -81,12 +90,12 @@
           },
           "accessToken": {
             "type": "string",
-            "description": "JWT access token",
+            "description": "JWT access token (only present in session responses)",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           },
           "refreshToken": {
             "type": "string",
-            "description": "JWT refresh token",
+            "description": "JWT refresh token (only present in session responses)",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           },
           "roles": {
@@ -95,6 +104,20 @@
               "type": "integer"
             },
             "example": [1, 2]
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the consumer session is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this consumer",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this consumer",
+            "example": "moderator_user"
           }
         },
         "required": ["nickname", "accessToken", "refreshToken", "roles"]
@@ -130,17 +153,22 @@
             "description": "Name of the resource",
             "example": "users"
           },
-          "operationId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the operation",
-            "example": 1
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "IDs of the operations associated with this route",
+            "example": [1, 2]
           },
           "operationName": {
-            "type": "string",
-            "maxLength": 50,
-            "description": "Name of the operation",
-            "example": "get"
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the operations associated with this route",
+            "example": ["get", "search"]
           },
           "pattern": {
             "type": "string",
@@ -154,17 +182,11 @@
             "description": "Resolved upstream service URL",
             "example": "http://ms-user:3000/api/users"
           },
-          "api": {
+          "name": {
             "type": "string",
             "maxLength": 50,
-            "description": "API name (e.g. users, products)",
-            "example": "users"
-          },
-          "action": {
-            "type": "string",
-            "maxLength": 50,
-            "description": "Action performed (e.g. search, add, update, delete)",
-            "example": "search"
+            "description": "Route name identifier",
+            "example": "searchUsers"
           },
           "description": {
             "type": "string",
@@ -172,17 +194,26 @@
             "description": "Route description",
             "example": "Search users"
           },
-          "methods": {
+          "methodIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+              "type": "integer",
+              "format": "int32"
             },
+            "description": "IDs of the HTTP methods allowed on this route",
+            "example": [1, 7]
+          },
+          "methodNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the HTTP methods allowed on this route",
             "example": ["POST", "OPTIONS"]
           },
-          "jwt": {
+          "protected": {
             "type": "boolean",
-            "description": "Whether the route requires JWT authentication"
+            "description": "Whether the route is protected (requires authentication)"
           },
           "core": {
             "type": "boolean",
@@ -191,9 +222,31 @@
           "archived": {
             "type": "boolean",
             "description": "Whether the route is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this route",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this route",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the route was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the route was last updated",
+            "example": "2025-07-22T15:45:00Z"
           }
         },
-        "required": ["serviceId", "api", "action", "pattern", "description", "methods", "jwt"]
+        "required": ["serviceId", "resourceId", "name", "pattern", "description", "methodIds", "protected"]
       },
       "service": {
         "type": "object",
@@ -202,28 +255,42 @@
             "type": "integer",
             "format": "int32"
           },
+          "appId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the application this service belongs to",
+            "example": 1
+          },
+          "appName": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Name of the application this service belongs to",
+            "example": "admin-panel"
+          },
           "name": {
             "type": "string",
             "maxLength": 10,
             "description": "Service name identifier",
             "example": "ms-user"
           },
-          "creatorId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the user who created this service",
-            "example": 123
+          "pattern": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "URL pattern prefix for routing to this service",
+            "example": "/api/users"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system service"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the service is archived"
           },
           "creatorName": {
             "type": "string",
             "description": "Name of the user who created this service",
             "example": "admin_user"
-          },
-          "updaterId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the user who last updated this service",
-            "example": 456
           },
           "updaterName": {
             "type": "string",
@@ -241,17 +308,9 @@
             "format": "date-time",
             "description": "Timestamp when the service was last updated",
             "example": "2025-07-22T15:45:00Z"
-          },
-          "core": {
-            "type": "boolean",
-            "description": "Whether this is a core system service"
-          },
-          "archived": {
-            "type": "boolean",
-            "description": "Whether the service is archived"
           }
         },
-        "required": ["name"]
+        "required": ["name", "appId"]
       },
       "cors": {
         "type": "object",
@@ -329,13 +388,35 @@
             "description": "Resource name",
             "example": "users"
           },
-          "locked": {
+          "core": {
             "type": "boolean",
-            "description": "Whether the resource is locked from modifications"
+            "description": "Whether this is a core system resource"
           },
           "archived": {
             "type": "boolean",
             "description": "Whether the resource is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this resource",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this resource",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the resource was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the resource was last updated",
+            "example": "2025-07-22T15:45:00Z"
           }
         },
         "required": ["serviceId", "serviceName", "name"]
@@ -343,27 +424,16 @@
       "operation": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 50,
-            "description": "Operation name",
-            "example": "get"
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 1000,
-            "description": "Operation description",
-            "example": "Retrieve records"
-          },
-          "archived": {
-            "type": "boolean",
-            "description": "Whether the operation is archived"
-          }
+          "id": { "type": "integer", "format": "int32" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Operation name", "example": "get" },
+          "description": { "type": "string", "maxLength": 1000, "description": "Operation description", "example": "Retrieve records" },
+          "color": { "type": "string", "minLength": 7, "maxLength": 7, "description": "Hex color code", "example": "#4B0082" },
+          "core": { "type": "boolean", "description": "Whether this is a core system operation" },
+          "archived": { "type": "boolean", "description": "Whether the operation is archived" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this operation", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this operation", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the operation was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the operation was last updated", "example": "2025-07-22T15:45:00Z" }
         },
         "required": ["name", "description"]
       },
@@ -371,33 +441,40 @@
         "type": "object",
         "properties": {
           "id": { "type": "integer", "format": "int32" },
+          "appId": { "type": "integer", "format": "int32", "description": "ID of the application this role belongs to", "example": 1 },
+          "appName": { "type": "string", "maxLength": 255, "description": "Name of the application this role belongs to", "example": "admin-panel" },
           "name": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Role name", "example": "editor" },
-          "description": { "type": "string", "maxLength": 1000, "description": "Role description", "example": "Can edit content" },
-          "color": { "type": "string", "minLength": 7, "maxLength": 7, "description": "Hex color code", "example": "#4B0082" },
-          "core": { "type": "boolean", "description": "Whether this is a built-in system role" },
-          "protected": { "type": "boolean", "description": "Whether this role is protected from deletion" },
-          "archived": { "type": "boolean", "description": "Whether the role is archived" }
+          "description": { "type": "string", "maxLength": 100, "description": "Role description", "example": "Can edit content" },
+          "color": { "type": "string", "minLength": 4, "maxLength": 7, "description": "Hex color code", "example": "#4B0082" },
+          "active": { "type": "boolean", "description": "Whether the role is active" },
+          "archived": { "type": "boolean", "description": "Whether the role is archived" },
+          "archivedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the role was archived", "example": "2025-07-22T10:30:00Z" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this role", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this role", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the role was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the role was last updated", "example": "2025-07-22T15:45:00Z" }
         },
-        "required": ["name"]
+        "required": ["name", "appId"]
       },
       "permission": {
         "type": "object",
         "properties": {
           "id": { "type": "integer", "format": "int32" },
           "roleId": { "type": "integer", "format": "int32", "description": "ID of the role", "example": 2 },
-          "roleName": { "type": "string", "description": "Name of the role", "example": "admin" },
           "serviceId": { "type": "integer", "format": "int32", "description": "ID of the service", "example": 1 },
-          "serviceName": { "type": "string", "description": "Name of the service", "example": "users" },
+          "serviceName": { "type": "string", "description": "Name of the service", "example": "ms-user" },
           "resourceId": { "type": "integer", "format": "int32", "description": "ID of the resource", "example": 1 },
           "resourceName": { "type": "string", "description": "Name of the resource", "example": "users" },
           "routeId": { "type": "integer", "format": "int32", "description": "ID of the route", "example": 5 },
           "routeName": { "type": "string", "description": "Name of the route", "example": "searchUsers" },
-          "conditionId": { "type": "integer", "format": "int32", "description": "ID of the filter condition (optional)", "example": 1 },
-          "conditionName": { "type": "string", "description": "Name of the condition", "example": "Non-archived only" },
+          "operationId": { "type": "integer", "format": "int32", "description": "ID of the operation", "example": 1 },
+          "operationName": { "type": "string", "description": "Name of the operation", "example": "search" },
+          "conditionId": { "type": "array", "items": { "type": "integer", "format": "int32" }, "description": "IDs of the filter conditions (optional)", "example": [1] },
+          "conditionName": { "type": "array", "items": { "type": "string" }, "description": "Names of the conditions", "example": ["Non-archived only"] },
           "scopes": { "type": "array", "items": { "type": "string" }, "description": "Scope names granted by this permission" },
           "fields": { "type": "array", "items": { "type": "string" }, "description": "Field names visible under this permission" }
         },
-        "required": ["roleId", "routeId"]
+        "required": ["roleId", "routeId", "operationId"]
       },
       "scope": {
         "type": "object",
@@ -405,30 +482,42 @@
           "id": { "type": "integer", "format": "int32" },
           "routeId": { "type": "integer", "format": "int32", "description": "ID of the associated route", "example": 5 },
           "routeName": { "type": "string", "description": "Name of the route", "example": "searchUsers" },
-          "resourceId": { "type": "integer", "format": "int32", "description": "ID of the resource", "example": 1 },
           "resourceName": { "type": "string", "description": "Name of the resource", "example": "users" },
-          "operationId": { "type": "integer", "format": "int32", "description": "ID of the operation", "example": 1 },
-          "operationName": { "type": "string", "description": "Name of the operation", "example": "read" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Scope name", "example": "users:search" },
           "core": { "type": "boolean", "description": "Whether this is a core system scope" },
-          "archived": { "type": "boolean", "description": "Whether the scope is archived" }
+          "archived": { "type": "boolean", "description": "Whether the scope is archived" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this scope", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this scope", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the scope was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the scope was last updated", "example": "2025-07-22T15:45:00Z" }
         },
-        "required": ["routeId", "resourceId", "operationId"]
+        "required": ["routeId", "name"]
       },
       "field": {
         "type": "object",
         "properties": {
           "id": { "type": "integer", "format": "int32" },
-          "name": { "type": "string", "minLength": 1, "maxLength": 100, "description": "Field identifier in table.column format", "example": "consumers.archived" },
+          "resourceId": { "type": "integer", "format": "int32", "description": "ID of the resource this field belongs to", "example": 1 },
+          "resourceName": { "type": "string", "description": "Name of the resource", "example": "users" },
+          "serviceName": { "type": "string", "description": "Name of the service", "example": "ms-user" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Field identifier in table.column format", "example": "consumers.archived" },
           "core": { "type": "boolean", "description": "Whether this is a core system field" },
-          "archived": { "type": "boolean", "description": "Whether the field is archived" }
+          "archived": { "type": "boolean", "description": "Whether the field is archived" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this field", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this field", "example": "moderator_user" }
         },
-        "required": ["name"]
+        "required": ["resourceId", "name"]
       },
       "method": {
         "type": "object",
         "properties": {
           "id": { "type": "integer", "format": "int32" },
-          "name": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"], "description": "HTTP method name", "example": "GET" }
+          "name": { "type": "string", "minLength": 1, "maxLength": 10, "description": "HTTP method name", "example": "GET" },
+          "color": { "type": "string", "minLength": 7, "maxLength": 7, "description": "Hex color code", "example": "#4B0082" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this method", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this method", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the method was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the method was last updated", "example": "2025-07-22T15:45:00Z" }
         },
         "required": ["name"]
       },
@@ -439,7 +528,14 @@
           "name": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Application name", "example": "admin-panel" },
           "description": { "type": "string", "maxLength": 100, "description": "Application description", "example": "Internal admin interface" },
           "core": { "type": "boolean", "description": "Whether this is a core system application" },
-          "archived": { "type": "boolean", "description": "Whether the application is archived" }
+          "archived": { "type": "boolean", "description": "Whether the application is archived" },
+          "archivedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the application was archived", "example": "2025-07-22T10:30:00Z" },
+          "creatorId": { "type": "integer", "format": "int32", "description": "ID of the user who created this application", "example": 123 },
+          "creatorName": { "type": "string", "description": "Name of the user who created this application", "example": "admin_user" },
+          "updaterId": { "type": "integer", "format": "int32", "description": "ID of the user who last updated this application", "example": 456 },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this application", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the application was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the application was last updated", "example": "2025-07-22T15:45:00Z" }
         },
         "required": ["name"]
       },
@@ -452,7 +548,12 @@
           "fieldName": { "type": "string", "description": "Name of the field", "example": "consumers.archived" },
           "op": { "type": "string", "minLength": 1, "maxLength": 10, "description": "Comparison operator", "example": "=" },
           "value": { "type": "string", "description": "Value to compare against", "example": "false" },
-          "archived": { "type": "boolean", "description": "Whether the condition is archived" }
+          "color": { "type": "string", "minLength": 4, "maxLength": 7, "description": "Hex color code", "example": "#4B0082" },
+          "archived": { "type": "boolean", "description": "Whether the condition is archived" },
+          "creatorName": { "type": "string", "description": "Name of the user who created this condition", "example": "admin_user" },
+          "updaterName": { "type": "string", "description": "Name of the user who last updated this condition", "example": "moderator_user" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the condition was created", "example": "2025-07-22T10:30:00Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the condition was last updated", "example": "2025-07-22T15:45:00Z" }
         },
         "required": ["name", "fieldId", "op", "value"]
       },
