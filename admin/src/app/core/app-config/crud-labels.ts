@@ -2,8 +2,8 @@ import { CrudLabels } from "@dwtechs/crud-builder";
 
 export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
   checkbox: {
-    no: $localize`:@@Crud_Labels_Checkbox_No:No`,
-    yes: $localize`:@@Crud_Labels_Checkbox_Yes:Yes`,
+    no: "No",
+    yes: "Yes",
   },
   tableRegular: {
     currentPageReport: (first: string, last: string, totalRecords: string) =>
