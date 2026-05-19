@@ -68,10 +68,10 @@ void main() {
   m += Line(gv, p[7], p[5]);
 
   // Glowing dots at each node position
-  for(int i=0; i<9; i++) {
-    float dd = length(gv - p[i]);
-    m += (1. - S(.0, .025, dd)) * 1.5;
-  }
+  // for(int i=0; i<9; i++) {
+  //   float dd = length(gv - p[i]);
+  //   m += (1. - S(.0, .025, dd)) * 1.5;
+  // }
 
   gl_FragColor = baseColor * m * 0.5;
 

@@ -47,7 +47,7 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
       this.animation.capFPS(14);
       this.shaderService.load().then((response: boolean) => {
         if (response) {
-          this.start();
+          this.start();https://github.com/DWTechs/Antity.js/settings
         }
       });
     });
@@ -58,14 +58,9 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
   }
 
   private start() {
-    const isDark = document.documentElement.classList.contains("dark");
     this.quad.addProgram(
-      isDark
-        ? this.shaderService.vertexShader
-        : this.shaderService.vertexLightShader,
-      isDark
-        ? this.shaderService.fragmentShader
-        : this.shaderService.fragmentLightShader,
+      this.shaderService.vertexShader,
+      this.shaderService.fragmentShader,
       null as unknown as Material,
     );
     this.animation.start();
