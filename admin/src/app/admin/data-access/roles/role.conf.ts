@@ -85,7 +85,7 @@ export const buildRoleColumns = (
   },
   {
     key: "active",
-    label: $localize`:@@Roles_Active:Actif`,
+    label: $localize`:@@Roles_Active:Active`,
     controlType: CONTROL_TYPES.CHECKBOX,
     columnOptions: {
       customCellRenderer: buildActiveCellRenderer(),
