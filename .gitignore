@@ -1,4 +1,5 @@
 node_modules/*
+website/node_modules/*
 /.scannerwork
 .DS_Store
 Thumbs.db

@@ -2,6 +2,12 @@
 
 Conditions are predefined filter rules that can be attached to permissions. They restrict data returned from a route based on a field value — for example, "only return non-archived records".
 
+## How It Works
+
+A condition combines a field, a comparison operator, and a value into a reusable named filter rule (e.g. `archived = false`). When a permission has a condition attached, the gateway forwards it to the target service to restrict the data returned. Conditions are optional — a permission without a condition applies no data filtering.
+
+Create conditions after creating fields, and before assigning them to permissions.
+
 ## Search Conditions
 
 ```

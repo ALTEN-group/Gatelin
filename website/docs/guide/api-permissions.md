@@ -2,6 +2,14 @@
 
 Permissions define which operations a role is allowed to perform on a given route. They are stored directly in the gateway database and loaded into memory at startup.
 
+## How It Works
+
+Each permission links a role to a route and optionally attaches a condition. When a request arrives, the gateway looks up whether the consumer's role has a permission entry for the matched route. If a condition is attached, it is forwarded to the target service as a query filter to restrict the data returned.
+
+Permissions are loaded from the database into memory at startup and updated in memory when changes occur.
+
+
+
 ## Search Permissions
 
 ```

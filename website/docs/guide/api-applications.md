@@ -2,6 +2,10 @@
 
 Applications represent client applications consuming the gateway. They are used for registration and access control purposes.
 
+## How It Works
+
+An application represents a registered client — such as a web app, mobile app, or third-party integration — consuming the gateway. Applications can be associated with consumers to track and control which clients are authorized to interact with the gateway.
+
 ## Search Applications
 
 ```

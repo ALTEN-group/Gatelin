@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: 'Gatelin',
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
   base: '/docs/',
@@ -10,17 +11,20 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: false,
-    nav: [
-      { text: 'Guide', link: '/guide/overview' },
-      { text: 'API', link: '/guide/api' },
-      { text: 'Deployment', link: '/guide/deployment' },
-    ],
     sidebar: [
       {
-        text: 'Introduction',
         items: [
           { text: 'Overview', link: '/guide/overview' },
+        ],
+      },
+      {
+        text: 'Deployment',
+        items: [
+          { text: 'Docker Compose', link: '/guide/deployment' },
           { text: 'Environment Variables', link: '/guide/configuration' },
+          { text: 'Integration', link: '/guide/integration' },
+          { text: 'Security', link: '/guide/security' },
+          { text: 'Troubleshooting', link: '/guide/troubleshooting' },
         ],
       },
       {
@@ -70,18 +74,31 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Deployment',
+        text: 'Sequence Diagrams',
         items: [
-          { text: 'Docker Compose', link: '/guide/deployment' },
-          { text: 'Integration', link: '/guide/integration' },
-          { text: 'Security', link: '/guide/security' },
-          { text: 'Troubleshooting', link: '/guide/troubleshooting' },
+          { text: 'Proxy Request', link: '/guide/sd-proxy' },
+          {
+            text: 'Sessions',
+            collapsed: false,
+            items: [
+              { text: 'Create Session', link: '/guide/sd-create-session' },
+              { text: 'Update Session', link: '/guide/sd-update-session' },
+            ],
+          },
+          {
+            text: 'Routes',
+            collapsed: false,
+            items: [
+              { text: 'Create Route', link: '/guide/sd-create-route' },
+              { text: 'Update Route', link: '/guide/sd-update-route' },
+            ],
+          },
         ],
       },
     ],
     socialLinks: [],
     footer: {
-      message: 'Released under the MIT License.',
+      message: 'Published and maintained by DW Technologies',
     },
   },
-})
+}))

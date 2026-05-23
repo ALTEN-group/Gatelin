@@ -17,3 +17,11 @@ Authorization: Bearer <access_token>
 4. Strips the pattern from URL (if configured)
 5. Forwards request to: `http://gatelin-user-development:3000/123`
 6. Returns the microservice response to the client
+
+## Health Check
+
+```
+GET /gateway/health
+```
+
+Returns the gateway service health status.

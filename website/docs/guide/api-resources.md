@@ -2,6 +2,12 @@
 
 Resources represent data entities from backend services (e.g. `users`, `orders`). They are used in the permission system to define the scope of access for a given role and route.
 
+## How It Works
+
+Resources map to the data entities exposed by your backend services. Each resource belongs to a service and is identified by a name (e.g. `users`, `articles`). They are referenced in scopes to define which entity a route gives access to.
+
+Create a resource for each distinct data entity you want to control access to, before creating scopes.
+
 ## Search Resources
 
 ```

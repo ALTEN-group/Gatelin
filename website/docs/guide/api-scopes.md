@@ -1,6 +1,12 @@
 # Scopes
 
-Scopes are constraints attached to routes in the permission system. They link a route to a resource, operation, and optional field-level conditions to restrict what data a role can access.
+Scopes attach to routes in the permission system. They link a route to a resource and operation to define what data entity and action type the route represents.
+
+## How It Works
+
+A scope answers: "What does this route give access to, and what kind of action does it represent?" The gateway uses the scope during ACL validation to confirm the consumer's role is allowed to perform that operation on that resource. Each route should have a scope defined for authorization to work correctly.
+
+Create scopes after resources and operations are in place.
 
 ## Search Scopes
 

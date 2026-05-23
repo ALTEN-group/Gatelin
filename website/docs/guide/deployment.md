@@ -4,6 +4,7 @@ Gatelin is distributed as Docker images on Docker Hub:
 
 - **`dwtechs/gatelin`** — the gateway itself
 - **`dwtechs/gatelin-migration`** — the Liquibase migration container
+- **`dwtechs/admin`** - the gateway management front-end
 
 See the [Integration](./integration) page for a full `docker-compose.yml` template.
 

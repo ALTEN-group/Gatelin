@@ -2,6 +2,10 @@
 
 Roles define access control profiles assigned to consumers. Each role carries a set of permissions (allowed operations per route). The role cache is loaded from the database at startup and kept in memory.
 
+## How It Works
+
+A role is assigned to a consumer and determines which routes they can access. When a request arrives, the gateway retrieves the consumer's role from their session and checks it against the permission table for the matched route. The role cache is refreshed in memory when roles or permissions are updated.
+
 ## Search Roles
 
 ```

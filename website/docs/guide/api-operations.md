@@ -2,6 +2,10 @@
 
 Operations represent action types (e.g. `read`, `write`, `delete`) used in the permission system to define what a role is allowed to do on a resource.
 
+## How It Works
+
+Operations define the type of action a permission grants on a resource. They are paired with a resource in a scope to express "this route allows performing operation X on resource Y". Create operations before creating scopes.
+
 ## Search Operations
 
 ```

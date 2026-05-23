@@ -2,6 +2,10 @@
 
 Fields represent database columns or entity properties used to build conditions in the permission system.
 
+## How It Works
+
+A field name follows the format `table.column` (e.g. `consumers.archived`). Fields are the building blocks of conditions — when creating a condition, you reference a field to specify which property to filter on. Create fields before creating conditions.
+
 ## Search Fields
 
 ```
