@@ -38,9 +38,11 @@ function init() {
     },
   };
   const { query, args } = rEnt.query.select(0, 0, "id", "ASC", filters);
-  const { SERVER_SCHEME, PORT, APP_NAME, ENV_NAME } = process.env;
-  const san = `${SERVER_SCHEME}${APP_NAME}-`;
-  const ep = `-${ENV_NAME}:${PORT}`;
+  const { APP_NAME, ENV_NAME } = process.env;
+  const scheme = process.env.SERVER_SCHEME ?? "http://";
+  const port = process.env.PORT ?? "3000";
+  const san = `${scheme}${APP_NAME}-`;
+  const ep = `-${ENV_NAME}:${port}`;
   return execute(query, args, null).then((r) => {
     // Collect unique service names to build base URLs later
     const serviceNames = new Set();

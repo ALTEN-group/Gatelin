@@ -23,7 +23,6 @@ export default withMermaid(defineConfig({
           { text: 'Docker Compose', link: '/guide/deployment' },
           { text: 'Environment Variables', link: '/guide/configuration' },
           { text: 'Integration', link: '/guide/integration' },
-          { text: 'Security', link: '/guide/security' },
           { text: 'Troubleshooting', link: '/guide/troubleshooting' },
         ],
       },
