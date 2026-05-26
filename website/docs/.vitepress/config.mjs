@@ -4,9 +4,9 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 export default withMermaid(defineConfig({
   title: 'Gatelin',
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
-  base: '/docs/',
+  base: '/',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/docs/favicon.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
   ],
   themeConfig: {
     logo: '/logo.svg',

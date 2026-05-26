@@ -9,6 +9,9 @@ hero:
     - theme: brand
       text: Get Started
       link: /guide/overview
+    - theme: alt
+      text: Enterprise Support
+      link: https://dwtechnologies.eu
 
 features:
   - icon: 🛣️
