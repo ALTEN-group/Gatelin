@@ -4,6 +4,7 @@
   "description": "Mock server for ms_auth microservice",
   "main": "src/app.js",
   "type": "module",
+  "author": "Ludovic Cluber",
   "scripts": {
     "start": "node src/app.js",
     "dev": "node --watch src/app.js"

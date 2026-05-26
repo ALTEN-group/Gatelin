@@ -9,7 +9,7 @@
     "build": "rollup --config rollup.config.mjs",
     "test": "echo \"No test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Ludovic Cluber",
   "license": "ISC",
   "dependencies": {
     "@dwtechs/winstan": "0.4.0",

@@ -11,7 +11,7 @@
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage"
   },
-  "author": "",
+  "author": "Ludovic Cluber",
   "license": "ISC",
   "dependencies": {
     "@dwtechs/antity-pgsql": "0.17.4",
