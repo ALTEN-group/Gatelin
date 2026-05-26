@@ -6,4 +6,5 @@ Thumbs.db
 src/public/*
 tests/coverage/
 docker/conf/.env.dev
+docker/conf/.env.prod
 website/docs/.vitepress/cache
