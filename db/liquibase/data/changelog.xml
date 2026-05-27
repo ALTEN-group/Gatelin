@@ -15,7 +15,7 @@
 
   <changeSet id="data-00" author="lcluber">
     <comment>Default CORS origins</comment>
-    <sqlFile path="01-insert-cors.sql"/>
+    <sqlFile path="01-insert-example-bugged-cors.sql"/>
   </changeSet>
   <changeSet id="data-01" author="lcluber">
     <comment>Example services, resources, operations and routes</comment>
