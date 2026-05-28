@@ -231,23 +231,23 @@ services:
       - "traefik.http.middlewares.adminer-stripprefix.stripprefix.prefixes=/adminer"
       - "traefik.http.middlewares.adminer-stripprefix.stripprefix.forceSlash=false"
 
-  dozzle:
-    container_name: ${DOZZLE_HOST}
-    hostname: ${DOZZLE_HOST}
-    image: ghcr.io/amir20/dozzle:latest
-    environment:
-      DOZZLE_BASE: /dozzle
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - internal
-    labels:
-      - "traefik.enable=true"
-      - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.dozzle.rule=PathPrefix(`/dozzle`)"
-      - "traefik.http.routers.dozzle.entrypoints=web"
-      - "traefik.http.routers.dozzle.service=dozzle"
-      - "traefik.http.services.dozzle.loadbalancer.server.port=${DOZZLE_PORT}"
+  # dozzle:
+  #   container_name: ${DOZZLE_HOST}
+  #   hostname: ${DOZZLE_HOST}
+  #   image: ghcr.io/amir20/dozzle:latest
+  #   environment:
+  #     DOZZLE_BASE: /dozzle
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   networks:
+  #     - internal
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "stack.name=${STACK_NAME}"
+  #     - "traefik.http.routers.dozzle.rule=PathPrefix(`/dozzle`)"
+  #     - "traefik.http.routers.dozzle.entrypoints=web"
+  #     - "traefik.http.routers.dozzle.service=dozzle"
+  #     - "traefik.http.services.dozzle.loadbalancer.server.port=${DOZZLE_PORT}"
 
   swagger:
     build:
