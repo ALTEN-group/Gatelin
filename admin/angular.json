@@ -45,7 +45,7 @@
             "index": "src/index.html",
             "polyfills": ["@angular/localize/init"],
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.svg", "src/assets"],
             "styles": [
               "src/styles.scss",
               "./node_modules/primeicons/primeicons.css"

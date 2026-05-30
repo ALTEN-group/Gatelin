@@ -11,7 +11,7 @@ LIQUIBASE_DB_PWD=$(openssl rand -base64 24)
 POSTGRES_ROOT_PWD=$(openssl rand -base64 24)
 GATELIN_DB_USER="gatelin_$(openssl rand -hex 4)"
 GATELIN_DB_PWD=$(openssl rand -base64 24)
-GATELIN_TOKEN_SECRET=$(openssl rand -hex 64)
+GATELIN_TOKEN_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
 
 sed -i "" \
   -e "s|^LIQUIBASE_DB_PWD=.*|LIQUIBASE_DB_PWD=${LIQUIBASE_DB_PWD}|" \

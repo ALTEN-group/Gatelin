@@ -1,8 +1,8 @@
 // @ts-check
 import http from "../../utils/http.js";
 
-const { MSAUTH_VERIFY_URL } = process.env;
-const url = MSAUTH_VERIFY_URL;
+const { PWD_CHECK_URL } = process.env;
+const url = PWD_CHECK_URL;
 
 /**
  * Validates user credentials against ms_auth service

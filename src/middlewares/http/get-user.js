@@ -2,8 +2,8 @@
 import { log } from "@dwtechs/winstan";
 import http from "../../utils/http.js";
 
-const { MSUSER_SEARCH_URL } = process.env;
-const url = MSUSER_SEARCH_URL;
+const { USER_SEARCH_URL } = process.env;
+const url = USER_SEARCH_URL;
 
 /**
  * Fetches user details from ms_user service by email

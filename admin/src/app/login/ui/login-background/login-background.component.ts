@@ -46,9 +46,7 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
       this.animation.setScope(this);
       this.animation.capFPS(14);
       this.shaderService.load().then((response: boolean) => {
-        if (response) {
-          this.start();https://github.com/DWTechs/Antity.js/settings
-        }
+        if (response) this.start();
       });
     });
   }
