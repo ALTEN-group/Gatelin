@@ -282,6 +282,7 @@ services:
     build:
       context: ${PWD}/website
       dockerfile: dockerfile
+      <<: *secretArgs
       args:
         UID: ${UID}
         GID: ${GID}

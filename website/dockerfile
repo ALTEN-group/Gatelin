@@ -4,7 +4,8 @@ FROM node:${NODE_VERSION}
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
-RUN apk update && apk add tzdata
+# install tzdata from default Alpine repos before replacing them
+RUN apk add --no-cache tzdata
 
 ARG TZ
 ENV TZ=${TZ}
@@ -13,6 +14,9 @@ ARG UID
 ARG GID
 RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
 USER user
+
+ARG NPMRC_PATH
+RUN --mount=type=secret,id=npmrc,target=${NPMRC_PATH},required=true,uid=${UID}
 
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --chmod=640 package*.json ./
