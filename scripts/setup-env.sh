@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# Cross-platform in-place sed (GNU/Linux vs macOS BSD)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  sedi() { sed -i '' "$@"; }
+else
+  sedi() { sed -i "$@"; }
+fi
+
 ENV_EXAMPLE="docker/conf/.env.dev.example"
 ENV_FILE="docker/conf/.env.dev"
 
@@ -13,7 +20,7 @@ GATELIN_DB_USER="gatelin_$(openssl rand -hex 4)"
 GATELIN_DB_PWD=$(openssl rand -base64 24)
 GATELIN_TOKEN_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
 
-sed -i "" \
+sedi \
   -e "s|^LIQUIBASE_DB_PWD=.*|LIQUIBASE_DB_PWD=${LIQUIBASE_DB_PWD}|" \
   -e "s|^POSTGRES_ROOT_PWD=.*|POSTGRES_ROOT_PWD=${POSTGRES_ROOT_PWD}|" \
   -e "s|^GATELIN_DB_USER=.*|GATELIN_DB_USER=${GATELIN_DB_USER}|" \
@@ -36,7 +43,7 @@ if [ -n "$NPM_REGISTRY_URL" ]; then
   fi
 fi
 
-sed -i "" \
+sedi \
   -e "s|^NPMRC=.*|NPMRC=\"${NPMRC_CONTENT}\"|" \
   "$ENV_FILE"
 
