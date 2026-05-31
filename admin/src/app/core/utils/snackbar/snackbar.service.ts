@@ -10,13 +10,13 @@ export class SnackbarService {
     this.show({
       severity: "error",
       detail: message,
-      key: "bottomCenter",
+      key: "topRight",
     });
   }
 
   public displaySuccess() {
     this.show({
-      key: "topRight",
+      key: "bottomCenter",
       severity: "success",
       closable: false,
     });
@@ -25,7 +25,7 @@ export class SnackbarService {
   public displayInfo(message: string) {
     this.show({
       detail: message,
-      key: "topRight",
+      key: "bottomCenter",
     });
   }
 
