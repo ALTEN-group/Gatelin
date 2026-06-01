@@ -161,26 +161,28 @@
     <comment></comment>
     <sqlFile path="versions/04-view/04-field.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="04-view-06" author="lcluber">
+  <changeSet id="04-view-05" author="lcluber">
     <comment>Consumers view</comment>
-    <sqlFile path="versions/04-view/06-consumer.sql" splitStatements="false"/>
+    <sqlFile path="versions/04-view/05-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-06" author="lcluber">
+    <comment>Permissions views</comment>
+    <sqlFile path="versions/04-view/06-permissions.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-07" author="lcluber">
-    <comment>Permissions views</comment>
-    <sqlFile path="versions/04-view/07-permissions.sql" splitStatements="false"/>
+    <comment>Roles view with application name</comment>
+    <sqlFile path="versions/04-view/07-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-08" author="lcluber">
-    <comment>Roles view with application name</comment>
-    <sqlFile path="versions/04-view/08-role.sql" splitStatements="false"/>
+    <comment>Services view with application name</comment>
+    <sqlFile path="versions/04-view/08-service.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-09" author="lcluber">
-    <comment>Services view with application name</comment>
-    <sqlFile path="versions/04-view/09-service.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="04-view-10" author="lcluber">
     <comment>Conditions view with field name</comment>
-    <sqlFile path="versions/04-view/10-condition.sql" splitStatements="false"/>
+    <sqlFile path="versions/04-view/09-condition.sql" splitStatements="false"/>
   </changeSet>
+
+  <!-- triggers -->
   <changeSet id="05-trig-01" author="lcluber">
     <comment></comment>
     <sqlFile path="versions/05-trig/01-route.sql" splitStatements="false"/>
