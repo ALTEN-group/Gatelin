@@ -1,6 +1,6 @@
 {
   "name": "ms_auth_mock",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Mock server for ms_auth microservice",
   "main": "src/app.js",
   "type": "module",
