@@ -44,7 +44,7 @@
           <p-treeTableToggler [rowNode]="rowNode" />
           <span [class]="'permissions-tree__label--' + rowData.type">{{ rowData.name }}</span>
         </td>
-        <td class="permissions-tree__center-col" (click)="$event.stopPropagation()">
+        <td class="permissions-tree__center-col" style="text-align: center;" (click)="$event.stopPropagation()">
           @if (rowData.type === 'route') {
             <p-checkbox
               [ngModel]="(rowData | getPerm:selectedRoleId()) !== undefined"
