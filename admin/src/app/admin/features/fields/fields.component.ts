@@ -59,9 +59,15 @@ export class FieldsComponent {
       if (!get) return of(NO_ROWS_AND_COUNT);
       const app = this.selectedApp();
       if (app) {
-        const serviceNames = this.services
+        const appServiceNames = this.services
           .filter((s) => s.appId === app.id)
           .map((s) => s.name);
+        const userFilter = (
+          event?.filters?.["serviceName"] as { value: string[] }[] | undefined
+        )?.[0]?.value;
+        const serviceNames = userFilter?.length
+          ? appServiceNames.filter((n) => userFilter.includes(n))
+          : appServiceNames;
         return get({
           ...event,
           filters: {

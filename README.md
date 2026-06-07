@@ -33,6 +33,15 @@ bash scripts/start-dev.sh
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development workflow, testing, and production build instructions.
 
+## Liquibase Artifacts
+
+Liquibase file artifacts are disabled by default in this project to avoid generating local files under `db/liquibase/**/logs` and `db/liquibase/**/snapshot`.
+
+- Set `LIQUIBASE_ENABLE_LOG_FILE=1` to enable timestamped log files.
+- Set `LIQUIBASE_ENABLE_SNAPSHOT=1` to enable JSON snapshot files.
+
+If not set (or set to `0`), these files are not created.
+
 ## License
 
 [MIT](LICENSE) © 2025 DWTechs

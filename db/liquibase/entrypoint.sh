@@ -11,8 +11,15 @@ export LIQUIBASE_COMMAND_REFERENCE_URL=${LIQUIBASE_COMMAND_URL}
 
 
 date_time=$(date +"%Y-%m-%d-%T")
-export LIQUIBASE_LOG_FILE="${LIQUIBASE_SEARCH_PATH}/logs/${date_time}.log"
 export PGPASSWORD=${LIQUIBASE_COMMAND_PASSWORD}
+
+# Disabled by default to avoid generating local artifacts in logs/ and snapshot/
+LIQUIBASE_ENABLE_LOG_FILE=${LIQUIBASE_ENABLE_LOG_FILE:-0}
+LIQUIBASE_ENABLE_SNAPSHOT=${LIQUIBASE_ENABLE_SNAPSHOT:-0}
+
+if [[ "${LIQUIBASE_ENABLE_LOG_FILE}" == "1" ]]; then
+  export LIQUIBASE_LOG_FILE="${LIQUIBASE_SEARCH_PATH}/logs/${date_time}.log"
+fi
 
 function diff(){
    /liquibase/liquibase diff-changelog --url="offline:postgresql?snapshot=${SNAPSHOT}.json" --changelog-file="${LIQUIBASE_SEARCH_PATH}/versions/generated/${date_time}.sql" --diff-types="tables, views, columns, indexes, foreignkeys, primarykeys, data, trigger"
@@ -30,6 +37,9 @@ function updateData(){
 }
 
 function snapshot(){
+  if [[ "${LIQUIBASE_ENABLE_SNAPSHOT}" != "1" ]]; then
+    return 0
+  fi
   local SNAPSHOT_NUMBER="$(( $(ls -1 ${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot* | wc -l) + 1 ))"
   /liquibase/liquibase --output-file="${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot${SNAPSHOT_NUMBER}.json" snapshot --snapshot-format=json
 }

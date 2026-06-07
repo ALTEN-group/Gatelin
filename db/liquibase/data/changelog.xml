@@ -13,33 +13,33 @@
     </changeSet>
   -->
 
-  <changeSet id="data-00" author="lcluber">
+  <changeSet id="data-01" author="lcluber">
     <comment>Default CORS origins</comment>
     <sqlFile path="01-insert-example-bugged-cors.sql"/>
   </changeSet>
-  <changeSet id="data-01" author="lcluber">
-    <comment>Example services, resources, operations and routes</comment>
-    <sqlFile path="02-insert-example-routes.sql"/>
-  </changeSet>
   <changeSet id="data-02" author="lcluber">
-    <comment>Example history: first update pass across all tables</comment>
-    <sqlFile path="03-insert-example-wrong-data.sql"/>
+    <comment>Example services, resources, operations and routes</comment>
+    <sqlFile path="02-insert-example-applications.sql"/>
   </changeSet>
   <changeSet id="data-03" author="lcluber">
-    <comment>Example history: second update pass across all tables (distinct timestamp)</comment>
-    <sqlFile path="04-insert-example-fixed-data.sql"/>
+    <comment>Example history: first update pass across all tables</comment>
+    <sqlFile path="03-insert-example-services.sql"/>
   </changeSet>
   <changeSet id="data-04" author="lcluber">
-    <comment>eBoutique test applications</comment>
-    <sqlFile path="05-insert-example-applications.sql"/>
+    <comment>Example history: second update pass across all tables (distinct timestamp)</comment>
+    <sqlFile path="04-insert-example-routes.sql"/>
   </changeSet>
   <changeSet id="data-05" author="lcluber">
-    <comment>eBoutique test roles</comment>
-    <sqlFile path="06-insert-example-roles.sql"/>
+    <comment>eBoutique test applications</comment>
+    <sqlFile path="05-insert-example-wrong-data.sql"/>
   </changeSet>
   <changeSet id="data-06" author="lcluber">
+    <comment>eBoutique test roles</comment>
+    <sqlFile path="06-insert-example-fixed-data.sql"/>
+  </changeSet>
+  <changeSet id="data-07" author="lcluber">
     <comment>eBoutique test services</comment>
-    <sqlFile path="07-insert-example-services.sql"/>
+    <sqlFile path="07-insert-example-roles.sql"/>
   </changeSet>
 
 </databaseChangeLog>

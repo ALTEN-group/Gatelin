@@ -1,25 +1,3 @@
--- Example data: add your own services, resources and routes
--- The following are already seeded by the schema migration and must NOT be duplicated:
---   services  : gatelin (id=1), ms-user-mock (id=2), ms-role-mock (id=3)
---   resources : session, consumers, routes, services, resources, operations,
---               cors, fields, scopes, preferences (gatelin), users, roles
---   operations: read, list, export, update, bulk update, create, bulk create,
---               archive, bulk archive, delete, bulk delete, bulk sync, execute
-
--- Add the application this service belongs to (idempotent)
-INSERT INTO application (name, description, "creatorId", "creatorName") VALUES
-  ('eBoutique', 'eBoutique web & mobile app', -1, 'system')
-ON CONFLICT DO NOTHING;
-
--- Add your own service
-INSERT INTO "service" ("appId", name, pattern, core, "creatorId", "creatorName")
-SELECT a.id, v.name, v.pattern, v.core, -1, 'system'
-FROM application a,
-(VALUES
-  ('ms-product', 'products', false)
-) AS v(name, pattern, core)
-WHERE a.name = 'eBoutique'
-ON CONFLICT DO NOTHING;
 
 -- Add resources for your service
 INSERT INTO resource ("serviceId", name, core, "creatorId", "creatorName") VALUES
