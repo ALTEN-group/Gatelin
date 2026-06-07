@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { InfoMessageComponent } from "@core/ui/info-message/info-message.component";
 import { TableComponent } from "@dwtechs/crud-builder";
 import { CorsService } from "app/admin/data-access/cors/cors.service";
 
 @Component({
   selector: "adm-cors",
   templateUrl: "./cors.component.html",
-  imports: [TableComponent],
+  imports: [TableComponent, InfoMessageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CorsComponent {
