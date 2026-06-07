@@ -1,15 +1,5 @@
 <div class="page-container">
 
-  <p-select
-    [options]="applications"
-    [(ngModel)]="selectedApp"
-    (onChange)="onAppSelect($event.value)"
-    [showClear]="true"
-    optionLabel="name"
-    placeholder="Filter by application"
-    i18n-placeholder="@@Fields_SelectApp"
-  />
-
   <app-info-message i18n="@@Fields_Info">
     Declaring fields allow you to restrict permissions at the property level of a resource.
     They only need to be declared for resources where you want to grant different permissions depending on the field.
@@ -17,14 +7,13 @@
   </app-info-message>
   <tbl-table
       [config]="config"
-      [httpCalls]="httpCalls"
+      [httpCalls]="fieldsService.httpCalls"
       [entityFactory]="entityFactory"
       [entityId]="tableInformation.key"
       [entityLabel]="tableInformation.label"
       [tableTitle]="tableInformation.title"
       [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
       [filterLevel]="tableInformation.filterLevel"
-      [forceReload]="forceReload()"
       [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
   />
 

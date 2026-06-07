@@ -138,8 +138,6 @@ INSERT INTO preference ("userId", resource, name, conf, "isActive", locked, "cre
 (-1, 'services', 'Default', '[
   {"key":"core",       "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",         "isVisible":false},
-  {"key":"appId",      "isVisible":false},
-  {"key":"appName",    "isVisible":true},
   {"key":"name",       "isVisible":true},
   {"key":"pattern",    "isVisible":true},
   {"key":"createdAt",  "isVisible":false},

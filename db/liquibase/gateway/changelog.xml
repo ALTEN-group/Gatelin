@@ -69,16 +69,12 @@
     <sqlFile path="versions/02-func/10-method.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-11" author="lcluber">
-    <comment>Service iud trigger function</comment>
-    <sqlFile path="versions/02-func/11-service.sql" splitStatements="false"/>
+    <comment>Condition iud trigger function</comment>
+    <sqlFile path="versions/02-func/11-condition.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-12" author="lcluber">
-    <comment>Condition iud trigger function</comment>
-    <sqlFile path="versions/02-func/12-condition.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="02-func-13" author="lcluber">
     <comment>Role iud trigger function</comment>
-    <sqlFile path="versions/02-func/13-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/12-role.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- structures -->
@@ -178,12 +174,8 @@
     <sqlFile path="versions/04-view/07-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-08" author="lcluber">
-    <comment>Services view with application name</comment>
-    <sqlFile path="versions/04-view/08-service.sql" splitStatements="false"/>
-  </changeSet>
-  <changeSet id="04-view-09" author="lcluber">
     <comment>Conditions view with field name</comment>
-    <sqlFile path="versions/04-view/09-condition.sql" splitStatements="false"/>
+    <sqlFile path="versions/04-view/08-condition.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- triggers -->

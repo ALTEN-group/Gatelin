@@ -1,41 +1,13 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
 
-export default new SQLEntity("services", [
+export default new SQLEntity("service", [
   {
     key: "id",
     type: "integer",
     min: null,
     max: null,
     isTypeChecked: true,
-    isFilterable: true,
-    requiredFor: [],
-    operations: ["SELECT"],
-    isPrivate: false,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
-  {
-    key: "appId",
-    type: "integer",
-    min: 1,
-    max: null,
-    isTypeChecked: true,
-    isFilterable: true,
-    requiredFor: ["POST"],
-    operations: ["SELECT", "INSERT"],
-    isPrivate: false,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
-  {
-    key: "appName",
-    type: "string",
-    min: 1,
-    max: 255,
-    isTypeChecked: false,
     isFilterable: true,
     requiredFor: [],
     operations: ["SELECT"],

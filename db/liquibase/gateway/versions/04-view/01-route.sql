@@ -2,8 +2,6 @@
 create or replace view routes AS
   SELECT r.id,
   b."serviceId",
-  s."appId",
-  app.name as "appName",
   s.name as "serviceName",
   r."resourceId",
   b.name as "resourceName",
@@ -30,11 +28,10 @@ create or replace view routes AS
   FROM "route" AS r
   LEFT OUTER JOIN "resource" as b ON r."resourceId" = b.id
   LEFT OUTER JOIN "service" as s ON b."serviceId" = s.id
-  LEFT OUTER JOIN "application" as app ON s."appId" = app.id
   LEFT JOIN route_operation ro ON ro."routeId" = r.id
   LEFT JOIN operation o ON o.id = ro."operationId"
   LEFT JOIN route_method rm ON rm."routeId" = r.id
   LEFT JOIN method mc ON mc.id = rm."methodId"
-  GROUP BY r.id, b."serviceId", s."appId", app.name, s.name, b.name, s.pattern, r."resourceId"
+  GROUP BY r.id, b."serviceId", s.name, b.name, s.pattern, r."resourceId"
   ORDER BY r.id ASC
 ;

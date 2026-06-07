@@ -4,7 +4,6 @@
 ```mermaid
 erDiagram
 
-  application ||--o{ service : ""
   application ||--o{ role : ""
   service ||--o{ resource : ""
   role ||--o{ permission : ""
@@ -66,7 +65,6 @@ erDiagram
 
   service {
     int id PK
-    int appId FK
     varchar name
     text pattern
     boolean core

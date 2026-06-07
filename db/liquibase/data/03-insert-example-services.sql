@@ -3,25 +3,17 @@
 --
 
 -- eBoutique services
-INSERT INTO service ("appId", name, pattern, "creatorId", "creatorName")
-SELECT a.id, v.name, v.pattern, -1, 'system'
-FROM application a,
-(VALUES
-  ('ms-product',  'products'),
-  ('ms-order',    'orders'),
-  ('ms-cart',     'cart'),
-  ('ms-customer', 'customers')
-) AS v(name, pattern)
-WHERE a.name = 'eBoutique'
+INSERT INTO service (name, pattern, "creatorId", "creatorName")
+VALUES
+  ('ms-product',  'products',  -1, 'system'),
+  ('ms-order',    'orders',    -1, 'system'),
+  ('ms-cart',     'cart',      -1, 'system'),
+  ('ms-customer', 'customers', -1, 'system')
 ON CONFLICT DO NOTHING;
 
 -- eBoutique Admin services
-INSERT INTO service ("appId", name, pattern, "creatorId", "creatorName")
-SELECT a.id, v.name, v.pattern, -1, 'system'
-FROM application a,
-(VALUES
-  ('ms-catalog',   'catalog'),
-  ('ms-reporting', 'reporting')
-) AS v(name, pattern)
-WHERE a.name = 'eBoutique Admin'
+INSERT INTO service (name, pattern, "creatorId", "creatorName")
+VALUES
+  ('ms-catalog',   'catalog',   -1, 'system'),
+  ('ms-reporting', 'reporting', -1, 'system')
 ON CONFLICT DO NOTHING;
