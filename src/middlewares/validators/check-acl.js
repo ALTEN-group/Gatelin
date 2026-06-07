@@ -52,9 +52,9 @@ function findMatchingPermission(
     if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
 
     let conditions = null;
-    if (isArray(perm.scopes, '!0')) {
+    if (isArray(perm.scopes, "!0")) {
       const urlScopes = scopeService.getValues(perm.scopes);
-      if (isArray(urlScopes, '!0')) {
+      if (isArray(urlScopes, "!0")) {
         // Only parse URL segments when this permission actually uses URL scopes
         const urlSegments = req.originalUrl
           .split("?")[0]
@@ -62,11 +62,13 @@ function findMatchingPermission(
           .filter(Boolean);
         const resourceIndex = urlSegments.indexOf(resourceName);
         const scopeSegment =
-          resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+          resourceIndex !== -1
+            ? (urlSegments[resourceIndex + 1] ?? null)
+            : null;
         if (!urlScopes.includes(scopeSegment)) continue;
       }
     }
-    if (isArray(perm.conditions, '!0')) {
+    if (isArray(perm.conditions, "!0")) {
       conditions = perm.conditions;
     }
     return { perm, conditions };
@@ -81,7 +83,7 @@ export default function checkAcl(req, res, next) {
   const c = res.locals.consumer;
   log.debug(
     () =>
-      `checkAcl(consumer: ${c.id}, operations: ${r.operations}, route: ${r.url}`,
+      `checkAcl(consumer: ${c.id}, operations: ${r.operationId}, route: ${r.url}`,
   );
 
   // Extract URL path segments (strip query string first), then find the position
@@ -91,7 +93,7 @@ export default function checkAcl(req, res, next) {
   const result = findMatchingPermission(
     c.roles,
     r.id,
-    r.operations,
+    r.operationId,
     req,
     r.resourceName,
   );

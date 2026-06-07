@@ -1,4 +1,4 @@
-<div class="fields-container">
+<div class="page-container">
 
   <p-select
     [options]="applications"
@@ -10,11 +10,11 @@
     i18n-placeholder="@@Fields_SelectApp"
   />
 
-  <p class="info-message" i18n="@@Fields_Info">
-    Fields allow you to restrict permissions at the property level of a resource.
+  <app-info-message i18n="@@Fields_Info">
+    Declaring fields allow you to restrict permissions at the property level of a resource.
     They only need to be declared for resources where you want to grant different permissions depending on the field.
     For example, a <strong>user</strong> resource could expose a <strong>salary</strong> field that only a manager role is allowed to read, while other roles can access the rest of the resource.
-  </p>
+  </app-info-message>
   <tbl-table
       [config]="config"
       [httpCalls]="httpCalls"

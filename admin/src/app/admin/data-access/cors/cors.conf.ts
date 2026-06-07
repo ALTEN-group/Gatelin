@@ -32,6 +32,12 @@ export const CORS_COLUMNS: () => StrictCrudItemOptions<Cors>[] = () => [
       validators: [maxlength(100)],
     },
   },
+  {
+    key: "credentials",
+    label: "Credentials",
+    controlType: CONTROL_TYPES.CHECKBOX,
+    controlOptions: {},
+  },
   ...buildArchivedConfig(),
   ...buildAuditConfig(),
 ];

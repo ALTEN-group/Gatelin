@@ -5,13 +5,10 @@
     margin-left: 0.75rem;
 }
 
-.info-message {
-    background-color: color-mix(in srgb, var(--info-color) 12%, transparent);
-    border-left: 4px solid var(--info-color);
-    border-radius: 4px;
-    color: var(--primary-font-color);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin: 0 1rem 1rem;
-    padding: 0.75rem 1rem;
+.page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
 }
+

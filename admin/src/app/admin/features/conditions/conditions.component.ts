@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
+import { InfoMessageComponent } from "@core/ui/info-message/info-message.component";
 import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
 import { ConditionsService } from "app/admin/data-access/conditions/conditions.service";
 
@@ -7,7 +8,7 @@ import { ConditionsService } from "app/admin/data-access/conditions/conditions.s
   selector: "adm-conditions",
   templateUrl: "./conditions.component.html",
   styleUrl: "./conditions.component.scss",
-  imports: [TableComponent],
+  imports: [TableComponent, InfoMessageComponent],
   providers: [ConfigHelper],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

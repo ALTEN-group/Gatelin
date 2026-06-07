@@ -76,6 +76,10 @@
     <comment>Condition iud trigger function</comment>
     <sqlFile path="versions/02-func/12-condition.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="02-func-13" author="lcluber">
+    <comment>Role iud trigger function</comment>
+    <sqlFile path="versions/02-func/13-role.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- structures -->
   <changeSet id="03-struct-01" author="lcluber">

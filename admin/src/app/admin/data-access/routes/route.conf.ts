@@ -100,7 +100,7 @@ export const ROUTE_COLUMNS: (
       controlType: CONTROL_TYPES.INPUT,
       type: INPUT_TYPES.TEXT,
       controlOptions: {
-        validators: [required, minlength(1), maxlength(40)],
+        validators: [minlength(1), maxlength(40)],
       },
     },
     {

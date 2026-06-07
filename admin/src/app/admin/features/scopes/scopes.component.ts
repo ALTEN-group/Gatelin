@@ -7,6 +7,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
+import { InfoMessageComponent } from "@core/ui/info-message/info-message.component";
 import {
   Calls,
   ConfigHelper,
@@ -26,7 +27,7 @@ import { of } from "rxjs";
   selector: "adm-scopes",
   templateUrl: "./scopes.component.html",
   styleUrl: "./scopes.component.scss",
-  imports: [TableComponent, SelectModule, FormsModule],
+  imports: [TableComponent, SelectModule, FormsModule, InfoMessageComponent],
   providers: [ConfigHelper],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

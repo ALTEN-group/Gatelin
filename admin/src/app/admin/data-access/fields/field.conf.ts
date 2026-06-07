@@ -22,6 +22,35 @@ export const FIELD_COLUMNS: (
 ) => StrictCrudItemOptions<Field>[] = ({ data }) => [
   ID_CONFIG,
   {
+    key: "serviceId",
+    label: "Service",
+    controlType: CONTROL_TYPES.SELECT,
+    options: toSelectItems<Service>(data.services, "name"),
+    controlOptions: {
+      validators: [required],
+      action: buildIdNameAction<Service>("serviceName", data.services, "name"),
+    },
+    columnOptions: {
+      isHardHidden: true,
+    },
+  },
+  {
+    key: "serviceName",
+    label: "Service",
+    controlType: CONTROL_TYPES.INPUT,
+    type: INPUT_TYPES.TEXT,
+    options: data.services.map((s: Service) => ({
+      label: s.name,
+      value: s.name,
+    })),
+    controlOptions: {
+      hidden: true,
+    },
+    columnOptions: {
+      filterType: CONTROL_TYPES.MULTISELECT,
+    },
+  },
+  {
     key: "resourceId",
     label: "Resource",
     controlType: CONTROL_TYPES.SELECT,
@@ -46,35 +75,6 @@ export const FIELD_COLUMNS: (
     options: data.resources.map((r: Resource) => ({
       label: r.name,
       value: r.name,
-    })),
-    controlOptions: {
-      hidden: true,
-    },
-    columnOptions: {
-      filterType: CONTROL_TYPES.MULTISELECT,
-    },
-  },
-  {
-    key: "serviceId",
-    label: "Service",
-    controlType: CONTROL_TYPES.SELECT,
-    options: toSelectItems<Service>(data.services, "name"),
-    controlOptions: {
-      validators: [required],
-      action: buildIdNameAction<Service>("serviceName", data.services, "name"),
-    },
-    columnOptions: {
-      isHardHidden: true,
-    },
-  },
-  {
-    key: "serviceName",
-    label: "Service",
-    controlType: CONTROL_TYPES.INPUT,
-    type: INPUT_TYPES.TEXT,
-    options: data.services.map((s: Service) => ({
-      label: s.name,
-      value: s.name,
     })),
     controlOptions: {
       hidden: true,

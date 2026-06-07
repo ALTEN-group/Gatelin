@@ -7,7 +7,7 @@ create or replace view routes AS
   s.name as "serviceName",
   r."resourceId",
   b.name as "resourceName",
-  array_agg(DISTINCT ro."operationId") FILTER (WHERE ro."operationId" IS NOT NULL) as operations,
+  array_agg(DISTINCT ro."operationId") FILTER (WHERE ro."operationId" IS NOT NULL) as "operationId",
   array_agg(DISTINCT o.name) FILTER (WHERE o.name IS NOT NULL) as "operationName",
   r.pattern,
   CASE WHEN COALESCE(s.pattern, '') = ''

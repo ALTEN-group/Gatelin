@@ -18,10 +18,10 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
       )
       RETURNING id INTO NEW.id;
 
-      IF NEW.operations IS NOT NULL THEN
+      IF NEW."operationId" IS NOT NULL THEN
         INSERT INTO route_operation ("routeId", "operationId")
         SELECT NEW.id, o
-        FROM unnest(NEW.operations) AS o;
+        FROM unnest(NEW."operationId") AS o;
       END IF;
 
       IF NEW."methodIds" IS NOT NULL THEN
@@ -45,11 +45,11 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         "updatedAt" = NOW()
       WHERE id = NEW.id;
 
-      IF NEW.operations IS NOT NULL THEN
+      IF NEW."operationId" IS NOT NULL THEN
         DELETE FROM route_operation WHERE "routeId" = NEW.id;
         INSERT INTO route_operation ("routeId", "operationId")
         SELECT NEW.id, o
-        FROM unnest(NEW.operations) AS o;
+        FROM unnest(NEW."operationId") AS o;
       END IF;
 
       IF NEW."methodIds" IS NOT NULL THEN

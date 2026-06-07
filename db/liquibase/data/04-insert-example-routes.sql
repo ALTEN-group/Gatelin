@@ -12,7 +12,7 @@ INSERT INTO resource ("serviceId", name, core, "creatorId", "creatorName") VALUE
 --   12=bulk sync   13=execute
 -- method IDs from seeded data: 1=GET 2=POST 3=PUT 4=PATCH 5=DELETE 6=HEAD
 -- Note: OPTIONS is handled statically by corsMiddleware — not stored in methodIds
-INSERT INTO routes ("resourceId", pattern, name, description, protected, core, operations, "methodIds", "creatorId", "creatorName") VALUES
+INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "operationId", "methodIds", "creatorId", "creatorName") VALUES
   -- products resource
   ((SELECT id FROM resource WHERE name='products' AND "serviceId"=(SELECT id FROM "service" WHERE name='ms-product')),
    '/search',  'searchProducts', 'Search products',  true,  false, ARRAY[2],  ARRAY[2], -1, 'system'),

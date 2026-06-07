@@ -1,10 +1,7 @@
 
+### Entity Relationship Diagram - Routes & ACL
 
 ```mermaid
----
-caption: Entity Relationship Diagram - Routes & ACL
----
-
 erDiagram
 
   application ||--o{ service : ""
@@ -122,11 +119,9 @@ erDiagram
   }
 ```
 
-```mermaid
----
-caption: Entity Relationship Diagram - Consumer & Preferences
----
+### Entity Relationship Diagram - Consumer & Preferences
 
+```mermaid
 erDiagram
 
   consumer }o--|| user : "(external)"
