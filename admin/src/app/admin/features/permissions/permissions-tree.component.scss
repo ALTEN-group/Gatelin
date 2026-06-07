@@ -16,7 +16,6 @@ adm-permissions-tree {
   overflow: hidden;
 
   p-select {
-    align-self: flex-end;
     width: 200px;
   }
 }
@@ -26,6 +25,7 @@ p-treetable {
   min-height: 0;
   overflow: hidden;
 
+  tr th:first-child,
   tr td:first-child {
     width: 200px;
   }
@@ -34,6 +34,14 @@ p-treetable {
 .permissions-tree__center-col {
   text-align: center;
   width: 5rem;
+}
+
+:host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__center-col {
+  text-align: center;
+
+  p-checkbox {
+    display: inline-flex;
+  }
 }
 
 .permissions-tree__label--service {
