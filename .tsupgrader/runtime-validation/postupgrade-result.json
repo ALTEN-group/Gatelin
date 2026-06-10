@@ -1,0 +1,35 @@
+{
+  "planHash": "0a34723b66cf7d87e1dca1acbae21a09bddde0e8f4812f9bded47bdc09d25bfa",
+  "phase": "postupgrade",
+  "recordedAtUtc": "2026-06-10T11:33:11.5410350Z",
+  "retryCount": 3,
+  "resetBaseline": false,
+  "result": {
+    "setupSucceeded": true,
+    "setupDurationMs": 990,
+    "setupFailureOutput": null,
+    "assertions": [
+      {
+        "name": "tests-pass",
+        "kind": "process",
+        "verificationMethod": "test-results",
+        "passed": false,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 1,
+        "outputSample": "\n\u003E gatelin@0.1.0 test\n\u003E jest --passWithNoTests\n\nFAIL tests/middlewares/cache/consumer.test.js\n  updateCache middleware\n    \u2715 should update cache with correct arguments and call next() (6 ms)\n    \u2713 should call next(404) when consumer is not found in cache (1 ms)\n    \u2713 should read id, accessToken, refreshToken and roles from req.body.rows[0] (1 ms)\n\n  \u25CF updateCache middleware \u203A should update cache with correct arguments and call next()\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    Expected: \u0022Updating consumer 5 in cache\u0022\n    Received: [Function anonymous]\n\n    Number of calls: 1\n\n      43 |     updateCache(req, res, next);\n      44 |\n    \u003E 45 |     expect(log.debug).toHaveBeenCalledWith(\u0022Updating consumer 5 in cache\u0022);\n         |                       ^\n      46 |     expect(csmerSvc.updateCache).toHaveBeenCalledWith(\n      47 |       5,\n      48 |       \u0022new-access\u0022,\n\n      at Object.toHaveBeenCalledWith (tests/middlewares/cache/consumer.test.js:45:23)\n\nTest Suites: 1 failed, 1 of 9 total\nTests:       1 failed, 2 passed, 3 total\nSnapshots:   0 total\nTime:        0.809 s\nRan all test suites.\n",
+        "durationMs": 1329,
+        "testResults": {
+          "testFramework": "jest",
+          "runnerDetectedFrom": "package_json",
+          "testsTotal": 3,
+          "testsPassed": 2,
+          "testsFailed": 1,
+          "testsSkipped": 0,
+          "parseFailed": false
+        }
+      }
+    ]
+  }
+}

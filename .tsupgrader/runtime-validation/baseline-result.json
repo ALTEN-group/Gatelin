@@ -1,0 +1,35 @@
+{
+  "planHash": "0a34723b66cf7d87e1dca1acbae21a09bddde0e8f4812f9bded47bdc09d25bfa",
+  "phase": "baseline",
+  "recordedAtUtc": "2026-06-10T11:32:19.4790740Z",
+  "retryCount": 0,
+  "resetBaseline": true,
+  "result": {
+    "setupSucceeded": true,
+    "setupDurationMs": 1058,
+    "setupFailureOutput": null,
+    "assertions": [
+      {
+        "name": "tests-pass",
+        "kind": "process",
+        "verificationMethod": "test-results",
+        "passed": false,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 1,
+        "outputSample": "\n\u003E gatelin@0.1.0 test\n\u003E jest --passWithNoTests\n\nFAIL tests/middlewares/validators/check-consumer.test.js\n  checkConsumer middleware\n    \u2715 should set res.locals.consumer and call next() when consumer is found (4 ms)\n    \u2715 should call next(404) when consumer is not found (6 ms)\n    \u2715 should call next(404) when consumer service returns undefined (2 ms)\n    \u2715 should read the access token from res.locals.tokens.access\n\n  \u25CF checkConsumer middleware \u203A should set res.locals.consumer and call next() when consumer is found\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    Expected: \u0022checkConsumer(accessToken=valid-access-token)\u0022\n    Received\n           1: [Function anonymous]\n           2: [Function anonymous]\n\n    Number of calls: 2\n\n      41 |\n      42 |     expect(csmerSvc.getOne).toHaveBeenCalledWith(\u0022valid-access-token\u0022);\n    \u003E 43 |     expect(log.debug).toHaveBeenCalledWith(\n         |                       ^\n      44 |       \u0022checkConsumer(accessToken=valid-access-token)\u0022,\n      45 |     );\n      46 |     expect(log.debug).toHaveBeenCalledWith(\n\n      at Object.toHaveBeenCalledWith (tests/middlewares/validators/check-consumer.test.js:43:23)\n\n  \u25CF checkConsumer middleware \u203A should call next(404) when consumer is not found\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    - Expected\n    \u002B Received\n\n      Object {\n    -   \u0022msg\u0022: \u0022Consumer not found\u0022,\n    -   \u0022status\u0022: 404,\n    \u002B   \u0022message\u0022: \u0022Unauthorized\u0022,\n    \u002B   \u0022status\u0022: 401,\n      },\n\n    Number of calls: 1\n\n      57 |\n      58 |     expect(csmerSvc.getOne).toHaveBeenCalledWith(\u0022valid-access-token\u0022);\n    \u003E 59 |     expect(next).toHaveBeenCalledWith({\n         |                  ^\n      60 |       status: 404,\n      61 |       msg: \u0022Consumer not found\u0022,\n      62 |     });\n\n      at Object.toHaveBeenCalledWith (tests/middlewares/validators/check-consumer.test.js:59:18)\n\n  \u25CF checkConsumer middleware \u203A should call next(404) when consumer service returns undefined\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    - Expected\n    \u002B Received\n\n      Object {\n    -   \u0022msg\u0022: \u0022Consumer not found\u0022,\n    -   \u0022status\u0022: 404,\n    \u002B   \u0022message\u0022: \u0022Unauthorized\u0022,\n    \u002B   \u0022status\u0022: 401,\n      },\n\n    Number of calls: 1\n\n      69 |     await checkConsumer(req, res, next);\n      70 |\n    \u003E 71 |     expect(next).toHaveBeenCalledWith({\n         |                  ^\n      72 |       status: 404,\n      73 |       msg: \u0022Consumer not found\u0022,\n      74 |     });\n\n      at Object.toHaveBeenCalledWith (tests/middlewares/validators/check-consumer.test.js:71:18)\n\n  \u25CF checkConsumer middleware \u203A should read the access token from res.locals.tokens.access\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    Expected: \u0022checkConsumer(accessToken=token-xyz)\u0022\n    Received\n           1: [Function anonymous]\n           2: [Function anonymous]\n\n    Number of calls: 2\n\n      82 |\n      83 |     expect(csmerSvc.getOne).toHaveBeenCalledWith(\u0022token-xyz\u0022);\n    \u003E 84 |     expect(log.debug).toHaveBeenCalledWith(\n         |                       ^\n      85 |       \u0022checkConsumer(accessToken=token-xyz)\u0022,\n      86 |     );\n      87 |   });\n\n      at Object.toHaveBeenCalledWith (tests/middlewares/validators/check-consumer.test.js:84:23)\n\nTest Suites: 1 failed, 1 of 9 total\nTests:       4 failed, 4 total\nSnapshots:   0 total\nTime:        0.921 s\nRan all test suites.\n",
+        "durationMs": 1431,
+        "testResults": {
+          "testFramework": "jest",
+          "runnerDetectedFrom": "package_json",
+          "testsTotal": 4,
+          "testsPassed": 0,
+          "testsFailed": 4,
+          "testsSkipped": 0,
+          "parseFailed": false
+        }
+      }
+    ]
+  }
+}

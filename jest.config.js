@@ -2,9 +2,6 @@ export default {
   // Test environment
   testEnvironment: "node",
 
-  // Enable experimental ESM support
-  extensionsToTreatAsEsm: [".js"],
-
   // Stop running tests after failures
   bail: true,
 
@@ -19,7 +16,7 @@ export default {
 
   // Native ES module support
   transform: {
-    "^.+\\.js$": ["babel-jest", { useESM: true }],
+    "^.+\\.js$": "babel-jest",
   },
 
   // Transform ES modules from node_modules

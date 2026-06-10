@@ -1,0 +1,15 @@
+{
+  "projectType": "server",
+  "setup": [ { "command": "npm", "args": ["install"] } ],
+  "assertions": [
+    {
+      "name": "tests-pass",
+      "kind": "process",
+      "command": "npm",
+      "args": ["test", "--", "--passWithNoTests"],
+      "verificationMethod": "test-results",
+      "expected": "0",
+      "timeoutSeconds": 120
+    }
+  ]
+}
