@@ -9,7 +9,7 @@
   },
   "author": "Ludovic Cluber",
   "devDependencies": {
-    "vitepress": "1.6.3"
+    "vitepress": "1.6.4"
   },
   "dependencies": {
     "mermaid": "11.15.0",
