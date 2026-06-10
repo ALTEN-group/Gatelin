@@ -1,0 +1,22 @@
+import { buildLockedCellRenderer } from "@core/utils/renderers/locked.renderer";
+import { CONTROL_TYPES } from "@dwtechs/crud-builder";
+export const CORE_CONFIG = {
+    key: "core",
+    label: "Core",
+    controlType: CONTROL_TYPES.CHECKBOX,
+    columnOptions: {
+        defaultWidth: "60px",
+        filterType: CONTROL_TYPES.CHECKBOX,
+        customCellRenderer: buildLockedCellRenderer(),
+        customHeaderRenderer: () => "🔒",
+    },
+    controlOptions: {
+        disabled: true,
+    },
+    conditions: {
+        controlOptions: {
+            hidden: ({ model }) => !model.id,
+        },
+    },
+};
+//# sourceMappingURL=core.config.js.map

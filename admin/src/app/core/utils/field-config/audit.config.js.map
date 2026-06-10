@@ -1,0 +1,1 @@
+{"version":3,"file":"audit.config.js","sourceRoot":"","sources":["audit.config.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,eAAe,CAAC;AACvC,OAAO,EAEL,iBAAiB,EACjB,WAAW,GAEZ,MAAM,uBAAuB,CAAC;AAE/B,MAAM,UAAU,gBAAgB;IAC9B,MAAM,MAAM,GAAG,MAAM,CAAC,WAAW,CAAC,CAAC;IACnC,OAAO,iBAAiB,CAAC,MAAM,CAAC,WAAW,CAAC,CAAC;AAC/C,CAAC"}

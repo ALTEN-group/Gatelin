@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { Component, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Player } from "@lcluber/frameratjs";
 import {
   FullscreenQuad,
@@ -14,6 +14,7 @@ import { ShaderService } from "app/login/utils/shader.service";
 @Component({
   selector: "adm-login-background",
   templateUrl: "./login-background.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./login-background.component.scss"],
 })
 export class LoginBackgroundComponent implements OnInit, OnDestroy {

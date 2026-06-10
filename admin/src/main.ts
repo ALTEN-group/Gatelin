@@ -5,6 +5,7 @@ import {
   provideHttpClient,
   withInterceptors,
   withInterceptorsFromDi,
+  withXhr
 } from "@angular/common/http";
 import localeFr from "@angular/common/locales/fr";
 import {
@@ -50,7 +51,7 @@ bootstrapApplication(AppComponent, {
       },
     }),
     provideAppConfig(),
-    provideHttpClient(
+    provideHttpClient(withXhr(), 
       withInterceptorsFromDi(),
       withInterceptors([
         authInterceptor,
