@@ -1,6 +1,6 @@
 /// <reference types="@angular/localize" />
 import { registerLocaleData } from "@angular/common";
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi, } from "@angular/common/http";
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import localeFr from "@angular/common/locales/fr";
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection, } from "@angular/core";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
@@ -38,7 +38,7 @@ bootstrapApplication(AppComponent, {
             },
         }),
         provideAppConfig(),
-        provideHttpClient(withInterceptorsFromDi(), withInterceptors([
+        provideHttpClient(withXhr(), withInterceptorsFromDi(), withInterceptors([
             authInterceptor,
             errorInterceptor,
             locationInterceptor,

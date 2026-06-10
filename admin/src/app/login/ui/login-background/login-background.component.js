@@ -1,5 +1,5 @@
 import { __decorate } from "tslib";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { Player } from "@lcluber/frameratjs";
 import { FullscreenQuad, Mesh, PerspectiveCamera, Renderer, Scene, } from "@lcluber/roostrjs";
 let LoginBackgroundComponent = class LoginBackgroundComponent {
@@ -39,6 +39,7 @@ LoginBackgroundComponent = __decorate([
     Component({
         selector: "adm-login-background",
         templateUrl: "./login-background.component.html",
+        changeDetection: ChangeDetectionStrategy.Eager,
         styleUrls: ["./login-background.component.scss"],
     })
 ], LoginBackgroundComponent);

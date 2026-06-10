@@ -30,15 +30,15 @@
     "@lcluber/orbisjs": "1.0.9",
     "@lcluber/roostrjs": "0.5.12",
     "@primeng/themes": "21.0.4",
-    "chart.js": "3.3.2",
-    "core-js": "3.26.1",
+    "chart.js": "4.5.1",
+    "core-js": "3.49.0",
     "exceljs": "4.4.0",
     "file-saver": "2.0.5",
     "primeicons": "7.0.0",
     "primeng": "21.1.6",
     "quill": "2.0.3",
     "rxjs": "7.8.1",
-    "tslib": "2.5.3",
+    "tslib": "2.8.1",
     "typescript": "6.0.3"
   },
   "devDependencies": {
@@ -47,9 +47,9 @@
     "@angular/compiler": "22.0.0",
     "@angular/compiler-cli": "22.0.0",
     "@angular/language-service": "22.0.0",
-    "@types/chart.js": "2.9.37",
+    "@types/chart.js": "4.0.1",
     "@types/file-saver": "2.0.7",
-    "@types/jasmine": "~5.1.0",
+    "@types/jasmine": "~6.0.0",
     "@types/node": "20.19.17",
     "istanbul-lib-instrument": "^6.0.3",
     "jasmine-core": "~5.1.0",
@@ -57,10 +57,10 @@
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
+    "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "zone.js": "0.15.1"
   }
 }
