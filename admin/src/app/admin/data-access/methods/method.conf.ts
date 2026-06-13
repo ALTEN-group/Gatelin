@@ -3,6 +3,7 @@ import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { disabledCellRenderer } from "@core/utils/renderers/disabled.renderer";
 import {
   CONTROL_TYPES,
+  hexColor,
   ID_CONFIG,
   INPUT_TYPES,
   StrictCrudItemOptions,
@@ -41,9 +42,13 @@ export function buildMethodColumns(
     },
     {
       key: "color",
-      label: "Couleur",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
+      label: "Color",
+      controlType: CONTROL_TYPES.COLOR,
+      controlOptions: {
+        inputIcon: "pi pi-palette",
+        validators: [hexColor],
+        defaultValue: "#6366f1",
+      },
       columnOptions: {
         customCellRenderer: buildColorCellRenderer(sanitizer),
       },

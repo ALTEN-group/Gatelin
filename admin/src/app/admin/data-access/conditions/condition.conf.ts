@@ -7,6 +7,7 @@ import { buildIdNameAction } from "@core/utils/field-config/on-select-action.con
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
+  hexColor,
   ID_CONFIG,
   INPUT_TYPES,
   maxlength,
@@ -108,8 +109,12 @@ export const CONDITION_COLUMNS: (
     {
       key: "color",
       label: "Color",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
+      controlType: CONTROL_TYPES.COLOR,
+      controlOptions: {
+        inputIcon: "pi pi-palette",
+        validators: [hexColor],
+        defaultValue: "#6366f1",
+      },
       columnOptions: {
         customCellRenderer: buildColorCellRenderer(sanitizer),
       },
