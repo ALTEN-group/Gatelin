@@ -9,7 +9,7 @@ export const CORE_CONFIG: StrictCrudItemOptions<{ core: boolean }> = {
     defaultWidth: "60px",
     filterType: CONTROL_TYPES.CHECKBOX,
     customCellRenderer: buildLockedCellRenderer(),
-    customHeaderRenderer: () => "🔒",
+    customHeaderRenderer: () => `<span title="Core">🔒</span>`,
   },
   controlOptions: {
     disabled: true,

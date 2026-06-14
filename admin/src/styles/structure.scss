@@ -31,15 +31,6 @@ $expandedSidenavWidth: 220px;
         }
     }
 
-
-    // &.mobile {
-
-    //     .adm-content,
-    //     .adm-navbar {
-    //         margin-left: 0;
-    //     }
-    // }
-
     &.sidenav-expanded {
         &.sidenav-pinned {
 
@@ -48,16 +39,6 @@ $expandedSidenavWidth: 220px;
                 margin-left: $expandedSidenavWidth;
                 width: calc(100% - $expandedSidenavWidth);
             }
-        }
-    }
-
-
-    @media (max-width: 768px) {
-        $appFrameHeight: calc(100vh - 100px);
-
-        .adm-content {
-            height: $appFrameHeight;
-            position: relative;
         }
     }
 }
