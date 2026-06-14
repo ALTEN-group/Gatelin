@@ -35,10 +35,12 @@
     </ng-template>
 
     <ng-template #body let-rowNode let-rowData="rowData">
+      @let hasPerm = (rowData | getPerm:selectedRoleId()) !== undefined;
       <tr
         [ttRow]="rowNode"
         [class.permissions-tree__row--route]="rowData.type === 'route'"
-        (click)="onRowClick(rowData)"
+        [class.permissions-tree__row--disabled]="rowData.type === 'route' && !rowData.protected && !hasPerm"
+        (click)="rowData.type === 'route' && !rowData.protected && !hasPerm ? null : onRowClick(rowData)"
       >
         <td>
           <p-treeTableToggler [rowNode]="rowNode" />
@@ -47,8 +49,9 @@
         <td class="permissions-tree__center-col" style="text-align: center;" (click)="$event.stopPropagation()">
           @if (rowData.type === 'route') {
             <p-checkbox
-              [ngModel]="(rowData | getPerm:selectedRoleId()) !== undefined"
+              [ngModel]="hasPerm"
               [binary]="true"
+              [disabled]="!rowData.protected && !hasPerm"
               (onChange)="onToggle(rowData, $event.checked)"
             />
           }

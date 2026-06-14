@@ -69,6 +69,15 @@ p-treetable {
   }
 }
 
+.permissions-tree__row--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+
+  &:hover {
+    background: none !important;
+  }
+}
+
 .permissions-tree__chips {
   display: flex;
   flex-wrap: wrap;

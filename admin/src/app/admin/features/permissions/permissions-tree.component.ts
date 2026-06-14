@@ -200,6 +200,7 @@ export class PermissionsTreeComponent {
     const roleId = this.selectedRoleId();
     if (roleId === null) return;
     const perm = nodeData.rolePerms[roleId];
+    if (!nodeData.protected && !perm) return;
     this.editingOriginalPerm.set(perm);
     this.dialogHeader.set(nodeData.name);
     this.dialogConfig.set([
@@ -323,6 +324,7 @@ export class PermissionsTreeComponent {
                     : [],
                 availableScopes: scopesByRoute.get(r.id) ?? [],
                 availableConditions: allConditions,
+                protected: r.protected,
               },
               leaf: true,
             })),

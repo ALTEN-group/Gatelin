@@ -38,6 +38,7 @@ CREATE OR REPLACE VIEW permissions AS
     res.name AS "resourceName",
     rt.id    AS "routeId",
     rt.name  AS "routeName",
+    rt.protected AS "routeProtected",
     p."operationId",
     o.name   AS "operationName",
     p.fields,
@@ -57,5 +58,5 @@ CREATE OR REPLACE VIEW permissions AS
   LEFT JOIN operation           o   ON o.id   = p."operationId"
   LEFT JOIN permission_condition pc ON pc."permissionId" = p.id
   LEFT JOIN condition            c  ON c.id   = pc."conditionId"
-  GROUP BY p.id, svc.id, svc.name, res.id, res.name, rt.id, rt.name, o.name
+  GROUP BY p.id, svc.id, svc.name, res.id, res.name, rt.id, rt.name, rt.protected, o.name
   ORDER BY svc.name ASC, res.name ASC, rt.name ASC, p."operationId" ASC;

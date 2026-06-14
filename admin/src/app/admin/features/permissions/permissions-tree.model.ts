@@ -21,6 +21,7 @@ export interface RouteNodeData {
   availableFields: string[];
   availableScopes: string[];
   availableConditions: { id: number; name: string; color: string | null }[];
+  protected: boolean;
 }
 
 export type PermTreeNodeData =
