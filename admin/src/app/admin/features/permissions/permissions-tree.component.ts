@@ -63,6 +63,11 @@ export class PermissionsTreeComponent {
       .filter((o) => o.id !== null)
       .map((o) => [o.id as number, o.color]),
   );
+  private readonly operationNameById: Map<number, string> = new Map(
+    ((this.route.snapshot.data["operations"] as Operation[]) ?? [])
+      .filter((o) => o.id !== null)
+      .map((o) => [o.id as number, o.name]),
+  );
   private readonly fieldsByResource: Map<number, string[]> = (() => {
     const map = new Map<number, string[]>();
     for (const f of (this.route.snapshot.data["fields"] as Field[]) ?? []) {
@@ -143,6 +148,7 @@ export class PermissionsTreeComponent {
       this.scopesByRoute,
       this.allConditions,
       this.operationColorById,
+      this.operationNameById,
     );
   });
 
@@ -181,7 +187,7 @@ export class PermissionsTreeComponent {
     const role = this.selectedRole();
     if (role?.id === null || role?.id === undefined) return;
 
-    const { create, archive } = this.permissionsService.httpCalls;
+    const { create } = this.permissionsService.httpCalls;
 
     if (checked) {
       if (!create) return;
@@ -194,10 +200,10 @@ export class PermissionsTreeComponent {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     } else {
-      if (!archive) return;
       const existingPerm = nodeData.rolePerms[role.id]?.[opId];
       if (!existingPerm?.id) return;
-      archive([existingPerm.id])
+      this.permissionsService
+        .delete(existingPerm.id)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     }
@@ -269,6 +275,7 @@ export class PermissionsTreeComponent {
     scopesByRoute: Map<number, string[]>,
     allConditions: { id: number; name: string; color: string | null }[],
     operationColorById: Map<number, string | null>,
+    operationNameById: Map<number, string>,
   ): TreeNode<PermTreeNodeData>[] {
     // Build routeId → roleId → operationId → Permission map
     const permMap = new Map<
@@ -341,11 +348,13 @@ export class PermissionsTreeComponent {
                 type: "route" as const,
                 id: r.id,
                 name: r.name,
-                operationIds: r.operationId,
-                operationNames: r.operationName,
-                operationColors: r.operationId.map(
-                  (id) => operationColorById.get(id) ?? null,
-                ),
+                operationIds: [...r.operationId].sort((a, b) => a - b),
+                operationNames: [...r.operationId]
+                  .sort((a, b) => a - b)
+                  .map((id) => operationNameById.get(id) ?? ""),
+                operationColors: [...r.operationId]
+                  .sort((a, b) => a - b)
+                  .map((id) => operationColorById.get(id) ?? null),
                 rolePerms: permMap.get(r.id) ?? {},
                 availableFields:
                   r.resourceId !== null

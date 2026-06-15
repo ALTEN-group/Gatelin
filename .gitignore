@@ -8,3 +8,6 @@ tests/coverage/
 docker/conf/.env.dev
 docker/conf/.env.prod
 website/docs/.vitepress/cache
+
+# APM dependencies
+apm_modules/

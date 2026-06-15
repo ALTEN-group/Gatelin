@@ -126,7 +126,7 @@ export const SIDENAV: MenuItem[] = [
       },
       {
         id: "cors",
-        label: $localize`:@@Admin_CorsNav:Cors`,
+        label: $localize`:@@Admin_CorsNav:CORS`,
         routerLink: `/${AppPaths.CORS}`,
         icon: "pi pi-shield",
         data: {

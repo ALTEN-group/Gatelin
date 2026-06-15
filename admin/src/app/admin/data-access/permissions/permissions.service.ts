@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/crud-builder";
 import { PERMISSION_COLUMNS } from "app/admin/data-access/permissions/permission.conf";
@@ -15,6 +16,7 @@ export class PermissionsService {
   private readonly crud = new CrudRepository<Permission>().with({
     endpoint: permissionsEndpoint,
   });
+  private readonly http = inject(HttpClient);
 
   public readonly httpCalls: Calls<Permission> = {
     get: this.crud.get,
@@ -25,6 +27,12 @@ export class PermissionsService {
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
     PERMISSION_COLUMNS(payload);
+
+  public delete(id: number): Observable<unknown> {
+    return this.http.delete<unknown>(permissionsEndpoint, {
+      body: { rows: [{ id }] },
+    });
+  }
 
   public getByRole(
     roleId: number | null,
