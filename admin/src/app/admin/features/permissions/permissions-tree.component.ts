@@ -32,7 +32,6 @@ import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
 import { TreeTableModule } from "primeng/treetable";
 import { of } from "rxjs";
-import { GetPermPipe } from "./get-perm.pipe";
 import { PermTreeNodeData } from "./permissions-tree.model";
 
 @Component({
@@ -46,7 +45,6 @@ import { PermTreeNodeData } from "./permissions-tree.model";
     SelectModule,
     Chip,
     EditionDialogComponent,
-    GetPermPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -168,8 +166,7 @@ export class PermissionsTreeComponent {
     this.selectedRole.set(role);
   }
 
-  public onToggle(nodeData: PermTreeNodeData, checked: boolean): void {
-    if (nodeData.type !== "route") return;
+  public onToggleOperation(nodeData: RouteNodeData, opId: number, checked: boolean): void {
     const role = this.selectedRole();
     if (role?.id === null || role?.id === undefined) return;
 
@@ -180,14 +177,14 @@ export class PermissionsTreeComponent {
       const perm: Permission = {
         ...permissionFactory(role.id),
         routeId: nodeData.id,
-        operationId: nodeData.operationIds,
+        operationId: opId as any,
       };
       create(perm)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     } else {
       if (!archive) return;
-      const existingPerm = nodeData.rolePerms[role.id];
+      const existingPerm = nodeData.rolePerms[role.id]?.[opId];
       if (!existingPerm?.id) return;
       archive([existingPerm.id])
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -195,14 +192,15 @@ export class PermissionsTreeComponent {
     }
   }
 
-  public onRowClick(nodeData: PermTreeNodeData): void {
-    if (nodeData.type !== "route") return;
+  public onEditOperation(nodeData: RouteNodeData, opId: number): void {
     const roleId = this.selectedRoleId();
     if (roleId === null) return;
-    const perm = nodeData.rolePerms[roleId];
+    const perm = nodeData.rolePerms[roleId]?.[opId];
     if (!nodeData.protected && !perm) return;
-    this.editingOriginalPerm.set(perm);
-    this.dialogHeader.set(nodeData.name);
+    this.editingOriginalPerm.set(perm ?? null);
+    const opIndex = nodeData.operationIds.indexOf(opId);
+    const opName = opIndex !== -1 ? nodeData.operationNames[opIndex] : "Operation";
+    this.dialogHeader.set(`${nodeData.name} - ${opName}`);
     this.dialogConfig.set([
       {
         key: "fields",
@@ -259,16 +257,24 @@ export class PermissionsTreeComponent {
     scopesByRoute: Map<number, string[]>,
     allConditions: { id: number; name: string; color: string | null }[],
   ): TreeNode<PermTreeNodeData>[] {
-    // Build routeId → { roleId: Permission } map from existing permissions
-    const permMap = new Map<number, Record<number, Permission>>();
+    // Build routeId → roleId → operationId → Permission map
+    const permMap = new Map<number, Record<number, Record<number, Permission>>>();
     for (const p of perms) {
-      if (p.routeId === null || p.roleId === null) continue;
-      let entry = permMap.get(p.routeId);
-      if (!entry) {
-        entry = {};
-        permMap.set(p.routeId, entry);
+      if (p.routeId === null || p.roleId === null || p.operationId === null) continue;
+      let routeEntry = permMap.get(p.routeId);
+      if (!routeEntry) {
+        routeEntry = {};
+        permMap.set(p.routeId, routeEntry);
       }
-      entry[p.roleId] = p;
+      let roleEntry = routeEntry[p.roleId];
+      if (!roleEntry) {
+        roleEntry = {};
+        routeEntry[p.roleId] = roleEntry;
+      }
+      const opIds = Array.isArray(p.operationId) ? p.operationId : [Number(p.operationId)];
+      for (const opId of opIds) {
+        roleEntry[opId] = p;
+      }
     }
 
     // Group routes: serviceId → resourceId → routes[]
@@ -317,6 +323,7 @@ export class PermissionsTreeComponent {
                 id: r.id,
                 name: r.name,
                 operationIds: r.operationId,
+                operationNames: r.operationName,
                 rolePerms: permMap.get(r.id) ?? {},
                 availableFields:
                   r.resourceId !== null

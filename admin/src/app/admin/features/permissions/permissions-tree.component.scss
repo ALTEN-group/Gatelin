@@ -36,6 +36,64 @@ p-treetable {
   width: 5rem;
 }
 
+.permissions-tree__operations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.permissions-tree__operation-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  p-checkbox {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.permissions-tree__edit-op {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-secondary);
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.permissions-tree__grouped-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.permissions-tree__op-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.permissions-tree__op-badge {
+  font-size: 0.70rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-color-secondary);
+  background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
+  padding: 2px 4px;
+  border-radius: 4px;
+  min-width: 4rem;
+  text-align: right;
+  border: 1px solid var(--p-content-border-color, rgba(0, 0, 0, 0.08));
+}
+
 :host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__center-col {
   text-align: center;
 

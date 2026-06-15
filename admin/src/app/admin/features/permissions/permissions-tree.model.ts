@@ -17,7 +17,8 @@ export interface RouteNodeData {
   id: number;
   name: string;
   operationIds: number[];
-  rolePerms: Record<number, Permission>;
+  operationNames: string[];
+  rolePerms: Record<number, Record<number, Permission>>;
   availableFields: string[];
   availableScopes: string[];
   availableConditions: { id: number; name: string; color: string | null }[];
