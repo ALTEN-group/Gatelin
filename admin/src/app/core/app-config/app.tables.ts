@@ -1,4 +1,4 @@
-import { FilterLevel } from "@dwtechs/crud-builder";
+import { ExcelExportMode, FilterLevel } from "@dwtechs/crud-builder";
 
 const tableKeys = [
   "routes",
@@ -27,6 +27,8 @@ type TableInfo = {
   editionDialogSize: "xs" | "s" | "m" | "l";
   filterLevel: FilterLevel;
   isPreferencesModeEnabled: boolean;
+  isExcelExportEnabled: boolean;
+  excelExportMode: ExcelExportMode;
   additionalReadonlyProperties: Record<string, boolean>;
 };
 
@@ -39,6 +41,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "m",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   consumers: {
@@ -49,6 +53,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   services: {
@@ -59,6 +65,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   resources: {
@@ -69,6 +77,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   cors: {
@@ -79,6 +89,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   operations: {
@@ -89,6 +101,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   methods: {
@@ -99,6 +113,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   fields: {
@@ -109,6 +125,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   scopes: {
@@ -119,6 +137,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   roles: {
@@ -129,6 +149,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   colors: {
@@ -139,6 +161,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   permissions: {
@@ -149,6 +173,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   applications: {
@@ -159,6 +185,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
   conditions: {
@@ -169,6 +197,8 @@ export const TABLES: Record<AppTable, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
 } as const;
