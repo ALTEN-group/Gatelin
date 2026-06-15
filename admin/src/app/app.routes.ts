@@ -247,6 +247,7 @@ export const ROUTES: Routes = [
       fields: fieldsResolver,
       scopes: scopesResolver,
       conditions: conditionsResolver,
+      operations: operationsResolver,
     },
   },
   {

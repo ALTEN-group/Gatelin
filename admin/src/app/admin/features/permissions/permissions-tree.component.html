@@ -48,15 +48,20 @@
           @if (rowData.type === 'route') {
             <div class="permissions-tree__operations-list">
               @for (opId of rowData.operationIds; track opId; let idx = $index) {
-                @let hasOp = rowData.rolePerms[roleId]?.[opId] !== undefined;
+                @let hasOp = roleId && rowData.rolePerms[roleId]?.[opId] !== undefined;
                 <div class="permissions-tree__operation-item">
                   <p-checkbox
+                    [inputId]="'op-' + rowData.id + '-' + opId"
                     [binary]="true"
                     [ngModel]="hasOp"
                     [disabled]="!rowData.protected && !hasOp"
                     (onChange)="onToggleOperation(rowData, opId, $event.checked)"
-                    [label]="rowData.operationNames[idx]"
                   />
+                  <label
+                    [for]="'op-' + rowData.id + '-' + opId"
+                    class="permissions-tree__op-chip"
+                    [style]="rowData.operationColors[idx] ? {'background': rowData.operationColors[idx], 'color': '#fff', 'border-color': rowData.operationColors[idx]} : {}"
+                  >{{ rowData.operationNames[idx] }}</label>
                   @if (hasOp) {
                     <button
                       pButton
@@ -75,10 +80,13 @@
           @if (rowData.type === 'route') {
             <div class="permissions-tree__grouped-chips">
               @for (opId of rowData.operationIds; track opId; let idx = $index) {
-                @let perm = rowData.rolePerms[roleId]?.[opId];
+                @let perm = roleId && rowData.rolePerms[roleId]?.[opId];
                 @if (perm && (perm.fields ?? []).length > 0) {
                   <div class="permissions-tree__op-group">
-                    <span class="permissions-tree__op-badge">{{ rowData.operationNames[idx] }}:</span>
+                    <span
+                      class="permissions-tree__op-badge"
+                      [style]="rowData.operationColors[idx] ? {'background': rowData.operationColors[idx], 'color': '#fff', 'border-color': rowData.operationColors[idx]} : {}"
+                    >{{ rowData.operationNames[idx] }}</span>
                     <div class="permissions-tree__chips">
                       @for (field of (perm.fields ?? []); track field) {
                         <p-chip [label]="field" styleClass="permissions-tree__chip" />
@@ -94,10 +102,13 @@
           @if (rowData.type === 'route') {
             <div class="permissions-tree__grouped-chips">
               @for (opId of rowData.operationIds; track opId; let idx = $index) {
-                @let perm = rowData.rolePerms[roleId]?.[opId];
+                @let perm = roleId && rowData.rolePerms[roleId]?.[opId];
                 @if (perm && (perm.scopes ?? []).length > 0) {
                   <div class="permissions-tree__op-group">
-                    <span class="permissions-tree__op-badge">{{ rowData.operationNames[idx] }}:</span>
+                    <span
+                      class="permissions-tree__op-badge"
+                      [style]="rowData.operationColors[idx] ? {'background': rowData.operationColors[idx], 'color': '#fff', 'border-color': rowData.operationColors[idx]} : {}"
+                    >{{ rowData.operationNames[idx] }}</span>
                     <div class="permissions-tree__chips">
                       @for (scope of (perm.scopes ?? []); track scope) {
                         <p-chip [label]="scope" styleClass="permissions-tree__chip" />
@@ -113,10 +124,13 @@
           @if (rowData.type === 'route') {
             <div class="permissions-tree__grouped-chips">
               @for (opId of rowData.operationIds; track opId; let idx = $index) {
-                @let perm = rowData.rolePerms[roleId]?.[opId];
+                @let perm = roleId && rowData.rolePerms[roleId]?.[opId];
                 @if (perm && (perm.conditionId ?? []).length > 0) {
                   <div class="permissions-tree__op-group">
-                    <span class="permissions-tree__op-badge">{{ rowData.operationNames[idx] }}:</span>
+                    <span
+                      class="permissions-tree__op-badge"
+                      [style]="rowData.operationColors[idx] ? {'background': rowData.operationColors[idx], 'color': '#fff', 'border-color': rowData.operationColors[idx]} : {}"
+                    >{{ rowData.operationNames[idx] }}</span>
                     <div class="permissions-tree__chips">
                       @for (condId of (perm.conditionId ?? []); track condId) {
                         @let cond = conditionById.get(condId);

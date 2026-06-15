@@ -87,11 +87,31 @@ p-treetable {
   text-transform: uppercase;
   color: var(--text-color-secondary);
   background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: 2px 6px;
+  border-radius: 6px;
   min-width: 4rem;
-  text-align: right;
+  text-align: center;
   border: 1px solid var(--p-content-border-color, rgba(0, 0, 0, 0.08));
+}
+
+.permissions-tree__op-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  height: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
+  color: var(--text-color);
+  border: 1px solid var(--p-content-border-color, rgba(0, 0, 0, 0.08));
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 :host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__center-col {
