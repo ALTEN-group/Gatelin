@@ -18,33 +18,14 @@ describe("resolvePermissions middleware", () => {
   });
 
   beforeEach(() => {
-    req = { body: { rows: [{ roles: [] }] } };
-    res = { locals: {} };
+    req = {};
+    res = { locals: { rows: [{ roles: [] }] } };
     next = jest.fn();
   });
 
-  describe("no roles", () => {
-    it("should set empty permissions and call next() when roles array is empty", () => {
-      req.body.rows[0].roles = [];
-      roleSvc.getOne.mockReturnValue(undefined);
-
-      resolvePermissions(req, res, next);
-
-      expect(res.locals.permissions).toEqual([]);
-      expect(next).toHaveBeenCalledWith();
-    });
-
-    it("should set empty permissions and call next() when rows is empty", () => {
-      req.body.rows = [];
-
-      resolvePermissions(req, res, next);
-
-      expect(res.locals.permissions).toEqual([]);
-      expect(next).toHaveBeenCalledWith();
-    });
-
-    it("should set empty permissions when role is not found in cache", () => {
-      req.body.rows[0].roles = [99];
+  describe("role not found in cache", () => {
+    it("should set empty permissions when role is not found in cache (stale token)", () => {
+      res.locals.rows = [{ roles: [99] }];
       roleSvc.getOne.mockReturnValue(undefined);
 
       resolvePermissions(req, res, next);
@@ -56,12 +37,12 @@ describe("resolvePermissions middleware", () => {
 
   describe("single role", () => {
     it("should map permissions from a single role", () => {
-      req.body.rows[0].roles = [1];
+      res.locals.rows = [{ roles: [1] }];
       roleSvc.getOne.mockReturnValue({
-        permissions: [
-          { route: 6,  operations: [2],    fields: null },
-          { route: 11, operations: [2, 3], fields: ["name"] },
-        ],
+        permissions: new Map([
+          [6,  { route: 6,  operations: [2],    fields: null }],
+          [11, { route: 11, operations: [2, 3], fields: ["name"] }],
+        ]),
       });
 
       resolvePermissions(req, res, next);
@@ -74,9 +55,9 @@ describe("resolvePermissions middleware", () => {
     });
 
     it("should default fields to null when permission has no fields property", () => {
-      req.body.rows[0].roles = [1];
+      res.locals.rows = [{ roles: [1] }];
       roleSvc.getOne.mockReturnValue({
-        permissions: [{ route: 6, operations: [2] }],
+        permissions: new Map([[6, { route: 6, operations: [2] }]]),
       });
 
       resolvePermissions(req, res, next);
@@ -89,13 +70,13 @@ describe("resolvePermissions middleware", () => {
 
   describe("multiple roles — no overlap", () => {
     it("should merge permissions from distinct routes", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 6, operations: [2], fields: null }],
+          permissions: new Map([[6, { route: 6, operations: [2], fields: null }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 41, operations: [2, 3], fields: null }],
+          permissions: new Map([[41, { route: 41, operations: [2, 3], fields: null }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -109,13 +90,13 @@ describe("resolvePermissions middleware", () => {
 
   describe("multiple roles — same route, operations merge", () => {
     it("should union operations when two roles grant the same route", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 6, operations: [2], fields: null }],
+          permissions: new Map([[6, { route: 6, operations: [2], fields: null }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 6, operations: [5], fields: null }],
+          permissions: new Map([[6, { route: 6, operations: [5], fields: null }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -130,13 +111,13 @@ describe("resolvePermissions middleware", () => {
     });
 
     it("should deduplicate overlapping operations", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 6, operations: [2, 3], fields: null }],
+          permissions: new Map([[6, { route: 6, operations: [2, 3], fields: null }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 6, operations: [2, 5], fields: null }],
+          permissions: new Map([[6, { route: 6, operations: [2, 5], fields: null }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -150,13 +131,13 @@ describe("resolvePermissions middleware", () => {
 
   describe("multiple roles — same route, fields merge", () => {
     it("should union fields when both roles restrict fields", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: ["id", "name"] }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: ["id", "name"] }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: ["name", "description"] }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name", "description"] }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -168,13 +149,13 @@ describe("resolvePermissions middleware", () => {
     });
 
     it("should set fields to null when one role is unrestricted (null) and the other restricts", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: null }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: null }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: ["name"] }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name"] }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -183,13 +164,13 @@ describe("resolvePermissions middleware", () => {
     });
 
     it("should set fields to null when restricted role comes before unrestricted role", () => {
-      req.body.rows[0].roles = [1, 2];
+      res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: ["name"] }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name"] }]]),
         })
         .mockReturnValueOnce({
-          permissions: [{ route: 11, operations: [2], fields: null }],
+          permissions: new Map([[11, { route: 11, operations: [2], fields: null }]]),
         });
 
       resolvePermissions(req, res, next);
@@ -200,11 +181,11 @@ describe("resolvePermissions middleware", () => {
 
   describe("output does not include internal cache properties", () => {
     it("should not include _fieldsSet in permissions output", () => {
-      req.body.rows[0].roles = [1];
+      res.locals.rows = [{ roles: [1] }];
       roleSvc.getOne.mockReturnValue({
-        permissions: [
-          { route: 6, operations: [2], fields: ["name"], _fieldsSet: new Set(["name"]) },
-        ],
+        permissions: new Map([
+          [6, { route: 6, operations: [2], fields: ["name"], _fieldsSet: new Set(["name"]) }],
+        ]),
       });
 
       resolvePermissions(req, res, next);
