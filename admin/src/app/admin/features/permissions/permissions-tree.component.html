@@ -56,11 +56,11 @@
               <p-checkbox
                 [inputId]="'op-' + rowData.routeId + '-' + rowData.id"
                 [binary]="true"
-                [ngModel]="rowData.perm !== undefined"
+                [ngModel]="rowData.perm?.active === true"
                 [disabled]="!rowData.routeProtected && !rowData.perm"
                 (onChange)="onToggleOperation(rowData, $event.checked)"
               />
-              @if (rowData.perm) {
+              @if (rowData.perm?.active) {
                 <button
                   pButton
                   type="button"
@@ -75,7 +75,7 @@
         <td>
           @if (rowData.type === 'operation') {
             <div class="permissions-tree__chips">
-              @for (field of (rowData.perm?.fields ?? []); track field) {
+              @for (field of (rowData.perm?.active ? (rowData.perm?.fields ?? []) : []); track field) {
                 <p-chip [label]="field" styleClass="permissions-tree__chip" />
               }
             </div>
@@ -84,7 +84,7 @@
         <td>
           @if (rowData.type === 'operation') {
             <div class="permissions-tree__chips">
-              @for (scope of (rowData.perm?.scopes ?? []); track scope) {
+              @for (scope of (rowData.perm?.active ? (rowData.perm?.scopes ?? []) : []); track scope) {
                 <p-chip [label]="scope" styleClass="permissions-tree__chip" />
               }
             </div>
@@ -93,7 +93,7 @@
         <td>
           @if (rowData.type === 'operation') {
             <div class="permissions-tree__chips">
-              @for (condId of (rowData.perm?.conditionId ?? []); track condId) {
+              @for (condId of (rowData.perm?.active ? (rowData.perm?.conditionId ?? []) : []); track condId) {
                 @let cond = conditionById.get(condId);
                 <p-chip
                   [label]="cond?.name ?? ''"

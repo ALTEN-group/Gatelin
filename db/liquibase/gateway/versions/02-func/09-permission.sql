@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS $$
     ins_id INT;
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO permission ("roleId", "routeId", "operationId", fields, scopes, "creatorId", "creatorName")
-      VALUES (NEW."roleId", NEW."routeId", NEW."operationId", NEW.fields::text[], NEW.scopes::text[], NEW."creatorId", NEW."creatorName")
+      INSERT INTO permission ("roleId", "routeId", "operationId", active, fields, scopes, "creatorId", "creatorName")
+      VALUES (NEW."roleId", NEW."routeId", NEW."operationId", TRUE, NEW.fields::text[], NEW.scopes::text[], NEW."creatorId", NEW."creatorName")
       RETURNING id INTO ins_id;
       IF NEW."conditionId" IS NOT NULL THEN
         INSERT INTO permission_condition ("permissionId", "conditionId")
@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS $$
     ELSIF TG_OP = 'UPDATE' THEN
       UPDATE permission SET
         "operationId" = NEW."operationId",
+        active        = NEW.active,
         fields        = NEW.fields::text[],
         scopes        = NEW.scopes::text[],
         "updaterId"   = NEW."updaterId",

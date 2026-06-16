@@ -182,22 +182,32 @@ export class PermissionsTreeComponent {
   public onToggleOperation(nodeData: OperationNodeData, checked: boolean): void {
     const role = this.selectedRole();
     if (role?.id === null || role?.id === undefined) return;
+    const { create, update } = this.permissionsService.httpCalls;
 
     if (checked) {
-      const { create } = this.permissionsService.httpCalls;
-      if (!create) return;
-      const perm: Permission = {
-        ...permissionFactory(role.id),
-        routeId: nodeData.routeId,
-        operationId: nodeData.id as any,
-      };
-      create(perm)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.permissionsResource.reload());
+      if (nodeData.perm) {
+        // Row exists but was inactive — flip it back on
+        if (!update) return;
+        update({ ...nodeData.perm, active: true })
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.permissionsResource.reload());
+      } else {
+        // No row yet — create it active
+        if (!create) return;
+        const perm: Permission = {
+          ...permissionFactory(role.id),
+          routeId: nodeData.routeId,
+          operationId: nodeData.id as any,
+          active: true,
+        };
+        create(perm)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.permissionsResource.reload());
+      }
     } else {
-      if (!nodeData.perm?.id) return;
-      this.permissionsService
-        .delete(nodeData.perm.id)
+      // Deactivate — preserve all configuration
+      if (!nodeData.perm?.id || !update) return;
+      update({ ...nodeData.perm, active: false })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     }

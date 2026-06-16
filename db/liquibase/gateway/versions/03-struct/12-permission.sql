@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS permission (
   "roleId"       INT NOT NULL,
   "routeId"      INT NOT NULL,
   "operationId"  INT NOT NULL,
+  active         BOOLEAN NOT NULL DEFAULT TRUE,
   fields         TEXT[],
   scopes         TEXT[],
   "creatorId"    INT,

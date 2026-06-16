@@ -7,6 +7,7 @@ export interface Permission extends ArchiveInfo {
   routeName: string;
   operationId: number[] | null;
   operationName: string;
+  active: boolean;
   fields: string[] | null;
   scopes: string[] | null;
   conditionId: number[] | null;
@@ -26,6 +27,7 @@ export const permissionFactory = (
   routeName: "",
   operationId: [],
   operationName: "",
+  active: true,
   fields: null,
   scopes: null,
   conditionId: null,

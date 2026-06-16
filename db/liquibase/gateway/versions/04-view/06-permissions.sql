@@ -22,7 +22,7 @@ CREATE OR REPLACE VIEW role_cache AS
     LEFT JOIN permission_condition pc ON pc."permissionId" = p.id
     LEFT JOIN condition c ON c.id = pc."conditionId"
     LEFT JOIN field f ON f.id = c."fieldId"
-    WHERE p."roleId" = r.id
+    WHERE p."roleId" = r.id AND p.active = TRUE
     GROUP BY p."routeId"
   ) rp ON TRUE
   GROUP BY r.id, r.archived;
@@ -36,11 +36,12 @@ CREATE OR REPLACE VIEW permissions AS
     svc.name AS "serviceName",
     res.id   AS "resourceId",
     res.name AS "resourceName",
-    rt.id    AS "routeId",
+    p."routeId",
     rt.name  AS "routeName",
     rt.protected AS "routeProtected",
     p."operationId",
     o.name   AS "operationName",
+    p.active,
     p.fields,
     p.scopes,
     COALESCE(array_agg(DISTINCT pc."conditionId") FILTER (WHERE pc."conditionId" IS NOT NULL), ARRAY[]::int[])   AS "conditionId",
@@ -58,5 +59,5 @@ CREATE OR REPLACE VIEW permissions AS
   LEFT JOIN operation           o   ON o.id   = p."operationId"
   LEFT JOIN permission_condition pc ON pc."permissionId" = p.id
   LEFT JOIN condition            c  ON c.id   = pc."conditionId"
-  GROUP BY p.id, svc.id, svc.name, res.id, res.name, rt.id, rt.name, rt.protected, o.name
+  GROUP BY p.id, p."routeId", p.active, svc.id, svc.name, res.id, res.name, rt.name, rt.protected, o.name
   ORDER BY svc.name ASC, res.name ASC, rt.name ASC, p."operationId" ASC;
