@@ -31,22 +31,17 @@ p-treetable {
   }
 }
 
-.permissions-tree__center-col {
+.permissions-tree__active-col {
   text-align: center;
-  width: 5rem;
+  width: 6rem;
 }
 
-.permissions-tree__operations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.25rem 0;
-}
-
-.permissions-tree__operation-item {
+.permissions-tree__active-cell {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0.25rem;
 
   p-checkbox {
     display: inline-flex;
@@ -66,32 +61,6 @@ p-treetable {
   &:hover {
     color: var(--primary-color);
   }
-}
-
-.permissions-tree__grouped-chips {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.25rem 0;
-}
-
-.permissions-tree__op-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.permissions-tree__op-badge {
-  font-size: 0.70rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--text-color-secondary);
-  background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
-  padding: 2px 6px;
-  border-radius: 6px;
-  min-width: 4rem;
-  text-align: center;
-  border: 1px solid var(--p-content-border-color, rgba(0, 0, 0, 0.08));
 }
 
 .permissions-tree__op-chip {
@@ -114,7 +83,7 @@ p-treetable {
   }
 }
 
-:host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__center-col {
+:host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__active-col {
   text-align: center;
 
   p-checkbox {
@@ -139,7 +108,7 @@ p-treetable {
   color: var(--text-color-secondary);
 }
 
-.permissions-tree__row--route {
+.permissions-tree__row--operation {
   cursor: pointer;
 
   &:hover {

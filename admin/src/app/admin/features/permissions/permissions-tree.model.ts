@@ -16,17 +16,25 @@ export interface RouteNodeData {
   type: "route";
   id: number;
   name: string;
-  operationIds: number[];
-  operationNames: string[];
-  operationColors: (string | null)[];
-  rolePerms: Record<number, Record<number, Permission>>;
+  protected: boolean;
+}
+
+export interface OperationNodeData {
+  type: "operation";
+  id: number;
+  routeId: number;
+  routeName: string;
+  routeProtected: boolean;
+  name: string;
+  color: string | null;
+  perm: Permission | undefined;
   availableFields: string[];
   availableScopes: string[];
   availableConditions: { id: number; name: string; color: string | null }[];
-  protected: boolean;
 }
 
 export type PermTreeNodeData =
   | ServiceNodeData
   | ResourceNodeData
-  | RouteNodeData;
+  | RouteNodeData
+  | OperationNodeData;

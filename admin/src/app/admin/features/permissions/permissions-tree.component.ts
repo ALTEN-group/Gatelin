@@ -33,7 +33,7 @@ import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
 import { TreeTableModule } from "primeng/treetable";
 import { of } from "rxjs";
-import { PermTreeNodeData, RouteNodeData } from "./permissions-tree.model";
+import { OperationNodeData, PermTreeNodeData } from "./permissions-tree.model";
 
 @Component({
   selector: "adm-permissions-tree",
@@ -179,46 +179,34 @@ export class PermissionsTreeComponent {
     this.selectedRole.set(role);
   }
 
-  public onToggleOperation(
-    nodeData: RouteNodeData,
-    opId: number,
-    checked: boolean,
-  ): void {
+  public onToggleOperation(nodeData: OperationNodeData, checked: boolean): void {
     const role = this.selectedRole();
     if (role?.id === null || role?.id === undefined) return;
 
-    const { create } = this.permissionsService.httpCalls;
-
     if (checked) {
+      const { create } = this.permissionsService.httpCalls;
       if (!create) return;
       const perm: Permission = {
         ...permissionFactory(role.id),
-        routeId: nodeData.id,
-        operationId: opId as any,
+        routeId: nodeData.routeId,
+        operationId: nodeData.id as any,
       };
       create(perm)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     } else {
-      const existingPerm = nodeData.rolePerms[role.id]?.[opId];
-      if (!existingPerm?.id) return;
+      if (!nodeData.perm?.id) return;
       this.permissionsService
-        .delete(existingPerm.id)
+        .delete(nodeData.perm.id)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.permissionsResource.reload());
     }
   }
 
-  public onEditOperation(nodeData: RouteNodeData, opId: number): void {
-    const roleId = this.selectedRoleId();
-    if (roleId === null) return;
-    const perm = nodeData.rolePerms[roleId]?.[opId];
-    if (!nodeData.protected && !perm) return;
-    this.editingOriginalPerm.set(perm ?? null);
-    const opIndex = nodeData.operationIds.indexOf(opId);
-    const opName =
-      opIndex !== -1 ? nodeData.operationNames[opIndex] : "Operation";
-    this.dialogHeader.set(`${nodeData.name} - ${opName}`);
+  public onEditOperation(nodeData: OperationNodeData): void {
+    if (!nodeData.perm) return;
+    this.editingOriginalPerm.set(nodeData.perm);
+    this.dialogHeader.set(`${nodeData.routeName} - ${nodeData.name}`);
     this.dialogConfig.set([
       {
         key: "fields",
@@ -242,7 +230,7 @@ export class PermissionsTreeComponent {
         })),
       },
     ]);
-    this.editedPermEntry.set({ ...perm });
+    this.editedPermEntry.set({ ...nodeData.perm });
     this.dialogVisible.set(true);
   }
 
@@ -277,29 +265,21 @@ export class PermissionsTreeComponent {
     operationColorById: Map<number, string | null>,
     operationNameById: Map<number, string>,
   ): TreeNode<PermTreeNodeData>[] {
-    // Build routeId → roleId → operationId → Permission map
-    const permMap = new Map<
-      number,
-      Record<number, Record<number, Permission>>
-    >();
+    // Build routeId → operationId → Permission map
+    // (perms are already scoped to the selected role by the resource loader)
+    const permMap = new Map<number, Map<number, Permission>>();
     for (const p of perms) {
-      if (p.routeId === null || p.roleId === null || p.operationId === null)
-        continue;
+      if (p.routeId === null || p.operationId === null) continue;
       let routeEntry = permMap.get(p.routeId);
       if (!routeEntry) {
-        routeEntry = {};
+        routeEntry = new Map();
         permMap.set(p.routeId, routeEntry);
-      }
-      let roleEntry = routeEntry[p.roleId];
-      if (!roleEntry) {
-        roleEntry = {};
-        routeEntry[p.roleId] = roleEntry;
       }
       const opIds = Array.isArray(p.operationId)
         ? p.operationId
         : [Number(p.operationId)];
       for (const opId of opIds) {
-        roleEntry[opId] = p;
+        routeEntry.set(opId, p);
       }
     }
 
@@ -335,37 +315,44 @@ export class PermissionsTreeComponent {
       expanded: true,
       children: Array.from(svc.resources.entries()).map(
         ([resourceId, res]) => ({
-          data: {
-            type: "resource" as const,
-            id: resourceId,
-            name: res.name,
-          },
+          data: { type: "resource" as const, id: resourceId, name: res.name },
           expanded: true,
           children: res.routes
             .filter((r): r is Route & { id: number } => r.id !== null)
-            .map((r) => ({
-              data: {
-                type: "route" as const,
-                id: r.id,
-                name: r.name,
-                operationIds: [...r.operationId].sort((a, b) => a - b),
-                operationNames: [...r.operationId]
-                  .sort((a, b) => a - b)
-                  .map((id) => operationNameById.get(id) ?? ""),
-                operationColors: [...r.operationId]
-                  .sort((a, b) => a - b)
-                  .map((id) => operationColorById.get(id) ?? null),
-                rolePerms: permMap.get(r.id) ?? {},
-                availableFields:
-                  r.resourceId !== null
-                    ? (fieldsByResource.get(r.resourceId) ?? [])
-                    : [],
-                availableScopes: scopesByRoute.get(r.id) ?? [],
-                availableConditions: allConditions,
-                protected: r.protected,
-              },
-              leaf: true,
-            })),
+            .map((r) => {
+              const sortedOpIds = [...r.operationId].sort((a, b) => a - b);
+              const routePerms = permMap.get(r.id);
+              const availableFields =
+                r.resourceId !== null
+                  ? (fieldsByResource.get(r.resourceId) ?? [])
+                  : [];
+              const availableScopes = scopesByRoute.get(r.id) ?? [];
+              return {
+                data: {
+                  type: "route" as const,
+                  id: r.id,
+                  name: r.name,
+                  protected: r.protected,
+                },
+                expanded: true,
+                children: sortedOpIds.map((opId) => ({
+                  data: {
+                    type: "operation" as const,
+                    id: opId,
+                    routeId: r.id,
+                    routeName: r.name,
+                    routeProtected: r.protected,
+                    name: operationNameById.get(opId) ?? "",
+                    color: operationColorById.get(opId) ?? null,
+                    perm: routePerms?.get(opId),
+                    availableFields,
+                    availableScopes,
+                    availableConditions: allConditions,
+                  },
+                  leaf: true,
+                })),
+              };
+            }),
         }),
       ),
     }));
