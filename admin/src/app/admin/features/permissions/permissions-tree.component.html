@@ -38,6 +38,8 @@
       <tr
         [ttRow]="rowNode"
         [class.permissions-tree__row--operation]="rowData.type === 'operation'"
+        [class.permissions-tree__row--clickable]="rowData.type === 'operation' && rowData.perm?.active"
+        (click)="rowData.type === 'operation' && rowData.perm?.active && onEditOperation(rowData)"
       >
         <td>
           <p-treeTableToggler [rowNode]="rowNode" />
@@ -59,16 +61,8 @@
                 [ngModel]="rowData.perm?.active === true"
                 [disabled]="!rowData.routeProtected && !rowData.perm"
                 (onChange)="onToggleOperation(rowData, $event.checked)"
+                (click)="$event.stopPropagation()"
               />
-              @if (rowData.perm?.active) {
-                <button
-                  pButton
-                  type="button"
-                  icon="pi pi-cog"
-                  class="p-button-text p-button-rounded p-button-sm permissions-tree__edit-op"
-                  (click)="onEditOperation(rowData)"
-                ></button>
-              }
             </div>
           }
         </td>

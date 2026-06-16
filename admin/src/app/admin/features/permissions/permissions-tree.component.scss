@@ -40,7 +40,6 @@ p-treetable {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
   padding: 0 0.25rem;
 
   p-checkbox {
@@ -49,18 +48,8 @@ p-treetable {
   }
 }
 
-.permissions-tree__edit-op {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color-secondary);
-
-  &:hover {
-    color: var(--primary-color);
-  }
+.permissions-tree__row--clickable {
+  cursor: pointer;
 }
 
 .permissions-tree__op-chip {
