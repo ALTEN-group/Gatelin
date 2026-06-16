@@ -82,4 +82,14 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
     min: "The value must be greater than or equal to {min}",
     maxFileSize: "The file size exceeds the maximum allowed size",
   },
+  history: {
+    updatedAt: "Updated at",
+    updatedBy: "Updated by",
+    noChanges: "No changes",
+    previousValue: "Previous value",
+    value: "Value",
+    property: "Property",
+    restore: "Restore",
+    showPreviousValue: "Show previous value",
+  },
 };
