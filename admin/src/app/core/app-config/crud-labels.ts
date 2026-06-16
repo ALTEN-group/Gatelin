@@ -33,6 +33,7 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
     validate: "Validate",
     cancel: "Cancel",
     deleteConfirmation: "Are you sure you want to delete this view?",
+    deleteConfirmationHeader: "Delete view",
   },
   editionDialog: {
     historyHeader: "History of changes",
