@@ -45,6 +45,7 @@ erDiagram
     int roleId FK
     int routeId FK
     int operationId FK
+    boolean active
     text[] fields
     text[] scopes
   }

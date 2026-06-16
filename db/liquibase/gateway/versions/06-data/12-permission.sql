@@ -35,43 +35,52 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1,  1,  4, NULL, NULL, -1, 'system'),  -- refreshToken        → update
 (1,  3,  8, NULL, NULL, -1, 'system'),  -- signOut             → archive
 (1,  4,  2, NULL, NULL, -1, 'system'),  -- getConsumers        → list
+(1,  4,  3, NULL, NULL, -1, 'system'),  -- getConsumers        → export
 (1,  5,  9, NULL, NULL, -1, 'system'),  -- archiveConsumers    → bulk archive
 (1,  6,  2, NULL, NULL, -1, 'system'),  -- searchRoutes        → list
+(1,  6,  3, NULL, NULL, -1, 'system'),  -- searchRoutes        → export
 (1,  7,  2, NULL, NULL, -1, 'system'),  -- getRouteHistory     → list
 (1,  8,  5, NULL, NULL, -1, 'system'),  -- updateRoutes        → bulk update
 (1,  9,  7, NULL, NULL, -1, 'system'),  -- addRoutes           → bulk create
 (1, 10,  9, NULL, NULL, -1, 'system'),  -- archiveRoutes       → bulk archive
 (1, 11,  2, NULL, NULL, -1, 'system'),  -- searchServices      → list
+(1, 11,  3, NULL, NULL, -1, 'system'),  -- searchServices      → export
 (1, 12,  2, NULL, NULL, -1, 'system'),  -- getServiceHistory   → list
 (1, 13,  5, NULL, NULL, -1, 'system'),  -- updateServices      → bulk update
 (1, 14,  7, NULL, NULL, -1, 'system'),  -- addServices         → bulk create
 (1, 15,  9, NULL, NULL, -1, 'system'),  -- archiveServices     → bulk archive
 (1, 16,  2, NULL, NULL, -1, 'system'),  -- searchResources     → list
+(1, 16,  3, NULL, NULL, -1, 'system'),  -- searchResources     → export
 (1, 17,  2, NULL, NULL, -1, 'system'),  -- getResourceHistory  → list
 (1, 18,  5, NULL, NULL, -1, 'system'),  -- updateResources     → bulk update
 (1, 19,  7, NULL, NULL, -1, 'system'),  -- addResources        → bulk create
 (1, 20,  9, NULL, NULL, -1, 'system'),  -- archiveResources    → bulk archive
 (1, 21,  2, NULL, NULL, -1, 'system'),  -- searchOperations    → list
+(1, 21,  3, NULL, NULL, -1, 'system'),  -- searchOperations    → export
 (1, 22,  2, NULL, NULL, -1, 'system'),  -- getOperationHistory → list
 (1, 23,  5, NULL, NULL, -1, 'system'),  -- updateOperations    → bulk update
 (1, 24,  7, NULL, NULL, -1, 'system'),  -- addOperations       → bulk create
 (1, 25,  9, NULL, NULL, -1, 'system'),  -- archiveOperations   → bulk archive
 (1, 26,  2, NULL, NULL, -1, 'system'),  -- searchCors          → list
+(1, 26,  3, NULL, NULL, -1, 'system'),  -- searchCors          → export
 (1, 27,  2, NULL, NULL, -1, 'system'),  -- getCorsHistory      → list
 (1, 28,  5, NULL, NULL, -1, 'system'),  -- updateCors          → bulk update
 (1, 29,  7, NULL, NULL, -1, 'system'),  -- addCors             → bulk create
 (1, 30,  9, NULL, NULL, -1, 'system'),  -- archiveCors         → bulk archive
 (1, 31,  2, NULL, NULL, -1, 'system'),  -- searchFields        → list
+(1, 31,  3, NULL, NULL, -1, 'system'),  -- searchFields        → export
 (1, 32,  2, NULL, NULL, -1, 'system'),  -- getFieldHistory     → list
 (1, 33,  5, NULL, NULL, -1, 'system'),  -- updateFields        → bulk update
 (1, 34,  7, NULL, NULL, -1, 'system'),  -- addFields           → bulk create
 (1, 35,  9, NULL, NULL, -1, 'system'),  -- archiveFields       → bulk archive
 (1, 36,  2, NULL, NULL, -1, 'system'),  -- searchScopes        → list
+(1, 36,  3, NULL, NULL, -1, 'system'),  -- searchScopes        → export
 (1, 37,  2, NULL, NULL, -1, 'system'),  -- getScopeHistory     → list
 (1, 38,  5, NULL, NULL, -1, 'system'),  -- updateScopes        → bulk update
 (1, 39,  7, NULL, NULL, -1, 'system'),  -- addScopes           → bulk create
 (1, 40,  9, NULL, NULL, -1, 'system'),  -- archiveScopes       → bulk archive
 (1, 41,  2, NULL, NULL, -1, 'system'),  -- searchRoles         → list
+(1, 41,  3, NULL, NULL, -1, 'system'),  -- searchRoles         → export
 (1, 42,  2, NULL, NULL, -1, 'system'),  -- getRoleHistory      → list
 (1, 43,  7, NULL, NULL, -1, 'system'),  -- addRoles            → bulk create
 (1, 44,  5, NULL, NULL, -1, 'system'),  -- updateRoles         → bulk update
