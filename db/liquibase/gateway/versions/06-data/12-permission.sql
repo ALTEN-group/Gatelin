@@ -58,7 +58,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1, 21,  2, NULL, NULL, -1, 'system'),  -- searchOperations    → list
 (1, 21,  3, NULL, NULL, -1, 'system'),  -- searchOperations    → export
 (1, 22,  2, NULL, NULL, -1, 'system'),  -- getOperationHistory → list
-(1, 23,  5, NULL, NULL, -1, 'system'),  -- updateOperations    → bulk update
+(1, 23,  5, ARRAY['color'], NULL, -1, 'system'),  -- updateOperations    → bulk update
 (1, 24,  7, NULL, NULL, -1, 'system'),  -- addOperations       → bulk create
 (1, 25,  9, NULL, NULL, -1, 'system'),  -- archiveOperations   → bulk archive
 (1, 26,  2, NULL, NULL, -1, 'system'),  -- searchCors          → list
@@ -134,7 +134,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 20,  9, NULL, NULL, -1, 'system'),  -- archiveResources
 (2, 21,  2, NULL, (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchOperations
 (2, 22,  2, NULL, NULL, -1, 'system'),  -- getOperationHistory
-(2, 23,  5, ARRAY['name', 'description'], NULL, -1, 'system'),  -- updateOperations
+(2, 23,  5, ARRAY['color'], NULL, -1, 'system'),  -- updateOperations
 (2, 24,  7, ARRAY['name', 'description'], NULL, -1, 'system'),  -- addOperations
 (2, 25,  9, NULL, NULL, -1, 'system'),  -- archiveOperations
 (2, 26,  2, NULL, (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchCors
