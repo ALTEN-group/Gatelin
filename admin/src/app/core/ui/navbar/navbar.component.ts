@@ -40,11 +40,6 @@ export class NavbarComponent {
     },
   ]);
 
-  public readonly portrait = computed(() => {
-    const portrait = this.currentUser()?.portrait;
-    return portrait ? `data:image/jpeg;base64, ${portrait}` : "";
-  });
-
   public readonly isAuthenticated = this.authenticationService.isAuthenticated;
   public readonly currentUser = this.authenticationService.user;
 

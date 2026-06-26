@@ -1,5 +1,4 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { Role } from "@core/roles/role.class";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
@@ -12,10 +11,11 @@ import {
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
 import { Consumer } from "app/admin/data-access/consumers/consumer.model";
+import { GatewayRole } from "app/admin/data-access/roles/role.model";
 
 const ROLE_STYLE_ID = "role-chip-styles";
 
-function injectRoleStyles(roles: Role[]): void {
+function injectRoleStyles(roles: GatewayRole[]): void {
   let styleEl = document.getElementById(ROLE_STYLE_ID);
   if (!styleEl) {
     styleEl = document.createElement("style");
@@ -37,7 +37,9 @@ function injectRoleStyles(roles: Role[]): void {
 export const CONSUMER_COLUMNS: (
   payload: ActivatedRouteSnapshot,
 ) => StrictCrudItemOptions<Consumer>[] = ({ data }) => {
-  const activeRoles = (data.roles as Role[]).filter((role) => !role.archived);
+  const activeRoles = (data.roles as GatewayRole[]).filter(
+    (role) => !role.archived,
+  );
   injectRoleStyles(activeRoles);
   return [
     ID_CONFIG,

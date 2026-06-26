@@ -2,7 +2,6 @@ import { Routes } from "@angular/router";
 import { aclGuard } from "@core/acl/acl.guard";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
-import { rolesResolver } from "@core/roles/roles.resolver";
 import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
 import { conditionsResolver } from "app/admin/data-access/conditions/conditions.resolver";
 import { fieldsResolver } from "app/admin/data-access/fields/fields.resolver";
@@ -76,7 +75,7 @@ export const ROUTES: Routes = [
       functionality: "consumers",
     },
     resolve: {
-      roles: rolesResolver,
+      roles: gatewayRolesResolver,
     },
   },
   {

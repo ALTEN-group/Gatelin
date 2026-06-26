@@ -3,7 +3,7 @@ import { Injectable, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
-import { LoginResponse } from "@core/auth/auth.dto";
+import { SessionResponse } from "@core/auth/auth.dto";
 import { TokenService } from "@core/auth/token.service";
 import { User } from "@core/user/user.class";
 import { Observable, of, pipe } from "rxjs";
@@ -34,7 +34,7 @@ export class AuthenticationService {
   public login(email: string, pwd: string): Observable<boolean> {
     if (!email || !pwd) return of(false);
     const payload = { email, pwd };
-    return this.http.post<LoginResponse>(this.sessionApi, payload).pipe(
+    return this.http.post<SessionResponse>(this.sessionApi, payload).pipe(
       tap((res) => {
         const { accessToken, refreshToken, permissions } = res;
         this.saveTokens(accessToken, refreshToken);
@@ -64,7 +64,7 @@ export class AuthenticationService {
     const refreshToken = this.tokenService.getRefreshToken();
     if (refreshToken)
       return this.http
-        .put<LoginResponse>(this.sessionApi, {
+        .put<SessionResponse>(this.sessionApi, {
           refreshToken,
         })
         .pipe(
@@ -85,14 +85,6 @@ export class AuthenticationService {
     return of(false);
   }
 
-  public updateUser(
-    nickname: string,
-    firstName: string,
-    lastName: string,
-  ): void {
-    this._user.update((u) => ({ ...u, nickname, firstName, lastName }) as User);
-  }
-
   // Get user basics info
   public getUserBasics() {
     return pipe(switchMap(() => this.getAccount()));
@@ -100,9 +92,8 @@ export class AuthenticationService {
 
   public getAccount(): Observable<User | null> {
     return this.http.get<User>(this.meApi).pipe(
-      tap((res) => {
-        const { nickname, firstName, lastName } = res;
-        this.updateUser(nickname, firstName, lastName);
+      tap((user) => {
+        this.updateUser(user);
       }),
       map(() => this._user() ?? null),
       catchError(() => {
@@ -136,5 +127,9 @@ export class AuthenticationService {
 
   private authenticate() {
     this._isAuthenticated.set(true);
+  }
+
+  private updateUser(user: User): void {
+    this._user.update((u) => ({ ...u, ...user }));
   }
 }
