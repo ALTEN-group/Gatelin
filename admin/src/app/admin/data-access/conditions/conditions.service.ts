@@ -1,5 +1,7 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { CONDITION_COLUMNS } from "app/admin/data-access/conditions/condition.conf";
 import {
@@ -8,12 +10,16 @@ import {
 } from "app/admin/data-access/conditions/condition.model";
 import { Observable } from "rxjs";
 
-const conditionsEndpoint: string = "conditions";
+const conditionsEndpoint: AdminEntity = "conditions";
 
 @Injectable({
   providedIn: "root",
 })
 export class ConditionsService {
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(conditionsEndpoint),
+  );
   private readonly crud = new CrudRepository<Condition>().with({
     endpoint: conditionsEndpoint,
   });
@@ -28,7 +34,7 @@ export class ConditionsService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    CONDITION_COLUMNS(payload);
+    CONDITION_COLUMNS(payload, this.acls());
   public readonly entityFactory = conditionFactory;
 
   public getAndCacheAll(): Observable<Condition[]> {

@@ -1,3 +1,5 @@
+import { Acls } from "@core/acl/acls.model";
+import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import {
@@ -11,28 +13,33 @@ import {
 } from "@dwtechs/crud-builder";
 import { GatewayApplication } from "app/admin/data-access/applications/application.model";
 
-export function buildApplicationColumns(): StrictCrudItemOptions<GatewayApplication>[] {
-  return [
-    ID_CONFIG,
-    CORE_CONFIG,
-    {
-      key: "name",
-      label: $localize`:@@Applications_Name:Name`,
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [required, minlength(1), maxlength(50)],
+export function buildApplicationColumns(
+  acls: Acls | undefined,
+): StrictCrudItemOptions<GatewayApplication>[] {
+  return withAclConditions(
+    [
+      ID_CONFIG,
+      CORE_CONFIG,
+      {
+        key: "name",
+        label: $localize`:@@Applications_Name:Name`,
+        controlType: CONTROL_TYPES.INPUT,
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [required, minlength(1), maxlength(50)],
+        },
       },
-    },
-    {
-      key: "description",
-      label: $localize`:@@Applications_Description:Description`,
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [maxlength(100)],
+      {
+        key: "description",
+        label: $localize`:@@Applications_Description:Description`,
+        controlType: CONTROL_TYPES.INPUT,
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [maxlength(100)],
+        },
       },
-    },
-    ...buildArchivedConfig(),
-  ];
+      ...buildArchivedConfig(),
+    ] as StrictCrudItemOptions<GatewayApplication>[],
+    acls,
+  );
 }

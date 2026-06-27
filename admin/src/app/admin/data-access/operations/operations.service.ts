@@ -1,4 +1,4 @@
-import { Injectable, inject } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
@@ -19,7 +19,9 @@ export class OperationsService {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly aclsService = inject(AclService);
 
-  private readonly acls = this.aclsService.getEntityAcls(operationsEndpoint);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(operationsEndpoint),
+  );
 
   private readonly crud = new CrudRepository<Operation>().with({
     endpoint: operationsEndpoint,
@@ -34,7 +36,9 @@ export class OperationsService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = buildOperationColumns(this.sanitizer, this.acls);
+  public readonly config = computed(() =>
+    buildOperationColumns(this.sanitizer, this.acls()),
+  );
   public readonly entityFactory = operationFactory;
 
   public getAndCacheAll(): Observable<Operation[]> {

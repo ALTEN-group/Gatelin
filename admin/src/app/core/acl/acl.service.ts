@@ -28,8 +28,6 @@ export class AclService {
   }
 
   public storeAccessLevels(userPermissions: Permission[]): void {
-    const accessLevels = this.accessLevels();
-    if (accessLevels || Object.keys(accessLevels || {}).length) return;
     const acls = this.buildAcls(userPermissions);
     this._accessLevels.set(acls);
     this._areAclResolved.set(true);
@@ -37,6 +35,31 @@ export class AclService {
 
   public resetAccessLevels(): void {
     this._accessLevels.set(undefined);
+  }
+
+  public updateFieldsForRoute(routeId: number, fields: string[] | null): void {
+    const accessLevels = this._accessLevels();
+    if (!accessLevels) return;
+    for (const entity in ENTITY_ROUTE_MAPPING) {
+      const adminEntity = entity as AdminEntity;
+      const routeOps = ENTITY_ROUTE_MAPPING[adminEntity];
+      for (const op in routeOps) {
+        const opKey = op as keyof typeof routeOps;
+        if (routeOps[opKey] !== routeId) continue;
+        const entityAcl = accessLevels[adminEntity];
+        if (!entityAcl) return;
+        const opAcl = entityAcl[opKey as keyof typeof entityAcl];
+        if (!opAcl) return;
+        this._accessLevels.set({
+          ...accessLevels,
+          [adminEntity]: {
+            ...entityAcl,
+            [opKey]: { ...opAcl, fields: fields ?? [] },
+          },
+        });
+        return;
+      }
+    }
   }
 
   public getEntityAcls(

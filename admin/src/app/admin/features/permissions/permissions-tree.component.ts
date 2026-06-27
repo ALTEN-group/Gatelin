@@ -10,6 +10,7 @@ import {
 import { rxResource, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
 import {
   CONTROL_TYPES,
   EditionDialogComponent,
@@ -32,7 +33,7 @@ import { Chip } from "primeng/chip";
 import { SelectModule } from "primeng/select";
 import { TableLazyLoadEvent } from "primeng/table";
 import { TreeTableModule } from "primeng/treetable";
-import { of } from "rxjs";
+import { of, tap } from "rxjs";
 import { OperationNodeData, PermTreeNodeData } from "./permissions-tree.model";
 
 @Component({
@@ -53,6 +54,7 @@ import { OperationNodeData, PermTreeNodeData } from "./permissions-tree.model";
 export class PermissionsTreeComponent {
   // ── injections ────────────────────────────────────────────────────────────
   private readonly permissionsService = inject(PermissionsService);
+  private readonly aclsService = inject(AclService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
 
@@ -179,7 +181,10 @@ export class PermissionsTreeComponent {
     this.selectedRole.set(role);
   }
 
-  public onToggleOperation(nodeData: OperationNodeData, checked: boolean): void {
+  public onToggleOperation(
+    nodeData: OperationNodeData,
+    checked: boolean,
+  ): void {
     const role = this.selectedRole();
     if (role?.id === null || role?.id === undefined) return;
     const { create, update } = this.permissionsService.httpCalls;
@@ -189,7 +194,17 @@ export class PermissionsTreeComponent {
         // Row exists but was inactive — flip it back on
         if (!update) return;
         update({ ...nodeData.perm, active: true })
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(
+            tap((res) => {
+              const saved = res.rows[0];
+              if (saved?.routeId !== null && saved?.routeId !== undefined)
+                this.aclsService.updateFieldsForRoute(
+                  saved.routeId,
+                  saved.fields,
+                );
+            }),
+            takeUntilDestroyed(this.destroyRef),
+          )
           .subscribe(() => this.permissionsResource.reload());
       } else {
         // No row yet — create it active
@@ -201,14 +216,34 @@ export class PermissionsTreeComponent {
           active: true,
         };
         create(perm)
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(
+            tap((res) => {
+              const saved = res.rows[0];
+              if (saved?.routeId !== null && saved?.routeId !== undefined)
+                this.aclsService.updateFieldsForRoute(
+                  saved.routeId,
+                  saved.fields,
+                );
+            }),
+            takeUntilDestroyed(this.destroyRef),
+          )
           .subscribe(() => this.permissionsResource.reload());
       }
     } else {
       // Deactivate — preserve all configuration
       if (!nodeData.perm?.id || !update) return;
       update({ ...nodeData.perm, active: false })
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(
+          tap((res) => {
+            const saved = res.rows[0];
+            if (saved?.routeId !== null && saved?.routeId !== undefined)
+              this.aclsService.updateFieldsForRoute(
+                saved.routeId,
+                saved.fields,
+              );
+          }),
+          takeUntilDestroyed(this.destroyRef),
+        )
         .subscribe(() => this.permissionsResource.reload());
     }
   }
@@ -258,7 +293,14 @@ export class PermissionsTreeComponent {
         : null,
     };
     update(merged)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        tap((res) => {
+          const saved = res.rows[0];
+          if (saved?.routeId !== null && saved?.routeId !== undefined)
+            this.aclsService.updateFieldsForRoute(saved.routeId, saved.fields);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(() => {
         this.dialogVisible.set(false);
         this.permissionsResource.reload();

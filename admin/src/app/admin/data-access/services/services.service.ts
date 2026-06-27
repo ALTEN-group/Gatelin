@@ -1,5 +1,7 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { buildServiceColumns } from "app/admin/data-access/services/service.conf";
 import {
@@ -8,12 +10,16 @@ import {
 } from "app/admin/data-access/services/service.model";
 import { map, Observable, shareReplay, tap } from "rxjs";
 
-const servicesApi: string = "services";
+const servicesApi: AdminEntity = "services";
 
 @Injectable({
   providedIn: "root",
 })
 export class ServicesService {
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(servicesApi),
+  );
   private readonly crud = new CrudRepository<Service>().with({
     endpoint: servicesApi,
   });
@@ -32,7 +38,7 @@ export class ServicesService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    buildServiceColumns(payload);
+    buildServiceColumns(payload, this.acls());
   public readonly entityFactory = serviceFactory;
 
   private _all$: Observable<Service[]> | null = null;

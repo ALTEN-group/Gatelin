@@ -1,5 +1,7 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { RESOURCE_COLUMNS } from "app/admin/data-access/resources/resource.conf";
 import {
@@ -8,12 +10,16 @@ import {
 } from "app/admin/data-access/resources/resource.model";
 import { Observable } from "rxjs";
 
-const resourcesEndpoint: string = "resources";
+const resourcesEndpoint: AdminEntity = "resources";
 
 @Injectable({
   providedIn: "root",
 })
 export class ResourcesService {
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(resourcesEndpoint),
+  );
   private readonly crud = new CrudRepository<Resource>().with({
     endpoint: resourcesEndpoint,
   });
@@ -28,7 +34,7 @@ export class ResourcesService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    RESOURCE_COLUMNS(payload);
+    RESOURCE_COLUMNS(payload, this.acls());
   public readonly entityFactory = resourceFactory;
 
   public getAndCacheAll(): Observable<Resource[]> {

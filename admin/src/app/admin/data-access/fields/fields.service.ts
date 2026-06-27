@@ -1,16 +1,22 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { FIELD_COLUMNS } from "app/admin/data-access/fields/field.conf";
 import { Field, fieldFactory } from "app/admin/data-access/fields/field.model";
 import { Observable } from "rxjs";
 
-const fieldsEndpoint: string = "fields";
+const fieldsEndpoint: AdminEntity = "fields";
 
 @Injectable({
   providedIn: "root",
 })
 export class FieldsService {
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(fieldsEndpoint),
+  );
   private readonly crud = new CrudRepository<Field>().with({
     endpoint: fieldsEndpoint,
   });
@@ -25,7 +31,7 @@ export class FieldsService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    FIELD_COLUMNS(payload);
+    FIELD_COLUMNS(payload, this.acls());
   public readonly entityFactory = fieldFactory;
 
   public getAndCacheAll(): Observable<Field[]> {

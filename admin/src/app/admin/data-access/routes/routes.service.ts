@@ -1,12 +1,14 @@
-import { Injectable, inject } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { ROUTE_COLUMNS } from "app/admin/data-access/routes/route.conf";
 import { Route, routeFactory } from "app/admin/data-access/routes/route.model";
 import { Observable } from "rxjs";
 
-const routesApi: string = "routes";
+const routesApi: AdminEntity = "routes";
 
 /**
  * Service to manage gateway routes
@@ -16,6 +18,10 @@ const routesApi: string = "routes";
 })
 export class RoutesService {
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(routesApi),
+  );
   private readonly crud = new CrudRepository<Route>().with({
     endpoint: routesApi,
   });
@@ -30,7 +36,7 @@ export class RoutesService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    ROUTE_COLUMNS(payload, this.sanitizer);
+    ROUTE_COLUMNS(payload, this.sanitizer, this.acls());
   public readonly entityFactory = routeFactory;
 
   public getAndCacheAll(): Observable<Route[]> {

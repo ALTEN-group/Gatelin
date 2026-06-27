@@ -1,4 +1,6 @@
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { Acls } from "@core/acl/acls.model";
+import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import {
   CONTROL_TYPES,
@@ -36,87 +38,91 @@ function injectRoleStyles(roles: GatewayRole[]): void {
 
 export const CONSUMER_COLUMNS: (
   payload: ActivatedRouteSnapshot,
-) => StrictCrudItemOptions<Consumer>[] = ({ data }) => {
+  acls: Acls | undefined,
+) => StrictCrudItemOptions<Consumer>[] = ({ data }, acls) => {
   const activeRoles = (data.roles as GatewayRole[]).filter(
     (role) => !role.archived,
   );
   injectRoleStyles(activeRoles);
-  return [
-    ID_CONFIG,
-    {
-      key: "userId",
-      label: "User ID",
-      controlType: CONTROL_TYPES.INPUT,
-      columnOptions: {
-        defaultWidth: "80px",
-      },
-      type: INPUT_TYPES.NUMBER,
-      controlOptions: {
-        validators: [required, min(1)],
-      },
-    },
-    {
-      key: "nickname",
-      label: "Name",
-      controlType: CONTROL_TYPES.INPUT,
-      columnOptions: {
-        defaultWidth: "100px",
-      },
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [required, minlength(3), maxlength(30)],
-      },
-    },
-    {
-      key: "accessToken",
-      label: "Access Token",
-      controlType: CONTROL_TYPES.INPUT,
-      columnOptions: {
-        defaultWidth: "100px",
-      },
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [required, minlength(28), maxlength(8000)],
-      },
-    },
-    {
-      key: "refreshToken",
-      label: "Refresh Token",
-      controlType: CONTROL_TYPES.INPUT,
-      columnOptions: {
-        defaultWidth: "100px",
-      },
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        validators: [required, minlength(28), maxlength(8000)],
-      },
-    },
-    {
-      key: "roles",
-      label: "Roles",
-      controlType: CONTROL_TYPES.MULTISELECT,
-      options: activeRoles.map((r) => ({
-        value: r.id,
-        label: r.name,
-        styleClass: `role-color-${r.id}`,
-      })),
-      columnOptions: {
-        customCellRenderer: (cellValue: unknown) => {
-          if (!Array.isArray(cellValue) || cellValue.length === 0) return "";
-          return (cellValue as number[])
-            .map((id) => {
-              const role = activeRoles.find((r) => r.id === id);
-              if (!role) return "";
-              return `<span class="role-color-${role.id} p-chip" style="display:block;margin-bottom:2px;">${role.name}</span>`;
-            })
-            .join("");
+  return withAclConditions(
+    [
+      ID_CONFIG,
+      {
+        key: "userId",
+        label: "User ID",
+        controlType: CONTROL_TYPES.INPUT,
+        columnOptions: {
+          defaultWidth: "80px",
+        },
+        type: INPUT_TYPES.NUMBER,
+        controlOptions: {
+          validators: [required, min(1)],
         },
       },
-      controlOptions: {
-        validators: [required],
-        width: "100%",
+      {
+        key: "nickname",
+        label: "Name",
+        controlType: CONTROL_TYPES.INPUT,
+        columnOptions: {
+          defaultWidth: "100px",
+        },
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [required, minlength(3), maxlength(30)],
+        },
       },
-    },
-    ...buildArchivedConfig(),
-  ];
+      {
+        key: "accessToken",
+        label: "Access Token",
+        controlType: CONTROL_TYPES.INPUT,
+        columnOptions: {
+          defaultWidth: "100px",
+        },
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [required, minlength(28), maxlength(8000)],
+        },
+      },
+      {
+        key: "refreshToken",
+        label: "Refresh Token",
+        controlType: CONTROL_TYPES.INPUT,
+        columnOptions: {
+          defaultWidth: "100px",
+        },
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [required, minlength(28), maxlength(8000)],
+        },
+      },
+      {
+        key: "roles",
+        label: "Roles",
+        controlType: CONTROL_TYPES.MULTISELECT,
+        options: activeRoles.map((r) => ({
+          value: r.id,
+          label: r.name,
+          styleClass: `role-color-${r.id}`,
+        })),
+        columnOptions: {
+          customCellRenderer: (cellValue: unknown) => {
+            if (!Array.isArray(cellValue) || cellValue.length === 0) return "";
+            return (cellValue as number[])
+              .map((id) => {
+                const role = activeRoles.find((r) => r.id === id);
+                if (!role) return "";
+                return `<span class="role-color-${role.id} p-chip" style="display:block;margin-bottom:2px;">${role.name}</span>`;
+              })
+              .join("");
+          },
+        },
+        controlOptions: {
+          validators: [required],
+          width: "100%",
+        },
+      },
+      ...buildArchivedConfig(),
+    ] as StrictCrudItemOptions<Consumer>[],
+    acls,
+  );
 };

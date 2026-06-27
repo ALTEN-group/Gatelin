@@ -2,6 +2,7 @@ import { Acls } from "@core/acl/acls.model";
 import {
   ConditionFn,
   ControlOptionsCondition,
+  CrudItemBase,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
 
@@ -51,7 +52,7 @@ function isFieldDisabled<T extends { id: unknown }>({
  * @param acls    - The ACL object for this entity, or `undefined` when not yet loaded.
  * @returns A new array of column definitions with ACL conditions applied.
  */
-export function withAclConditions<T extends { id: unknown }>(
+export function withAclConditions<T extends CrudItemBase>(
   columns: StrictCrudItemOptions<T>[],
   acls: Acls | undefined,
 ): StrictCrudItemOptions<T>[] {

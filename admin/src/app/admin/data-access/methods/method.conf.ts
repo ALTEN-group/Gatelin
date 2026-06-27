@@ -1,4 +1,6 @@
 import { DomSanitizer } from "@angular/platform-browser";
+import { Acls } from "@core/acl/acls.model";
+import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { disabledCellRenderer } from "@core/utils/renderers/disabled.renderer";
 import {
@@ -25,34 +27,38 @@ function buildColorCellRenderer(
 
 export function buildMethodColumns(
   sanitizer: DomSanitizer,
+  acls: Acls | undefined,
 ): StrictCrudItemOptions<Method>[] {
-  return [
-    ID_CONFIG,
-    {
-      key: "name",
-      label: "Name",
-      controlType: CONTROL_TYPES.INPUT,
-      type: INPUT_TYPES.TEXT,
-      controlOptions: {
-        disabled: true,
+  return withAclConditions(
+    [
+      ID_CONFIG,
+      {
+        key: "name",
+        label: "Name",
+        controlType: CONTROL_TYPES.INPUT,
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          disabled: true,
+        },
+        columnOptions: {
+          customCellRenderer: disabledCellRenderer,
+        },
       },
-      columnOptions: {
-        customCellRenderer: disabledCellRenderer,
+      {
+        key: "color",
+        label: "Color",
+        controlType: CONTROL_TYPES.COLOR,
+        controlOptions: {
+          inputIcon: "pi pi-palette",
+          validators: [hexColor],
+          defaultValue: "#6366f1",
+        },
+        columnOptions: {
+          customCellRenderer: buildColorCellRenderer(sanitizer),
+        },
       },
-    },
-    {
-      key: "color",
-      label: "Color",
-      controlType: CONTROL_TYPES.COLOR,
-      controlOptions: {
-        inputIcon: "pi pi-palette",
-        validators: [hexColor],
-        defaultValue: "#6366f1",
-      },
-      columnOptions: {
-        customCellRenderer: buildColorCellRenderer(sanitizer),
-      },
-    },
-    ...buildArchivedConfig(),
-  ];
+      ...buildArchivedConfig(),
+    ] as StrictCrudItemOptions<Method>[],
+    acls,
+  );
 }

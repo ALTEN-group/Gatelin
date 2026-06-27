@@ -8,9 +8,9 @@ import { PermTreeNodeData } from "app/admin/features/permissions/permissions-tre
 export class GetPermPipe implements PipeTransform {
   transform(
     nodeData: PermTreeNodeData,
-    roleId: number | null,
+    _roleId: number | null,
   ): Permission | undefined {
-    if (nodeData.type !== "route" || roleId === null) return undefined;
-    return nodeData.rolePerms[roleId];
+    if (nodeData.type !== "operation") return undefined;
+    return nodeData.perm;
   }
 }

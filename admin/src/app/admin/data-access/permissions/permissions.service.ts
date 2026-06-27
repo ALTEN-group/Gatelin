@@ -1,17 +1,23 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/crud-builder";
 import { PERMISSION_COLUMNS } from "app/admin/data-access/permissions/permission.conf";
 import { Permission } from "app/admin/data-access/permissions/permission.model";
 import { TableLazyLoadEvent } from "primeng/table";
 import { Observable } from "rxjs";
 
-const permissionsEndpoint: string = "permissions";
+const permissionsEndpoint: AdminEntity = "permissions";
 
 @Injectable({
   providedIn: "root",
 })
 export class PermissionsService {
+  private readonly aclsService = inject(AclService);
+  private readonly acls = computed(() =>
+    this.aclsService.getEntityAcls(permissionsEndpoint),
+  );
   private readonly crud = new CrudRepository<Permission>().with({
     endpoint: permissionsEndpoint,
   });
@@ -23,7 +29,7 @@ export class PermissionsService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    PERMISSION_COLUMNS(payload);
+    PERMISSION_COLUMNS(payload, this.acls());
 
   public getByRole(
     roleId: number | null,
