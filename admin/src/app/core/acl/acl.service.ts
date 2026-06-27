@@ -1,51 +1,69 @@
 import { Injectable, signal } from "@angular/core";
-import { Acls } from "@core/acl/acls.model";
-import { BASE_ACLS } from "@core/app-config/app.acls";
+import { AclsMapping } from "@core/acl/acls.model";
+import { ENTITY_ROUTE_MAPPING } from "@core/app-config/app.acls";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Permission } from "@core/auth/auth.dto";
 import { Calls } from "@dwtechs/crud-builder";
 
 @Injectable({ providedIn: "root" })
 export class AclService {
-  private _accessLevels = signal<Acls>({});
+  private _accessLevels = signal<AclsMapping | undefined>(undefined);
   public readonly accessLevels = this._accessLevels.asReadonly();
 
   private readonly _areAclResolved = signal(false);
   public readonly areAclResolved = this._areAclResolved.asReadonly();
 
   public hasAccess(
-    functionality: string | undefined,
+    functionality: AdminEntity | undefined,
     operation: keyof Calls<unknown> | undefined,
   ): boolean {
     if (!functionality) return true;
-    const funcAcls = this.accessLevels()[functionality];
+    const accessLevels = this.accessLevels();
+    if (!accessLevels) return false;
+    const funcAcls = accessLevels[functionality];
     if (!funcAcls) return false;
-    if (operation) return funcAcls[operation as keyof typeof funcAcls] || false;
-    return funcAcls.get || false;
+    if (operation)
+      return funcAcls[operation as keyof typeof funcAcls]?.allowed || false;
+    return funcAcls.get?.allowed || false;
   }
 
   public storeAccessLevels(userPermissions: Permission[]): void {
-    if (this._accessLevels().size) return;
+    const accessLevels = this.accessLevels();
+    if (accessLevels || Object.keys(accessLevels || {}).length) return;
     const acls = this.buildAcls(userPermissions);
     this._accessLevels.set(acls);
     this._areAclResolved.set(true);
   }
 
   public resetAccessLevels(): void {
-    this._accessLevels.set({});
+    this._accessLevels.set(undefined);
   }
 
-  private buildAcls(userPermissions: Permission[]): Acls {
-    const userAcls: Acls = {};
-    for (const functionality in BASE_ACLS) {
-      userAcls[functionality] = {};
-      const routes = BASE_ACLS[functionality];
+  public getEntityAcls(
+    functionality: AdminEntity,
+  ): AclsMapping[keyof AclsMapping] | undefined {
+    const accessLevels = this.accessLevels();
+    if (!accessLevels) return undefined;
+    return accessLevels[functionality];
+  }
+
+  private buildAcls(userPermissions: Permission[]): AclsMapping {
+    const userAcls = {} as AclsMapping;
+    for (const functionality in ENTITY_ROUTE_MAPPING) {
+      const adminEntity = functionality as AdminEntity;
+      userAcls[adminEntity] = {};
+      const routes = ENTITY_ROUTE_MAPPING[adminEntity];
       for (const route in routes) {
         const routeId = routes[route as keyof typeof routes];
-        const hasPermission = userPermissions.some(
+        const permission = userPermissions.find(
           (perm) => perm.route === routeId,
         );
         // transform routeId to access true/false
-        userAcls[functionality][route as keyof typeof routes] = hasPermission;
+        userAcls[adminEntity][route as keyof typeof routes] = {
+          allowed: !!permission,
+          operations: permission?.operations || [],
+          fields: permission?.fields || [],
+        };
       }
     }
     return userAcls;

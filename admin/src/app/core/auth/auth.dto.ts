@@ -1,6 +1,6 @@
 export interface Permission {
   route: number;
-  operation: number[];
+  operations: number[];
   fields: string[];
 }
 

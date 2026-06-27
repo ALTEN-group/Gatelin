@@ -7,6 +7,7 @@ import {
   input,
 } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls } from "@dwtechs/crud-builder";
 
 @Directive({
@@ -17,7 +18,7 @@ export class ProtectFeatureDirective {
   private readonly aclService = inject(AclService);
 
   /** Represents the functionality to access, "routes" for instance */
-  public readonly protectFeature = input.required<string | undefined>();
+  public readonly protectFeature = input.required<AdminEntity | undefined>();
 
   /** Represents the id of access level necessary to see the feature (1: read, 2: write...) */
   public readonly operation = input<keyof Calls<unknown> | undefined>(

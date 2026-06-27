@@ -1,5 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
+import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository } from "@dwtechs/crud-builder";
 import { buildOperationColumns } from "app/admin/data-access/operations/operation.conf";
 import {
@@ -8,13 +10,17 @@ import {
 } from "app/admin/data-access/operations/operation.model";
 import { Observable } from "rxjs";
 
-const operationsEndpoint: string = "operations";
+const operationsEndpoint: AdminEntity = "operations";
 
 @Injectable({
   providedIn: "root",
 })
 export class OperationsService {
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly aclsService = inject(AclService);
+
+  private readonly acls = this.aclsService.getEntityAcls(operationsEndpoint);
+
   private readonly crud = new CrudRepository<Operation>().with({
     endpoint: operationsEndpoint,
   });
@@ -28,7 +34,7 @@ export class OperationsService {
     getHistory: this.crud.getHistory,
   };
 
-  public readonly config = buildOperationColumns(this.sanitizer);
+  public readonly config = buildOperationColumns(this.sanitizer, this.acls);
   public readonly entityFactory = operationFactory;
 
   public getAndCacheAll(): Observable<Operation[]> {

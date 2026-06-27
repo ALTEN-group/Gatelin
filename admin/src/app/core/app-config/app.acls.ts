@@ -1,9 +1,9 @@
-import { AclsMapping } from "@core/acl/acls.model";
+import { EntityRouteMapping } from "@core/acl/acls.model";
 
 /**
- * Base ACLs for the application, defining mapping between routes and their id in the database.
+ * Base entity-routes mapping, defining mapping between routes and their id in the database.
  */
-export const BASE_ACLS: AclsMapping = {
+export const ENTITY_ROUTE_MAPPING: EntityRouteMapping = {
   consumers: {
     get: 4, // getConsumers
   },

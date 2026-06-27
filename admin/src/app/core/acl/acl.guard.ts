@@ -1,6 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivateFn, Router } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { AppPaths } from "app/app.routes";
 
@@ -23,7 +24,8 @@ function resolveAccess(
   route: ActivatedRouteSnapshot,
   aclService: AclService,
 ): boolean {
-  const requiredFunctionality: string | undefined = route.data.functionality;
+  const requiredFunctionality: AdminEntity | undefined =
+    route.data.functionality;
   return aclService.hasAccess(requiredFunctionality, "get");
 }
 

@@ -9,6 +9,7 @@ import {
 import { toSignal } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
+import { AdminEntity } from "@core/app-config/app.entities";
 import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { MenuItem } from "primeng/api";
 import { PanelModule } from "primeng/panel";
@@ -111,7 +112,7 @@ export class SidenavComponent {
     };
   }
 
-  private hasAccess(functionality: string | undefined) {
+  private hasAccess(functionality: AdminEntity | undefined) {
     return this.aclService.hasAccess(functionality, "get");
   }
 }

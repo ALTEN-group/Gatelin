@@ -1,29 +1,11 @@
 import { ExcelExportMode, FilterLevel } from "@dwtechs/crud-builder";
-
-const tableKeys = [
-  "routes",
-  "consumers",
-  "services",
-  "resources",
-  "cors",
-  "operations",
-  "methods",
-  "fields",
-  "scopes",
-  "roles",
-  "colors",
-  "permissions",
-  "applications",
-  "conditions",
-] as const; // Extend as needed
-
-type AppTable = (typeof tableKeys)[number];
+import { AdminEntity } from "./app.entities";
 
 type TableInfo = {
   label: string;
   title: string;
-  key: AppTable;
-  functionalityKey: string;
+  key: AdminEntity;
+  functionalityKey: string; // TODO: should be typed as AdminEntity too. Or just removed.
   editionDialogSize: "xs" | "s" | "m" | "l";
   filterLevel: FilterLevel;
   isPreferencesModeEnabled: boolean;
@@ -32,7 +14,7 @@ type TableInfo = {
   additionalReadonlyProperties: Record<string, boolean>;
 };
 
-export const TABLES: Record<AppTable, TableInfo> = {
+export const TABLES: Record<AdminEntity, TableInfo> = {
   routes: {
     label: $localize`:@@TableLabels_Route:Route`,
     title: $localize`:@@TableLabels_Routes:Routes`,
@@ -146,18 +128,6 @@ export const TABLES: Record<AppTable, TableInfo> = {
     title: $localize`:@@TableLabels_Roles:Roles`,
     key: "roles",
     functionalityKey: "roles",
-    editionDialogSize: "s",
-    filterLevel: "advanced",
-    isPreferencesModeEnabled: true,
-    isExcelExportEnabled: true,
-    excelExportMode: "local",
-    additionalReadonlyProperties: { core: true },
-  },
-  colors: {
-    label: $localize`:@@TableLabels_Color:Color`,
-    title: $localize`:@@TableLabels_Colors:Colors`,
-    key: "colors",
-    functionalityKey: "colors",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
