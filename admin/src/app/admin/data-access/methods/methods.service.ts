@@ -1,4 +1,10 @@
-import { computed, inject, Injectable } from "@angular/core";
+import {
+  computed,
+  inject,
+  Injectable,
+  Injector,
+  runInInjectionContext,
+} from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
@@ -18,6 +24,7 @@ const methodsEndpoint: AdminEntity = "methods";
 export class MethodsService {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly aclsService = inject(AclService);
+  private readonly injector = inject(Injector);
   private readonly acls = computed(() =>
     this.aclsService.getEntityAcls(methodsEndpoint),
   );
@@ -31,7 +38,9 @@ export class MethodsService {
   };
 
   public readonly config = computed(() =>
-    buildMethodColumns(this.sanitizer, this.acls()),
+    runInInjectionContext(this.injector, () =>
+      buildMethodColumns(this.sanitizer, this.acls()),
+    ),
   );
   public readonly entityFactory = methodFactory;
 
