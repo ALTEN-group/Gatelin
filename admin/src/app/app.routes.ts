@@ -3,16 +3,16 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { ADMIN_ENTITIES, AdminEntity } from "@core/app-config/app.entities";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
-import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
-import { conditionsResolver } from "app/admin/data-access/conditions/conditions.resolver";
-import { fieldsResolver } from "app/admin/data-access/fields/fields.resolver";
-import { methodsResolver } from "app/admin/data-access/methods/methods.resolver";
-import { operationsResolver } from "app/admin/data-access/operations/operations.resolver";
-import { resourcesResolver } from "app/admin/data-access/resources/resources.resolver";
-import { gatewayRolesResolver } from "app/admin/data-access/roles/roles.resolver";
-import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
-import { scopesResolver } from "app/admin/data-access/scopes/scopes.resolver";
-import { serviceResolver } from "app/admin/data-access/services/service.resolver";
+import { gatewayApplicationsResolver } from "app/authorizations/data-access/applications/applications.resolver";
+import { conditionsResolver } from "app/authorizations/data-access/conditions/conditions.resolver";
+import { fieldsResolver } from "app/authorizations/data-access/fields/fields.resolver";
+import { methodsResolver } from "app/routing/data-access/methods/methods.resolver";
+import { operationsResolver } from "app/routing/data-access/operations/operations.resolver";
+import { resourcesResolver } from "app/routing/data-access/resources/resources.resolver";
+import { gatewayRolesResolver } from "app/authorizations/data-access/roles/roles.resolver";
+import { routesResolver } from "app/routing/data-access/routes/routes.resolver";
+import { scopesResolver } from "app/authorizations/data-access/scopes/scopes.resolver";
+import { serviceResolver } from "app/routing/data-access/services/service.resolver";
 
 type EntityPaths = { readonly [K in AdminEntity as Uppercase<K>]: K };
 
@@ -41,7 +41,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.ROUTES,
     loadComponent: () =>
-      import("./admin/features/routes/routes.component").then(
+      import("./routing/features/routes/routes.component").then(
         (m) => m.RoutesComponent,
       ),
     title: "Routes",
@@ -60,7 +60,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.CONSUMERS,
     loadComponent: () =>
-      import("./admin/features/consumers/consumers.component").then(
+      import("./consumers/features/consumers/consumers.component").then(
         (m) => m.ConsumersComponent,
       ),
     title: "Consumers",
@@ -76,7 +76,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.SERVICES,
     loadComponent: () =>
-      import("./admin/features/services/services.component").then(
+      import("./routing/features/services/services.component").then(
         (m) => m.ServicesComponent,
       ),
     title: "Services",
@@ -89,7 +89,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.RESOURCES,
     loadComponent: () =>
-      import("./admin/features/resources/resources.component").then(
+      import("./routing/features/resources/resources.component").then(
         (m) => m.ResourcesComponent,
       ),
     title: "Resources",
@@ -105,7 +105,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.CORS,
     loadComponent: () =>
-      import("./admin/features/cors/cors.component").then(
+      import("./authorizations/features/cors/cors.component").then(
         (m) => m.CorsComponent,
       ),
     title: "CORS",
@@ -118,7 +118,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.OPERATIONS,
     loadComponent: () =>
-      import("./admin/features/operations/operations.component").then(
+      import("./routing/features/operations/operations.component").then(
         (m) => m.OperationsComponent,
       ),
     title: "Operations",
@@ -131,7 +131,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.METHODS,
     loadComponent: () =>
-      import("./admin/features/methods/methods.component").then(
+      import("./routing/features/methods/methods.component").then(
         (m) => m.MethodsComponent,
       ),
     title: "Methods",
@@ -147,7 +147,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.FIELDS,
     loadComponent: () =>
-      import("./admin/features/fields/fields.component").then(
+      import("./authorizations/features/fields/fields.component").then(
         (m) => m.FieldsComponent,
       ),
     title: "Fields",
@@ -164,7 +164,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.SCOPES,
     loadComponent: () =>
-      import("./admin/features/scopes/scopes.component").then(
+      import("./authorizations/features/scopes/scopes.component").then(
         (m) => m.ScopesComponent,
       ),
     title: "Scopes",
@@ -181,7 +181,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.ROLES,
     loadComponent: () =>
-      import("./admin/features/roles/roles.component").then(
+      import("./authorizations/features/roles/roles.component").then(
         (m) => m.RolesComponent,
       ),
     title: "Roles",
@@ -197,7 +197,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.APPLICATIONS,
     loadComponent: () =>
-      import("./admin/features/applications/applications.component").then(
+      import("./authorizations/features/applications/applications.component").then(
         (m) => m.ApplicationsComponent,
       ),
     title: "Applications",
@@ -210,7 +210,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.CONDITIONS,
     loadComponent: () =>
-      import("./admin/features/conditions/conditions.component").then(
+      import("./authorizations/features/conditions/conditions.component").then(
         (m) => m.ConditionsComponent,
       ),
     title: "Conditions",
@@ -226,7 +226,7 @@ export const ROUTES: Routes = [
   {
     path: AppPaths.PERMISSIONS,
     loadComponent: () =>
-      import("./admin/features/permissions/permissions-tree.component").then(
+      import("./authorizations/features/permissions/permissions-tree.component").then(
         (m) => m.PermissionsTreeComponent,
       ),
     title: "Permissions Tree",
