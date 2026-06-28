@@ -4,8 +4,7 @@ import { AdminEntity } from "./app.entities";
 type TableInfo = {
   label: string;
   title: string;
-  key: AdminEntity;
-  functionalityKey: string; // TODO: should be typed as AdminEntity too. Or just removed.
+  entityId: AdminEntity;
   editionDialogSize: "xs" | "s" | "m" | "l";
   filterLevel: FilterLevel;
   isPreferencesModeEnabled: boolean;
@@ -18,8 +17,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   routes: {
     label: $localize`:@@TableLabels_Route:Route`,
     title: $localize`:@@TableLabels_Routes:Routes`,
-    key: "routes",
-    functionalityKey: "routes",
+    entityId: "routes",
     editionDialogSize: "m",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -30,8 +28,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   consumers: {
     label: $localize`:@@TableLabels_Consumer:Consumer`,
     title: $localize`:@@TableLabels_Consumers:Consumers`,
-    key: "consumers",
-    functionalityKey: "consumers",
+    entityId: "consumers",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -42,8 +39,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   services: {
     label: $localize`:@@TableLabels_Service:Service`,
     title: $localize`:@@TableLabels_Services:Services`,
-    key: "services",
-    functionalityKey: "services",
+    entityId: "services",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -54,8 +50,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   resources: {
     label: $localize`:@@TableLabels_Resource:Resource`,
     title: $localize`:@@TableLabels_Resources:Resources`,
-    key: "resources",
-    functionalityKey: "resources",
+    entityId: "resources",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -66,8 +61,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   cors: {
     label: $localize`:@@TableLabels_Cors:CORS`,
     title: $localize`:@@TableLabels_CorsPlural:CORS`,
-    key: "cors",
-    functionalityKey: "cors",
+    entityId: "cors",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -78,8 +72,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   operations: {
     label: $localize`:@@TableLabels_Operation:Opération`,
     title: $localize`:@@TableLabels_Operations:Opérations`,
-    key: "operations",
-    functionalityKey: "operations",
+    entityId: "operations",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -90,8 +83,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   methods: {
     label: $localize`:@@TableLabels_Method:Method`,
     title: $localize`:@@TableLabels_Methods:Methods`,
-    key: "methods",
-    functionalityKey: "methods",
+    entityId: "methods",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -102,8 +94,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   fields: {
     label: $localize`:@@TableLabels_Field:Field`,
     title: $localize`:@@TableLabels_Fields:Fields`,
-    key: "fields",
-    functionalityKey: "fields",
+    entityId: "fields",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -114,8 +105,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   scopes: {
     label: $localize`:@@TableLabels_Scope:Scope`,
     title: $localize`:@@TableLabels_Scopes:Scopes`,
-    key: "scopes",
-    functionalityKey: "scopes",
+    entityId: "scopes",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -126,8 +116,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   roles: {
     label: $localize`:@@TableLabels_Role:Role`,
     title: $localize`:@@TableLabels_Roles:Roles`,
-    key: "roles",
-    functionalityKey: "roles",
+    entityId: "roles",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -138,8 +127,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   permissions: {
     label: $localize`:@@TableLabels_Permission:Permission`,
     title: $localize`:@@TableLabels_Permissions:Permissions`,
-    key: "permissions",
-    functionalityKey: "permissions",
+    entityId: "permissions",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -150,8 +138,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   applications: {
     label: $localize`:@@TableLabels_Application:Application`,
     title: $localize`:@@TableLabels_Applications:Applications`,
-    key: "applications",
-    functionalityKey: "applications",
+    entityId: "applications",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
@@ -162,8 +149,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
   conditions: {
     label: $localize`:@@TableLabels_Condition:Condition`,
     title: $localize`:@@TableLabels_Conditions:Conditions`,
-    key: "conditions",
-    functionalityKey: "conditions",
+    entityId: "conditions",
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,

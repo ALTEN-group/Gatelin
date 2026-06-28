@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { aclGuard } from "@core/acl/acl.guard";
+import { ADMIN_ENTITIES, AdminEntity } from "@core/app-config/app.entities";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
 import { gatewayApplicationsResolver } from "app/admin/data-access/applications/applications.resolver";
@@ -13,26 +14,20 @@ import { routesResolver } from "app/admin/data-access/routes/routes.resolver";
 import { scopesResolver } from "app/admin/data-access/scopes/scopes.resolver";
 import { serviceResolver } from "app/admin/data-access/services/service.resolver";
 
+type EntityPaths = { readonly [K in AdminEntity as Uppercase<K>]: K };
+
+const ENTITY_PATHS = Object.fromEntries(
+  ADMIN_ENTITIES.map((e) => [e.toUpperCase(), e]),
+) as EntityPaths;
+
 /**
  * Application Paths
  */
 export const AppPaths = {
   LOGIN: "login",
-  ROUTES: "routes",
-  CONSUMERS: "consumers",
-  SERVICES: "services",
-  RESOURCES: "resources",
-  CORS: "cors",
-  OPERATIONS: "operations",
-  METHODS: "methods",
-  FIELDS: "fields",
-  SCOPES: "scopes",
-  ROLES: "roles",
-  PERMISSIONS: "permissions",
-  APPLICATIONS: "applications",
-  CONDITIONS: "conditions",
   NOT_FOUND: "not-found",
   UNAUTHORIZED: "unauthorized",
+  ...ENTITY_PATHS,
 } as const;
 
 export const ROUTES: Routes = [
@@ -53,7 +48,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_RoutesNav:Routes`,
-      functionality: "routes",
+      functionality: AppPaths.ROUTES,
     },
     resolve: {
       operations: operationsResolver,
@@ -72,7 +67,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ConsumersNav:Consumers`,
-      functionality: "consumers",
+      functionality: AppPaths.CONSUMERS,
     },
     resolve: {
       roles: gatewayRolesResolver,
@@ -88,7 +83,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ServicesNav:Services`,
-      functionality: "services",
+      functionality: AppPaths.SERVICES,
     },
   },
   {
@@ -101,7 +96,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ResourcesNav:Resources`,
-      functionality: "resources",
+      functionality: AppPaths.RESOURCES,
     },
     resolve: {
       services: serviceResolver,
@@ -117,7 +112,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_CorsNav:CORS`,
-      functionality: "cors",
+      functionality: AppPaths.CORS,
     },
   },
   {
@@ -130,7 +125,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_OperationsNav:Operations`,
-      functionality: "operations",
+      functionality: AppPaths.OPERATIONS,
     },
   },
   {
@@ -143,7 +138,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_MethodsNav:Methods`,
-      functionality: "methods",
+      functionality: AppPaths.METHODS,
     },
     resolve: {
       methods: methodsResolver,
@@ -159,7 +154,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_FieldsNav:Fields`,
-      functionality: "fields",
+      functionality: AppPaths.FIELDS,
     },
     resolve: {
       resources: resourcesResolver,
@@ -176,7 +171,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ScopesNav:Scopes`,
-      functionality: "scopes",
+      functionality: AppPaths.SCOPES,
     },
     resolve: {
       routes: routesResolver,
@@ -193,7 +188,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_RolesNav:Roles`,
-      functionality: "roles",
+      functionality: AppPaths.ROLES,
     },
     resolve: {
       applications: gatewayApplicationsResolver,
@@ -209,7 +204,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ApplicationsNav:Applications`,
-      functionality: "applications",
+      functionality: AppPaths.APPLICATIONS,
     },
   },
   {
@@ -222,7 +217,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_ConditionsNav:Conditions`,
-      functionality: "conditions",
+      functionality: AppPaths.CONDITIONS,
     },
     resolve: {
       fields: fieldsResolver,
@@ -238,7 +233,7 @@ export const ROUTES: Routes = [
     canActivate: [aclGuard()],
     data: {
       breadcrumb: $localize`:@@Admin_PermissionsTreeNav:Permissions Tree`,
-      functionality: "permissions",
+      functionality: AppPaths.PERMISSIONS,
     },
     resolve: {
       roles: gatewayRolesResolver,
