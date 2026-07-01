@@ -4,6 +4,7 @@ const router = express.Router();
 
 import cEnt from "../entities/condition.js";
 import history from "../middlewares/history.js";
+import schema from "../middlewares/schema.js";
 
 // Search conditions
 router.post("/search", cEnt.get);
@@ -15,5 +16,7 @@ router.post("/", cEnt.addArraySubstack);
 router.put("/", cEnt.updateArraySubstack);
 // Bulk archive
 router.post("/archive", cEnt.archive);
+// Get entity schema
+router.get("/schema", schema.get(cEnt));
 
 export default router;

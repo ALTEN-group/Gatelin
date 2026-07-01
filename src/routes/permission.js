@@ -4,6 +4,7 @@ const router = express.Router();
 
 import pEnt from "../entities/permission.js";
 import history from "../middlewares/history.js";
+import schema from "../middlewares/schema.js";
 
 // Search permissions
 router.post("/search", pEnt.get);
@@ -18,5 +19,7 @@ router.post("/", pEnt.addArraySubstack);
 router.put("/", pEnt.updateArraySubstack);
 // Delete permissions (uncheck route)
 router.delete("/", pEnt.delete);
+// Get entity schema
+router.get("/schema", schema.get(pEnt));
 
 export default router;

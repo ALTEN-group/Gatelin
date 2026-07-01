@@ -4,6 +4,7 @@ const router = express.Router();
 
 import fEnt from "../entities/field.js";
 import history from "../middlewares/history.js";
+import schema from "../middlewares/schema.js";
 
 // Search fields
 router.post("/search", fEnt.get);
@@ -15,5 +16,7 @@ router.post("/", fEnt.addArraySubstack);
 router.put("/", fEnt.updateArraySubstack);
 // Bulk archive
 router.post("/archive", fEnt.archive);
+// Get entity schema
+router.get("/schema", schema.get(fEnt));
 
 export default router;

@@ -9,6 +9,7 @@ import {
   updateCache,
   deleteFromCache,
 } from "../middlewares/cache/cors.js";
+import schema from "../middlewares/schema.js";
 
 const add = [cEnt.addArraySubstack, addToCache];
 const update = [cEnt.updateArraySubstack, updateCache];
@@ -24,5 +25,7 @@ router.post("/", add);
 router.put("/", update);
 // Bulk archive
 router.post("/archive", del);
+// Get entity schema
+router.get("/schema", schema.get(cEnt));
 
 export default router;
