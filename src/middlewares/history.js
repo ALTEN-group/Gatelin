@@ -18,6 +18,8 @@ function get(tableName, schema = "public") {
       .then((r) => {
         const { rowCount, rows } = r;
         if (!rowCount) return next({ status: 404, msg: "history not found" });
+        if (rowCount === 1 && rows[0].operation === "INSERT")
+          return next({ status: 404, msg: "history not found" });
         res.locals.rows = rows;
         res.locals.total = rowCount;
         next();
@@ -55,6 +57,8 @@ function getByField(tableName, field, schema = "public") {
       .then((r) => {
         const { rowCount, rows } = r;
         if (!rowCount) return next({ status: 404, msg: "history not found" });
+        if (rowCount === 1 && rows[0].operation === "INSERT")
+          return next({ status: 404, msg: "history not found" });
         res.locals.rows = rows;
         res.locals.total = rowCount;
         next();
