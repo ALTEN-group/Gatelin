@@ -84,7 +84,22 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (15, '/(?<resource>[\w\-]+)',                     'getPreferences',        'Get preferences for the authenticated consumer',     true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (15, '/(?<resource>[\w\-]+)',                     'syncPreferences',       'Sync preferences for the authenticated consumer',    true,  true, ARRAY[12],   ARRAY[3],  -1, 'system'),
   -- users (16)
-  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system')
+  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system'),
+  -- schemas
+  (2,  '/schema',                                  'getConsumerSchema',    'Get consumer entity schema',                         true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (3,  '/schema',                                  'getRouteSchema',       'Get route entity schema',                            true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (4,  '/schema',                                  'getServiceSchema',     'Get service entity schema',                          true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (5,  '/schema',                                  'getResourceSchema',    'Get resource entity schema',                         true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (6,  '/schema',                                  'getOperationSchema',   'Get operation entity schema',                        true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (7,  '/schema',                                  'getCorsSchema',        'Get cors entity schema',                             true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (8,  '/schema',                                  'getFieldSchema',       'Get field entity schema',                            true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (9,  '/schema',                                  'getScopeSchema',       'Get scope entity schema',                            true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (10, '/schema',                                  'getRoleSchema',        'Get role entity schema',                             true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (11, '/schema',                                  'getPermissionSchema',  'Get permission entity schema',                       true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (12, '/schema',                                  'getMethodSchema',      'Get method entity schema',                           true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (13, '/schema',                                  'getApplicationSchema', 'Get application entity schema',                      true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (14, '/schema',                                  'getConditionSchema',   'Get condition entity schema',                        true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  (15, '/schema',                                  'getPreferenceSchema',  'Get preference entity schema',                       true,  true, ARRAY[2],    ARRAY[1],  -1, 'system')
 ON CONFLICT DO NOTHING;
 
 ANALYZE;
