@@ -14,8 +14,8 @@
   "author": "Ludovic Cluber",
   "license": "ISC",
   "dependencies": {
-    "@dwtechs/antity-pgsql": "0.18.1",
-    "@dwtechs/checkard": "3.6.0",
+    "@dwtechs/antity-pgsql": "0.18.2",
+    "@dwtechs/checkard": "3.6.1",
     "@dwtechs/errandler-express": "0.1.0",
     "@dwtechs/healix-express": "0.1.0",
     "@dwtechs/servpico-express": "0.2.1",
@@ -27,7 +27,7 @@
     "express-rate-limit": "8.5.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^21.0.0",
+    "@octokit/rest": "21.0.0",
     "@babel/core": "7.28.4",
     "@babel/preset-env": "7.28.3",
     "@biomejs/biome": "2.3.12",
