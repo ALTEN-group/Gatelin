@@ -238,7 +238,6 @@ export const ROUTES: Routes = [
     resolve: {
       roles: gatewayRolesResolver,
       routes: routesResolver,
-      fields: fieldsResolver,
       scopes: scopesResolver,
       conditions: conditionsResolver,
       operations: operationsResolver,

@@ -1,17 +1,15 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { AclsMapping } from "@core/acl/acls.model";
-import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { ENTITY_ROUTE_MAPPING } from "@core/app-config/app.acls";
 import { AdminEntity } from "@core/app-config/app.entities";
 import { Permission } from "@core/auth/auth.dto";
+import { SchemaService } from "@core/schema/schema.service";
 import { Calls } from "@dwtechs/crud-builder";
 import { catchError, map, Observable, of, tap } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class AclService {
-  private readonly http = inject(HttpClient);
-  private readonly appConfig = inject(APP_CONFIG);
+  private readonly schemaService = inject(SchemaService);
 
   private _accessLevels = signal<AclsMapping | undefined>(undefined);
   public readonly accessLevels = this._accessLevels.asReadonly();
@@ -90,45 +88,38 @@ export class AclService {
 
     if (opsToEnrich.length === 0) return of(undefined);
 
-    const endpoint = `${this.appConfig.apiGateway}${functionality}/schema`;
+    return this.schemaService.get(functionality).pipe(
+      tap((rows) => {
+        let updatedEntityAcl = { ...entityAcl };
 
-    return this.http
-      .get<{ rows?: Array<{ key?: string; operations?: string[] }> }>(endpoint)
-      .pipe(
-        tap((response) => {
-          const rows = response?.rows ?? [];
-          let updatedEntityAcl = { ...entityAcl };
+        for (const { op, schemaOp } of opsToEnrich) {
+          const operationAcl = entityAcl[op];
+          if (!operationAcl) continue;
 
-          for (const { op, schemaOp } of opsToEnrich) {
-            const operationAcl = entityAcl[op];
-            if (!operationAcl) continue;
+          const permissionFields = operationAcl.fields ?? [];
+          const schemaFields = rows
+            .filter((row) =>
+              row.operations.some((v) => v.toUpperCase() === schemaOp),
+            )
+            .map((row) => row.key);
 
-            const permissionFields = operationAcl.fields ?? [];
-            const schemaFields = rows.flatMap((row) => {
-              const rowOps = row.operations ?? [];
-              return rowOps.some((v) => v?.toUpperCase() === schemaOp) &&
-                row.key
-                ? [row.key]
-                : [];
-            });
+          // Schema is the baseline; permission fields (length > 0) override it.
+          const finalFields =
+            permissionFields.length > 0 ? permissionFields : schemaFields;
+          updatedEntityAcl = {
+            ...updatedEntityAcl,
+            [op]: { ...operationAcl, fields: finalFields },
+          };
+        }
 
-            // Schema is the baseline; permission fields (length > 0) override it.
-            const finalFields =
-              permissionFields.length > 0 ? permissionFields : schemaFields;
-            updatedEntityAcl = {
-              ...updatedEntityAcl,
-              [op]: { ...operationAcl, fields: finalFields },
-            };
-          }
-
-          this._accessLevels.set({
-            ...accessLevels,
-            [functionality]: updatedEntityAcl,
-          });
-        }),
-        map(() => undefined),
-        catchError(() => of(undefined)),
-      );
+        this._accessLevels.set({
+          ...accessLevels,
+          [functionality]: updatedEntityAcl,
+        });
+      }),
+      map(() => undefined),
+      catchError(() => of(undefined)),
+    );
   }
 
   public getEntityAcls(

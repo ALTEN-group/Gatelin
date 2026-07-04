@@ -1,3 +1,4 @@
+import { AdminEntity } from "@core/app-config/app.entities";
 import { ArchiveInfo } from "@dwtechs/crud-builder";
 
 /**
@@ -8,7 +9,7 @@ export interface Route extends ArchiveInfo {
   serviceId: number | null;
   serviceName: string;
   resourceId: number | null;
-  resourceName: string;
+  resourceName: AdminEntity;
   operationId: number[];
   operationName: string[];
   methodIds: number[];
@@ -31,7 +32,7 @@ export const routeFactory = (): Route => ({
   serviceId: null,
   serviceName: "",
   resourceId: null,
-  resourceName: "",
+  resourceName: "" as AdminEntity,
   operationId: [],
   operationName: [],
   methodIds: [],

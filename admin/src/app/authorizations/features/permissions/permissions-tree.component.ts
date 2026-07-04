@@ -13,20 +13,21 @@ import { ActivatedRoute } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import {
   CONTROL_TYPES,
+  CrudItemOptions,
   EditionDialogComponent,
   RowsAndCount,
 } from "@dwtechs/crud-builder";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
-import { Field } from "app/authorizations/data-access/fields/field.model";
-import { Operation } from "app/routing/data-access/operations/operation.model";
+import { FieldsService } from "app/authorizations/data-access/fields/fields.service";
 import {
   Permission,
   permissionFactory,
 } from "app/authorizations/data-access/permissions/permission.model";
 import { PermissionsService } from "app/authorizations/data-access/permissions/permissions.service";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
-import { Route } from "app/routing/data-access/routes/route.model";
 import { Scope } from "app/authorizations/data-access/scopes/scope.model";
+import { Operation } from "app/routing/data-access/operations/operation.model";
+import { Route } from "app/routing/data-access/routes/route.model";
 import { TreeNode } from "primeng/api";
 import { Checkbox } from "primeng/checkbox";
 import { Chip } from "primeng/chip";
@@ -55,6 +56,7 @@ export class PermissionsTreeComponent {
   // ── injections ────────────────────────────────────────────────────────────
   private readonly permissionsService = inject(PermissionsService);
   private readonly aclsService = inject(AclService);
+  private readonly fieldsService = inject(FieldsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
 
@@ -70,17 +72,6 @@ export class PermissionsTreeComponent {
       .filter((o) => o.id !== null)
       .map((o) => [o.id as number, o.name]),
   );
-  private readonly fieldsByResource: Map<number, string[]> = (() => {
-    const map = new Map<number, string[]>();
-    for (const f of (this.route.snapshot.data["fields"] as Field[]) ?? []) {
-      if (f.resourceId === null || f.archived) continue;
-      const names = map.get(f.resourceId) ?? [];
-      names.push(f.name);
-      map.set(f.resourceId, names);
-    }
-    return map;
-  })();
-
   private readonly scopesByRoute: Map<number, string[]> = (() => {
     const map = new Map<number, string[]>();
     for (const s of (this.route.snapshot.data["scopes"] as Scope[]) ?? []) {
@@ -146,7 +137,6 @@ export class PermissionsTreeComponent {
     return this.buildTree(
       this.routes,
       perms,
-      this.fieldsByResource,
       this.scopesByRoute,
       this.allConditions,
       this.operationColorById,
@@ -159,14 +149,8 @@ export class PermissionsTreeComponent {
   public readonly editedPermEntry = signal<Permission>(permissionFactory());
   public readonly dialogVisible = signal(false);
   public readonly dialogHeader = signal("");
-  public readonly dialogConfig = signal<
-    {
-      key: string;
-      label: string;
-      controlType: (typeof CONTROL_TYPES)[keyof typeof CONTROL_TYPES];
-      options?: { label: string; value: unknown }[];
-    }[]
-  >([]);
+  public readonly dialogConfig = signal<CrudItemOptions[]>([]);
+  public readonly dialogLoading = signal(false);
   public readonly dialogFeatures = {
     create: false,
     update: true,
@@ -252,31 +236,53 @@ export class PermissionsTreeComponent {
     if (!nodeData.perm) return;
     this.editingOriginalPerm.set(nodeData.perm);
     this.dialogHeader.set(`${nodeData.routeName} - ${nodeData.name}`);
-    this.dialogConfig.set([
-      {
-        key: "fields",
-        label: "Fields",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableFields.map((f) => ({ label: f, value: f })),
-      },
-      {
-        key: "scopes",
-        label: "Scopes",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableScopes.map((s) => ({ label: s, value: s })),
-      },
-      {
-        key: "conditionId",
-        label: "Conditions",
-        controlType: CONTROL_TYPES.MULTISELECT,
-        options: nodeData.availableConditions.map((c) => ({
-          label: c.name,
-          value: c.id,
-        })),
-      },
-    ]);
     this.editedPermEntry.set({ ...nodeData.perm });
-    this.dialogVisible.set(true);
+    this.dialogLoading.set(true);
+    this.fieldsService
+      .getSchemaFields(nodeData.resourceName)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (schema) => {
+          const fields = this.pickFieldsForOperation(
+            nodeData.methodNames,
+            schema,
+          );
+          this.dialogConfig.set([
+            // Dont display fields if none are available for this operation
+            ...(fields.length
+              ? [
+                  {
+                    key: "fields",
+                    label: "Fields",
+                    controlType: CONTROL_TYPES.MULTISELECT,
+                    options: fields.map((f) => ({ label: f, value: f })),
+                  } satisfies CrudItemOptions,
+                ]
+              : []),
+            {
+              key: "scopes",
+              label: "Scopes",
+              controlType: CONTROL_TYPES.MULTISELECT,
+              options: nodeData.availableScopes.map((s) => ({
+                label: s,
+                value: s,
+              })),
+            },
+            {
+              key: "conditionId",
+              label: "Conditions",
+              controlType: CONTROL_TYPES.MULTISELECT,
+              options: nodeData.availableConditions.map((c) => ({
+                label: c.name,
+                value: c.id,
+              })),
+            },
+          ]);
+          this.dialogLoading.set(false);
+          this.dialogVisible.set(true);
+        },
+        error: () => this.dialogLoading.set(false),
+      });
   }
 
   public onPermSaved(savedEntry: Permission | null): void {
@@ -308,10 +314,19 @@ export class PermissionsTreeComponent {
   }
 
   // ── private methods ───────────────────────────────────────────────────────
+  private pickFieldsForOperation(
+    methodNames: string[],
+    schema: { create: string[]; update: string[] },
+  ): string[] {
+    const methods = methodNames.map((m) => m.toUpperCase());
+    if (methods.includes("POST")) return schema.create;
+    if (methods.some((m) => m === "PUT" || m === "PATCH")) return schema.update;
+    return [];
+  }
+
   private buildTree(
     routes: Route[],
     perms: Permission[],
-    fieldsByResource: Map<number, string[]>,
     scopesByRoute: Map<number, string[]>,
     allConditions: { id: number; name: string; color: string | null }[],
     operationColorById: Map<number, string | null>,
@@ -374,10 +389,6 @@ export class PermissionsTreeComponent {
             .map((r) => {
               const sortedOpIds = [...r.operationId].sort((a, b) => a - b);
               const routePerms = permMap.get(r.id);
-              const availableFields =
-                r.resourceId !== null
-                  ? (fieldsByResource.get(r.resourceId) ?? [])
-                  : [];
               const availableScopes = scopesByRoute.get(r.id) ?? [];
               return {
                 data: {
@@ -397,7 +408,8 @@ export class PermissionsTreeComponent {
                     name: operationNameById.get(opId) ?? "",
                     color: operationColorById.get(opId) ?? null,
                     perm: routePerms?.get(opId),
-                    availableFields,
+                    resourceName: r.resourceName,
+                    methodNames: r.methodNames,
                     availableScopes,
                     availableConditions: allConditions,
                   },

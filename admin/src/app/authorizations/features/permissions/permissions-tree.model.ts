@@ -1,3 +1,4 @@
+import { AdminEntity } from "@core/app-config/app.entities";
 import { Permission } from "app/authorizations/data-access/permissions/permission.model";
 
 export interface ServiceNodeData {
@@ -28,7 +29,8 @@ export interface OperationNodeData {
   name: string;
   color: string | null;
   perm: Permission | undefined;
-  availableFields: string[];
+  resourceName: AdminEntity;
+  methodNames: string[];
   availableScopes: string[];
   availableConditions: { id: number; name: string; color: string | null }[];
 }
