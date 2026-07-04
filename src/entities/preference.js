@@ -65,7 +65,7 @@ export default new SQLEntity("preference", [
     max: null,
     isTypeChecked: true,
     isFilterable: false,
-    requiredFor: ["POST", "PUT"],
+    requiredFor: ["POST"],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,
     sanitizer: null,

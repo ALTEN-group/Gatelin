@@ -23,7 +23,7 @@ export default new SQLEntity("method", [
     max: 10,
     isTypeChecked: true,
     isFilterable: true,
-    requiredFor: ["POST", "PUT"],
+    requiredFor: ["POST"],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,
     sanitizer: null,

@@ -65,7 +65,7 @@ export default new SQLEntity("fields", [
     max: 50,
     isTypeChecked: true,
     isFilterable: true,
-    requiredFor: ["POST", "PUT"],
+    requiredFor: ["POST"],
     operations: ["SELECT", "INSERT", "UPDATE"],
     isPrivate: false,
     sanitizer: null,
