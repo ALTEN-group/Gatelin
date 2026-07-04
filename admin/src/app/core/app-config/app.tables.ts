@@ -70,8 +70,8 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
     additionalReadonlyProperties: { core: true },
   },
   operations: {
-    label: $localize`:@@TableLabels_Operation:Opération`,
-    title: $localize`:@@TableLabels_Operations:Opérations`,
+    label: $localize`:@@TableLabels_Operation:Operation`,
+    title: $localize`:@@TableLabels_Operations:Operations`,
     entityId: "operations",
     editionDialogSize: "s",
     filterLevel: "advanced",
