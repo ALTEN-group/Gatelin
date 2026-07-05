@@ -2,10 +2,25 @@
  * @jest-environment node
  */
 
-process.env.MSUSER_SEARCH_URL = "https://user.example.com";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-jest.mock("@dwtechs/winstan");
-jest.mock("../../../src/utils/http.js", () => ({
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const httpUtilPath = path.join(__dirname, "../../../src/utils/http.js");
+
+process.env.USER_SEARCH_URL = "https://user.example.com";
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+jest.unstable_mockModule(httpUtilPath, () => ({
   __esModule: true,
   default: { query: jest.fn() },
 }));
@@ -60,7 +75,7 @@ describe("getUserByEmail middleware", () => {
   });
 
   it("should set active: false for inactive user", async () => {
-    const user = { id: "u2", nickname: "bob", roles: [], active: false };
+    const user = { id: "u2", nickname: "bob", roles: [4], active: false };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserByEmail(req, res, next);
@@ -95,6 +110,7 @@ describe("getUserByEmail middleware", () => {
     mockQuery.mockRejectedValueOnce(error);
 
     await getUserByEmail(req, res, next);
+    await Promise.resolve();
 
     expect(next).toHaveBeenCalledWith(error);
   });

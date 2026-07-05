@@ -2,24 +2,54 @@
  * @jest-environment node
  */
 
-import checkRoute from "../../../src/middlewares/validators/check-route.js";
-import routeSvc from "../../../src/services/route.js";
-import { log } from "@dwtechs/winstan";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-jest.mock("@dwtechs/winstan");
-jest.mock("../../../src/services/route.js", () => ({
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const routeSvcPath = path.join(__dirname, "../../../src/services/route.js");
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+jest.unstable_mockModule(routeSvcPath, () => ({
   __esModule: true,
   default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
 }));
 
 describe("checkRoute middleware", () => {
+  let checkRoute;
+  let routeSvc;
+  let log;
   let req, res, next;
+
+  beforeAll(async () => {
+    const winstanModule = await import("@dwtechs/winstan");
+    log = winstanModule.log;
+    const routeModule = await import("../../../src/services/route.js");
+    routeSvc = routeModule.default;
+    const module = await import(
+      "../../../src/middlewares/validators/check-route.js"
+    );
+    checkRoute = module.default;
+  });
 
   beforeEach(() => {
     req = { originalUrl: "/api/users", method: "GET" };
     res = { locals: {} };
     next = jest.fn();
   });
+
+  const debugMessages = () =>
+    log.debug.mock.calls.map(([arg]) =>
+      typeof arg === "function" ? arg() : arg,
+    );
 
   it("should set res.locals.route and call next() when route is found", () => {
     const mockRoute = { id: 1, url: "/api/users", isProtected: true };
@@ -28,10 +58,10 @@ describe("checkRoute middleware", () => {
     checkRoute(req, res, next);
 
     expect(routeSvc.getOne).toHaveBeenCalledWith("/api/users", "GET");
-    expect(log.debug).toHaveBeenCalledWith(
+    expect(debugMessages()).toContain(
       "checkRoute(url: /api/users, method: GET)",
     );
-    expect(log.debug).toHaveBeenCalledWith(
+    expect(debugMessages()).toContain(
       `checkRoute(Route: ${JSON.stringify(mockRoute)})`,
     );
     expect(res.locals.route).toEqual(mockRoute);
@@ -44,7 +74,7 @@ describe("checkRoute middleware", () => {
     checkRoute(req, res, next);
 
     expect(routeSvc.getOne).toHaveBeenCalledWith("/api/users", "GET");
-    expect(log.debug).toHaveBeenCalledWith(
+    expect(debugMessages()).toContain(
       "checkRoute(url: /api/users, method: GET)",
     );
     expect(next).toHaveBeenCalledWith({
@@ -81,7 +111,7 @@ describe("checkRoute middleware", () => {
       "/api/users/123/profile",
       "PUT",
     );
-    expect(log.debug).toHaveBeenCalledWith(
+    expect(debugMessages()).toContain(
       "checkRoute(url: /api/users/123/profile, method: PUT)",
     );
     expect(res.locals.route).toEqual(mockRoute);

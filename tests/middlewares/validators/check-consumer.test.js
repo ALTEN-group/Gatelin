@@ -2,25 +2,51 @@
  * @jest-environment node
  */
 
-import { log } from "@dwtechs/winstan";
-import csmerSvc from "../../../src/services/consumer.js";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-jest.mock("@dwtechs/winstan");
-jest.mock("../../../src/services/consumer.js", () => ({
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const consumerSvcPath = path.join(
+  __dirname,
+  "../../../src/services/consumer.js",
+);
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+jest.unstable_mockModule(consumerSvcPath, () => ({
   __esModule: true,
   default: { getOne: jest.fn() },
 }));
 
 describe("checkConsumer middleware", () => {
   let checkConsumer;
+  let log;
+  let csmerSvc;
   let req, res, next;
 
   beforeAll(async () => {
+    const winstanModule = await import("@dwtechs/winstan");
+    log = winstanModule.log;
+    const consumerModule = await import("../../../src/services/consumer.js");
+    csmerSvc = consumerModule.default;
     const module = await import(
       "../../../src/middlewares/validators/check-consumer.js"
     );
     checkConsumer = module.default;
   });
+
+  const debugMessages = () =>
+    log.debug.mock.calls.map(([arg]) =>
+      typeof arg === "function" ? arg() : arg,
+    );
 
   beforeEach(() => {
     req = {};
@@ -40,37 +66,35 @@ describe("checkConsumer middleware", () => {
     await checkConsumer(req, res, next);
 
     expect(csmerSvc.getOne).toHaveBeenCalledWith("valid-access-token");
-    expect(log.debug).toHaveBeenCalledWith(
-      "checkConsumer(accessToken=valid-access-token)",
-    );
-    expect(log.debug).toHaveBeenCalledWith(
-      `checkConsumer(Consumer: ${JSON.stringify(mockConsumer)})`,
+    expect(debugMessages()).toContain("checkConsumer(accessToken=<present>)");
+    expect(debugMessages()).toContain(
+      `checkConsumer(Consumer: ${mockConsumer.id})`,
     );
     expect(res.locals.consumer).toBe(mockConsumer);
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should call next(404) when consumer is not found", async () => {
+  it("should call next(401) when consumer is not found", async () => {
     csmerSvc.getOne.mockReturnValue(null);
 
     await checkConsumer(req, res, next);
 
     expect(csmerSvc.getOne).toHaveBeenCalledWith("valid-access-token");
     expect(next).toHaveBeenCalledWith({
-      status: 404,
-      msg: "Consumer not found",
+      status: 401,
+      message: "Unauthorized",
     });
     expect(res.locals.consumer).toBeUndefined();
   });
 
-  it("should call next(404) when consumer service returns undefined", async () => {
+  it("should call next(401) when consumer service returns undefined", async () => {
     csmerSvc.getOne.mockReturnValue(undefined);
 
     await checkConsumer(req, res, next);
 
     expect(next).toHaveBeenCalledWith({
-      status: 404,
-      msg: "Consumer not found",
+      status: 401,
+      message: "Unauthorized",
     });
   });
 
@@ -81,8 +105,6 @@ describe("checkConsumer middleware", () => {
     await checkConsumer(req, res, next);
 
     expect(csmerSvc.getOne).toHaveBeenCalledWith("token-xyz");
-    expect(log.debug).toHaveBeenCalledWith(
-      "checkConsumer(accessToken=token-xyz)",
-    );
+    expect(debugMessages()).toContain("checkConsumer(accessToken=<present>)");
   });
 });

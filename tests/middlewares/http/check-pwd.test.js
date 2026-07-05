@@ -2,10 +2,25 @@
  * @jest-environment node
  */
 
-process.env.MSAUTH_VERIFY_URL = "https://auth.example.com";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-jest.mock("@dwtechs/winstan");
-jest.mock("../../../src/utils/http.js", () => ({
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const httpUtilPath = path.join(__dirname, "../../../src/utils/http.js");
+
+process.env.PWD_CHECK_URL = "https://auth.example.com";
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+jest.unstable_mockModule(httpUtilPath, () => ({
   __esModule: true,
   default: { query: jest.fn() },
 }));
@@ -78,8 +93,18 @@ describe("checkPwd middleware", () => {
 
     await checkPwd(req, res, next);
 
-    const call = mockQuery.mock.calls[0];
-    expect(call[4]).toEqual({});
+    expect(mockQuery).toHaveBeenLastCalledWith(
+      "POST",
+      "https://auth.example.com",
+      undefined,
+      {
+        filters: {
+          userId: { value: 1, matchMode: "equals" },
+          pwd: { value: "testpassword", matchMode: "equals" },
+        },
+      },
+      {},
+    );
     expect(next).toHaveBeenCalledWith();
   });
 
@@ -88,6 +113,7 @@ describe("checkPwd middleware", () => {
     mockQuery.mockRejectedValueOnce(error);
 
     await checkPwd(req, res, next);
+    await Promise.resolve();
 
     expect(next).toHaveBeenCalledWith(error);
   });
@@ -97,6 +123,7 @@ describe("checkPwd middleware", () => {
     mockQuery.mockRejectedValueOnce(networkError);
 
     await checkPwd(req, res, next);
+    await Promise.resolve();
 
     expect(next).toHaveBeenCalledWith(networkError);
   });

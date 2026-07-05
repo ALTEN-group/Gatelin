@@ -2,9 +2,6 @@ export default {
   // Test environment
   testEnvironment: "node",
 
-  // Enable experimental ESM support
-  extensionsToTreatAsEsm: [".js"],
-
   // Stop running tests after failures
   bail: true,
 
@@ -19,7 +16,7 @@ export default {
 
   // Native ES module support
   transform: {
-    "^.+\\.js$": ["babel-jest", { useESM: true }],
+    "^.+\\.js$": "babel-jest",
   },
 
   // Transform ES modules from node_modules
@@ -33,6 +30,11 @@ export default {
     "^prom$": "<rootDir>/../common/libs/src/prom/prom.js",
     "^res$": "<rootDir>/../common/libs/src/res/res.js",
     "^@internal/req$": "<rootDir>/../common/libs/src/req/req.js",
+    // @dwtechs/checkard's package.json omits "type": "module", so Jest's
+    // native-ESM loader misdetects dist/ch.js (which uses `export {}`) as
+    // CommonJS and fails to parse it. Force resolution to the real CJS build.
+    "^@dwtechs/checkard$":
+      "<rootDir>/node_modules/@dwtechs/checkard/dist/ch.cjs.js",
   },
 
   // Setup files

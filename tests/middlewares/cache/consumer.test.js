@@ -2,23 +2,49 @@
  * @jest-environment node
  */
 
-import { log } from "@dwtechs/winstan";
-import csmerSvc from "../../../src/services/consumer.js";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-jest.mock("@dwtechs/winstan");
-jest.mock("../../../src/services/consumer.js", () => ({
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const consumerSvcPath = path.join(
+  __dirname,
+  "../../../src/services/consumer.js",
+);
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+jest.unstable_mockModule(consumerSvcPath, () => ({
   __esModule: true,
   default: { updateCache: jest.fn() },
 }));
 
 describe("updateCache middleware", () => {
   let updateCache;
+  let log;
+  let csmerSvc;
   let req, res, next;
 
   beforeAll(async () => {
+    const winstanModule = await import("@dwtechs/winstan");
+    log = winstanModule.log;
+    const consumerModule = await import("../../../src/services/consumer.js");
+    csmerSvc = consumerModule.default;
     const module = await import("../../../src/middlewares/cache/consumer.js");
     updateCache = module.updateCache;
   });
+
+  const debugMessages = () =>
+    log.debug.mock.calls.map(([arg]) =>
+      typeof arg === "function" ? arg() : arg,
+    );
 
   beforeEach(() => {
     req = {
@@ -42,7 +68,7 @@ describe("updateCache middleware", () => {
 
     updateCache(req, res, next);
 
-    expect(log.debug).toHaveBeenCalledWith("Updating consumer 5 in cache");
+    expect(debugMessages()).toContain("Updating consumer 5 in cache");
     expect(csmerSvc.updateCache).toHaveBeenCalledWith(
       5,
       "new-access",

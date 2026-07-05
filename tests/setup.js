@@ -1,4 +1,5 @@
 // Test setup file for gateway service
+import { jest } from "@jest/globals";
 
 // Mock environment variables
 process.env.NODE_ENV = "test";

@@ -2,15 +2,26 @@
  * @jest-environment node
  */
 
-jest.mock("../../../src/services/role.js");
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import roleSvc from "../../../src/services/role.js";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const roleSvcPath = path.join(__dirname, "../../../src/services/role.js");
+
+jest.unstable_mockModule(roleSvcPath, () => ({
+  __esModule: true,
+  default: { init: jest.fn(), getOne: jest.fn(), deleteArchived: jest.fn() },
+}));
 
 describe("resolvePermissions middleware", () => {
   let resolvePermissions;
+  let roleSvc;
   let req, res, next;
 
   beforeAll(async () => {
+    const roleModule = await import("../../../src/services/role.js");
+    roleSvc = roleModule.default;
     const module = await import(
       "../../../src/middlewares/mappers/resolve-permissions.js"
     );
@@ -40,7 +51,7 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1] }];
       roleSvc.getOne.mockReturnValue({
         permissions: new Map([
-          [6,  { route: 6,  operations: [2],    fields: null }],
+          [6, { route: 6, operations: [2], fields: null }],
           [11, { route: 11, operations: [2, 3], fields: ["name"] }],
         ]),
       });
@@ -48,7 +59,7 @@ describe("resolvePermissions middleware", () => {
       resolvePermissions(req, res, next);
 
       expect(res.locals.permissions).toEqual([
-        { route: 6,  operations: [2],    fields: null },
+        { route: 6, operations: [2], fields: null },
         { route: 11, operations: [2, 3], fields: ["name"] },
       ]);
       expect(next).toHaveBeenCalledWith();
@@ -73,16 +84,20 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[6, { route: 6, operations: [2], fields: null }]]),
+          permissions: new Map([
+            [6, { route: 6, operations: [2], fields: null }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[41, { route: 41, operations: [2, 3], fields: null }]]),
+          permissions: new Map([
+            [41, { route: 41, operations: [2, 3], fields: null }],
+          ]),
         });
 
       resolvePermissions(req, res, next);
 
       expect(res.locals.permissions).toEqual([
-        { route: 6,  operations: [2],    fields: null },
+        { route: 6, operations: [2], fields: null },
         { route: 41, operations: [2, 3], fields: null },
       ]);
     });
@@ -93,10 +108,14 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[6, { route: 6, operations: [2], fields: null }]]),
+          permissions: new Map([
+            [6, { route: 6, operations: [2], fields: null }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[6, { route: 6, operations: [5], fields: null }]]),
+          permissions: new Map([
+            [6, { route: 6, operations: [5], fields: null }],
+          ]),
         });
 
       resolvePermissions(req, res, next);
@@ -114,10 +133,14 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[6, { route: 6, operations: [2, 3], fields: null }]]),
+          permissions: new Map([
+            [6, { route: 6, operations: [2, 3], fields: null }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[6, { route: 6, operations: [2, 5], fields: null }]]),
+          permissions: new Map([
+            [6, { route: 6, operations: [2, 5], fields: null }],
+          ]),
         });
 
       resolvePermissions(req, res, next);
@@ -134,10 +157,17 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: ["id", "name"] }]]),
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: ["id", "name"] }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name", "description"] }]]),
+          permissions: new Map([
+            [
+              11,
+              { route: 11, operations: [2], fields: ["name", "description"] },
+            ],
+          ]),
         });
 
       resolvePermissions(req, res, next);
@@ -152,10 +182,14 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: null }]]),
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: null }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name"] }]]),
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: ["name"] }],
+          ]),
         });
 
       resolvePermissions(req, res, next);
@@ -167,10 +201,14 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1, 2] }];
       roleSvc.getOne
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: ["name"] }]]),
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: ["name"] }],
+          ]),
         })
         .mockReturnValueOnce({
-          permissions: new Map([[11, { route: 11, operations: [2], fields: null }]]),
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: null }],
+          ]),
         });
 
       resolvePermissions(req, res, next);
@@ -184,7 +222,15 @@ describe("resolvePermissions middleware", () => {
       res.locals.rows = [{ roles: [1] }];
       roleSvc.getOne.mockReturnValue({
         permissions: new Map([
-          [6, { route: 6, operations: [2], fields: ["name"], _fieldsSet: new Set(["name"]) }],
+          [
+            6,
+            {
+              route: 6,
+              operations: [2],
+              fields: ["name"],
+              _fieldsSet: new Set(["name"]),
+            },
+          ],
         ]),
       });
 

@@ -2,15 +2,26 @@
  * @jest-environment node
  */
 
-import { log } from "@dwtechs/winstan";
+import { jest } from "@jest/globals";
 
-jest.mock("@dwtechs/winstan");
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
 
 describe("updateHeaderWithConsumer middleware", () => {
   let updateHeaderWithConsumer;
+  let log;
   let req, res, next;
 
   beforeAll(async () => {
+    const winstanModule = await import("@dwtechs/winstan");
+    log = winstanModule.log;
     const module = await import(
       "../../../src/middlewares/mappers/additionalHeaders.js"
     );
@@ -21,12 +32,13 @@ describe("updateHeaderWithConsumer middleware", () => {
     req = {};
     res = {
       locals: {
-        route: { isProtected: true },
+        route: { protected: true },
         tokens: { decodedAccess: { iss: "consumer-123", sub: "user-456" } },
         consumer: { nickname: "testuser" },
       },
     };
     next = jest.fn();
+    log.debug.mockClear();
   });
 
   describe("protected route", () => {
@@ -38,10 +50,13 @@ describe("updateHeaderWithConsumer middleware", () => {
         "x-consumer-name": "testuser",
       });
       expect(next).toHaveBeenCalledWith();
-      expect(log.debug).toHaveBeenCalledWith(
-        `updateHeaderWithConsumer(decodedAccessToken=${JSON.stringify({ iss: "consumer-123", sub: "user-456" })})`,
+      const debugMessages = log.debug.mock.calls.map(([arg]) =>
+        typeof arg === "function" ? arg() : arg,
       );
-      expect(log.debug).toHaveBeenCalledWith(
+      expect(debugMessages).toContain(
+        "updateHeaderWithConsumer(decodedAccessToken=<present>)",
+      );
+      expect(debugMessages).toContain(
         `updateHeaders(${JSON.stringify({ "x-consumer-id": "consumer-123", "x-consumer-name": "testuser" })})`,
       );
     });
@@ -62,7 +77,7 @@ describe("updateHeaderWithConsumer middleware", () => {
 
   describe("unprotected route", () => {
     it("should skip header setup and call next() immediately", () => {
-      res.locals.route.isProtected = false;
+      res.locals.route.protected = false;
 
       updateHeaderWithConsumer(req, res, next);
 
@@ -71,8 +86,8 @@ describe("updateHeaderWithConsumer middleware", () => {
       expect(log.debug).not.toHaveBeenCalled();
     });
 
-    it("should skip when isProtected is null", () => {
-      res.locals.route.isProtected = null;
+    it("should skip when protected is null", () => {
+      res.locals.route.protected = null;
 
       updateHeaderWithConsumer(req, res, next);
 
