@@ -99,7 +99,7 @@ export default withMermaid(defineConfig({
     ],
     socialLinks: [],
     footer: {
-      message: 'Published and maintained by DW Technologies',
+      message: 'Published and maintained by ALTEN',
     },
   },
 }))

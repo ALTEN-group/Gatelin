@@ -11,7 +11,7 @@ hero:
       link: /guide/overview
     - theme: alt
       text: Enterprise Support
-      link: https://dwtechnologies.eu
+      link: https://www.alten.com/
 
 features:
   - icon: 🛣️
