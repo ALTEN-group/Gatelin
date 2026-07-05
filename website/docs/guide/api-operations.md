@@ -43,11 +43,13 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "read",
-  "description": "Read access",
-  "color": "#4B0082",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "name": "read",
+      "description": "Read access",
+      "color": "#4B0082"
+    }
+  ]
 }
 ```
 
@@ -61,12 +63,14 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "name": "read",
-  "description": "Read-only access",
-  "color": "#0000FF",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "read",
+      "description": "Read-only access",
+      "color": "#0000FF"
+    }
+  ]
 }
 ```
 
@@ -80,7 +84,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 

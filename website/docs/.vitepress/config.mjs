@@ -1,10 +1,12 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 
+const base = process.env.VITEPRESS_BASE || (process.env.NODE_ENV === 'production' ? '/' : '/docs/')
+
 export default withMermaid(defineConfig({
   title: 'Gatelin',
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
-  base: '/',
+  base,
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
   ],

@@ -43,11 +43,14 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "editor",
-  "description": "Can edit content",
-  "color": "#4B0082",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "name": "editor",
+      "description": "Can edit content",
+      "color": "#4B0082",
+      "appId": 1
+    }
+  ]
 }
 ```
 
@@ -61,12 +64,14 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "name": "editor",
-  "description": "Can edit and publish content",
-  "color": "#0000FF",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "editor",
+      "description": "Can edit and publish content",
+      "color": "#0000FF"
+    }
+  ]
 }
 ```
 
@@ -80,11 +85,15 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 
-**Response (200 OK)**
+**Response (204 No Content)**
 
 ### Role Fields
 

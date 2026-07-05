@@ -48,13 +48,16 @@ POST /gateway/permissions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
-[
-  {
-    "roleId": 2,
-    "routeId": 5,
-    "conditionId": 1
-  }
-]
+{
+  "rows": [
+    {
+      "roleId": 2,
+      "routeId": 5,
+      "operationId": 1,
+      "conditionId": 1
+    }
+  ]
+}
 ```
 
 **Response (201 Created)**
@@ -66,12 +69,14 @@ PUT /gateway/permissions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
-[
-  {
-    "id": 10,
-    "conditionId": 2
-  }
-]
+{
+  "rows": [
+    {
+      "id": 10,
+      "conditionId": 2
+    }
+  ]
+}
 ```
 
 **Response (200 OK)**
@@ -84,7 +89,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [10, 11, 12]
+  "rows": [
+    { "id": 10 },
+    { "id": 11 },
+    { "id": 12 }
+  ]
 }
 ```
 

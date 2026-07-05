@@ -45,12 +45,12 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "routeId": 5,
-  "resourceId": 2,
-  "operationId": 1,
-  "core": false,
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "routeId": 5,
+      "name": "users:search"
+    }
+  ]
 }
 ```
 
@@ -61,8 +61,7 @@ Authorization: Bearer <access_token>
 | Field | Description |
 |---|---|
 | `routeId` | ID of the associated route |
-| `resourceId` | ID of the associated resource |
-| `operationId` | ID of the associated operation |
+| `name` | Scope name (e.g. `users:search`) |
 | `core` | Whether this scope is a core system scope (read-only) |
 
 ## Update Scope
@@ -73,12 +72,12 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "resourceId": 3,
-  "operationId": 2,
-  "core": false,
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "users:search:v2"
+    }
+  ]
 }
 ```
 
@@ -92,7 +91,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 

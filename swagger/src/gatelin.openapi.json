@@ -1597,15 +1597,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -1757,9 +1777,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/resource"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/resource"
+                    }
+                  }
                 }
               }
             }
@@ -1806,9 +1834,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/resource"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/resource"
+                    }
+                  }
                 }
               }
             }
@@ -1860,15 +1896,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -2070,9 +2126,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/operation"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/operation"
+                    }
+                  }
                 }
               }
             }
@@ -2119,9 +2183,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/operation"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/operation"
+                    }
+                  }
                 }
               }
             }
@@ -2173,15 +2245,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -2597,9 +2689,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/route"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/route"
+                    }
+                  }
                 }
               }
             }
@@ -2646,9 +2746,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/route"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/route"
+                    }
+                  }
                 }
               }
             }
@@ -2700,16 +2808,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2,
-                  3
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -2909,9 +3036,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/service"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/service"
+                    }
+                  }
                 }
               }
             }
@@ -2958,9 +3093,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/service"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/service"
+                    }
+                  }
                 }
               }
             }
@@ -3012,15 +3155,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -3220,9 +3383,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/cors"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/cors"
+                    }
+                  }
                 }
               }
             }
@@ -3269,9 +3440,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/cors"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/cors"
+                    }
+                  }
                 }
               }
             }
@@ -3323,15 +3502,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -3532,9 +3731,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/role"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/role"
+                    }
+                  }
                 }
               }
             }
@@ -3580,9 +3787,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/role"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/role"
+                    }
+                  }
                 }
               }
             }
@@ -3633,15 +3848,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -3855,9 +4090,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/permission"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/permission"
+                    }
+                  }
                 }
               }
             }
@@ -3903,9 +4146,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/permission"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/permission"
+                    }
+                  }
                 }
               }
             }
@@ -3955,16 +4206,38 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  10,
-                  11,
-                  12
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 10
+                      },
+                      {
+                        "id": 11
+                      },
+                      {
+                        "id": 12
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -4164,9 +4437,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/scope"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/scope"
+                    }
+                  }
                 }
               }
             }
@@ -4212,9 +4493,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/scope"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/scope"
+                    }
+                  }
                 }
               }
             }
@@ -4265,15 +4554,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -4472,9 +4781,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/field"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/field"
+                    }
+                  }
                 }
               }
             }
@@ -4520,9 +4837,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/field"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/field"
+                    }
+                  }
                 }
               }
             }
@@ -4573,15 +4898,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -4781,9 +5126,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/method"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/method"
+                    }
+                  }
                 }
               }
             }
@@ -4947,9 +5300,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/application"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/application"
+                    }
+                  }
                 }
               }
             }
@@ -4995,9 +5356,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/application"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/application"
+                    }
+                  }
                 }
               }
             }
@@ -5048,15 +5417,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -5255,9 +5644,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/condition"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/condition"
+                    }
+                  }
                 }
               }
             }
@@ -5303,9 +5700,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/condition"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/condition"
+                    }
+                  }
                 }
               }
             }
@@ -5356,15 +5761,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "example": [
-                  1,
-                  2
-                ]
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -5540,23 +5965,33 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/preference"
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/preference"
+                    }
+                  }
                 }
               },
-              "example": [
-                {
-                  "id": 1,
-                  "visible": true,
-                  "order": 1
-                },
-                {
-                  "id": 2,
-                  "visible": false,
-                  "order": 2
-                }
-              ]
+              "example": {
+                "rows": [
+                  {
+                    "id": 1,
+                    "visible": true,
+                    "order": 1
+                  },
+                  {
+                    "id": 2,
+                    "visible": false,
+                    "order": 2
+                  }
+                ]
+              }
             }
           }
         },

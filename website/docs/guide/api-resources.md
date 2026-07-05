@@ -45,11 +45,13 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "serviceId": 1,
-  "serviceName": "user",
-  "name": "users",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "serviceId": 1,
+      "serviceName": "user",
+      "name": "users"
+    }
+  ]
 }
 ```
 
@@ -63,12 +65,14 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "serviceId": 1,
-  "serviceName": "user",
-  "name": "profiles",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "serviceId": 1,
+      "serviceName": "user",
+      "name": "profiles"
+    }
+  ]
 }
 ```
 
@@ -82,7 +86,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 

@@ -23,7 +23,7 @@ Authorization: Bearer <access_token>
   {
     "id": 1,
     "resource": "routes",
-    "field": "api",
+    "field": "pattern",
     "visible": true,
     "order": 1
   }
@@ -39,18 +39,20 @@ PUT /gateway/preferences/:resource
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
-[
-  {
-    "id": 1,
-    "visible": true,
-    "order": 1
-  },
-  {
-    "id": 2,
-    "visible": false,
-    "order": 2
-  }
-]
+{
+  "rows": [
+    {
+      "id": 1,
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "visible": false,
+      "order": 2
+    }
+  ]
+}
 ```
 
 **Response (200 OK)**

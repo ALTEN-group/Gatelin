@@ -38,9 +38,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "https://app.example.com",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "name": "https://app.example.com"
+    }
+  ]
 }
 ```
 
@@ -54,10 +56,12 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "name": "https://updated.example.com",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "https://updated.example.com"
+    }
+  ]
 }
 ```
 
@@ -71,7 +75,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 

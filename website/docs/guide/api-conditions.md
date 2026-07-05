@@ -45,12 +45,14 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "Non-archived only",
-  "fieldId": 7,
-  "op": "=",
-  "value": "false",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "name": "Non-archived only",
+      "fieldId": 7,
+      "op": "=",
+      "value": "false"
+    }
+  ]
 }
 ```
 
@@ -73,13 +75,15 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "name": "Non-archived only",
-  "fieldId": 7,
-  "op": "=",
-  "value": "false",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "Non-archived only",
+      "fieldId": 7,
+      "op": "=",
+      "value": "false"
+    }
+  ]
 }
 ```
 
@@ -93,7 +97,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 

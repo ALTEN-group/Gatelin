@@ -12,7 +12,7 @@ Authorization: Bearer <access_token>
 **Flow:**
 
 1. Gateway validates the route exists and matches `/api/users` pattern
-2. Validates JWT token (if `jwt: true` for the route)
+2. Validates JWT token (if `protected: true` for the route)
 3. Checks consumer session exists and is valid
 4. Strips the pattern from URL (if configured)
 5. Forwards request to: `http://gatelin-user-development:3000/123`

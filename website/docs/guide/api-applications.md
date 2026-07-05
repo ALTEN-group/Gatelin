@@ -43,10 +43,12 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "admin-panel",
-  "description": "Internal admin interface",
-  "creatorId": 1,
-  "creatorName": "admin"
+  "rows": [
+    {
+      "name": "admin-panel",
+      "description": "Internal admin interface"
+    }
+  ]
 }
 ```
 
@@ -60,11 +62,13 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "id": 1,
-  "name": "admin-panel",
-  "description": "Updated description",
-  "updaterId": 1,
-  "updaterName": "admin"
+  "rows": [
+    {
+      "id": 1,
+      "name": "admin-panel",
+      "description": "Updated description"
+    }
+  ]
 }
 ```
 
@@ -78,7 +82,11 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "ids": [1, 2, 3]
+  "rows": [
+    { "id": 1 },
+    { "id": 2 },
+    { "id": 3 }
+  ]
 }
 ```
 
