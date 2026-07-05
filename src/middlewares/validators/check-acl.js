@@ -31,7 +31,9 @@ import scopeService from "../../services/scope.js";
  */
 function filterFields(item, allowed) {
   return Object.fromEntries(
-    Object.entries(item).filter(([k]) => allowed.has(k)),
+    // "id" is always kept: it identifies the row to update/delete and is not
+    // a writable field governed by the per-role field ACL.
+    Object.entries(item).filter(([k]) => k === "id" || allowed.has(k)),
   );
 }
 
