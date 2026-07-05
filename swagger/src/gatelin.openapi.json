@@ -188,7 +188,7 @@
             "description": "Name of the resource",
             "example": "users"
           },
-          "operations": {
+          "operationId": {
             "type": "array",
             "items": {
               "type": "integer",
@@ -675,11 +675,19 @@
             "description": "Name of the route",
             "example": "searchUsers"
           },
+          "routeProtected": {
+            "type": "boolean",
+            "description": "Whether the associated route requires authentication"
+          },
           "operationId": {
             "type": "integer",
             "format": "int32",
             "description": "ID of the operation",
             "example": 1
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the permission is active"
           },
           "operationName": {
             "type": "string",
@@ -1197,6 +1205,73 @@
             "example": "Invalid request parameters"
           }
         }
+      },
+      "entityProperty": {
+        "type": "object",
+        "description": "Field metadata describing a single property of an entity",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Field name",
+            "example": "name"
+          },
+          "type": {
+            "type": "string",
+            "description": "Field data type",
+            "example": "string"
+          },
+          "min": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Minimum length or value"
+          },
+          "max": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Maximum length or value"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "SQL operations this field participates in",
+            "example": [
+              "SELECT",
+              "INSERT",
+              "UPDATE"
+            ]
+          },
+          "requiredFor": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "HTTP methods for which this field is required",
+            "example": [
+              "POST"
+            ]
+          },
+          "isFilterable": {
+            "type": "boolean",
+            "description": "Whether this field can be used as a search filter"
+          }
+        }
+      },
+      "entitySchemaResponse": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/entityProperty"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Number of properties returned"
+          }
+        }
       }
     },
     "responses": {
@@ -1551,6 +1626,38 @@
         }
       }
     },
+    "/gateway/consumers/schema": {
+      "get": {
+        "tags": [
+          "Consumer Management"
+        ],
+        "summary": "Get consumer schema",
+        "description": "Retrieve field metadata for the consumer entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consumer schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/resources/search": {
       "post": {
         "tags": [
@@ -1825,6 +1932,38 @@
           },
           "404": {
             "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources/schema": {
+      "get": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Get resource schema",
+        "description": "Retrieve field metadata for the resource entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -2113,6 +2252,38 @@
         }
       }
     },
+    "/gateway/operations/schema": {
+      "get": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Get operation schema",
+        "description": "Retrieve field metadata for the operation entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/routes/search": {
       "post": {
         "tags": [
@@ -2193,7 +2364,7 @@
                       }
                     },
                     "example": {
-                      "jwt": {
+                      "protected": {
                         "value": true,
                         "matchMode": "equals"
                       }
@@ -2213,8 +2384,8 @@
                     "filters": {}
                   }
                 },
-                "filterJwtEnabled": {
-                  "summary": "Filter: JWT enabled routes",
+                "filterProtectedEnabled": {
+                  "summary": "Filter: protected routes (require authentication)",
                   "value": {
                     "paginate": true,
                     "first": 0,
@@ -2222,21 +2393,21 @@
                     "sortField": "id",
                     "sortOrder": "ASC",
                     "filters": {
-                      "jwt": {
+                      "protected": {
                         "value": true,
                         "matchMode": "equals"
                       }
                     }
                   }
                 },
-                "filterJwtDisabled": {
-                  "summary": "Filter: JWT disabled routes",
+                "filterProtectedDisabled": {
+                  "summary": "Filter: unprotected (public) routes",
                   "value": {
                     "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
-                      "jwt": {
+                      "protected": {
                         "value": false,
                         "matchMode": "equals"
                       }
@@ -2244,15 +2415,15 @@
                   }
                 },
                 "filterByNameContains": {
-                  "summary": "Filter: Service contains 'gatelin'",
+                  "summary": "Filter: serviceName contains 'gatelin'",
                   "value": {
                     "paginate": true,
                     "first": 0,
                     "rows": 10,
-                    "sortField": "service",
+                    "sortField": "serviceName",
                     "sortOrder": "ASC",
                     "filters": {
-                      "service": {
+                      "serviceName": {
                         "value": "gatelin",
                         "matchMode": "contains"
                       }
@@ -2260,13 +2431,13 @@
                   }
                 },
                 "filterByServiceStartsWith": {
-                  "summary": "Filter: Service starts with 'gate'",
+                  "summary": "Filter: serviceName starts with 'gate'",
                   "value": {
                     "paginate": true,
                     "first": 0,
                     "rows": 10,
                     "filters": {
-                      "service": {
+                      "serviceName": {
                         "value": "gate",
                         "matchMode": "startsWith"
                       }
@@ -2290,7 +2461,7 @@
                   }
                 },
                 "filterMultipleConditions": {
-                  "summary": "Filter: Multiple conditions (JWT + service)",
+                  "summary": "Filter: Multiple conditions (protected + id)",
                   "value": {
                     "paginate": true,
                     "first": 0,
@@ -2298,7 +2469,7 @@
                     "sortField": "id",
                     "sortOrder": "ASC",
                     "filters": {
-                      "jwt": {
+                      "protected": {
                         "value": true,
                         "matchMode": "equals"
                       },
@@ -2345,12 +2516,12 @@
                   }
                 },
                 "sortByServiceDesc": {
-                  "summary": "Sort: By service descending",
+                  "summary": "Sort: By serviceName descending",
                   "value": {
                     "paginate": true,
                     "first": 0,
                     "rows": 10,
-                    "sortField": "service",
+                    "sortField": "serviceName",
                     "sortOrder": "DESC",
                     "filters": {}
                   }
@@ -2602,6 +2773,38 @@
           },
           "404": {
             "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes/schema": {
+      "get": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Get route schema",
+        "description": "Retrieve field metadata for the route entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -2888,6 +3091,38 @@
         }
       }
     },
+    "/gateway/services/schema": {
+      "get": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Get service schema",
+        "description": "Retrieve field metadata for the service entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/cors/search": {
       "post": {
         "tags": [
@@ -3167,6 +3402,38 @@
         }
       }
     },
+    "/gateway/cors/schema": {
+      "get": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Get CORS schema",
+        "description": "Retrieve field metadata for the cors entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CORS schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/roles/search": {
       "post": {
         "tags": [
@@ -3437,6 +3704,38 @@
           },
           "404": {
             "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles/schema": {
+      "get": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Get role schema",
+        "description": "Retrieve field metadata for the role entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -3736,6 +4035,38 @@
         }
       }
     },
+    "/gateway/permissions/schema": {
+      "get": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Get permission schema",
+        "description": "Retrieve field metadata for the permission entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/scopes/search": {
       "post": {
         "tags": [
@@ -4005,6 +4336,38 @@
           },
           "404": {
             "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes/schema": {
+      "get": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Get scope schema",
+        "description": "Retrieve field metadata for the scope entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scope schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -4288,6 +4651,38 @@
         }
       }
     },
+    "/gateway/fields/schema": {
+      "get": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Get field schema",
+        "description": "Retrieve field metadata for the field entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/methods/search": {
       "post": {
         "tags": [
@@ -4416,6 +4811,38 @@
           },
           "404": {
             "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/methods/schema": {
+      "get": {
+        "tags": [
+          "Method Management"
+        ],
+        "summary": "Get method schema",
+        "description": "Retrieve field metadata for the method entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Method schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -4699,6 +5126,38 @@
         }
       }
     },
+    "/gateway/applications/schema": {
+      "get": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Get application schema",
+        "description": "Retrieve field metadata for the application entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/conditions/search": {
       "post": {
         "tags": [
@@ -4975,6 +5434,38 @@
         }
       }
     },
+    "/gateway/conditions/schema": {
+      "get": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Get condition schema",
+        "description": "Retrieve field metadata for the condition entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Condition schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
     "/gateway/preferences/{resource}": {
       "get": {
         "tags": [
@@ -5085,6 +5576,38 @@
           },
           "400": {
             "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/preferences/schema": {
+      "get": {
+        "tags": [
+          "Preference Management"
+        ],
+        "summary": "Get preference schema",
+        "description": "Retrieve field metadata for the preference entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preference schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/unauthorizedError"
