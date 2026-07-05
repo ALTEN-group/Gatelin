@@ -1,19 +1,9 @@
-# apm.yml — ships with your project
 name: Gatelin
 version: 1.0.0
 author: LCluber
+targets:
+- copilot
 dependencies:
   apm:
-    - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
-    # Skills from any repository
-    # - anthropics/skills/skills/frontend-design
-    # Plugins
-    # - github/awesome-copilot/plugins/context-engineering
-    # Specific agent primitives from any repository
-    # - github/awesome-copilot/agents/api-architect.agent.md
-    # A full APM package with instructions, skills, prompts, hooks...
-    # - microsoft/apm-sample-package#v1.0.0
-  mcp:
-    # MCP servers -- installed into every detected client
-    # - name: io.github.github/github-mcp-server
-      # transport: http   # MCP transport name, not URL scheme -- connects over HTTPS
+  - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
+  mcp: null
