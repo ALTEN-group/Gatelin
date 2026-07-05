@@ -1,37 +1,15 @@
 lockfile_version: '1'
-generated_at: '2026-06-14T15:21:12.779108+00:00'
+generated_at: '2026-07-05T06:19:19.832823+00:00'
 apm_version: 0.20.0
 dependencies:
-- repo_url: microsoft/apm-sample-package
+- repo_url: ALTEN-group/coding-pal
   host: github.com
-  resolved_commit: fb2851683be0e0e7711421d518bd8dba23b0b1f6
-  resolved_ref: v1.0.0
+  resolved_commit: 45948e772e07913f53b53d5baff89eec2abdf7f4
+  virtual_path: instructions/sharp-agent.instructions.md
+  is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .agents/skills/style-checker
-  - .agents/skills/style-checker/SKILL.md
-  - .github/agents/design-reviewer.agent.md
-  - .github/instructions/design-standards.instructions.md
-  - .github/prompts/accessibility-audit.prompt.md
-  - .github/prompts/design-review.prompt.md
+  - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
-    .agents/skills/style-checker/SKILL.md: sha256:1142700284d253c15e561434362ae6203db08e41ef07e7082386df3651738829
-    .github/agents/design-reviewer.agent.md: sha256:616988766ebc7d42cc6f599a17d1ad3ab8164e139fad82e111af5441fe3986cb
-    .github/instructions/design-standards.instructions.md: sha256:6f5d994d6437416e14e4ca5540f4d1cf06fad079728a1419acfb1dd7038ec38d
-    .github/prompts/accessibility-audit.prompt.md: sha256:c3382c6b7ac6ba38cf66d345923be79c5a46b8783a0d33aac457ff60f1b6597a
-    .github/prompts/design-review.prompt.md: sha256:f10919f07eec83c62c7912e318382b472ad27eb1c22c11525b813522960e8e06
-  content_hash: sha256:744cca54cc8ff7ca90aa1dd621c2f98c6291cd793815afe8518001cc94b8aba9
-- repo_url: github/awesome-copilot
-  host: github.com
-  resolved_commit: a1fc7f1a5799eefa984a4e46e672f34be1ce63f1
-  virtual_path: skills/review-and-refactor
-  is_virtual: true
-  depth: 2
-  resolved_by: microsoft/apm-sample-package
-  package_type: claude_skill
-  deployed_files:
-  - .agents/skills/review-and-refactor
-  - .agents/skills/review-and-refactor/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/review-and-refactor/SKILL.md: sha256:95b48ed4b137777ddc87b77cb0873ed7f485141a517825e71af1a984cf5a6cd6
-  content_hash: sha256:9236d06a1500089ddb46975b866e9a63478e502afe7095b1980c618678a7c7fe
+    .github/instructions/sharp-agent.instructions.md: sha256:8fbb5e46348653d681ecf5dd770b20ef8d000d25a3a3d5982fc60e8d639c4856
+  content_hash: sha256:c1645b6fcff11a18f4d44de98f217e885e0f174703033878a3401b9ae67562cf

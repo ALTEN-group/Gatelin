@@ -4,6 +4,7 @@ version: 1.0.0
 author: LCluber
 dependencies:
   apm:
+    - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
     # Skills from any repository
     # - anthropics/skills/skills/frontend-design
     # Plugins
@@ -11,7 +12,7 @@ dependencies:
     # Specific agent primitives from any repository
     # - github/awesome-copilot/agents/api-architect.agent.md
     # A full APM package with instructions, skills, prompts, hooks...
-    - microsoft/apm-sample-package#v1.0.0
+    # - microsoft/apm-sample-package#v1.0.0
   mcp:
     # MCP servers -- installed into every detected client
     # - name: io.github.github/github-mcp-server
