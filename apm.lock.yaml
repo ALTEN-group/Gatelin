@@ -1,15 +1,26 @@
 lockfile_version: '1'
-generated_at: '2026-07-05T06:19:19.832823+00:00'
+generated_at: '2026-07-05T10:11:49.573096+00:00'
 apm_version: 0.20.0
 dependencies:
 - repo_url: ALTEN-group/coding-pal
   host: github.com
-  resolved_commit: 45948e772e07913f53b53d5baff89eec2abdf7f4
+  resolved_commit: 33dc4a14741c8545f7c6d8af0f375ff4a053fdab
+  virtual_path: instructions/node-express.instructions.md
+  is_virtual: true
+  package_type: apm_package
+  deployed_files:
+  - .github/instructions/node-express.instructions.md
+  deployed_file_hashes:
+    .github/instructions/node-express.instructions.md: sha256:652d99ccd472e75a1a5bc56b4e2acb466d501693b89ae9d2c2411d045abd6436
+  content_hash: sha256:00546de933d3839798c82c4ca59538d8f7fc219cb67bb62e5abd17c43166f8ad
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: ce1280f3b4928561f2b8660e619cbacdf090b01d
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
   package_type: apm_package
   deployed_files:
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
-    .github/instructions/sharp-agent.instructions.md: sha256:8fbb5e46348653d681ecf5dd770b20ef8d000d25a3a3d5982fc60e8d639c4856
-  content_hash: sha256:c1645b6fcff11a18f4d44de98f217e885e0f174703033878a3401b9ae67562cf
+    .github/instructions/sharp-agent.instructions.md: sha256:7ab9c7ae2cfbaf32002b41ee45d37ac5548648b4b17b823a4fcf2c0f4b86167b
+  content_hash: sha256:71eb4304e847e674bc11da35a7a61bfbe2fb6cc2c5108a89f8a777b44edee9fc

@@ -6,4 +6,5 @@ targets:
 dependencies:
   apm:
   - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
+  - ALTEN-group/coding-pal/instructions/node-express.instructions.md
   mcp: null
