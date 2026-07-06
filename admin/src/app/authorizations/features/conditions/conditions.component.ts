@@ -7,7 +7,6 @@ import { ConditionsService } from "app/authorizations/data-access/conditions/con
 @Component({
   selector: "adm-conditions",
   templateUrl: "./conditions.component.html",
-  styleUrl: "./conditions.component.scss",
   imports: [TableComponent, InfoMessageComponent],
   providers: [ConfigHelper],
   changeDetection: ChangeDetectionStrategy.OnPush,
