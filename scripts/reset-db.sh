@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}🗑️  Resetting database...${NC}"
 
 # Load environment variables
-if [ -f docker/conf/.env.dev ]; then
+if [[ -f docker/conf/.env.dev ]]; then
   set -a
   source <(grep -v '^#' docker/conf/.env.dev | grep -v '^UID=')
   set +a

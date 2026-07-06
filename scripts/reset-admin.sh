@@ -17,7 +17,7 @@ echo -e "${YELLOW}🗑️  Resetting admin service...${NC}"
 echo -e ""
 
 # Load environment variables
-if [ -f docker/conf/.env.dev ]; then
+if [[ -f docker/conf/.env.dev ]]; then
   set -a
   source <(grep -v '^#' docker/conf/.env.dev | grep -v '^UID=')
   set +a
@@ -47,7 +47,7 @@ docker rm -f "$ADMIN_CONTAINER" 2>/dev/null \
 echo -e ""
 echo -e "${YELLOW}🖼️  Removing admin image...${NC}"
 ADMIN_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -E "(dwtechs/)?${APP_NAME}.*admin" || true)
-if [ -z "$ADMIN_IMAGES" ]; then
+if [[ -z "$ADMIN_IMAGES" ]]; then
   echo -e "${YELLOW}⚠${NC}  No admin images found"
 else
   echo "$ADMIN_IMAGES" | while read -r IMAGE; do

@@ -17,7 +17,7 @@ echo -e "${RED}🗑️  Cleaning up Gatelin service...${NC}"
 echo -e ""
 
 # Load environment variables
-if [ -f docker/conf/.env.dev ]; then
+if [[ -f docker/conf/.env.dev ]]; then
   set -a
   source <(grep -v '^#' docker/conf/.env.dev | grep -v '^UID=')
   set +a
@@ -52,7 +52,7 @@ echo -e "${YELLOW}🖼️  Removing Gatelin image...${NC}"
 # Look for gatelin image (dwtechs/gatelin:tag)
 GATELIN_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -E "(dwtechs/)?${APP_NAME}:" || true)
 
-if [ -z "$GATELIN_IMAGES" ]; then
+if [[ -z "$GATELIN_IMAGES" ]]; then
   echo -e "${YELLOW}⚠${NC}  No Gatelin images found"
 else
   echo "$GATELIN_IMAGES" | while read -r IMAGE; do

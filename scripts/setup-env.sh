@@ -35,9 +35,9 @@ set -e
 
 # Build NPMRC only with non-empty values (no deprecated fields)
 NPMRC_CONTENT=""
-if [ -n "$NPM_REGISTRY_URL" ]; then
+if [[ -n "$NPM_REGISTRY_URL" ]]; then
   NPMRC_CONTENT="registry=${NPM_REGISTRY_URL}"
-  if [ -n "$NPM_REGISTRY_TOKEN" ]; then
+  if [[ -n "$NPM_REGISTRY_TOKEN" ]]; then
     NPMRC_CONTENT="${NPMRC_CONTENT}
 //${NPM_REGISTRY_URL}:_authToken=${NPM_REGISTRY_TOKEN}"
   fi

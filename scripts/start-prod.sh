@@ -16,7 +16,7 @@ ENV_FILE="docker/conf/.env.prod"
 # Read VERSION from env file
 VERSION=$(grep -E "^VERSION=" "$ENV_FILE" | cut -d'=' -f2-)
 
-if [ -z "$VERSION" ]; then
+if [[ -z "$VERSION" ]]; then
   echo "Error: VERSION is not set in $ENV_FILE"
   exit 1
 fi
