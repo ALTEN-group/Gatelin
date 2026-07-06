@@ -12,7 +12,9 @@ RUN apk update && apk add --no-cache postgresql-client curl
 USER liquibase
 
 # copy entrypoints files
-COPY --chown=liquibase:liquibase --chmod=700 ./entrypoint.sh /docker-entrypoint.sh
+# Owned by root with no write bit for group/other so the non-root
+# liquibase user (running at container start) can read/execute but not modify it.
+COPY --chown=root:root --chmod=755 ./entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 # CMD ["sleep","36000"]

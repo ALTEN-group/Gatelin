@@ -1,6 +1,6 @@
 ARG NODE_VERSION
 ARG NGINX_VERSION
-FROM node:${NODE_VERSION} As build
+FROM node:${NODE_VERSION} AS build
 
 # change apk repos
 RUN rm /etc/apk/repositories
