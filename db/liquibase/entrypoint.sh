@@ -24,31 +24,37 @@ fi
 function diff(){
    /liquibase/liquibase diff-changelog --url="offline:postgresql?snapshot=${SNAPSHOT}.json" --changelog-file="${LIQUIBASE_SEARCH_PATH}/versions/generated/${date_time}.sql" --diff-types="tables, views, columns, indexes, foreignkeys, primarykeys, data, trigger"
    /liquibase/liquibase changelog-sync
+   return $?
 }
 
 function update(){
    /liquibase/liquibase update
+   return $?
 }
 
-function updateData(){
-  if [ -f "/liquibase/data/changelog.xml" ]; then
+function update_data(){
+  if [[ -f "/liquibase/data/changelog.xml" ]]; then
     LIQUIBASE_SEARCH_PATH=/liquibase/data LIQUIBASE_COMMAND_CHANGELOG_FILE=changelog.xml /liquibase/liquibase update
+    return $?
   fi
+  return 0
 }
 
 function snapshot(){
   if [[ "${LIQUIBASE_ENABLE_SNAPSHOT}" != "1" ]]; then
     return 0
   fi
-  local SNAPSHOT_NUMBER="$(( $(ls -1 ${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot* | wc -l) + 1 ))"
-  /liquibase/liquibase --output-file="${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot${SNAPSHOT_NUMBER}.json" snapshot --snapshot-format=json
+  local snapshot_number="$(( $(ls -1 ${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot* | wc -l) + 1 ))"
+  /liquibase/liquibase --output-file="${LIQUIBASE_SEARCH_PATH}/snapshot/snapshot${snapshot_number}.json" snapshot --snapshot-format=json
+  return $?
 }
 
 function rollback(){
   /liquibase/liquibase rollback-count --count=$ROLLBACK --contexts=""
+  return $?
 }
 
-function createUser()
+function create_user()
 {
   psql -h ${DB_HOST} -d postgres -tc "SELECT 1 FROM pg_roles WHERE rolname = '${DB_USER}'" | grep -q 1 || psql -h ${DB_HOST} -d ${DB_NAME} -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';"
   psql -h ${DB_HOST} -d ${DB_NAME} -c "CREATE SCHEMA IF NOT EXISTS log; \
@@ -59,10 +65,12 @@ function createUser()
                                       GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA log TO $DB_USER; \
                                       GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO $DB_USER;
                                       GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA log TO $DB_USER;"
+  return $?
 }
 
-function createDB(){
+function create_db(){
   psql -h ${DB_HOST} -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${DB_NAME}'" | grep -q 1 || psql -h ${DB_HOST} -d postgres -c "CREATE DATABASE ${DB_NAME}"
+  return $?
 }
 
 if [[ "$1" != "history" ]] && type "$1" > /dev/null 2>&1; then
@@ -70,11 +78,11 @@ if [[ "$1" != "history" ]] && type "$1" > /dev/null 2>&1; then
   exec "$@"
 else
   if [[ $UPDATE = 1 ]]; then
-      createDB
+      create_db
       update
-      updateData
+      update_data
       snapshot
-      createUser
+      create_user
   elif [[ $ROLLBACK -gt 1 ]]; then
       rollback
       snapshot

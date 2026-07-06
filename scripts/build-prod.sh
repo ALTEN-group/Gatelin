@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 ENV_FILE="docker/conf/.env.prod"
 
-if [ ! -f "$ENV_FILE" ]; then
+if [[ ! -f "$ENV_FILE" ]]; then
   echo -e "${RED}❌ $ENV_FILE not found. Cannot build production images.${NC}"
   exit 1
 fi
@@ -42,7 +42,7 @@ BUILD_MIGRATION=false
 BUILD_ADMIN=false
 BUILD_WEBSITE=false
 
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
   BUILD_GATEWAY=true
   BUILD_MIGRATION=true
   BUILD_ADMIN=true
@@ -62,7 +62,7 @@ fi
 echo -e "${BLUE}🔖 Version: ${VERSION}${NC}"
 
 # ─── Gateway ────────────────────────────────────────────────────────────────
-if [ "$BUILD_GATEWAY" = true ]; then
+if [[ "$BUILD_GATEWAY" == true ]]; then
   IMAGE="dwtechs/gatelin:${VERSION}"
   echo -e "${YELLOW}🏗️  Building gateway image ${IMAGE}...${NC}"
   docker build \
@@ -79,7 +79,7 @@ if [ "$BUILD_GATEWAY" = true ]; then
 fi
 
 # ─── Migration ──────────────────────────────────────────────────────────────
-if [ "$BUILD_MIGRATION" = true ]; then
+if [[ "$BUILD_MIGRATION" == true ]]; then
   IMAGE="dwtechs/gatelin-migration:${VERSION}"
   echo -e "${YELLOW}🏗️  Building migration image ${IMAGE}...${NC}"
   docker build \
@@ -92,7 +92,7 @@ if [ "$BUILD_MIGRATION" = true ]; then
 fi
 
 # ─── Admin ──────────────────────────────────────────────────────────────────
-if [ "$BUILD_ADMIN" = true ]; then
+if [[ "$BUILD_ADMIN" == true ]]; then
   IMAGE="dwtechs/gatelin-admin:${VERSION}"
   echo -e "${YELLOW}🏗️  Building admin image ${IMAGE}...${NC}"
   docker build \
@@ -112,7 +112,7 @@ if [ "$BUILD_ADMIN" = true ]; then
 fi
 
 # ─── Website ────────────────────────────────────────────────────────────────
-if [ "$BUILD_WEBSITE" = true ]; then
+if [[ "$BUILD_WEBSITE" == true ]]; then
   IMAGE="dwtechs/gatelin-website:${VERSION}"
   echo -e "${YELLOW}🏗️  Building website image ${IMAGE}...${NC}"
   docker build \
