@@ -11,7 +11,7 @@ import { catchError, map, Observable, of, tap } from "rxjs";
 export class AclService {
   private readonly schemaService = inject(SchemaService);
 
-  private _accessLevels = signal<AclsMapping | undefined>(undefined);
+  private readonly _accessLevels = signal<AclsMapping | undefined>(undefined);
   public readonly accessLevels = this._accessLevels.asReadonly();
 
   private readonly _areAclResolved = signal(false);

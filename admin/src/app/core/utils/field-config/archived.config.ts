@@ -13,7 +13,7 @@ export function buildArchivedConfig() {
       ? {
           ...col,
           columnOptions: {
-            ...(col.columnOptions || {}),
+            ...col.columnOptions,
             defaultWidth: "60px",
             customCellRenderer: archivedRenderer,
             customHeaderRenderer: () =>

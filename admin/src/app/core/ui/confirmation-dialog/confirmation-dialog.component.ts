@@ -7,7 +7,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
   selector: "shared-confirmation-dialog",
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./confirmation-dialog.component.html",
-  styleUrls: ["./confirmation-dialog.component.scss"],
+
   imports: [DialogModule, ButtonModule],
 })
 export class ConfirmationDialogComponent {
