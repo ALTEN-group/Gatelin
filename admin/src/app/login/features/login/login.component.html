@@ -23,6 +23,7 @@
           </p-inputGroupAddon>
           <input
             id="emailInput"
+            aria-label="Email"
             type="text"
             pInputText
             formControlName="email"
@@ -61,6 +62,8 @@
             <i class="pi pi-lock"></i>
           </p-inputGroupAddon>
           <input
+            id="passwordInput"
+            aria-label="Mot de passe"
             [type]="isPasswordHidden ? 'password' : 'text'"
             pInputText
             formControlName="password"

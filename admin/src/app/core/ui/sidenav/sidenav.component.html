@@ -1,6 +1,8 @@
 <p-panel
   (mouseover)="sidenavService.setExpanded(true)"
   (mouseleave)="sidenavService.setExpanded(false)"
+  (focusin)="sidenavService.setExpanded(true)"
+  (focusout)="sidenavService.setExpanded(false)"
   [class.collapsed]="!sidenavService.getExpanded()">
 
   <ng-template pTemplate="header">

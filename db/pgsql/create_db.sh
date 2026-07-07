@@ -51,34 +51,34 @@ check_env_vars_set() {
 # }
 
 function create_db_and_user() {
-  local DB_NAME=$1
-  local DB_USER="${DB_NAME}_USER"
-  local DB_PWD="${DB_NAME}_PWD"
+  local db_name=$1
+  local db_user="${db_name}_USER"
+  local db_pwd="${db_name}_PWD"
 
   # To UPPERCASE
-  DB_USER=$(echo "$DB_USER" | tr '[:lower:]' '[:upper:]')
-  DB_PWD=$(echo "$DB_PWD" | tr '[:lower:]' '[:upper:]')
+  db_user=$(echo "$db_user" | tr '[:lower:]' '[:upper:]')
+  db_pwd=$(echo "$db_pwd" | tr '[:lower:]' '[:upper:]')
 
-  DB_USER="${!DB_USER}"
-  DB_PWD="${!DB_PWD}"
+  db_user="${!db_user}"
+  db_pwd="${!db_pwd}"
 
-  echo "Create database '$DB_NAME' and its user : '$DB_USER'"
+  echo "Create database '$db_name' and its user : '$db_user'"
 
-  if [[ $DB_NAME == 'liquibase' ]]; then
+  if [[ $db_name == 'liquibase' ]]; then
     psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" <<-EOSQL
-            CREATE ROLE $DB_USER WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD '$DB_PWD';
-            GRANT SELECT ON ALL TABLES IN SCHEMA public TO $DB_USER;
-            GRANT CONNECT ON DATABASE postgres TO $DB_USER;
+            CREATE ROLE $db_user WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD '$db_pwd';
+            GRANT SELECT ON ALL TABLES IN SCHEMA public TO $db_user;
+            GRANT CONNECT ON DATABASE postgres TO $db_user;
 EOSQL
   else
-    # DROP ROLE IF EXISTS "$DB_USER";
+    # DROP ROLE IF EXISTS "$db_user";
     psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" <<-EOSQL
-        CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';
-        CREATE DATABASE $DB_NAME OWNER $DB_USER;
-        GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER WITH GRANT OPTION;
+        CREATE USER $db_user WITH PASSWORD '$db_pwd';
+        CREATE DATABASE $db_name OWNER $db_user;
+        GRANT ALL PRIVILEGES ON DATABASE $db_name TO $db_user WITH GRANT OPTION;
 EOSQL
-        # ALTER DATABASE $DB_NAME OWNER TO $DB_USER;
-        # ALTER DATABASE $DB_NAME SET TIMEZONE TO 'CET';
+        # ALTER DATABASE $db_name OWNER TO $db_user;
+        # ALTER DATABASE $db_name SET TIMEZONE TO 'CET';
   fi
 
 }
