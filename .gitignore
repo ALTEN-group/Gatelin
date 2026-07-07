@@ -9,5 +9,6 @@ docker/conf/.env.dev
 docker/conf/.env.prod
 website/docs/.vitepress/cache
 .github/instructions/
+.github/agents/
 # APM dependencies
 apm_modules/
