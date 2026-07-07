@@ -1,26 +1,40 @@
 lockfile_version: '1'
-generated_at: '2026-07-05T10:11:49.573096+00:00'
-apm_version: 0.20.0
+generated_at: '2026-07-07T06:51:45.519963+00:00'
+apm_version: 0.24.0
 dependencies:
 - repo_url: ALTEN-group/coding-pal
+  name: coding-pal-unit-test
   host: github.com
-  resolved_commit: 33dc4a14741c8545f7c6d8af0f375ff4a053fdab
+  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  version: 1.0.0
+  virtual_path: agents/unit-test.agent.md
+  is_virtual: true
+  deployed_files:
+  - .github/agents/unit-test.agent.md
+  deployed_file_hashes:
+    .github/agents/unit-test.agent.md: sha256:24b1191b83cfaf2d1a5c0dad7e028cf86d2eee7a370b47ac233fafa2f4cbaa57
+  content_hash: sha256:fa0eb986875bcd90b6509bbff394070e5c7c63b9a6544a94ee348a6cce02fb59
+- repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-express
+  host: github.com
+  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  version: 1.0.0
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/node-express.instructions.md
   deployed_file_hashes:
     .github/instructions/node-express.instructions.md: sha256:652d99ccd472e75a1a5bc56b4e2acb466d501693b89ae9d2c2411d045abd6436
-  content_hash: sha256:00546de933d3839798c82c4ca59538d8f7fc219cb67bb62e5abd17c43166f8ad
+  content_hash: sha256:5eb7b184472c67e6c7ee4c7dc633398a6021bd06afa232557ae1f5867683dfa6
 - repo_url: ALTEN-group/coding-pal
+  name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: ce1280f3b4928561f2b8660e619cbacdf090b01d
+  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  version: 1.0.0
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
     .github/instructions/sharp-agent.instructions.md: sha256:7ab9c7ae2cfbaf32002b41ee45d37ac5548648b4b17b823a4fcf2c0f4b86167b
-  content_hash: sha256:71eb4304e847e674bc11da35a7a61bfbe2fb6cc2c5108a89f8a777b44edee9fc
+  content_hash: sha256:7af3e5410943186a6e3d55aafe24fbe69a2916cae16951738932278a1af2ad2f
