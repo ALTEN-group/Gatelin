@@ -1,14 +1,15 @@
 lockfile_version: '1'
-generated_at: '2026-07-07T07:01:48.317447+00:00'
+generated_at: '2026-07-09T07:37:33.894489+00:00'
 apm_version: 0.24.0
 dependencies:
 - repo_url: ALTEN-group/coding-pal
   name: coding-pal-unit-test
   host: github.com
-  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
   version: 1.0.0
   virtual_path: agents/unit-test.agent.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .github/agents/unit-test.agent.md
   deployed_file_hashes:
@@ -17,22 +18,37 @@ dependencies:
 - repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-express
   host: github.com
-  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
   version: 1.0.0
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .github/instructions/node-express.instructions.md
   deployed_file_hashes:
     .github/instructions/node-express.instructions.md: sha256:652d99ccd472e75a1a5bc56b4e2acb466d501693b89ae9d2c2411d045abd6436
   content_hash: sha256:5eb7b184472c67e6c7ee4c7dc633398a6021bd06afa232557ae1f5867683dfa6
 - repo_url: ALTEN-group/coding-pal
+  name: coding-pal-postgres-liquibase
+  host: github.com
+  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
+  version: 1.0.0
+  virtual_path: instructions/postgres-liquibase.instructions.md
+  is_virtual: true
+  package_type: apm_package
+  deployed_files:
+  - .github/instructions/postgres-liquibase.instructions.md
+  deployed_file_hashes:
+    .github/instructions/postgres-liquibase.instructions.md: sha256:4666e6595bf2fc4f22e7b3b0f346932623111877355f8b04c28d5b71f70a576b
+  content_hash: sha256:c90ab9e9e4b7f433a8df8de096f2570025cc50cf373ecf9943730040be128e79
+- repo_url: ALTEN-group/coding-pal
   name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: 6225075a1193f59ac83e3c62ec53f34904b08d61
+  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
   version: 1.0.0
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:

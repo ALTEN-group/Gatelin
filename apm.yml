@@ -9,4 +9,5 @@ dependencies:
   - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
   - ALTEN-group/coding-pal/instructions/node-express.instructions.md
   - ALTEN-group/coding-pal/instructions/postgres-liquibase.instructions.md
+  - ALTEN-group/coding-pal/instructions/docker.instructions.md
   mcp: null
