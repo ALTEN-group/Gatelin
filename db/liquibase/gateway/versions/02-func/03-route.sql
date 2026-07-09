@@ -22,12 +22,20 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         INSERT INTO route_operation ("routeId", "operationId")
         SELECT NEW.id, o
         FROM unnest(NEW."operationId") AS o;
+
+        PERFORM log_history('public', 'route_operation', 'INSERT',
+          jsonb_build_object('id', NEW.id, 'operationId', NEW."operationId",
+                              'creatorId', NEW."creatorId", 'creatorName', NEW."creatorName")::json);
       END IF;
 
       IF NEW."methodIds" IS NOT NULL THEN
         INSERT INTO route_method ("routeId", "methodId")
         SELECT NEW.id, m
         FROM unnest(NEW."methodIds") AS m;
+
+        PERFORM log_history('public', 'route_method', 'INSERT',
+          jsonb_build_object('id', NEW.id, 'methodIds', NEW."methodIds",
+                              'creatorId', NEW."creatorId", 'creatorName', NEW."creatorName")::json);
       END IF;
 
       RETURN NEW;
@@ -50,6 +58,10 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         INSERT INTO route_operation ("routeId", "operationId")
         SELECT NEW.id, o
         FROM unnest(NEW."operationId") AS o;
+
+        PERFORM log_history('public', 'route_operation', 'UPDATE',
+          jsonb_build_object('id', NEW.id, 'operationId', NEW."operationId",
+                              'updaterId', NEW."updaterId", 'updaterName', NEW."updaterName")::json);
       END IF;
 
       IF NEW."methodIds" IS NOT NULL THEN
@@ -57,6 +69,10 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         INSERT INTO route_method ("routeId", "methodId")
         SELECT NEW.id, m
         FROM unnest(NEW."methodIds") AS m;
+
+        PERFORM log_history('public', 'route_method', 'UPDATE',
+          jsonb_build_object('id', NEW.id, 'methodIds', NEW."methodIds",
+                              'updaterId', NEW."updaterId", 'updaterName', NEW."updaterName")::json);
       END IF;
 
       PERFORM set_archived('route', OLD.id, NEW.archived, OLD.archived);

@@ -8,10 +8,10 @@ import schema from "../middlewares/schema.js";
 
 // Search permissions
 router.post("/search", pEnt.get);
-// Get history of permissions for a specific route
+// Get history of permissions for a specific route, including condition assignment changes
 router.get(
   "/history/route/:routeId",
-  history.getByField("permission", "routeId"),
+  history.getByField(["permission", "permission_condition"], "routeId"),
 );
 // Add permissions
 router.post("/", pEnt.addArraySubstack);

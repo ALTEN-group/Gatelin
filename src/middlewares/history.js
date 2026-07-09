@@ -4,7 +4,7 @@ const ALLOWED_HISTORY_FIELDS = new Set(["routeId"]);
 
 /**
  * Creates a history getter middleware for a specific table
- * @param {string} tableName - The name of the table to retrieve history for
+ * @param {string|string[]} tableName - The name(s) of the table(s) to retrieve history for
  * @param {string} [schema='public'] - The schema name (defaults to 'public')
  * @returns {Function} Express middleware function
  */
@@ -31,21 +31,22 @@ function get(tableName, schema = "public") {
 /**
  * Retrieves the history for a given ID.
  *
- * @param {string} tableName - The name of the table to retrieve history for
+ * @param {string|string[]} tableName - The name(s) of the table(s) to retrieve history for
  * @param {type} id - The ID for which to retrieve history.
  * @param {string} [schema='public'] - The schema name (defaults to 'public')
  * @return {Promise} A promise that resolves with the history data.
  */
 function query(tableName, id, schema = "public") {
+  const tableNames = Array.isArray(tableName) ? tableName : [tableName];
   const sql = `
     SELECT id, tstamp, operation, "consumerId", "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1 
-      AND "tableName" = $2
+      AND "tableName" = ANY($2::text[])
       AND CAST(record->>'id' AS INT) = $3
     ORDER BY tstamp ASC
   `;
-  return execute(sql, [schema, tableName, id], null);
+  return execute(sql, [schema, tableNames, id], null);
 }
 
 function getByField(tableName, field, schema = "public") {
@@ -70,15 +71,16 @@ function getByField(tableName, field, schema = "public") {
 function queryByField(tableName, field, value, schema = "public") {
   if (!ALLOWED_HISTORY_FIELDS.has(field))
     throw new Error(`Invalid history field: ${field}`);
+  const tableNames = Array.isArray(tableName) ? tableName : [tableName];
   const sql = `
     SELECT id, tstamp, operation, "consumerId", "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1
-      AND "tableName" = $2
+      AND "tableName" = ANY($2::text[])
       AND CAST(record->>'${field}' AS INT) = $3
     ORDER BY tstamp ASC
   `;
-  return execute(sql, [schema, tableName, value], null);
+  return execute(sql, [schema, tableNames, value], null);
 }
 
 export default {

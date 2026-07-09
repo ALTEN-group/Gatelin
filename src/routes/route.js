@@ -9,8 +9,11 @@ import schema from "../middlewares/schema.js";
 
 // Get routes
 router.post("/search", rEnt.get);
-// Get version history of a specific route
-router.get("/:id/history", history.get("route"));
+// Get version history of a specific route, including method/operation assignment changes
+router.get(
+  "/:id/history",
+  history.get(["route", "route_operation", "route_method"]),
+);
 // add a route.
 router.post("/", checkRoutePattern, rEnt.addArraySubstack);
 // Update a route.

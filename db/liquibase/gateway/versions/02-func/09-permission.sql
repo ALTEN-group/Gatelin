@@ -11,6 +11,10 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS $$
         INSERT INTO permission_condition ("permissionId", "conditionId")
         SELECT ins_id, cond_id FROM unnest(NEW."conditionId") AS cond_id
         WHERE cond_id IS NOT NULL;
+
+        PERFORM log_history('public', 'permission_condition', 'INSERT',
+          jsonb_build_object('id', ins_id, 'routeId', NEW."routeId", 'conditionId', NEW."conditionId",
+                              'creatorId', NEW."creatorId", 'creatorName', NEW."creatorName")::json);
       END IF;
       RETURN NEW;
 
@@ -29,6 +33,10 @@ CREATE OR REPLACE FUNCTION iud_permission() RETURNS trigger AS $$
         INSERT INTO permission_condition ("permissionId", "conditionId")
         SELECT OLD.id, cond_id FROM unnest(NEW."conditionId") AS cond_id
         WHERE cond_id IS NOT NULL;
+
+        PERFORM log_history('public', 'permission_condition', 'UPDATE',
+          jsonb_build_object('id', OLD.id, 'routeId', OLD."routeId", 'conditionId', NEW."conditionId",
+                              'updaterId', NEW."updaterId", 'updaterName', NEW."updaterName")::json);
       END IF;
       RETURN NEW;
 
