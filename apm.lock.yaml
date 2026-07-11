@@ -1,56 +1,64 @@
 lockfile_version: '1'
-generated_at: '2026-07-09T07:37:33.894489+00:00'
-apm_version: 0.24.0
+generated_at: '2026-07-11T08:58:58.686479+00:00'
+apm_version: 0.20.0
 dependencies:
 - repo_url: ALTEN-group/coding-pal
-  name: coding-pal-unit-test
   host: github.com
-  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
-  version: 1.0.0
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
   virtual_path: agents/unit-test.agent.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/agents/unit-test.agent.md
   deployed_file_hashes:
     .github/agents/unit-test.agent.md: sha256:24b1191b83cfaf2d1a5c0dad7e028cf86d2eee7a370b47ac233fafa2f4cbaa57
-  content_hash: sha256:fa0eb986875bcd90b6509bbff394070e5c7c63b9a6544a94ee348a6cce02fb59
+  content_hash: sha256:a1558903932823dfee0a0c7b132d91abfdc057b2936148c958ee75e4370fec30
 - repo_url: ALTEN-group/coding-pal
-  name: coding-pal-node-express
   host: github.com
-  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
-  version: 1.0.0
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
+  virtual_path: instructions/angular-admin.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/angular-admin.instructions.md
+  deployed_file_hashes:
+    .github/instructions/angular-admin.instructions.md: sha256:5b8bcc06993c030dbaa0e7bc25890de555f52e33d3c6177a3c61a010574984fd
+  content_hash: sha256:6e6b6396f8613556e4ed2a29b30b30984cfa4e3063e61c2372455039ce46c870
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
+  virtual_path: instructions/docker.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/docker.instructions.md
+  deployed_file_hashes:
+    .github/instructions/docker.instructions.md: sha256:b19fc27a481d4e83703a428fa28bae3e3bf736467e152db25de73f352fb199cf
+  content_hash: sha256:aa3d2885f638f70dfb0e331af622be529b266fd6a2c8bd7c8ac148b3749157a2
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/node-express.instructions.md
   deployed_file_hashes:
     .github/instructions/node-express.instructions.md: sha256:652d99ccd472e75a1a5bc56b4e2acb466d501693b89ae9d2c2411d045abd6436
-  content_hash: sha256:5eb7b184472c67e6c7ee4c7dc633398a6021bd06afa232557ae1f5867683dfa6
+  content_hash: sha256:00546de933d3839798c82c4ca59538d8f7fc219cb67bb62e5abd17c43166f8ad
 - repo_url: ALTEN-group/coding-pal
-  name: coding-pal-postgres-liquibase
   host: github.com
-  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
-  version: 1.0.0
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
   virtual_path: instructions/postgres-liquibase.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/postgres-liquibase.instructions.md
   deployed_file_hashes:
     .github/instructions/postgres-liquibase.instructions.md: sha256:4666e6595bf2fc4f22e7b3b0f346932623111877355f8b04c28d5b71f70a576b
-  content_hash: sha256:c90ab9e9e4b7f433a8df8de096f2570025cc50cf373ecf9943730040be128e79
+  content_hash: sha256:b58a948ec1e5eae1bf6d560f35c6eb7166754365a085e0672314cbe90d9bd10c
 - repo_url: ALTEN-group/coding-pal
-  name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: 7762119bfbe935699d80279cfe3375ea270b6f96
-  version: 1.0.0
+  resolved_commit: c9715d5a399bd5772f28813283ceb96c404b0c14
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
     .github/instructions/sharp-agent.instructions.md: sha256:7ab9c7ae2cfbaf32002b41ee45d37ac5548648b4b17b823a4fcf2c0f4b86167b
-  content_hash: sha256:7af3e5410943186a6e3d55aafe24fbe69a2916cae16951738932278a1af2ad2f
+  content_hash: sha256:71eb4304e847e674bc11da35a7a61bfbe2fb6cc2c5108a89f8a777b44edee9fc

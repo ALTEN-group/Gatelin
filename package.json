@@ -20,7 +20,7 @@
     "@dwtechs/healix-express": "0.1.0",
     "@dwtechs/servpico-express": "0.2.1",
     "@dwtechs/sparray": "0.2.1",
-    "@dwtechs/toker-express": "0.7.3",
+    "@dwtechs/toker-express": "0.8.0",
     "@dwtechs/winstan": "0.7.1" ,
     "@dwtechs/winstan-plugin-express-perf": "0.2.1",
     "express": "5.1.0",
