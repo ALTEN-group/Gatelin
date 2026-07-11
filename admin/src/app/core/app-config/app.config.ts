@@ -19,6 +19,10 @@ import {
   HISTORY_MAPPER,
   provideCrudLabels,
 } from "@dwtechs/crud-builder";
+import { ConditionsService } from "app/authorizations/data-access/conditions/conditions.service";
+import { MethodsService } from "app/routing/data-access/methods/methods.service";
+import { OperationsService } from "app/routing/data-access/operations/operations.service";
+import { ResourcesService } from "app/routing/data-access/resources/resources.service";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
 
@@ -71,15 +75,73 @@ export function provideAppConfig() {
     { provide: TitleStrategy, useClass: CustomTitleStrategyService }, // remove if no custom titles
     {
       provide: HISTORY_MAPPER,
-      useValue: (raw: unknown): HistorizedData<unknown> => {
-        const r = raw as any;
-        return {
-          id: r.id,
-          tstamp: r.tstamp,
-          operation: r.operation,
-          updaterId: r.consumerId,
-          updaterName: r.consumerName,
-          record: r.record,
+      useFactory: () => {
+        const operationNames = new Map<number, string>();
+        const methodNames = new Map<number, string>();
+        const conditionNames = new Map<number, string>();
+        const resourcesById = new Map<
+          number,
+          { serviceId: number | null; serviceName: string }
+        >();
+
+        const fill =
+          (map: Map<number, string>) =>
+          (items: { id: number | null; name: string }[]) => {
+            map.clear();
+            for (const item of items)
+              if (item.id !== null) map.set(item.id, item.name);
+          };
+
+        inject(OperationsService)
+          .getAndCacheAll()
+          .subscribe(fill(operationNames));
+        inject(MethodsService).getAndCacheAll().subscribe(fill(methodNames));
+        inject(ConditionsService)
+          .getAndCacheAll()
+          .subscribe(fill(conditionNames));
+        inject(ResourcesService)
+          .getAndCacheAll()
+          .subscribe((resources) => {
+            resourcesById.clear();
+            for (const resource of resources)
+              if (resource.id !== null)
+                resourcesById.set(resource.id, {
+                  serviceId: resource.serviceId,
+                  serviceName: resource.serviceName,
+                });
+          });
+
+        const withNames = (value: unknown, names: Map<number, string>) =>
+          Array.isArray(value)
+            ? value.map((id) => names.get(id) ?? id)
+            : typeof value === "number"
+              ? (names.get(value) ?? value)
+              : value;
+
+        return (raw: unknown): HistorizedData<unknown> => {
+          const r = raw as any;
+          const record = { ...r.record };
+          if ("operationId" in record)
+            record.operationId = withNames(record.operationId, operationNames);
+          if ("methodIds" in record)
+            record.methodIds = withNames(record.methodIds, methodNames);
+          if ("conditionId" in record)
+            record.conditionId = withNames(record.conditionId, conditionNames);
+          if ("resourceId" in record && record.resourceId != null) {
+            const resource = resourcesById.get(record.resourceId);
+            if (resource) {
+              record.serviceId = resource.serviceId;
+              record.serviceName = resource.serviceName;
+            }
+          }
+          return {
+            id: r.id,
+            tstamp: r.tstamp,
+            operation: r.operation,
+            updaterId: r.consumerId,
+            updaterName: r.consumerName,
+            record,
+          };
         };
       },
     },

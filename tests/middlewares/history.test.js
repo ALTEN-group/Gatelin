@@ -91,16 +91,111 @@ describe("history middleware", () => {
     });
 
     it("should set res.locals.rows/total and call next() when history exists beyond the initial INSERT", async () => {
-      const rows = [{ operation: "INSERT" }, { operation: "UPDATE" }];
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-01T00:00:00.000Z",
+          operation: "INSERT",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7 },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7 },
+        },
+      ];
       execute.mockResolvedValueOnce({ rowCount: 2, rows });
 
       history.get("route")(req, res, next);
       await Promise.resolve();
       await Promise.resolve();
 
-      expect(res.locals.rows).toBe(rows);
+      expect(res.locals.rows).toHaveLength(2);
       expect(res.locals.total).toBe(2);
       expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should merge rows from the same transaction (same tstamp/consumerId/record.id) into one grouped entry", async () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, name: "route-a" },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, operationId: [1, 2] },
+        },
+        {
+          id: 3,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, methodIds: [3, 4] },
+        },
+      ];
+      execute.mockResolvedValueOnce({ rowCount: 3, rows });
+
+      history.get(["route", "route_operation", "route_method"])(req, res, next);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(res.locals.rows).toEqual([
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, name: "route-a", operationId: [1, 2], methodIds: [3, 4] },
+        },
+      ]);
+      expect(res.locals.total).toBe(1);
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should call next(404) when the only grouped action is the initial INSERT (even with junction rows)", async () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-01T00:00:00.000Z",
+          operation: "INSERT",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, name: "route-a" },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-01T00:00:00.000Z",
+          operation: "INSERT",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, operationId: [1, 2] },
+        },
+      ];
+      execute.mockResolvedValueOnce({ rowCount: 2, rows });
+
+      history.get(["route", "route_operation"])(req, res, next);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(next).toHaveBeenCalledWith({
+        status: 404,
+        msg: "history not found",
+      });
     });
 
     it("should call next(err) when the query rejects", async () => {
@@ -112,6 +207,86 @@ describe("history middleware", () => {
       await Promise.resolve();
 
       expect(next).toHaveBeenCalledWith(err);
+    });
+  });
+
+  describe("groupByAction", () => {
+    it("should return one entry per row when tstamp/consumerId/record.id all differ", () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-01T00:00:00.000Z",
+          operation: "INSERT",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7 },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7 },
+        },
+      ];
+
+      expect(history.groupByAction(rows)).toEqual(rows.map((r) => ({ ...r })));
+    });
+
+    it("should merge rows sharing tstamp/consumerId/record.id and combine their record fields", () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, name: "route-a" },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, operationId: [1, 2] },
+        },
+      ];
+
+      expect(history.groupByAction(rows)).toEqual([
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7, name: "route-a", operationId: [1, 2] },
+        },
+      ]);
+    });
+
+    it("should keep rows separate when record.id differs even if tstamp/consumerId match", () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 101 },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 102 },
+        },
+      ];
+
+      expect(history.groupByAction(rows)).toHaveLength(2);
     });
   });
 
@@ -141,7 +316,16 @@ describe("history middleware", () => {
     });
 
     it("should set res.locals.rows/total and call next() for a valid allowed field", async () => {
-      const rows = [{ operation: "UPDATE" }];
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 7 },
+        },
+      ];
       execute.mockResolvedValueOnce({ rowCount: 1, rows });
 
       history.getByField("route", "routeId")(req, res, next);
@@ -153,8 +337,42 @@ describe("history middleware", () => {
         ["public", "route", "9"],
         null,
       );
-      expect(res.locals.rows).toBe(rows);
+      expect(res.locals.rows).toHaveLength(1);
       expect(res.locals.total).toBe(1);
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should keep distinct records separate when several share the same tstamp/consumerId (bulk update)", async () => {
+      const rows = [
+        {
+          id: 1,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 101, routeId: 9 },
+        },
+        {
+          id: 2,
+          tstamp: "2026-01-02T00:00:00.000Z",
+          operation: "UPDATE",
+          consumerId: 1,
+          consumerName: "alice",
+          record: { id: 102, routeId: 9 },
+        },
+      ];
+      execute.mockResolvedValueOnce({ rowCount: 2, rows });
+
+      history.getByField(["permission", "permission_condition"], "routeId")(
+        req,
+        res,
+        next,
+      );
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(res.locals.rows).toHaveLength(2);
+      expect(res.locals.total).toBe(2);
       expect(next).toHaveBeenCalledWith();
     });
 
