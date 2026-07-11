@@ -2,8 +2,10 @@
 import { timingSafeEqual } from "crypto";
 import { log } from "@dwtechs/winstan";
 
+const cookieName = process.env.REFRESH_TOKEN_COOKIE_NAME || "refreshToken";
+
 export function checkRefreshToken(req, res, next) {
-  const brt = req.body.refreshToken;
+  const brt = req.body?.refreshToken ?? req.cookies?.[cookieName];
   const crt = res.locals.consumer.refreshToken;
   const tokensMatch =
     typeof brt === "string" &&

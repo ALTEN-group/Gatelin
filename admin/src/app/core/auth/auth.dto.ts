@@ -11,6 +11,5 @@ export interface LoginDtoIn {
 
 export interface SessionResponse {
   accessToken: string;
-  refreshToken: string;
   permissions: Permission[];
 }

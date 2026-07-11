@@ -12,8 +12,8 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/crud-builder";
-import { Consumer } from "app/consumers/data-access/consumers/consumer.model";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
+import { Consumer } from "app/consumers/data-access/consumers/consumer.model";
 
 const ROLE_STYLE_ID = "role-chip-styles";
 
@@ -74,18 +74,6 @@ export const CONSUMER_COLUMNS: (
       {
         key: "accessToken",
         label: "Access Token",
-        controlType: CONTROL_TYPES.INPUT,
-        columnOptions: {
-          defaultWidth: "100px",
-        },
-        type: INPUT_TYPES.TEXT,
-        controlOptions: {
-          validators: [required, minlength(28), maxlength(8000)],
-        },
-      },
-      {
-        key: "refreshToken",
-        label: "Refresh Token",
         controlType: CONTROL_TYPES.INPUT,
         columnOptions: {
           defaultWidth: "100px",

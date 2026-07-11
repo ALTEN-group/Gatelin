@@ -71,7 +71,7 @@ const sessionEntity = new SQLEntity("consumers", [
     isFilterable: false,
     requiredFor: ["POST", "PUT"],
     operations: ["INSERT", "UPDATE"],
-    isPrivate: false,
+    isPrivate: true,
     sanitizer: null,
     normalizer: null,
     validator: null,

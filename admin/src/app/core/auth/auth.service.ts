@@ -36,8 +36,8 @@ export class AuthenticationService {
     const payload = { email, pwd };
     return this.http.post<SessionResponse>(this.sessionApi, payload).pipe(
       tap((res) => {
-        const { accessToken, refreshToken, permissions } = res;
-        this.saveTokens(accessToken, refreshToken);
+        const { accessToken, permissions } = res;
+        this.saveTokens(accessToken);
         this.authenticate();
         this.aclService.storeAccessLevels(permissions);
       }),
@@ -52,7 +52,6 @@ export class AuthenticationService {
     return this.http.delete<void>(this.sessionApi, {}).pipe(
       tap(() => {
         this.tokenService.deleteAccessToken();
-        this.tokenService.deleteRefreshToken();
         this.resetCurrentUser();
         this.redirectToLogin();
       }),
@@ -61,26 +60,24 @@ export class AuthenticationService {
   }
 
   public refreshToken(): Observable<boolean> {
-    const refreshToken = this.tokenService.getRefreshToken();
-    if (refreshToken)
-      return this.http
-        .put<SessionResponse>(this.sessionApi, {
-          refreshToken,
-        })
-        .pipe(
-          tap((res) => {
-            const { accessToken, refreshToken, permissions } = res ?? {};
-            if (!accessToken || !refreshToken) return;
-            this.saveTokens(accessToken, refreshToken);
-            this.authenticate();
-            this.aclService.resetAccessLevels();
-            if (permissions) this.aclService.storeAccessLevels(permissions);
-          }),
-          map((res) => !!res),
-          catchError(() => {
-            return of(false);
-          }),
-        );
+    // The refresh token itself is carried by an httpOnly cookie the browser
+    // sends automatically; only gate on a previously stored access token to
+    // avoid firing a doomed request when no session ever existed.
+    if (this.tokenService.getAccessToken())
+      return this.http.put<SessionResponse>(this.sessionApi, {}).pipe(
+        tap((res) => {
+          const { accessToken, permissions } = res ?? {};
+          if (!accessToken) return;
+          this.saveTokens(accessToken);
+          this.authenticate();
+          this.aclService.resetAccessLevels();
+          if (permissions) this.aclService.storeAccessLevels(permissions);
+        }),
+        map((res) => !!res),
+        catchError(() => {
+          return of(false);
+        }),
+      );
 
     return of(false);
   }
@@ -120,9 +117,8 @@ export class AuthenticationService {
     this.aclService.resetAccessLevels();
   }
 
-  private saveTokens(accessToken: string, refreshToken: string) {
+  private saveTokens(accessToken: string) {
     this.tokenService.saveAccessToken(accessToken);
-    this.tokenService.saveRefreshToken(refreshToken);
   }
 
   private authenticate() {

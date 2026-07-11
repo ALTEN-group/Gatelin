@@ -4,6 +4,7 @@ import {
   decodeAccess,
   decodeRefresh,
   refreshTokens,
+  clearRefreshCookie,
 } from "@dwtechs/toker-express";
 import express from "express";
 const router = express.Router();
@@ -15,13 +16,19 @@ import sEnt from "../entities/session.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
+import { checkCsrf } from "../middlewares/validators/check-csrf.js";
 import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
 import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
-import { addToCache,
+import {
+  addToCache,
   updateCache,
   deleteFromCache,
 } from "../middlewares/cache/consumer.js";
 import { sendSession } from "../middlewares/res/send-session.js";
+import {
+  setCsrfCookie,
+  clearCsrfCookie,
+} from "../middlewares/res/csrf-cookie.js";
 import { resolvePermissions } from "../middlewares/mappers/resolve-permissions.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { send204 } from "../middlewares/res/send-204.js";
@@ -30,16 +37,31 @@ import { send204 } from "../middlewares/res/send-204.js";
 const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
 // const activate = [ activateUser, uEnt.update ];
 const getSession = [...checkRequest, createRow]; // get session from tokens
-const addSession = [checkPwd, createTokens, sEnt.add, addToCache, resolvePermissions, sendSession];
+const addSession = [
+  checkPwd,
+  createTokens,
+  sEnt.add,
+  addToCache,
+  resolvePermissions,
+  setCsrfCookie,
+  sendSession,
+];
 const updateSession = [
   refreshTokens,
   getUserById,
   sEnt.update,
   updateCache,
   resolvePermissions,
+  setCsrfCookie,
   sendSession,
 ];
-const deleteSession = [sEnt.archive, deleteFromCache, send204];
+const deleteSession = [
+  sEnt.archive,
+  deleteFromCache,
+  clearRefreshCookie,
+  clearCsrfCookie,
+  send204,
+];
 
 const add = [
   checkEmail,
@@ -50,13 +72,14 @@ const add = [
 const update = [
   ignoreExpiration,
   getSession,
+  checkCsrf,
   checkRefreshToken,
   decodeAccess, // extract issuer
   decodeRefresh, // check expiration
   updateSession,
 ];
 
-const del = [getSession, deleteSession];
+const del = [getSession, checkCsrf, deleteSession];
 
 // add a session. e.g. Log a user
 router.post("/", add);

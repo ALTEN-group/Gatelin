@@ -17,7 +17,7 @@ sequenceDiagram
   u->>f: Open URL
   activate f
   f--)f: Load application
-  f--)f: No tokens found from local storage
+  f--)f: No accessToken found in local storage
   f->>u: Redirect to login page
   deactivate f
   activate u
@@ -187,6 +187,7 @@ sequenceDiagram
       msg--)msg: Create accessToken with payload : { id, nickname, roles }
       msg--)msg: Create refreshToken
       msg--)msg: Add accessToken and refreshToken to req.body.rows[0]
+      msg--)msg: Set refreshToken httpOnly cookie on res (REFRESH_TOKEN_COOKIE=true)
     end
     rect rgb(100, 200, 100, 0.2)
       note over msg: Session Entity Block
@@ -205,10 +206,15 @@ sequenceDiagram
       msg--)msg: Merge operations and fields across roles
       msg--)msg: Store merged permissions array in res.locals.permissions
     end
-    msg--)msg: Delete unsafe props from response data
-    msg->>f: return 200 ok : { nickname, accessToken, refreshToken, roles, permissions }
+    rect rgb(100, 200, 100, 0.2)
+      note over msg: CSRF Cookie Block
+      msg--)msg: Generate CSRF token and set non-httpOnly csrfToken cookie on res
+    end
+    msg--)msg: Delete unsafe props from response data (refreshToken is isPrivate, stripped from body)
+    msg->>f: return 200 ok : { nickname, accessToken, roles, permissions }<br/>Set-Cookie: refreshToken (httpOnly), csrfToken
     deactivate msg
     activate f
+    f--)f: Store accessToken in local storage<br/>(refreshToken and csrfToken cookies stored by browser)
     f->>u: Display home page
     deactivate f
   end 

@@ -5,6 +5,7 @@ import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
+import cookieParser from "cookie-parser";
 import { security } from "./conf/sec.js";
 import { corsMiddleware } from "./conf/cors.js";
 import rateLimit from "express-rate-limit";
@@ -64,6 +65,7 @@ const proxyLimiter = rateLimit({
 });
 
 app.use(express.json({ limit: "100kb" }));
+app.use(cookieParser());
 app.use(`${s}health`, healixRouter);
 // performance measurement starts for any call to the following routes
 app.use(startTimer);

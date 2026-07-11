@@ -95,4 +95,51 @@ describe("checkRefreshToken middleware", () => {
       message: "Unauthorized",
     });
   });
+
+  it("should fall back to the cookie when the body token is absent and it matches", () => {
+    req = { body: {}, cookies: { refreshToken: "cookie-token-value" } };
+    res = { locals: { consumer: { refreshToken: "cookie-token-value" } } };
+
+    checkRefreshToken(req, res, next);
+
+    expect(debugMessages()).toContain("checkRefreshToken(match=true)");
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should call next(401) when only the cookie token is present and it doesn't match", () => {
+    req = { body: {}, cookies: { refreshToken: "wrong-token-value" } };
+    res = { locals: { consumer: { refreshToken: "cookie-token-value" } } };
+
+    checkRefreshToken(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 401,
+      message: "Unauthorized",
+    });
+  });
+
+  it("should prefer the body token over the cookie when both are present", () => {
+    req = {
+      body: { refreshToken: "body-token-value" },
+      cookies: { refreshToken: "cookie-token-value" },
+    };
+    res = { locals: { consumer: { refreshToken: "body-token-value" } } };
+
+    checkRefreshToken(req, res, next);
+
+    expect(debugMessages()).toContain("checkRefreshToken(match=true)");
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should call next(401) when both body and cookie tokens are absent", () => {
+    req = { body: {}, cookies: {} };
+    res = { locals: { consumer: { refreshToken: "some-token" } } };
+
+    checkRefreshToken(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 401,
+      message: "Unauthorized",
+    });
+  });
 });

@@ -5,6 +5,7 @@ import {
   provideHttpClient,
   withInterceptors,
   withInterceptorsFromDi,
+  withXsrfConfiguration,
 } from "@angular/common/http";
 import localeFr from "@angular/common/locales/fr";
 import {
@@ -57,6 +58,10 @@ bootstrapApplication(AppComponent, {
         errorInterceptor,
         locationInterceptor,
       ]),
+      withXsrfConfiguration({
+        cookieName: "csrfToken",
+        headerName: "X-CSRF-Token",
+      }),
     ),
     provideRouter(ROUTES),
     MessageService,

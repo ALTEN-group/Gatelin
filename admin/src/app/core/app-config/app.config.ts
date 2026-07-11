@@ -31,7 +31,6 @@ const AppStorageKey = {
   TABLE_CONFIG: `${APP_KEY}_tableConfig`,
   THEME: `${APP_KEY}_theme`,
   TOKEN: `${APP_KEY}_token`,
-  REFRESH_TOKEN: `${APP_KEY}_refreshToken`,
 } as const;
 export const CONFIG: AppConfig = {
   title: TITLE,
