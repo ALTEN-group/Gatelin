@@ -1,7 +1,9 @@
+import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
   CONTROL_TYPES,
   ID_CONFIG,
@@ -15,35 +17,38 @@ import {
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 import { Consumer } from "app/consumers/data-access/consumers/consumer.model";
 
-const ROLE_STYLE_ID = "role-chip-styles";
+const roleStylesheet = new CSSStyleSheet();
 
-function injectRoleStyles(roles: GatewayRole[]): void {
-  let styleEl = document.getElementById(ROLE_STYLE_ID);
-  if (!styleEl) {
-    styleEl = document.createElement("style");
-    styleEl.id = ROLE_STYLE_ID;
-    document.head.appendChild(styleEl);
-  }
+function buildRoleCSS(roles: GatewayRole[]): string {
   const chipRules = roles
     .filter((r) => r.color)
     .map(
       (r) =>
-        `.role-color-${r.id}{background-color:${r.color}!important;color:#fff!important;display:block!important;margin-bottom:2px;}`,
+        `.role-color-${r.id}{background-color:${r.color}!important;color:#fff!important;}`,
     )
     .join("");
-  // Allow the cell wrapper span to expand vertically
-  const cellRule = `tbl-table-cell>span:has(.p-chip){white-space:normal!important;overflow:visible!important;}`;
-  styleEl.textContent = chipRules + cellRule;
+  return (
+    chipRules +
+    `tbl-table-cell>span:has(.p-chip){white-space:normal!important;overflow:visible!important;}`
+  );
 }
 
 export const CONSUMER_COLUMNS: (
   payload: ActivatedRouteSnapshot,
   acls: Acls | undefined,
-) => StrictCrudItemOptions<Consumer>[] = ({ data }, acls) => {
+  sanitizer: DomSanitizer,
+) => StrictCrudItemOptions<Consumer>[] = ({ data }, acls, sanitizer) => {
   const activeRoles = (data.roles as GatewayRole[]).filter(
     (role) => !role.archived,
   );
-  injectRoleStyles(activeRoles);
+  // TODO: workaround for chips not accepting raw colors. Need to update the crud lib.
+  roleStylesheet.replaceSync(buildRoleCSS(activeRoles));
+  if (!document.adoptedStyleSheets.includes(roleStylesheet)) {
+    document.adoptedStyleSheets = [
+      ...document.adoptedStyleSheets,
+      roleStylesheet,
+    ];
+  }
   return withAclConditions(
     [
       ID_CONFIG,
@@ -93,16 +98,17 @@ export const CONSUMER_COLUMNS: (
           styleClass: `role-color-${r.id}`,
         })),
         columnOptions: {
-          customCellRenderer: (cellValue: unknown) => {
-            if (!Array.isArray(cellValue) || cellValue.length === 0) return "";
-            return (cellValue as number[])
-              .map((id) => {
-                const role = activeRoles.find((r) => r.id === id);
-                if (!role) return "";
-                return `<span class="role-color-${role.id} p-chip" style="display:block;margin-bottom:2px;">${role.name}</span>`;
-              })
-              .join("");
-          },
+          customCellRenderer: buildColoredChipsCellRenderer(
+            sanitizer,
+            (value: unknown) => {
+              const role = activeRoles.find((r) => r.id === Number(value));
+              if (!role) return undefined;
+              return {
+                label: role.name,
+                color: role.color || null,
+              };
+            },
+          ),
         },
         controlOptions: {
           validators: [required],

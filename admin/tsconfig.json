@@ -19,7 +19,7 @@
     "useDefineForClassFields": false,
     "lib": ["ES2023", "dom"],
     "skipLibCheck": true,
-    "types": ["jasmine", "node"],
+    "types": ["node"],
     "paths": {
       "@messages/*": ["app/messages/*"],
       "@core/*": ["app/core/*"],
