@@ -1,4 +1,5 @@
 import { computed, inject, Injectable } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
@@ -19,6 +20,7 @@ const consumersApi: AdminEntity = "consumers";
 })
 export class ConsumersService {
   private readonly aclsService = inject(AclService);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly acls = computed(() =>
     this.aclsService.getEntityAcls(consumersApi),
   );
@@ -34,6 +36,6 @@ export class ConsumersService {
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>
-    CONSUMER_COLUMNS(payload, this.acls());
+    CONSUMER_COLUMNS(payload, this.acls(), this.sanitizer);
   public readonly entityFactory = consumerFactory;
 }

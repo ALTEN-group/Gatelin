@@ -176,11 +176,7 @@ services:
       - ${PWD}/jest.config.js:/usr/src/app/jest.config.js
       - ${PWD}/babel.config.json:/usr/src/app/babel.config.json
       - ${PWD}/package.json:/usr/src/app/package.json
-      - type: bind
-        source: ${PWD}/node_modules
-        target: /usr/src/app/node_modules
-        bind:
-          create_host_path: true
+      - gateway_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
@@ -210,11 +206,7 @@ services:
       - internal
     volumes:
       - ${PWD}/admin:/usr/src/app
-      - type: bind
-        source: ${PWD}/admin/node_modules
-        target: /usr/src/app/node_modules
-        bind:
-          create_host_path: true
+      - admin_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
@@ -377,6 +369,18 @@ secrets:
 volumes:
   postgres_data:
     driver: local
+  gateway_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/node_modules
+  admin_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/admin/node_modules
   swagger_node_modules:
   website_node_modules:
   ms_user_mock_node_modules:

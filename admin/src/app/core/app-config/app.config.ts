@@ -19,6 +19,7 @@ import {
   HistorizedData,
   HISTORY_MAPPER,
   provideCrudLabels,
+  provideFormFieldRenderer,
   TableConfig,
   TableConfigService,
 } from "@dwtechs/crud-builder";
@@ -59,6 +60,7 @@ export function provideAppConfig() {
       const authService = inject(AuthenticationService);
       return checkToken(authService);
     }),
+    provideFormFieldRenderer("primeng"),
     { provide: LOCALE_ID, useValue: "fr" },
     { provide: APP_CONFIG, useValue: CONFIG },
     {
