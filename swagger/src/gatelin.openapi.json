@@ -67,27 +67,6 @@
               "pwd": "User1234!"
             }
           },
-          "eboutique_user": {
-            "summary": "eBoutique user â€” standard shop access",
-            "value": {
-              "email": "ebuser@example.com",
-              "pwd": "p@s5WOrd!99"
-            }
-          },
-          "eboutique_super_admin": {
-            "summary": "eBoutique super admin â€” full eBoutique admin permissions",
-            "value": {
-              "email": "ebsuperadmin@example.com",
-              "pwd": "EbSup3r!1"
-            }
-          },
-          "eboutique_admin": {
-            "summary": "eBoutique admin â€” most eBoutique admin permissions except locking",
-            "value": {
-              "email": "ebadmin@example.com",
-              "pwd": "EbAdm1n!1"
-            }
-          },
           "wrong_credentials": {
             "summary": "Wrong credentials (invalid â€” expect 401)",
             "value": {

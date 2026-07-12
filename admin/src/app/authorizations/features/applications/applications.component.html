@@ -1,14 +1,18 @@
-<tbl-table 
-    [config]="config()"
-    [httpCalls]="httpCalls"
-    [entityFactory]="entityFactory"
-    [entityId]="tableInformation.entityId"
-    [entityLabel]="tableInformation.label"
-    [tableTitle]="tableInformation.title"
-    [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
-    [filterLevel]="tableInformation.filterLevel"
-    [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
-    [isUrlStateSyncEnabled]="tableInformation.isUrlStateSyncEnabled"
-    [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
-    [excelExportMode]="tableInformation.excelExportMode"
-/>
+<div class="page-container">
+
+  <tbl-table 
+      [config]="config()"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+      [filterLevel]="tableInformation.filterLevel"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [isUrlStateSyncEnabled]="tableInformation.isUrlStateSyncEnabled"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [excelExportMode]="tableInformation.excelExportMode"
+  />
+
+</div>

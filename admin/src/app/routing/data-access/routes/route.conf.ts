@@ -117,7 +117,7 @@ export const ROUTE_COLUMNS: (
         },
         columnOptions: {
           customCellRenderer: (cellValue: unknown): string =>
-            cellValue ? String(cellValue) : "/",
+            typeof cellValue === "string" && cellValue ? cellValue : "/",
         },
       },
       {
