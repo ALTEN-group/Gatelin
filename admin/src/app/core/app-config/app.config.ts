@@ -19,9 +19,6 @@ import {
   HISTORY_MAPPER,
   provideCrudLabels,
 } from "@dwtechs/crud-builder";
-import { ConditionsService } from "app/authorizations/data-access/conditions/conditions.service";
-import { MethodsService } from "app/routing/data-access/methods/methods.service";
-import { OperationsService } from "app/routing/data-access/operations/operations.service";
 import { ResourcesService } from "app/routing/data-access/resources/resources.service";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
@@ -76,29 +73,19 @@ export function provideAppConfig() {
     {
       provide: HISTORY_MAPPER,
       useFactory: () => {
-        const operationNames = new Map<number, string>();
-        const methodNames = new Map<number, string>();
-        const conditionNames = new Map<number, string>();
+        // route history records only ever contain the base "route" table's own
+        // columns (resourceId, name, ...) — serviceId/serviceName are derived
+        // via a view join (route -> resource -> service) and were never part
+        // of that snapshot, so restoring an old version left the Service
+        // select empty. Backfill serviceId/serviceName (as real values, not
+        // display names — restoring sets these straight into the form, and
+        // the serviceId select matches options by numeric id) from resourceId
+        // using the already-loaded Resources cache.
         const resourcesById = new Map<
           number,
           { serviceId: number | null; serviceName: string }
         >();
 
-        const fill =
-          (map: Map<number, string>) =>
-          (items: { id: number | null; name: string }[]) => {
-            map.clear();
-            for (const item of items)
-              if (item.id !== null) map.set(item.id, item.name);
-          };
-
-        inject(OperationsService)
-          .getAndCacheAll()
-          .subscribe(fill(operationNames));
-        inject(MethodsService).getAndCacheAll().subscribe(fill(methodNames));
-        inject(ConditionsService)
-          .getAndCacheAll()
-          .subscribe(fill(conditionNames));
         inject(ResourcesService)
           .getAndCacheAll()
           .subscribe((resources) => {
@@ -111,22 +98,9 @@ export function provideAppConfig() {
                 });
           });
 
-        const withNames = (value: unknown, names: Map<number, string>) =>
-          Array.isArray(value)
-            ? value.map((id) => names.get(id) ?? id)
-            : typeof value === "number"
-              ? (names.get(value) ?? value)
-              : value;
-
         return (raw: unknown): HistorizedData<unknown> => {
           const r = raw as any;
           const record = { ...r.record };
-          if ("operationId" in record)
-            record.operationId = withNames(record.operationId, operationNames);
-          if ("methodIds" in record)
-            record.methodIds = withNames(record.methodIds, methodNames);
-          if ("conditionId" in record)
-            record.conditionId = withNames(record.conditionId, conditionNames);
           if ("resourceId" in record && record.resourceId != null) {
             const resource = resourcesById.get(record.resourceId);
             if (resource) {

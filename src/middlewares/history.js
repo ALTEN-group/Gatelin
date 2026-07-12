@@ -45,7 +45,7 @@ function groupByAction(rows) {
  * @returns {Function} Express middleware function
  */
 function get(tableName, schema = "public") {
-  return function (req, res, next) {
+  return (req, res, next) => {
     const id = req.params.id;
     // log.debug(`getHistory(id=${id})`);
     if (!id) return next({ status: 400, msg: "Missing id" });
@@ -86,7 +86,7 @@ function query(tableName, id, schema = "public") {
 }
 
 function getByField(tableName, field, schema = "public") {
-  return function (req, res, next) {
+  return (req, res, next) => {
     const value = req.params[field];
     if (!value) return next({ status: 400, msg: `Missing ${field}` });
 
