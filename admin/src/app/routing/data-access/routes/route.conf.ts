@@ -106,6 +106,10 @@ export const ROUTE_COLUMNS: (
         controlOptions: {
           validators: [minlength(1), maxlength(40)],
         },
+        columnOptions: {
+          customCellRenderer: (cellValue: unknown): string =>
+            cellValue ? String(cellValue) : "/",
+        },
       },
       {
         key: "operationId",
