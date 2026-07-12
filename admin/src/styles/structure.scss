@@ -1,4 +1,5 @@
 $navbarHeight: 40px;
+$navbarGap: 16px;
 $breadcrumbHeight: 0px;
 $collapsedSidenavWidth: 60px;
 $expandedSidenavWidth: 180px;
@@ -16,15 +17,16 @@ $expandedSidenavWidth: 180px;
         margin-left: $collapsedSidenavWidth;
         width: calc(100% - $collapsedSidenavWidth);
         z-index: 3;
-        background-color: var(--primary-bg-color);
+        background-color: var(--p-panel-background);
+        border-bottom: 1px solid var(--border-color);
     }
 
     .adm-content {
         background-color: var(--primary-bg-color);
-        min-height: calc(100vh - $navbarHeight - $breadcrumbHeight);
+        min-height: calc(100vh - $navbarHeight - $breadcrumbHeight - $navbarGap);
         height: 1px;
         margin-left: $collapsedSidenavWidth;
-        margin-top: $navbarHeight + $breadcrumbHeight - 1px;
+        margin-top: $navbarHeight + $breadcrumbHeight - 1px + $navbarGap;
 
         h2 {
             text-align: center;
