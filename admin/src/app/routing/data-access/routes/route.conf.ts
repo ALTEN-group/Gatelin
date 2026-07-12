@@ -84,6 +84,15 @@ export const ROUTE_COLUMNS: (
         columnOptions: {
           isHardHidden: true,
         },
+        conditions: {
+          options: ({ model }) =>
+            toSelectItems<Resource>(
+              data.resources.filter(
+                (r: Resource) => r.serviceId === model.serviceId,
+              ),
+              "name",
+            ),
+        },
       },
       {
         key: "resourceName",
