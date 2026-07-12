@@ -69,34 +69,33 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (9,  'name',         true, -1, 'system'),
   (9,  'archived',     true, -1, 'system'),
   (9,  'archivedAt',   true, -1, 'system'),
-  -- roles (10)  ids: 64-76
+  -- roles (10)  ids: 64-75
   (10, 'id',          true, -1, 'system'),
   (10, 'appId',       true, -1, 'system'),
   (10, 'appName',     true, -1, 'system'),
   (10, 'name',        true, -1, 'system'),
   (10, 'description', true, -1, 'system'),
   (10, 'color',       true, -1, 'system'),
-  (10, 'active',      true, -1, 'system'),
   (10, 'archived',    true, -1, 'system'),
   (10, 'archivedAt',  true, -1, 'system'),
   (10, 'createdAt',   true, -1, 'system'),
   (10, 'creatorName', true, -1, 'system'),
   (10, 'updatedAt',   true, -1, 'system'),
   (10, 'updaterName', true, -1, 'system'),
-  -- methods (12)  ids: 77-81
+  -- methods (12)  ids: 76-80
   (12, 'id',          true, -1, 'system'),
   (12, 'name',        true, -1, 'system'),
   (12, 'color',       true, -1, 'system'),
   (12, 'archived',    true, -1, 'system'),
   (12, 'archivedAt',  true, -1, 'system'),
-  -- applications (13)  ids: 82-87
+  -- applications (13)  ids: 81-86
   (13, 'id',          true, -1, 'system'),
   (13, 'name',        true, -1, 'system'),
   (13, 'description', true, -1, 'system'),
   (13, 'core',        true, -1, 'system'),
   (13, 'archived',    true, -1, 'system'),
   (13, 'archivedAt',  true, -1, 'system'),
-  -- conditions (14)  ids: 88-95
+  -- conditions (14)  ids: 87-94
   (14, 'id',          true, -1, 'system'),
   (14, 'name',        true, -1, 'system'),
   (14, 'fieldId',     true, -1, 'system'),
@@ -105,7 +104,7 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (14, 'value',       true, -1, 'system'),
   (14, 'archived',    true, -1, 'system'),
   (14, 'archivedAt',  true, -1, 'system'),
-  -- preferences (15)  ids: 96-101
+  -- preferences (15)  ids: 95-100
   (15, 'id',         true, -1, 'system'),
   (15, 'consumerId', true, -1, 'system'),
   (15, 'resource',   false, -1, 'system'),

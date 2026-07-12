@@ -6,7 +6,6 @@ CREATE OR REPLACE VIEW roles AS
     r.name,
     r.description,
     r.color,
-    r.active,
     r.archived,
     r."archivedAt",
     r."updaterId",

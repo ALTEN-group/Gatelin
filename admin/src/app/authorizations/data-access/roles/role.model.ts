@@ -7,7 +7,6 @@ export interface GatewayRole extends ArchiveInfo {
   name: string;
   description: string;
   color: string;
-  active: boolean;
 }
 
 export const gatewayRoleFactory = (): GatewayRole => ({
@@ -17,6 +16,5 @@ export const gatewayRoleFactory = (): GatewayRole => ({
   name: "",
   description: "",
   color: "",
-  active: true,
   ...new ArchiveInfo(),
 });

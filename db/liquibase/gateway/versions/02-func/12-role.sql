@@ -4,13 +4,12 @@
 CREATE OR REPLACE FUNCTION iud_role() RETURNS trigger AS $$
   BEGIN
     IF TG_OP = 'INSERT' THEN
-      INSERT INTO role ("appId", name, description, color, active, "creatorId", "creatorName")
+      INSERT INTO role ("appId", name, description, color, "creatorId", "creatorName")
       VALUES (
         NEW."appId",
         NEW.name,
         NEW.description,
         NEW.color,
-        COALESCE(NEW.active, FALSE),
         NEW."creatorId",
         NEW."creatorName"
       )
@@ -24,7 +23,6 @@ CREATE OR REPLACE FUNCTION iud_role() RETURNS trigger AS $$
         name = COALESCE(NEW.name, name),
         description = COALESCE(NEW.description, description),
         color = COALESCE(NEW.color, color),
-        active = COALESCE(NEW.active, active),
         "updaterId" = NEW."updaterId",
         "updaterName" = NEW."updaterName",
         "updatedAt" = NOW()

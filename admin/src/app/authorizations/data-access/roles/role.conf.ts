@@ -9,7 +9,6 @@ import {
   toNamesSelectOptions,
   toSelectItems,
 } from "@core/utils/primeng/to-select-items";
-import { buildActiveCellRenderer } from "@core/utils/renderers/active.renderer";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -91,14 +90,6 @@ export const buildRoleColumns = (
         },
         columnOptions: {
           customCellRenderer: buildColorCellRenderer(sanitizer),
-        },
-      },
-      {
-        key: "active",
-        label: $localize`:@@Roles_Active:Active`,
-        controlType: CONTROL_TYPES.CHECKBOX,
-        columnOptions: {
-          customCellRenderer: buildActiveCellRenderer(),
         },
       },
       ...buildArchivedConfig(),
