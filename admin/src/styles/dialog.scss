@@ -22,3 +22,11 @@
     justify-content: space-between;
   }
 }
+
+/* History panel: the oldest entry (always the creation record) has no
+   previous version to diff against, so every field is flagged as "changed" —
+   display it with default styling instead of the "changed" highlight. */
+crd-history tbody > tr:last-child .has-changed {
+  color: inherit;
+  font-weight: normal;
+}

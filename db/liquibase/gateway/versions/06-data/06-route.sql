@@ -83,8 +83,6 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   -- preferences (15)
   (15, '/(?<resource>[\w\-]+)',                     'getPreferences',        'Get preferences for the authenticated consumer',     true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (15, '/(?<resource>[\w\-]+)',                     'syncPreferences',       'Sync preferences for the authenticated consumer',    true,  true, ARRAY[12],   ARRAY[3],  -1, 'system'),
-  -- users (16)
-  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system'),
   -- schemas
   (2,  '/schema',                                  'getConsumerSchema',    'Get consumer entity schema',                         true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (3,  '/schema',                                  'getRouteSchema',       'Get route entity schema',                            true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
@@ -99,7 +97,9 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (12, '/schema',                                  'getMethodSchema',      'Get method entity schema',                           true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (13, '/schema',                                  'getApplicationSchema', 'Get application entity schema',                      true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (14, '/schema',                                  'getConditionSchema',   'Get condition entity schema',                        true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
-  (15, '/schema',                                  'getPreferenceSchema',  'Get preference entity schema',                       true,  true, ARRAY[2],    ARRAY[1],  -1, 'system')
+  (15, '/schema',                                  'getPreferenceSchema',  'Get preference entity schema',                       true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
+  -- users (16)
+  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system')
 ON CONFLICT DO NOTHING;
 
 ANALYZE;

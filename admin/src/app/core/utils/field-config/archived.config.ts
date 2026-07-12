@@ -16,8 +16,7 @@ export function buildArchivedConfig() {
             ...col.columnOptions,
             defaultWidth: "60px",
             customCellRenderer: archivedRenderer,
-            customHeaderRenderer: () =>
-              `<i class="pi pi-archive" title="Archived"></i>`,
+            customHeaderRenderer: () => `<span title="Archived">🗄️</span>`,
           },
         }
       : col,

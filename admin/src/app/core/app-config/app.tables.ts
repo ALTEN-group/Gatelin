@@ -87,7 +87,7 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
     editionDialogSize: "s",
     filterLevel: "advanced",
     isPreferencesModeEnabled: true,
-    isExcelExportEnabled: true,
+    isExcelExportEnabled: false,
     excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },

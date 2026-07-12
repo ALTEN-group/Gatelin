@@ -13,11 +13,14 @@ import { PrimeNgTranslations } from "@core/app-config/primeng-translations";
 import { AuthenticationService } from "@core/auth/auth.service";
 import {
   APP_FORM_CONFIG,
+  ColumnConfig,
   APP_CONFIG as CRUD_APP_CONFIG,
   FormTokenData,
   HistorizedData,
   HISTORY_MAPPER,
   provideCrudLabels,
+  TableConfig,
+  TableConfigService,
 } from "@dwtechs/crud-builder";
 import { ResourcesService } from "app/routing/data-access/resources/resources.service";
 import { environment } from "environments/environment";
@@ -98,15 +101,36 @@ export function provideAppConfig() {
                 });
           });
 
+        // Field display order in the history panel follows the record's own
+        // key order, so mirror the user's active "routes" datagrid column
+        // preference to keep both views consistent.
+        let routesColumnOrder: string[] = [];
+
+        inject(TableConfigService)
+          .getViews("routes")
+          .subscribe((views: TableConfig[]) => {
+            const activeView = views.find((view) => view.isActive) ?? views[0];
+            routesColumnOrder =
+              activeView?.conf?.map((col: ColumnConfig) => col.key) ?? [];
+          });
+
         return (raw: unknown): HistorizedData<unknown> => {
           const r = raw as any;
-          const record = { ...r.record };
-          if ("resourceId" in record && record.resourceId != null) {
-            const resource = resourcesById.get(record.resourceId);
+          const original = { ...r.record };
+          if ("resourceId" in original && original.resourceId != null) {
+            const resource = resourcesById.get(original.resourceId);
             if (resource) {
-              record.serviceId = resource.serviceId;
-              record.serviceName = resource.serviceName;
+              original.serviceId = resource.serviceId;
+              original.serviceName = resource.serviceName;
             }
+          }
+          let record = original;
+          if (routesColumnOrder.length > 0) {
+            record = {};
+            for (const key of routesColumnOrder)
+              if (key in original) record[key] = original[key];
+            for (const key of Object.keys(original))
+              if (!(key in record)) record[key] = original[key];
           }
           return {
             id: r.id,
