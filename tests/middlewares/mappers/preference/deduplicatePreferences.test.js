@@ -60,8 +60,8 @@ describe("deduplicatePreferences middleware", () => {
     res = {
       locals: {
         rows: [
-          { name: "theme", locked: true, value: "light" },
-          { name: "theme", locked: false, value: "dark" },
+          { name: "theme", locked: true, conf: { a: 1 }, value: "light" },
+          { name: "theme", locked: false, conf: { a: 2 }, value: "dark" },
         ],
       },
     };
@@ -69,11 +69,47 @@ describe("deduplicatePreferences middleware", () => {
     deduplicatePreferences(req, res, next);
 
     expect(res.locals.rows).toEqual([
-      { name: "theme", locked: false, value: "dark" },
+      { name: "theme", locked: false, conf: { a: 2 }, value: "dark" },
     ]);
     expect(debugMessages()).toContain(
       "deduplicatePreferences: 2 rows → 1 after dedup",
     );
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should re-lock a user row whose conf still matches the system default (e.g. only isActive differs)", () => {
+    res = {
+      locals: {
+        rows: [
+          { name: "Default", locked: true, conf: { a: 1 }, isActive: true },
+          { name: "Default", locked: false, conf: { a: 1 }, isActive: false },
+        ],
+      },
+    };
+
+    deduplicatePreferences(req, res, next);
+
+    expect(res.locals.rows).toEqual([
+      { name: "Default", locked: true, conf: { a: 1 }, isActive: false },
+    ]);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should keep a user row unlocked when its conf genuinely differs from the system default", () => {
+    res = {
+      locals: {
+        rows: [
+          { name: "Default", locked: true, conf: { a: 1 } },
+          { name: "Default", locked: false, conf: { a: 2 } },
+        ],
+      },
+    };
+
+    deduplicatePreferences(req, res, next);
+
+    expect(res.locals.rows).toEqual([
+      { name: "Default", locked: false, conf: { a: 2 } },
+    ]);
     expect(next).toHaveBeenCalledWith();
   });
 

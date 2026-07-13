@@ -14,6 +14,9 @@ jest.unstable_mockModule("@dwtechs/winstan", () => ({
   },
 }));
 
+const execute = jest.fn();
+jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
+
 describe("injectBody middleware", () => {
   let injectBody;
   let req, res, next;
@@ -26,6 +29,8 @@ describe("injectBody middleware", () => {
   });
 
   beforeEach(() => {
+    execute.mockReset();
+    execute.mockResolvedValue({ rows: [] });
     res = {
       locals: { consumer: { userId: 11 } },
       json: jest.fn(),
@@ -34,31 +39,32 @@ describe("injectBody middleware", () => {
     next = jest.fn();
   });
 
-  it("should create req.body when missing", () => {
+  it("should create req.body when missing", async () => {
     req.body = undefined;
     req.body = { rows: [{ name: "a" }] };
 
-    injectBody(req, res, next);
+    await injectBody(req, res, next);
 
     expect(req.body).toBeDefined();
   });
 
-  it("should respond directly with an empty sync payload when rows is empty, without calling next()", () => {
+  it("should respond directly with an empty sync payload when rows is empty, without calling next()", async () => {
     req.body = { rows: [] };
 
-    injectBody(req, res, next);
+    await injectBody(req, res, next);
 
     expect(res.json).toHaveBeenCalledWith({
       rows: [],
       sync: { inserted: 0, updated: 0, deleted: 0 },
     });
     expect(next).not.toHaveBeenCalled();
+    expect(execute).not.toHaveBeenCalled();
   });
 
-  it("should respond directly when req.body.rows is missing entirely", () => {
+  it("should respond directly when req.body.rows is missing entirely", async () => {
     req.body = {};
 
-    injectBody(req, res, next);
+    await injectBody(req, res, next);
 
     expect(res.json).toHaveBeenCalledWith({
       rows: [],
@@ -67,7 +73,7 @@ describe("injectBody middleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("should inject userId and resource into each row, set conflictTarget, and call next()", () => {
+  it("should inject userId and resource into each row, set conflictTarget, and call next()", async () => {
     req.body = {
       rows: [
         { name: "theme", value: "dark" },
@@ -75,7 +81,7 @@ describe("injectBody middleware", () => {
       ],
     };
 
-    injectBody(req, res, next);
+    await injectBody(req, res, next);
 
     expect(req.body.rows).toEqual([
       { name: "theme", value: "dark", userId: 11, resource: "dashboard" },
@@ -84,5 +90,135 @@ describe("injectBody middleware", () => {
     expect(req.body.conflictTarget).toEqual(["userId", "resource", "name"]);
     expect(res.json).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should drop locked rows that are unchanged from the system default", async () => {
+    execute.mockResolvedValue({
+      rows: [{ name: "Default", conf: { a: 1 }, isActive: true }],
+    });
+    req.body = {
+      rows: [{ name: "Default", conf: { a: 1 }, isActive: true, locked: true }],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(res.json).toHaveBeenCalledWith({
+      rows: [],
+      sync: { inserted: 0, updated: 0, deleted: 0 },
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it("should keep locked rows whose conf or isActive differ from the system default", async () => {
+    execute.mockResolvedValue({
+      rows: [{ name: "Default", conf: { a: 1 }, isActive: false }],
+    });
+    req.body = {
+      rows: [{ name: "Default", conf: { a: 1 }, isActive: true, locked: true }],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(req.body.rows).toEqual([
+      {
+        name: "Default",
+        conf: { a: 1 },
+        isActive: true,
+        locked: true,
+        userId: 11,
+        resource: "dashboard",
+      },
+    ]);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should always keep non-locked (user-owned) rows regardless of the system default", async () => {
+    execute.mockResolvedValue({
+      rows: [{ name: "Custom", conf: { a: 1 }, isActive: true }],
+    });
+    req.body = {
+      rows: [{ name: "Custom", conf: { a: 1 }, isActive: true, locked: false }],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(req.body.rows).toEqual([
+      {
+        name: "Custom",
+        conf: { a: 1 },
+        isActive: true,
+        locked: false,
+        userId: 11,
+        resource: "dashboard",
+      },
+    ]);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should drop the active locked row when only cosmetic conf metadata (e.g. defaultWidth) differs", async () => {
+    execute.mockResolvedValue({
+      rows: [
+        {
+          name: "Default",
+          conf: [{ key: "core", isVisible: true, defaultWidth: "60px" }],
+          isActive: true,
+        },
+      ],
+    });
+    req.body = {
+      rows: [
+        {
+          name: "Default",
+          conf: [{ key: "core", isVisible: true }],
+          isActive: true,
+          locked: true,
+        },
+      ],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(res.json).toHaveBeenCalledWith({
+      rows: [],
+      sync: { inserted: 0, updated: 0, deleted: 0 },
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it("should keep the active locked row when isVisible actually changed", async () => {
+    execute.mockResolvedValue({
+      rows: [
+        {
+          name: "Default",
+          conf: [{ key: "core", isVisible: true, defaultWidth: "60px" }],
+          isActive: true,
+        },
+      ],
+    });
+    req.body = {
+      rows: [
+        {
+          name: "Default",
+          conf: [{ key: "core", isVisible: false }],
+          isActive: true,
+          locked: true,
+        },
+      ],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.body.rows).toHaveLength(1);
+  });
+
+  it("should call next(err) when the system defaults query fails", async () => {
+    const err = new Error("db error");
+    execute.mockRejectedValue(err);
+    req.body = { rows: [{ name: "Default", locked: true }] };
+
+    await injectBody(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(err);
   });
 });
