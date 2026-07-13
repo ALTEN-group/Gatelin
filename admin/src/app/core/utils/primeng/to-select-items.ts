@@ -15,6 +15,7 @@ export function toSelectItems<T extends { id: number | null }>(
     .map((item: T) => ({
       value: item.id,
       label: item[keyoflabel] as string,
+      color: (item as any).color || null,
       extraData: extraKeys?.reduce(
         (acc, key) => {
           acc[key] = item[key];

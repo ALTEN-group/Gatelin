@@ -17,22 +17,6 @@ import {
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 import { Consumer } from "app/consumers/data-access/consumers/consumer.model";
 
-const roleStylesheet = new CSSStyleSheet();
-
-function buildRoleCSS(roles: GatewayRole[]): string {
-  const chipRules = roles
-    .filter((r) => r.color)
-    .map(
-      (r) =>
-        `.role-color-${r.id}{background-color:${r.color}!important;color:#fff!important;}`,
-    )
-    .join("");
-  return (
-    chipRules +
-    `tbl-table-cell>span:has(.p-chip){white-space:normal!important;overflow:visible!important;}`
-  );
-}
-
 export const CONSUMER_COLUMNS: (
   payload: ActivatedRouteSnapshot,
   acls: Acls | undefined,
@@ -41,14 +25,6 @@ export const CONSUMER_COLUMNS: (
   const activeRoles = (data.roles as GatewayRole[]).filter(
     (role) => !role.archived,
   );
-  // TODO: workaround for chips not accepting raw colors. Need to update the crud lib.
-  roleStylesheet.replaceSync(buildRoleCSS(activeRoles));
-  if (!document.adoptedStyleSheets.includes(roleStylesheet)) {
-    document.adoptedStyleSheets = [
-      ...document.adoptedStyleSheets,
-      roleStylesheet,
-    ];
-  }
   return withAclConditions(
     [
       ID_CONFIG,
@@ -96,6 +72,7 @@ export const CONSUMER_COLUMNS: (
           value: r.id,
           label: r.name,
           styleClass: `role-color-${r.id}`,
+          color: r.color || null,
         })),
         columnOptions: {
           customCellRenderer: buildColoredChipsCellRenderer(
