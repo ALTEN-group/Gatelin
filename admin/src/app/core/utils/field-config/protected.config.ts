@@ -11,6 +11,7 @@ export const PROTECTED_CONFIG: StrictCrudItemOptions<{
     defaultWidth: "60px",
     filterType: CONTROL_TYPES.CHECKBOX,
     customCellRenderer: buildProtectedCellRenderer(),
-    customHeaderRenderer: () => `<span title="Protected">🔑</span>`,
+    customHeaderRenderer: () => `<span>🔑</span>`,
+    headerTooltip: "Protected",
   },
 };
