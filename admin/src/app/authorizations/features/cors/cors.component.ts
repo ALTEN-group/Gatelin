@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
 import { InfoMessageComponent } from "@core/ui/info-message/info-message.component";
-import { TableComponent } from "@dwtechs/crud-builder";
+import { TableComponent } from "@dwtechs/ngx-crud-builder";
 import { CorsService } from "app/authorizations/data-access/cors/cors.service";
 
 @Component({

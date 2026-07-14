@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls } from "@dwtechs/crud-builder";
+import { Calls } from "@dwtechs/ngx-crud-builder";
 
 @Directive({
   selector: "[protectFeature]",

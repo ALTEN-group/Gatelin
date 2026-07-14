@@ -4,7 +4,7 @@ import {
   ControlOptionsCondition,
   CrudItemBase,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 
 function getFormMode(model: { id: unknown }): "create" | "update" {
   return model.id ? "update" : "create";

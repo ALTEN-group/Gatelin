@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
 import { SchemaService } from "@core/schema/schema.service";
-import { Calls, CrudRepository } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository } from "@dwtechs/ngx-crud-builder";
 import { FIELD_COLUMNS } from "app/authorizations/data-access/fields/field.conf";
 import {
   Field,

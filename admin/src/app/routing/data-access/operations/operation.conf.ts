@@ -13,7 +13,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Operation } from "app/routing/data-access/operations/operation.model";
 
 export function buildOperationColumns(

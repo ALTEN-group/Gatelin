@@ -6,7 +6,7 @@ import {
 } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
 import { InfoMessageComponent } from "@core/ui/info-message/info-message.component";
-import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import { ConfigHelper, TableComponent } from "@dwtechs/ngx-crud-builder";
 import { FieldsService } from "app/authorizations/data-access/fields/fields.service";
 
 @Component({

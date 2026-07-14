@@ -9,7 +9,7 @@ import { TokenService } from "@core/auth/token.service";
 import { cloneReq } from "@core/interceptors/clone-req";
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
-import { OfflineService } from "@dwtechs/crud-builder";
+import { OfflineService } from "@dwtechs/ngx-crud-builder";
 import {
   bufferCount,
   catchError,

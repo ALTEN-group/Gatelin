@@ -3,7 +3,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls, CrudRepository } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository } from "@dwtechs/ngx-crud-builder";
 import { buildRoleColumns } from "app/authorizations/data-access/roles/role.conf";
 import {
   GatewayRole,

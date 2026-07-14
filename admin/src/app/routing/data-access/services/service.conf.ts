@@ -12,7 +12,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Service } from "app/routing/data-access/services/service.model";
 
 export const buildServiceColumns = (

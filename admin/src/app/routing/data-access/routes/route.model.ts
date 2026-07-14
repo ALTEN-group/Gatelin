@@ -1,5 +1,5 @@
 import { AdminEntity } from "@core/app-config/app.entities";
-import { ArchiveInfo } from "@dwtechs/crud-builder";
+import { ArchiveInfo } from "@dwtechs/ngx-crud-builder";
 
 /**
  * Represents a gateway route

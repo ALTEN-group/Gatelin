@@ -1,5 +1,5 @@
 import { inject } from "@angular/core";
-import { CRUD_LABELS, createArchivedConfig } from "@dwtechs/crud-builder";
+import { CRUD_LABELS, createArchivedConfig } from "@dwtechs/ngx-crud-builder";
 
 const archivedRenderer = (v: unknown) =>
   v

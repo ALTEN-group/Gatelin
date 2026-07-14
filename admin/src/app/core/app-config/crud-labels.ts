@@ -1,4 +1,4 @@
-import { CrudLabels } from "@dwtechs/crud-builder";
+import { CrudLabels } from "@dwtechs/ngx-crud-builder";
 
 export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
   checkbox: {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import { ConfigHelper, TableComponent } from "@dwtechs/ngx-crud-builder";
 import { ConsumersService } from "app/consumers/data-access/consumers/consumers.service";
 
 /**

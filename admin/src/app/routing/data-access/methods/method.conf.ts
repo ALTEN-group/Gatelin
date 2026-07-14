@@ -9,7 +9,7 @@ import {
   ID_CONFIG,
   INPUT_TYPES,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Method } from "app/routing/data-access/methods/method.model";
 
 const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{3,8}$/;

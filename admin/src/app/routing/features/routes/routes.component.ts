@@ -5,7 +5,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { ConfigHelper, TableComponent } from "@dwtechs/crud-builder";
+import { ConfigHelper, TableComponent } from "@dwtechs/ngx-crud-builder";
 import { RoutesService } from "app/routing/data-access/routes/routes.service";
 
 /**

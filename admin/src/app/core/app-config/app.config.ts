@@ -22,7 +22,7 @@ import {
   provideFormFieldRenderer,
   TableConfig,
   TableConfigService,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { ResourcesService } from "app/routing/data-access/resources/resources.service";
 import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";

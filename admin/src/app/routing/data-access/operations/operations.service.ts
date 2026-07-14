@@ -8,7 +8,7 @@ import {
 import { DomSanitizer } from "@angular/platform-browser";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls, CrudRepository } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository } from "@dwtechs/ngx-crud-builder";
 import { buildOperationColumns } from "app/routing/data-access/operations/operation.conf";
 import {
   Operation,

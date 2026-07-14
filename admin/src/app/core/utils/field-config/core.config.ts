@@ -1,5 +1,5 @@
 import { buildLockedCellRenderer } from "@core/utils/renderers/locked.renderer";
-import { CONTROL_TYPES, StrictCrudItemOptions } from "@dwtechs/crud-builder";
+import { CONTROL_TYPES, StrictCrudItemOptions } from "@dwtechs/ngx-crud-builder";
 
 export const CORE_CONFIG: StrictCrudItemOptions<{ core: boolean }> = {
   key: "core",

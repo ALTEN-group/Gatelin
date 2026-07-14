@@ -4,7 +4,7 @@ import {
   createAuditConfig,
   CRUD_LABELS,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 
 export function buildAuditConfig(): StrictCrudItemOptions<ArchiveInfo>[] {
   const labels = inject(CRUD_LABELS);

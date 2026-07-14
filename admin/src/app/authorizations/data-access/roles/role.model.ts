@@ -1,4 +1,4 @@
-import { ArchiveInfo } from "@dwtechs/crud-builder";
+import { ArchiveInfo } from "@dwtechs/ngx-crud-builder";
 
 export interface GatewayRole extends ArchiveInfo {
   id: number | null;

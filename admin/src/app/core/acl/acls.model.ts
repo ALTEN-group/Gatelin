@@ -1,5 +1,5 @@
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls } from "@dwtechs/crud-builder";
+import { Calls } from "@dwtechs/ngx-crud-builder";
 
 /**
  * Maps each CRUD operation to a gateway route ID.

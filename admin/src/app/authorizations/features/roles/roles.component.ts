@@ -5,7 +5,7 @@ import {
   ConfigHelper,
   provideCrudLabels,
   TableComponent,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 import { GatewayRolesService } from "app/authorizations/data-access/roles/roles.service";
 import { AppPaths } from "app/app.routes";

@@ -2,7 +2,7 @@ import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/ngx-crud-builder";
 import { PERMISSION_COLUMNS } from "app/authorizations/data-access/permissions/permission.conf";
 import { Permission } from "app/authorizations/data-access/permissions/permission.model";
 import { TableLazyLoadEvent } from "primeng/table";

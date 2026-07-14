@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
-import { TableComponent } from "@dwtechs/crud-builder";
+import { TableComponent } from "@dwtechs/ngx-crud-builder";
 import { OperationsService } from "app/routing/data-access/operations/operations.service";
 
 @Component({

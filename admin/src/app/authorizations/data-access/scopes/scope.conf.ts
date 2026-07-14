@@ -14,7 +14,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Resource } from "app/routing/data-access/resources/resource.model";
 import { Route } from "app/routing/data-access/routes/route.model";
 import { Scope } from "app/authorizations/data-access/scopes/scope.model";

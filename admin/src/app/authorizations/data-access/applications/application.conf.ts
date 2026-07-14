@@ -10,7 +10,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { GatewayApplication } from "app/authorizations/data-access/applications/application.model";
 
 export function buildApplicationColumns(

@@ -1,4 +1,4 @@
-import { ExcelExportMode, FilterLevel } from "@dwtechs/crud-builder";
+import { ExcelExportMode, FilterLevel } from "@dwtechs/ngx-crud-builder";
 import { AdminEntity } from "./app.entities";
 
 type TableInfo = {

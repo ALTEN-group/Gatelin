@@ -1,5 +1,5 @@
 import { buildProtectedCellRenderer } from "@core/utils/renderers/protected.renderer";
-import { CONTROL_TYPES, StrictCrudItemOptions } from "@dwtechs/crud-builder";
+import { CONTROL_TYPES, StrictCrudItemOptions } from "@dwtechs/ngx-crud-builder";
 
 export const PROTECTED_CONFIG: StrictCrudItemOptions<{
   protected: boolean;

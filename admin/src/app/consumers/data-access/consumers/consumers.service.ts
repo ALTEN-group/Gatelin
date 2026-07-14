@@ -3,7 +3,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls, CrudRepository } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository } from "@dwtechs/ngx-crud-builder";
 import { CONSUMER_COLUMNS } from "app/consumers/data-access/consumers/consumer.conf";
 import {
   Consumer,

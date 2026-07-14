@@ -10,7 +10,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Cors } from "app/authorizations/data-access/cors/cors.model";
 
 export const CORS_COLUMNS: (

@@ -19,7 +19,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { GatewayApplication } from "app/authorizations/data-access/applications/application.model";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 

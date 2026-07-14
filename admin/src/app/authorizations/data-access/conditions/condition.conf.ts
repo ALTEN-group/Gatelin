@@ -16,7 +16,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
 import { Field } from "app/authorizations/data-access/fields/field.model";
 import { SelectItem } from "primeng/api";

@@ -1,4 +1,4 @@
-import { FormFieldInteractionEvent } from "@dwtechs/crud-builder";
+import { FormFieldInteractionEvent } from "@dwtechs/ngx-crud-builder";
 
 export function buildIdNameAction<T extends { id: number | null }>(
   nameKey: string,

@@ -4,7 +4,7 @@ import { ENTITY_ROUTE_MAPPING } from "@core/app-config/app.acls";
 import { AdminEntity } from "@core/app-config/app.entities";
 import { Permission } from "@core/auth/auth.dto";
 import { SchemaService } from "@core/schema/schema.service";
-import { Calls } from "@dwtechs/crud-builder";
+import { Calls } from "@dwtechs/ngx-crud-builder";
 import { catchError, map, Observable, of, tap } from "rxjs";
 
 @Injectable({ providedIn: "root" })

@@ -2,7 +2,7 @@ import { computed, inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
-import { Calls, CrudRepository } from "@dwtechs/crud-builder";
+import { Calls, CrudRepository } from "@dwtechs/ngx-crud-builder";
 import { CONDITION_COLUMNS } from "app/authorizations/data-access/conditions/condition.conf";
 import {
   Condition,

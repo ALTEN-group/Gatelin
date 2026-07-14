@@ -16,7 +16,7 @@ import {
   CrudItemOptions,
   EditionDialogComponent,
   RowsAndCount,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
 import { FieldsService } from "app/authorizations/data-access/fields/fields.service";
 import {

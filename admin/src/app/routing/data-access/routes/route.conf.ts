@@ -23,7 +23,7 @@ import {
   minlength,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Method } from "app/routing/data-access/methods/method.model";
 import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Resource } from "app/routing/data-access/resources/resource.model";

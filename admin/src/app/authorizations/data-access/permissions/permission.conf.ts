@@ -15,7 +15,7 @@ import {
   INPUT_TYPES,
   required,
   StrictCrudItemOptions,
-} from "@dwtechs/crud-builder";
+} from "@dwtechs/ngx-crud-builder";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
 import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Permission } from "app/authorizations/data-access/permissions/permission.model";
