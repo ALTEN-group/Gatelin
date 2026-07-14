@@ -10,19 +10,18 @@ docker-compose logs <service-name>
 
 ```bash
 # Check if PostgreSQL is running
-docker exec gatelin-postgres pg_isready -U gatelin_user
+docker exec my-project-postgres-local pg_isready -U root -d gatelin
 
 # Test connection from gateway container
-docker exec gatelin-api nc -zv postgres 5432
+docker exec my-project-gatelin-local nc -zv my-project-postgres-local 5432
 ```
 
 ## Migration Failures
 
 ```bash
 # View migration logs
-docker logs gatelin-migration
+docker logs my-project-gatelin-migration-local
 
-# Rollback migration
-docker-compose run --rm gatelin_migration \
-  -e ROLLBACK=true -e UPDATE=false
+# Rollback the last changeset
+docker compose run --rm -e UPDATE=0 -e ROLLBACK=1 gatelin_migration
 ```

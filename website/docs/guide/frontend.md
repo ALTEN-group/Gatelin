@@ -5,9 +5,9 @@ How a frontend app should interact with Gatelin tokens.
 ## 1. Login
 
 ```typescript
-const response = await fetch('/gatelin/consumers', {
+const response = await fetch('/gateway/sessions', {
   method: 'POST',
-  body: JSON.stringify({ email, password })
+  body: JSON.stringify({ email, pwd })
 });
 const { accessToken, refreshToken } = await response.json();
 
@@ -32,7 +32,7 @@ fetch('/api/protected-resource', {
 ```typescript
 if (response.status === 401) {
   const refreshToken = localStorage.getItem('refreshToken');
-  const refreshResponse = await fetch('/gatelin/consumers', {
+  const refreshResponse = await fetch('/gateway/sessions', {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${accessToken}`
@@ -57,7 +57,7 @@ if (response.status === 401) {
 ```typescript
 const accessToken = localStorage.getItem('accessToken');
 
-await fetch('/gatelin/consumers', {
+await fetch('/gateway/sessions', {
   method: 'DELETE',
   headers: { 'Authorization': `Bearer ${accessToken}` }
 });
@@ -74,4 +74,4 @@ localStorage.removeItem('refreshToken');
 | `httpOnly cookies` | More secure — not accessible to JavaScript |
 | `sessionStorage` | Cleared when the tab closes |
 
-> **Never** send the refresh token except to the `PUT /gatelin/consumers` endpoint.
+> **Never** send the refresh token except to the `PUT /gateway/sessions` endpoint.

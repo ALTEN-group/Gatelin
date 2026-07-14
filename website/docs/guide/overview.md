@@ -34,7 +34,7 @@ Consumers are loaded into an **in-memory cache** at startup and kept up to date 
 
 ### Roles
 
-A **role** is a named group of permissions, scoped to an application. Consumers are assigned one or more roles, and those roles define what they are allowed to access. Roles can be activated, deactivated, or archived, and carry a name, description, and display color for administration purposes.
+A **role** is a named group of permissions, scoped to an application. Consumers are assigned one or more roles, and those roles define what they are allowed to access. Roles can be archived, and carry a name, description, and display color for administration purposes.
 
 ### Permissions
 

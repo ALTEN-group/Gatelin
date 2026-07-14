@@ -16,7 +16,7 @@ Authorization: Bearer <access_token>
   "sortField": "id",
   "sortOrder": "ASC",
   "filters": {
-    "api": {
+    "pattern": {
       "value": "users",
       "matchMode": "contains"
     }

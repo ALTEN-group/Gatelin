@@ -33,6 +33,7 @@ export default withMermaid(defineConfig({
         items: [
           { text: 'Sessions', link: '/guide/api-sessions' },
           { text: 'Proxy', link: '/guide/api-proxy' },
+          { text: 'Consumers', link: '/guide/api-consumers' },
           {
             text: 'Routing',
             collapsed: false,
@@ -57,14 +58,6 @@ export default withMermaid(defineConfig({
               { text: 'CORS', link: '/guide/api-cors' },
             ],
           },
-          {
-            text: 'Admin',
-            collapsed: false,
-            items: [
-              { text: 'Consumers', link: '/guide/api-consumers' },
-              { text: 'Preferences', link: '/guide/api-preferences' },
-            ],
-          },
         ],
       },
       {
@@ -72,28 +65,6 @@ export default withMermaid(defineConfig({
         items: [
           { text: 'Request Flow', link: '/guide/architecture' },
           { text: 'Frontend Integration', link: '/guide/frontend' },
-        ],
-      },
-      {
-        text: 'Sequence Diagrams',
-        items: [
-          { text: 'Proxy Request', link: '/guide/sd-proxy' },
-          {
-            text: 'Sessions',
-            collapsed: false,
-            items: [
-              { text: 'Create Session', link: '/guide/sd-create-session' },
-              { text: 'Update Session', link: '/guide/sd-update-session' },
-            ],
-          },
-          {
-            text: 'Routes',
-            collapsed: false,
-            items: [
-              { text: 'Create Route', link: '/guide/sd-create-route' },
-              { text: 'Update Route', link: '/guide/sd-update-route' },
-            ],
-          },
         ],
       },
     ],

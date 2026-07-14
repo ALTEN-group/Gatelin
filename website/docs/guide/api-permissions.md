@@ -54,7 +54,7 @@ Authorization: Bearer <access_token>
       "roleId": 2,
       "routeId": 5,
       "operationId": 1,
-      "conditionId": 1
+      "conditionId": [1]
     }
   ]
 }
@@ -73,7 +73,7 @@ Authorization: Bearer <access_token>
   "rows": [
     {
       "id": 10,
-      "conditionId": 2
+      "conditionId": [2]
     }
   ]
 }

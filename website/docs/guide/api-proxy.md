@@ -11,11 +11,11 @@ Authorization: Bearer <access_token>
 
 **Flow:**
 
-1. Gateway validates the route exists and matches `/api/users` pattern
+1. Gateway validates the route exists and matches the `/users/:id` pattern
 2. Validates JWT token (if `protected: true` for the route)
-3. Checks consumer session exists and is valid
-4. Strips the pattern from URL (if configured)
-5. Forwards request to: `http://gatelin-user-development:3000/123`
+3. Checks consumer session exists and is valid, and that a permission grants access
+4. Injects `x-consumer-id` / `x-consumer-name` headers
+5. Forwards the request, path and query string unchanged, to: `http://<app>-user-<env>:3000/users/123`
 6. Returns the microservice response to the client
 
 ## Health Check

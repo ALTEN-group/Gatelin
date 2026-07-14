@@ -7,17 +7,19 @@ Client Request
     ↓
 [checkRoute] - Validate route exists and extract config
     ↓
-[decodeAccess] - Decode JWT token (if present)
+[parseBearer] - Extract Bearer token from Authorization header
     ↓
-[checkConsumer] - Validate consumer session
+[decodeAccess] - Decode and verify the JWT access token
     ↓
-[checkACL] - Validate user roles/permissions
+[checkConsumer] - Validate consumer session (in-memory cache)
     ↓
-[stripUrl] - Remove pattern prefix from URL
+[checkAcl] - Validate user roles/permissions for the route
     ↓
-[additionalHeaders] - Add custom headers
+[applyAclConditions] - Inject ACL conditions into req.body.filters
     ↓
-[forwardToService] - Forward to target microservice
+[additionalHeaders] - Add x-consumer-* headers (proxy routes only)
+    ↓
+[forwardToService] - Forward to target microservice (proxy routes only)
     ↓
 Client Response
 ```
@@ -27,11 +29,11 @@ Client Response
 | Middleware | Role |
 |---|---|
 | `checkRoute` | Validates incoming request matches a configured route |
+| `parseBearer` / `decodeAccess` | Extract and verify the JWT access token |
 | `checkConsumer` | Ensures consumer session exists and is valid |
-| `checkToken` | Validates JWT access and refresh tokens |
-| `checkACL` | Validates user has required roles for the route |
-| `stripUrl` | Removes route pattern prefix before forwarding |
-| `additionalHeaders` | Adds gateway-specific headers to forwarded requests |
+| `checkAcl` | Validates user has required roles/permissions for the route |
+| `applyAclConditions` | Enforces ACL-scoped filters on search requests |
+| `additionalHeaders` | Adds `x-consumer-id`/`x-consumer-name` headers before forwarding |
 
 ## Production Stack
 

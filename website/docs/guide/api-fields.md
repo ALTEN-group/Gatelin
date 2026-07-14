@@ -45,6 +45,7 @@ Authorization: Bearer <access_token>
 {
   "rows": [
     {
+      "resourceId": 3,
       "name": "consumers.archived"
     }
   ]

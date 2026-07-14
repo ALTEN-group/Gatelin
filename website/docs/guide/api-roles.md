@@ -99,8 +99,8 @@ Authorization: Bearer <access_token>
 
 | Field | Description |
 |---|---|
+| `appId` | ID of the application this role belongs to |
 | `name` | Unique role name |
 | `description` | Human-readable description |
 | `color` | Hex color code assigned to the role (e.g. `#FF8000`) |
-| `active` | Whether the role is currently active |
 | `archived` | Whether the role is archived |

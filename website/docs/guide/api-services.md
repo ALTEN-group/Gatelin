@@ -40,7 +40,8 @@ Authorization: Bearer <access_token>
 {
   "rows": [
     {
-      "name": "user"
+      "name": "user",
+      "pattern": "my-api"
     }
   ]
 }

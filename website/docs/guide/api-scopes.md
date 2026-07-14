@@ -4,9 +4,9 @@ Scopes attach to routes in the permission system. They link a route to a resourc
 
 ## How It Works
 
-A scope answers: "What does this route give access to, and what kind of action does it represent?" The gateway uses the scope during ACL validation to confirm the consumer's role is allowed to perform that operation on that resource. Each route should have a scope defined for authorization to work correctly.
+A scope is a named tag attached to a route (e.g. `users:search`). When a permission references a scope, the ACL check only grants access if the URL segment following the resource name matches one of the scope's route names — letting a role be restricted to specific sub-paths of a route instead of the whole route.
 
-Create scopes after resources and operations are in place.
+Create scopes after routes are in place.
 
 ## Search Scopes
 

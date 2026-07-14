@@ -39,7 +39,7 @@ These variables must be set on the `gatelin` container:
 | `DB_NAME` | ✅ | Database name (default: `gatelin`) |
 | `DB_USER` | ✅ | Database user for Gatelin |
 | `DB_PWD` | ✅ | Database password for Gatelin |
-| `TOKEN_SECRET` | ✅ | Secret used to verify JWT access tokens (must match your auth service) |
+| `TOKEN_SECRET` | ✅ | Secret used to verify JWT access tokens, at least 32 characters (must match your auth service) |
 | `APP_NAME` | ✅ | Application name, used to name the Docker network and containers |
 | `ENV_NAME` | ✅ | Environment name, e.g. `local`, `staging`, `prod` |
 | `SERVER_SCHEME` | ⬜ | Scheme used in internal URLs (default: `http://`) |
