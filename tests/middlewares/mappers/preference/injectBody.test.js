@@ -94,7 +94,7 @@ describe("injectBody middleware", () => {
 
   it("should drop locked rows that are unchanged from the system default", async () => {
     execute.mockResolvedValue({
-      rows: [{ name: "Default", conf: { a: 1 }, isActive: true }],
+      rows: [{ userId: -1, name: "Default", conf: { a: 1 }, isActive: true }],
     });
     req.body = {
       rows: [{ name: "Default", conf: { a: 1 }, isActive: true, locked: true }],
@@ -109,9 +109,9 @@ describe("injectBody middleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("should keep locked rows whose conf or isActive differ from the system default", async () => {
+  it("should keep locked rows whose isActive differs from the system default under the SAME name (activating a preset, not a customization)", async () => {
     execute.mockResolvedValue({
-      rows: [{ name: "Default", conf: { a: 1 }, isActive: false }],
+      rows: [{ userId: -1, name: "Default", conf: { a: 1 }, isActive: false }],
     });
     req.body = {
       rows: [{ name: "Default", conf: { a: 1 }, isActive: true, locked: true }],
@@ -155,10 +155,11 @@ describe("injectBody middleware", () => {
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should drop the active locked row when only cosmetic conf metadata (e.g. defaultWidth) differs", async () => {
+  it("should fork a locked row under a new '(copy)' name when defaultWidth differs (e.g. a column resize)", async () => {
     execute.mockResolvedValue({
       rows: [
         {
+          userId: -1,
           name: "Default",
           conf: [{ key: "core", isVisible: true, defaultWidth: "60px" }],
           isActive: true,
@@ -169,7 +170,7 @@ describe("injectBody middleware", () => {
       rows: [
         {
           name: "Default",
-          conf: [{ key: "core", isVisible: true }],
+          conf: [{ key: "core", isVisible: true, defaultWidth: "120px" }],
           isActive: true,
           locked: true,
         },
@@ -178,17 +179,24 @@ describe("injectBody middleware", () => {
 
     await injectBody(req, res, next);
 
-    expect(res.json).toHaveBeenCalledWith({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
-    expect(next).not.toHaveBeenCalled();
+    expect(req.body.rows).toEqual([
+      {
+        name: "Default (copy)",
+        conf: [{ key: "core", isVisible: true, defaultWidth: "120px" }],
+        isActive: true,
+        locked: true,
+        userId: 11,
+        resource: "dashboard",
+      },
+    ]);
+    expect(next).toHaveBeenCalledWith();
   });
 
-  it("should keep the active locked row when isVisible actually changed", async () => {
+  it("should fork a locked row under a new '(copy)' name when isVisible actually changed", async () => {
     execute.mockResolvedValue({
       rows: [
         {
+          userId: -1,
           name: "Default",
           conf: [{ key: "core", isVisible: true, defaultWidth: "60px" }],
           isActive: true,
@@ -209,7 +217,59 @@ describe("injectBody middleware", () => {
     await injectBody(req, res, next);
 
     expect(next).toHaveBeenCalledWith();
-    expect(req.body.rows).toHaveLength(1);
+    expect(req.body.rows).toEqual([
+      {
+        name: "Default (copy)",
+        conf: [{ key: "core", isVisible: false }],
+        isActive: true,
+        locked: true,
+        userId: 11,
+        resource: "dashboard",
+      },
+    ]);
+  });
+
+  it("should append a numeric suffix when the auto-generated copy name is already taken", async () => {
+    execute.mockResolvedValue({
+      rows: [
+        {
+          userId: -1,
+          name: "Default",
+          conf: [{ key: "core", isVisible: true, defaultWidth: "60px" }],
+          isActive: true,
+        },
+        {
+          userId: 11,
+          name: "Default (copy)",
+          conf: [{ key: "core", isVisible: false }],
+          isActive: false,
+        },
+      ],
+    });
+    req.body = {
+      rows: [
+        {
+          name: "Default",
+          conf: [{ key: "core", isVisible: true, defaultWidth: "120px" }],
+          isActive: true,
+          locked: true,
+        },
+      ],
+    };
+
+    await injectBody(req, res, next);
+
+    expect(req.body.rows).toEqual([
+      {
+        name: "Default (copy 2)",
+        conf: [{ key: "core", isVisible: true, defaultWidth: "120px" }],
+        isActive: true,
+        locked: true,
+        userId: 11,
+        resource: "dashboard",
+      },
+    ]);
+    expect(next).toHaveBeenCalledWith();
   });
 
   it("should call next(err) when the system defaults query fails", async () => {

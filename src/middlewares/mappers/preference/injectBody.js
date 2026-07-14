@@ -4,6 +4,24 @@ import { log } from "@dwtechs/winstan";
 import { confEquals } from "../../../utils/preferenceConf.js";
 
 /**
+ * Builds a unique "<name> (copy[ N])" name to fork a locked preference into
+ * a personal, distinctly-named view, avoiding collisions with the user's
+ * existing preference names for the same resource.
+ * @param {string} name
+ * @param {Set<string>} takenNames
+ * @returns {string}
+ */
+function uniqueCopyName(name, takenNames) {
+  let candidate = `${name} (copy)`;
+  let n = 2;
+  while (takenNames.has(candidate)) {
+    candidate = `${name} (copy ${n})`;
+    n++;
+  }
+  return candidate;
+}
+
+/**
  * Express middleware that injects userId (from the JWT session) and resource
  * (from the URL param) into each row of req.body.rows sent by the front-end.
  *
@@ -39,29 +57,51 @@ export async function injectBody(req, res, next) {
   // on every sync, not just the row the user actually changed. Blindly upserting
   // every row would copy ALL locked (system, userId=-1) rows into user-owned
   // (locked=false) rows, making every preference lose its "locked" status after
-  // a single unrelated change. Fetch the current system defaults and drop any
-  // locked row that is unchanged so it's left untouched.
+  // a single unrelated change. Fetch the current system defaults (to detect
+  // no-op saves) and the user's own existing preference names (to avoid copy-
+  // name collisions), then drop any locked row that is unchanged.
   let defaultsByName = new Map();
+  const existingUserNames = new Set();
   try {
-    const { rows: defaults } = await execute(
-      `SELECT name, conf, "isActive" FROM preference WHERE "userId" = -1 AND resource = $1`,
-      [String(resource)],
+    const { rows: existing } = await execute(
+      `SELECT "userId", name, conf, "isActive" FROM preference WHERE "userId" IN (-1, $1) AND resource = $2`,
+      [userId, String(resource)],
       null,
     );
-    defaultsByName = new Map(defaults.map((d) => [d.name, d]));
+    for (const r of existing) {
+      if (r.userId === -1) defaultsByName.set(r.name, r);
+      else existingUserNames.add(r.name);
+    }
   } catch (err) {
     return next(err);
   }
 
-  const changedRows = rows.filter(
-    /** @param {any} row */ (row) => {
-      if (!row.locked) return true;
-      const def = defaultsByName.get(row.name);
-      return (
-        !def || def.isActive !== row.isActive || !confEquals(def.conf, row.conf)
-      );
-    },
-  );
+  // A locked row can differ from its system default in two independent ways:
+  // - isActive only (the user just activated this preset): fork it under the
+  //   SAME name, shadowing the locked original (existing behavior).
+  // - conf (visibility/order/width actually customized): this is a genuine
+  //   personalization, so fork it as a NEW, distinctly-named view instead of
+  //   shadowing the original - both remain visible/selectable independently.
+  const changedRows = [];
+  for (const row of rows) {
+    if (!row.locked) {
+      changedRows.push(row);
+      continue;
+    }
+    const def = defaultsByName.get(row.name);
+    if (!def) {
+      changedRows.push(row);
+      continue;
+    }
+    const confChanged = !confEquals(def.conf, row.conf);
+    const isActiveChanged = def.isActive !== row.isActive;
+    if (!confChanged && !isActiveChanged) continue;
+    if (confChanged) {
+      row.name = uniqueCopyName(row.name, existingUserNames);
+      existingUserNames.add(row.name);
+    }
+    changedRows.push(row);
+  }
 
   if (changedRows.length === 0) {
     log.debug(() => `injectPreferenceBody: no changed rows, skipping`);

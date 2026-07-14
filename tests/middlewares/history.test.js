@@ -44,7 +44,7 @@ describe("history middleware", () => {
 
       expect(execute).toHaveBeenCalledWith(
         expect.any(String),
-        ["public", "route", "7"],
+        ["public", ["route"], "7"],
         null,
       );
     });
@@ -56,7 +56,7 @@ describe("history middleware", () => {
 
       expect(execute).toHaveBeenCalledWith(
         expect.any(String),
-        ["gateway", "route", "7"],
+        ["gateway", ["route"], "7"],
         null,
       );
     });
@@ -160,7 +160,12 @@ describe("history middleware", () => {
           operation: "UPDATE",
           consumerId: 1,
           consumerName: "alice",
-          record: { id: 7, name: "route-a", operationId: [1, 2], methodIds: [3, 4] },
+          record: {
+            id: 7,
+            name: "route-a",
+            operationId: [1, 2],
+            methodIds: [3, 4],
+          },
         },
       ]);
       expect(res.locals.total).toBe(1);
@@ -334,7 +339,7 @@ describe("history middleware", () => {
 
       expect(execute).toHaveBeenCalledWith(
         expect.any(String),
-        ["public", "route", "9"],
+        ["public", ["route"], "9"],
         null,
       );
       expect(res.locals.rows).toHaveLength(1);

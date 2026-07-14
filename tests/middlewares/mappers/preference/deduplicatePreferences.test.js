@@ -128,6 +128,35 @@ describe("deduplicatePreferences middleware", () => {
     expect(next).toHaveBeenCalledWith();
   });
 
+  it("should force isActive:false on the locked default when a differently-named personal fork is active", () => {
+    res = {
+      locals: {
+        rows: [
+          { name: "Default", locked: true, conf: { a: 1 }, isActive: true },
+          {
+            name: "Default (copy)",
+            locked: false,
+            conf: { a: 2 },
+            isActive: true,
+          },
+        ],
+      },
+    };
+
+    deduplicatePreferences(req, res, next);
+
+    expect(res.locals.rows).toEqual([
+      { name: "Default", locked: true, conf: { a: 1 }, isActive: false },
+      {
+        name: "Default (copy)",
+        locked: false,
+        conf: { a: 2 },
+        isActive: true,
+      },
+    ]);
+    expect(next).toHaveBeenCalledWith();
+  });
+
   it("should keep unlocked rows with distinct names untouched", () => {
     res = {
       locals: {

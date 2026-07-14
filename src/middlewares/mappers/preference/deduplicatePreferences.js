@@ -16,6 +16,13 @@ import { confEquals } from "../../../utils/preferenceConf.js";
  * an editable/deletable custom one — only a genuine `conf` change (a real
  * customization) should ever "unlock" it.
  *
+ * A structural fork (see injectBody.js) creates a personal row under a NEW
+ * name, keeping whatever `isActive` the source view had - without ever
+ * touching the locked original's own `isActive` (shared across all users).
+ * That can leave two rows both reporting `isActive: true` for the same
+ * resource. Only one row may ever be reported active: the user's own pick
+ * always wins over the locked default.
+ *
  * @param {import('express').Request} _req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -40,11 +47,21 @@ export function deduplicatePreferences(_req, res, next) {
       return def && confEquals(def.conf, r.conf) ? { ...r, locked: true } : r;
     });
 
+  // A structural fork keeps whatever `isActive` the resized/customized view
+  // already had, without ever touching the locked original's own `isActive`
+  // (it's shared, userId=-1, and must stay untouched for other users). That
+  // can leave two rows both reporting isActive=true for the same resource.
+  // The user's own pick always wins over the locked default.
+  const activeUserRow = deduped.find((r) => !r.locked && r.isActive);
+  const withSingleActive = activeUserRow
+    ? deduped.map((r) => (r === activeUserRow ? r : { ...r, isActive: false }))
+    : deduped;
+
   log.debug(
     () =>
-      `deduplicatePreferences: ${rows.length} rows → ${deduped.length} after dedup`,
+      `deduplicatePreferences: ${rows.length} rows → ${withSingleActive.length} after dedup`,
   );
 
-  res.locals.rows = deduped;
+  res.locals.rows = withSingleActive;
   next();
 }
