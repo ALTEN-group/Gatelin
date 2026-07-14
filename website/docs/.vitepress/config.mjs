@@ -8,7 +8,7 @@ export default withMermaid(defineConfig({
   description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
   base,
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],
   ],
   themeConfig: {
     logo: '/logo.svg',
