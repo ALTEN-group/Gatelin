@@ -20,8 +20,8 @@
 --   65=getConsumerSchema    66=getRouteSchema       67=getServiceSchema     68=getResourceSchema
 --   69=getOperationSchema  70=getCorsSchema        71=getFieldSchema       72=getScopeSchema
 --   73=getRoleSchema       74=getPermissionSchema  75=getMethodSchema      76=getApplicationSchema
---   77=getConditionSchema  78=getPreferenceSchema
---   79=getBasicUserInfo
+--   77=getConditionSchema
+--   78=getBasicUserInfo
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -125,8 +125,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1, 75,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
 (1, 76,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
 (1, 77,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
-(1, 78,  2, NULL, NULL, -1, 'system'),  -- getPreferenceSchema  → list
-(1, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo     → read
+(1, 78,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo     → read
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -210,8 +209,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 75,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
 (2, 76,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
 (2, 77,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
-(2, 78,  2, NULL, NULL, -1, 'system'),  -- getPreferenceSchema  → list
-(2, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(2, 78,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -227,7 +225,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (3, 36,  2, ARRAY['id', 'value'], (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchScopes
 (3, 41,  2, ARRAY['id', 'name', 'description', 'color'], (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchRoles
 (3, 63,  2, NULL, NULL, -1, 'system'),  -- getPreferences
-(3, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(3, 78,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- Guest (4): session routes only
