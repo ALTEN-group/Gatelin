@@ -1,14 +1,3 @@
 tbl-table {
-    display: block;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    overflow: hidden;
-
-    .table {
-        margin: 0 !important;
-    }
-
-    p-toolbar {
-        margin: 0;
-    }
 }
