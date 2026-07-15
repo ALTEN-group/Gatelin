@@ -289,18 +289,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "appId": {
-            "type": "integer",
-            "format": "int32",
-            "description": "ID of the application this service belongs to",
-            "example": 1
-          },
-          "appName": {
-            "type": "string",
-            "maxLength": 255,
-            "description": "Name of the application this service belongs to",
-            "example": "admin-panel"
-          },
           "name": {
             "type": "string",
             "maxLength": 10,
@@ -345,8 +333,7 @@
           }
         },
         "required": [
-          "name",
-          "appId"
+          "name"
         ]
       },
       "cors": {
@@ -361,6 +348,16 @@
             "maxLength": 50,
             "description": "CORS origin name",
             "example": "http://localhost:3000"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "CORS origin description",
+            "example": "Admin panel front-end"
+          },
+          "credentials": {
+            "type": "boolean",
+            "description": "Whether credentials (cookies, authorization headers) are allowed for this origin"
           },
           "creatorId": {
             "type": "integer",
@@ -828,6 +825,18 @@
             "type": "string",
             "description": "Name of the user who last updated this field",
             "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the field was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the field was last updated",
+            "example": "2025-07-22T15:45:00Z"
           }
         },
         "required": [
@@ -1041,33 +1050,70 @@
             "type": "integer",
             "format": "int32"
           },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who owns this preference (-1 for shared system defaults)",
+            "example": 5
+          },
           "resource": {
             "type": "string",
             "description": "Resource name (e.g. routes, roles, services)",
             "example": "routes"
           },
-          "field": {
+          "name": {
             "type": "string",
-            "description": "Column field name",
-            "example": "api"
+            "description": "Name of this saved view",
+            "example": "Default view"
           },
-          "visible": {
+          "conf": {
+            "type": "array",
+            "description": "Column configuration (visibility, order and width) for this view",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "Column field key"
+                },
+                "isVisible": {
+                  "type": "boolean",
+                  "description": "Whether the column is visible"
+                },
+                "defaultWidth": {
+                  "type": "integer",
+                  "description": "Column display width"
+                }
+              }
+            },
+            "example": [
+              {
+                "key": "id",
+                "isVisible": true,
+                "defaultWidth": 80
+              },
+              {
+                "key": "name",
+                "isVisible": true,
+                "defaultWidth": 200
+              }
+            ]
+          },
+          "isActive": {
             "type": "boolean",
-            "description": "Whether the column is visible",
+            "description": "Whether this view is the currently active one for the resource",
             "example": true
           },
-          "order": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Column display order",
-            "example": 1
+          "locked": {
+            "type": "boolean",
+            "description": "Whether this is a shared system default that cannot be edited directly (customizing it creates a personal copy)",
+            "example": false
           }
         },
         "required": [
           "resource",
-          "field",
-          "visible",
-          "order"
+          "name",
+          "conf"
         ]
       },
       "historyEntry": {
@@ -5876,7 +5922,7 @@
           "Preference Management"
         ],
         "summary": "Get preferences for a resource",
-        "description": "Returns column visibility and ordering preferences for the given resource, merging system defaults with any user overrides.",
+        "description": "Returns saved view presets (column visibility, order and width) for the given resource, merging shared system defaults with any user-owned views.",
         "security": [
           {
             "bearerAuth": []
@@ -5921,7 +5967,7 @@
           "Preference Management"
         ],
         "summary": "Upsert preferences for a resource",
-        "description": "Creates user preference rows from system defaults on first call; updates existing rows on subsequent calls.",
+        "description": "Creates user preference rows from system defaults on first call; updates existing rows on subsequent calls. Never deletes rows - use the DELETE endpoint to remove a preference.",
         "security": [
           {
             "bearerAuth": []
@@ -5961,13 +6007,21 @@
                 "rows": [
                   {
                     "id": 1,
-                    "visible": true,
-                    "order": 1
-                  },
-                  {
-                    "id": 2,
-                    "visible": false,
-                    "order": 2
+                    "name": "Default view",
+                    "conf": [
+                      {
+                        "key": "id",
+                        "isVisible": true,
+                        "defaultWidth": 80
+                      },
+                      {
+                        "key": "name",
+                        "isVisible": true,
+                        "defaultWidth": 200
+                      }
+                    ],
+                    "isActive": true,
+                    "locked": false
                   }
                 ]
               }
@@ -6000,31 +6054,53 @@
         }
       }
     },
-    "/gateway/preferences/schema": {
-      "get": {
+    "/gateway/preferences/{resource}/{id}": {
+      "delete": {
         "tags": [
           "Preference Management"
         ],
-        "summary": "Get preference schema",
-        "description": "Retrieve field metadata for the preference entity",
+        "summary": "Delete a preference",
+        "description": "Permanently deletes a single user-owned preference. The row must belong to the authenticated user for this resource - a shared system default (userId=-1) or another user's row can never be deleted.",
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resource name (e.g. routes, roles, services)",
+            "example": "routes"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Preference id",
+            "example": 12
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "Preference schema",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/entitySchemaResponse"
-                }
-              }
-            }
+          "204": {
+            "description": "Preference deleted successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
           },
           "401": {
             "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
           },
           "5XX": {
             "$ref": "#/components/responses/unexpectedError"
@@ -6132,7 +6208,7 @@
     },
     {
       "name": "Preference Management",
-      "description": "Per-user column visibility and ordering preferences"
+      "description": "Per-user saved view presets (column visibility, order and width) for list/table resources"
     },
     {
       "name": "Health",
