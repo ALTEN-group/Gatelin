@@ -47,19 +47,19 @@ export async function injectBody(req, res, next) {
 
   if (rows.length === 0) {
     log.debug(() => `injectPreferenceBody: empty rows, skipping`);
-    return res.json({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
+    return res.json({ rows: [] });
   }
 
   // The front-end resends the whole preferences array (locked defaults included)
-  // on every sync, not just the row the user actually changed. Blindly upserting
+  // on every save, not just the row the user actually changed. Blindly upserting
   // every row would copy ALL locked (system, userId=-1) rows into user-owned
   // (locked=false) rows, making every preference lose its "locked" status after
   // a single unrelated change. Fetch the current system defaults (to detect
   // no-op saves) and the user's own existing preference names (to avoid copy-
   // name collisions), then drop any locked row that is unchanged.
+  //
+  // Deleting a preference has its own dedicated DELETE route/endpoint - this
+  // PUT only ever inserts or updates rows, it never deletes.
   let defaultsByName = new Map();
   const existingUserNames = new Set();
   try {
@@ -105,10 +105,7 @@ export async function injectBody(req, res, next) {
 
   if (changedRows.length === 0) {
     log.debug(() => `injectPreferenceBody: no changed rows, skipping`);
-    return res.json({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
+    return res.json({ rows: [] });
   }
 
   // Include changed rows only (locked or not).

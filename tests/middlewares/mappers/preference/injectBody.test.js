@@ -48,15 +48,12 @@ describe("injectBody middleware", () => {
     expect(req.body).toBeDefined();
   });
 
-  it("should respond directly with an empty sync payload when rows is empty, without calling next()", async () => {
+  it("should respond directly with empty rows when rows is empty, without calling next()", async () => {
     req.body = { rows: [] };
 
     await injectBody(req, res, next);
 
-    expect(res.json).toHaveBeenCalledWith({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
+    expect(res.json).toHaveBeenCalledWith({ rows: [] });
     expect(next).not.toHaveBeenCalled();
     expect(execute).not.toHaveBeenCalled();
   });
@@ -66,10 +63,7 @@ describe("injectBody middleware", () => {
 
     await injectBody(req, res, next);
 
-    expect(res.json).toHaveBeenCalledWith({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
+    expect(res.json).toHaveBeenCalledWith({ rows: [] });
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -102,10 +96,7 @@ describe("injectBody middleware", () => {
 
     await injectBody(req, res, next);
 
-    expect(res.json).toHaveBeenCalledWith({
-      rows: [],
-      sync: { inserted: 0, updated: 0, deleted: 0 },
-    });
+    expect(res.json).toHaveBeenCalledWith({ rows: [] });
     expect(next).not.toHaveBeenCalled();
   });
 
