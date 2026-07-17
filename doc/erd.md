@@ -74,7 +74,7 @@ erDiagram
   resource {
     int id PK
     int serviceId FK
-    varchar name
+    varchar name UK
     boolean core
   }
 
@@ -123,9 +123,14 @@ erDiagram
 ```mermaid
 erDiagram
 
+  role }|--o{ consumer : "(denormalized int[])"
   consumer }o--|| user : "(external)"
-  consumer }o--|{ role : "(denormalized int[])"
   preference }o--|| user : "(external)"
+  preference }o--|| resource : ""
+  preference ||--o{ preference_selection : ""
+  preference_selection }o--|| user : "(external)"
+  resource ||--o{ preference_selection : ""
+
 
   cors {
     int id PK
@@ -145,11 +150,16 @@ erDiagram
 
   preference {
     int id PK
-    int userId FK "ms_user"
-    varchar resource
-    varchar name
+    int userId FK "ms_user, null = template (locked)"
+    int resourceId FK "-> resource.id"
+    varchar name UK "UK with userId, resourceId"
     jsonb conf
-    boolean isActive
+  }
+
+  preference_selection {
+    int userId PK, FK "ms_user"
+    int resourceId PK, FK "-> resource.id"
+    int preferenceId FK "-> preference.id, current selection (template or personal)"
   }
 
   user {

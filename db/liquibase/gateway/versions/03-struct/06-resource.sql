@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS resource (
   "updatedAt" TIMESTAMP NULL,
   "updaterId" INT,
   "updaterName" TEXT,
+  UNIQUE (name),
   CHECK ("serviceId">=0),
   CONSTRAINT fk_resource_service
 		FOREIGN KEY ("serviceId") REFERENCES service (id)

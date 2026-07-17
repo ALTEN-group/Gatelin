@@ -5,7 +5,7 @@ import { isArray } from "@dwtechs/checkard";
 import {
   getMany,
   getByResourceAndUserId,
-} from "../../../services/preference.js";
+} from "../../services/preference.js";
 // import { upsertSelection } from "./selection.js";
 // import { send } from "../../res/send.js";
 

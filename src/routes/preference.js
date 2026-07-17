@@ -3,19 +3,43 @@ import express from "express";
 const router = express.Router();
 
 import pEnt from "../entities/preference.js";
-import { injectFilters } from "../middlewares/mappers/preference/injectFilters.js";
-import { injectBody } from "../middlewares/mappers/preference/injectBody.js";
-import { deduplicatePreferences } from "../middlewares/mappers/preference/deduplicatePreferences.js";
-import checkPreferenceOwnership from "../middlewares/validators/check-preference-ownership.js";
+import rEnt from "../entities/resource.js";
+import { getPreferences } from "../middlewares/mappers/preference/getPreferences.js";
+import { injectUserIdAndResourceId } from "../middlewares/mappers/preference/injectUserIdAndResourceId.js";
+import { filterByName } from "../middlewares/filters/byName.js";
+import { filterByIdAndUserIdAndResource } from "../middlewares/filters/byIdAndUserIdAndResource.js";
 
-// Get entity schema
-router.get("/:resource", injectFilters, pEnt.get, deduplicatePreferences);
-// Upsert user preferences: creates user copies of system defaults on first save,
-// updates existing user rows on subsequent saves.
-router.put("/:resource", injectBody, pEnt.upsertArraySubstack);
-// Delete a single user-owned preference. checkPreferenceOwnership guarantees
-// the row belongs to the authenticated user for this resource, so a shared
-// system default (userId=-1) or another user's row can never be deleted.
-router.delete("/:resource/:id", checkPreferenceOwnership, pEnt.delete);
+// Get the merged view list (system templates + this user's own preferences)
+router.get("/:resource", getPreferences);
+// Create a preference conf
+router.post(
+  "/:resource",
+  filterByName, // injects resource filter
+  rEnt.get, // fetches the resource to res.locals.rows. Fails with 404 if the resource name doesn't exist
+  injectUserIdAndResourceId, // inject userId and resourceId to req.body.rows
+  pEnt.addArraySubstack, // adds the preference to db
+);
+// Update a route.
+router.put("/", pEnt.updateArraySubstack);
+// Delete a single user-owned preference.
+// guarantee the row belongs to the authenticated user
+router.delete(
+  "/:resource/:id",
+  filterByIdAndUserIdAndResource, // injects preference filter
+  pEnt.get, // fetches the row to res.locals.rows. Fails with 404 if the preference is not owned by this user
+  pEnt.delete, // deletes the row from preference
+);
+
+// router.put(
+//   "/:resource/:id",
+//   filterByIdAndResource, // injects filter by id and resource
+//   pEnt.get, // fetches the row to res.locals.rows.
+//   renameIfLocked, // renames the row if it's locked
+//   ...pEnt.upsertArraySubstack,
+// );
+// // Upsert user preferences: creates user copies of system defaults on first save,
+// // updates existing user rows on subsequent saves, and syncs which view is active
+// // into preference_selection.
+// router.put("/:resource", , ...pEnt.upsertArraySubstack);
 
 export default router;

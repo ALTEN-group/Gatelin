@@ -139,7 +139,6 @@
     <sqlFile path="versions/03-struct/16-permission-condition.sql" splitStatements="false"/>
   </changeSet>
 
-
   <!-- views -->
   <changeSet id="04-view-01" author="lcluber">
     <comment></comment>
@@ -172,6 +171,10 @@
   <changeSet id="04-view-08" author="lcluber">
     <comment>Conditions view with field name</comment>
     <sqlFile path="versions/04-view/08-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-09" author="lcluber">
+    <comment>Preferences view with resource name</comment>
+    <sqlFile path="versions/04-view/09-preference.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- triggers -->
