@@ -19,7 +19,7 @@ router.post(
   injectUserIdAndResourceId, // inject userId and resourceId to req.body.rows
   pEnt.addArraySubstack, // adds the preference to db
 );
-// Update a route.
+// Update preferences.
 router.put("/", pEnt.updateArraySubstack);
 // Delete a single user-owned preference.
 // guarantee the row belongs to the authenticated user
@@ -29,17 +29,5 @@ router.delete(
   pEnt.get, // fetches the row to res.locals.rows. Fails with 404 if the preference is not owned by this user
   pEnt.delete, // deletes the row from preference
 );
-
-// router.put(
-//   "/:resource/:id",
-//   filterByIdAndResource, // injects filter by id and resource
-//   pEnt.get, // fetches the row to res.locals.rows.
-//   renameIfLocked, // renames the row if it's locked
-//   ...pEnt.upsertArraySubstack,
-// );
-// // Upsert user preferences: creates user copies of system defaults on first save,
-// // updates existing user rows on subsequent saves, and syncs which view is active
-// // into preference_selection.
-// router.put("/:resource", , ...pEnt.upsertArraySubstack);
 
 export default router;

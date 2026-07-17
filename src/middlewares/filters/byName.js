@@ -20,7 +20,9 @@
  */
 export function filterByName(req, res, next) {
   const { resource } = req.params;
+  req.body = req.body || {};
   req.body.filters = {
+    ...req.body.filters,
     name: { value: resource, matchMode: "=" },
   };
   next();
