@@ -82,8 +82,9 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (14, '/archive',                                 'archiveConditions',     'Archive conditions',                                 true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
   -- preferences (15)
   (15, '/(?<resource>[\w\-]+)',                     'getPreferences',        'Get preferences for the authenticated consumer',     true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
-  (15, '/(?<resource>[\w\-]+)',                     'syncPreferences',       'Sync preferences for the authenticated consumer',    true,  true, ARRAY[12],   ARRAY[3],  -1, 'system'),
-  (15, '/(?<resource>[\w\-]+)/(?<id>\d+)',           'deletePreference',      'Delete a single preference for the authenticated consumer', true, true, ARRAY[10],  ARRAY[5],  -1, 'system'),
+  (15, '/(?<resource>[\w\-]+)',                     'addPreferences',        'Add preference for the authenticated consumer on a specific resource',     true,  true, ARRAY[6],    ARRAY[2],  -1, 'system'),
+  (15, '/(?<resource>[\w\-]+)',                     'updatePreferences',     'Update preferences for the authenticated consumer on a specific resource',    true,  true, ARRAY[5],   ARRAY[3],  -1, 'system'),
+  (15, '/(?<resource>[\w\-]+)/(?<id>\d+)',           'deletePreference',     'Delete a single preference for the authenticated consumer', true, true, ARRAY[10],  ARRAY[5],  -1, 'system'),
   -- schemas
   (2,  '/schema',                                  'getConsumerSchema',    'Get consumer entity schema',                         true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (3,  '/schema',                                  'getRouteSchema',       'Get route entity schema',                            true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),

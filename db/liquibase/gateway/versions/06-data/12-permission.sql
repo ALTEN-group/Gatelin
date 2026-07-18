@@ -16,12 +16,12 @@
 --   51=searchMethods    52=updateMethods
 --   53=searchApplications 54=getApplicationHistory 55=addApplications 56=updateApplications 57=archiveApplications
 --   58=searchConditions  59=getConditionHistory  60=updateConditions  61=addConditions  62=archiveConditions
---   63=getPreferences   64=syncPreferences  65=deletePreference
---   66=getConsumerSchema    67=getRouteSchema       68=getServiceSchema     69=getResourceSchema
---   70=getOperationSchema  71=getCorsSchema        72=getFieldSchema       73=getScopeSchema
---   74=getRoleSchema       75=getPermissionSchema  76=getMethodSchema      77=getApplicationSchema
---   78=getConditionSchema
---   79=getBasicUserInfo
+--   63=getPreferences   64=addPreferences   65=updatePreferences   66=deletePreference
+--   67=getConsumerSchema    68=getRouteSchema       69=getServiceSchema     70=getResourceSchema
+--   71=getOperationSchema  72=getCorsSchema        73=getFieldSchema       74=getScopeSchema
+--   75=getRoleSchema       76=getPermissionSchema  77=getMethodSchema      78=getApplicationSchema
+--   79=getConditionSchema
+--   80=getBasicUserInfo
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -111,22 +111,23 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1, 61,  7, NULL, NULL, -1, 'system'),  -- addConditions       → bulk create
 (1, 62,  9, NULL, NULL, -1, 'system'),  -- archiveConditions   → bulk archive
 (1, 63,  2, NULL, NULL, -1, 'system'),  -- getPreferences      → list
-(1, 64, 12, NULL, NULL, -1, 'system'),  -- syncPreferences     → bulk sync
-(1, 65, 10, NULL, NULL, -1, 'system'),  -- deletePreference    → delete
-(1, 66,  2, NULL, NULL, -1, 'system'),  -- getConsumerSchema    → list
-(1, 67,  2, NULL, NULL, -1, 'system'),  -- getRouteSchema       → list
-(1, 68,  2, NULL, NULL, -1, 'system'),  -- getServiceSchema     → list
-(1, 69,  2, NULL, NULL, -1, 'system'),  -- getResourceSchema    → list
-(1, 70,  2, NULL, NULL, -1, 'system'),  -- getOperationSchema   → list
-(1, 71,  2, NULL, NULL, -1, 'system'),  -- getCorsSchema        → list
-(1, 72,  2, NULL, NULL, -1, 'system'),  -- getFieldSchema       → list
-(1, 73,  2, NULL, NULL, -1, 'system'),  -- getScopeSchema       → list
-(1, 74,  2, NULL, NULL, -1, 'system'),  -- getRoleSchema        → list
-(1, 75,  2, NULL, NULL, -1, 'system'),  -- getPermissionSchema  → list
-(1, 76,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
-(1, 77,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
-(1, 78,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
-(1, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo     → read
+(1, 64,  6, NULL, NULL, -1, 'system'),  -- addPreferences      → create
+(1, 65,  5, NULL, NULL, -1, 'system'),  -- updatePreferences   → bulk update
+(1, 66, 10, NULL, NULL, -1, 'system'),  -- deletePreference    → delete
+(1, 67,  2, NULL, NULL, -1, 'system'),  -- getConsumerSchema    → list
+(1, 68,  2, NULL, NULL, -1, 'system'),  -- getRouteSchema       → list
+(1, 69,  2, NULL, NULL, -1, 'system'),  -- getServiceSchema     → list
+(1, 70,  2, NULL, NULL, -1, 'system'),  -- getResourceSchema    → list
+(1, 71,  2, NULL, NULL, -1, 'system'),  -- getOperationSchema   → list
+(1, 72,  2, NULL, NULL, -1, 'system'),  -- getCorsSchema        → list
+(1, 73,  2, NULL, NULL, -1, 'system'),  -- getFieldSchema       → list
+(1, 74,  2, NULL, NULL, -1, 'system'),  -- getScopeSchema       → list
+(1, 75,  2, NULL, NULL, -1, 'system'),  -- getRoleSchema        → list
+(1, 76,  2, NULL, NULL, -1, 'system'),  -- getPermissionSchema  → list
+(1, 77,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
+(1, 78,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
+(1, 79,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
+(1, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo     → read
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -196,22 +197,23 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 61,  7, ARRAY['name', 'fieldId', 'op', 'value'], NULL, -1, 'system'),  -- addConditions
 (2, 62,  9, NULL, NULL, -1, 'system'),  -- archiveConditions
 (2, 63,  2, NULL, NULL, -1, 'system'),  -- getPreferences
-(2, 64, 12, NULL, NULL, -1, 'system'),  -- syncPreferences
-(2, 65, 10, NULL, NULL, -1, 'system'),  -- deletePreference
-(2, 66,  2, NULL, NULL, -1, 'system'),  -- getConsumerSchema    → list
-(2, 67,  2, NULL, NULL, -1, 'system'),  -- getRouteSchema       → list
-(2, 68,  2, NULL, NULL, -1, 'system'),  -- getServiceSchema     → list
-(2, 69,  2, NULL, NULL, -1, 'system'),  -- getResourceSchema    → list
-(2, 70,  2, NULL, NULL, -1, 'system'),  -- getOperationSchema   → list
-(2, 71,  2, NULL, NULL, -1, 'system'),  -- getCorsSchema        → list
-(2, 72,  2, NULL, NULL, -1, 'system'),  -- getFieldSchema       → list
-(2, 73,  2, NULL, NULL, -1, 'system'),  -- getScopeSchema       → list
-(2, 74,  2, NULL, NULL, -1, 'system'),  -- getRoleSchema        → list
-(2, 75,  2, NULL, NULL, -1, 'system'),  -- getPermissionSchema  → list
-(2, 76,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
-(2, 77,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
-(2, 78,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
-(2, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(2, 64,  6, NULL, NULL, -1, 'system'),  -- addPreferences
+(2, 65,  5, NULL, NULL, -1, 'system'),  -- updatePreferences
+(2, 66, 10, NULL, NULL, -1, 'system'),  -- deletePreference
+(2, 67,  2, NULL, NULL, -1, 'system'),  -- getConsumerSchema    → list
+(2, 68,  2, NULL, NULL, -1, 'system'),  -- getRouteSchema       → list
+(2, 69,  2, NULL, NULL, -1, 'system'),  -- getServiceSchema     → list
+(2, 70,  2, NULL, NULL, -1, 'system'),  -- getResourceSchema    → list
+(2, 71,  2, NULL, NULL, -1, 'system'),  -- getOperationSchema   → list
+(2, 72,  2, NULL, NULL, -1, 'system'),  -- getCorsSchema        → list
+(2, 73,  2, NULL, NULL, -1, 'system'),  -- getFieldSchema       → list
+(2, 74,  2, NULL, NULL, -1, 'system'),  -- getScopeSchema       → list
+(2, 75,  2, NULL, NULL, -1, 'system'),  -- getRoleSchema        → list
+(2, 76,  2, NULL, NULL, -1, 'system'),  -- getPermissionSchema  → list
+(2, 77,  2, NULL, NULL, -1, 'system'),  -- getMethodSchema      → list
+(2, 78,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
+(2, 79,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
+(2, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- User (3): read-only, public fields only
@@ -227,8 +229,9 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (3, 36,  2, ARRAY['id', 'value'], (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchScopes
 (3, 41,  2, ARRAY['id', 'name', 'description', 'color'], (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchRoles
 (3, 63,  2, NULL, NULL, -1, 'system'),  -- getPreferences
-(3, 65, 10, NULL, NULL, -1, 'system'),  -- deletePreference
-(3, 79,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(3, 64,  6, NULL, NULL, -1, 'system'),  -- addPreferences
+(3, 66, 10, NULL, NULL, -1, 'system'),  -- deletePreference
+(3, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
 -- ============================================================
 -- Guest (4): session routes only
