@@ -32,6 +32,7 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
     delete: "Delete",
     validate: "Validate",
     cancel: "Cancel",
+    rename: "Rename",
     deleteConfirmation: "Are you sure you want to delete this view?",
     deleteConfirmationHeader: "Delete view",
   },
