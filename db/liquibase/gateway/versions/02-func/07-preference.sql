@@ -28,6 +28,14 @@ CREATE OR REPLACE FUNCTION iud_preference() RETURNS trigger AS $$
       INSERT INTO preference ("userId", "resourceId", name, conf, "creatorId", "creatorName")
       VALUES (NEW."userId", NEW."resourceId", NEW.name, NEW.conf, NEW."creatorId", NEW."creatorName")
       RETURNING id INTO NEW.id;
+
+      IF NEW."isActive" IS TRUE THEN
+        INSERT INTO preference_selection ("userId", "resourceId", "preferenceId")
+        VALUES (NEW."userId", NEW."resourceId", NEW.id)
+        ON CONFLICT ("userId", "resourceId")
+        DO UPDATE SET "preferenceId" = EXCLUDED."preferenceId";
+      END IF;
+
       RETURN NEW;
 
     ELSIF TG_OP = 'UPDATE' THEN

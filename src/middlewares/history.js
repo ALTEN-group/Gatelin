@@ -7,7 +7,7 @@ const ALLOWED_HISTORY_FIELDS = new Set(["routeId"]);
  * update that also rewrites its route_operation/route_method junction rows)
  * into a single entry.
  *
- * Rows are grouped by (tstamp, consumerId, record.id): Postgres `now()` is
+ * Rows are grouped by (tstamp, consumerUserId, record.id): Postgres `now()` is
  * transaction-stable so every row written by the same transaction shares the
  * same tstamp, and record.id (the audited entity's own id, reused by
  * junction-table history rows) keeps unrelated records apart when several
@@ -22,14 +22,14 @@ function groupByAction(rows) {
   for (const row of rows) {
     const tstamp =
       row.tstamp instanceof Date ? row.tstamp.toISOString() : row.tstamp;
-    const key = `${tstamp}_${row.consumerId}_${row.record?.id}`;
+    const key = `${tstamp}_${row.consumerUserId}_${row.record?.id}`;
     const group = groups.get(key);
     if (!group)
       groups.set(key, {
         id: row.id,
         tstamp: row.tstamp,
         operation: row.operation,
-        consumerId: row.consumerId,
+        consumerUserId: row.consumerUserId,
         consumerName: row.consumerName,
         record: { ...row.record },
       });
@@ -75,7 +75,7 @@ function get(tableName, schema = "public") {
 function query(tableName, id, schema = "public") {
   const tableNames = Array.isArray(tableName) ? tableName : [tableName];
   const sql = `
-    SELECT id, tstamp, operation, "consumerId", "consumerName", record
+    SELECT id, tstamp, operation, "consumerUserId", "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1 
       AND "tableName" = ANY($2::text[])
@@ -109,7 +109,7 @@ function queryByField(tableName, field, value, schema = "public") {
     throw new Error(`Invalid history field: ${field}`);
   const tableNames = Array.isArray(tableName) ? tableName : [tableName];
   const sql = `
-    SELECT id, tstamp, operation, "consumerId", "consumerName", record
+    SELECT id, tstamp, operation, "consumerUserId", "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1
       AND "tableName" = ANY($2::text[])

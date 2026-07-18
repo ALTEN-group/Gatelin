@@ -20,7 +20,7 @@ router.post(
   pEnt.addArraySubstack, // adds the preference to db
 );
 // Update preferences.
-router.put("/", pEnt.updateArraySubstack);
+router.put("/:resource", pEnt.updateArraySubstack);
 // Delete a single user-owned preference.
 // guarantee the row belongs to the authenticated user
 router.delete(

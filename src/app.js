@@ -81,7 +81,7 @@ app.use(`${s}operations`, ...cr, operation, send);
 app.use(`${s}cors`, ...cr, cors, send);
 app.use(`${s}fields`, ...cr, field, send);
 app.use(`${s}scopes`, ...cr, scope, send);
-app.use(`${s}preferences`, ...cr, preference, send);
+app.use(`${s}preferences/`, ...cr, preference, send);
 app.use(`${s}roles`, ...cr, role, send);
 app.use(`${s}permissions`, ...cr, permission, send);
 app.use(`${s}methods`, ...cr, method, send);

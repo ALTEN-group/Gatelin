@@ -13,28 +13,28 @@ CREATE OR REPLACE FUNCTION log_history(
   record_new JSON
 ) RETURNS VOID AS $$
 DECLARE
-  v_consumer_id INT;
-  v_consumer_name TEXT;
+  v_user_id INT;
+  v_user_name TEXT;
 BEGIN
   -- Extract audit identity from creator (INSERT) or updater (UPDATE/DELETE)
   IF p_operation = 'INSERT' THEN
-    v_consumer_id   := (record_new->>'creatorId')::INT;
-    v_consumer_name := record_new->>'creatorName';
+    v_user_id   := (record_new->>'creatorId')::INT;
+    v_user_name := record_new->>'creatorName';
   ELSE
-    v_consumer_id   := (record_new->>'updaterId')::INT;
-    v_consumer_name := record_new->>'updaterName';
+    v_user_id   := (record_new->>'updaterId')::INT;
+    v_user_name := record_new->>'updaterName';
   END IF;
 
-  -- Validate that consumer information is provided
-  IF v_consumer_id IS NULL THEN
-    RAISE EXCEPTION '"consumerId" is required for tracked operations.';
+  -- Validate that user information is provided
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION '"userId" is required for tracked operations.';
   END IF;
   
-  IF v_consumer_name IS NULL THEN
-    RAISE EXCEPTION '"consumerName" is required for tracked operations.';
+  IF v_user_name IS NULL THEN
+    RAISE EXCEPTION '"userName" is required for tracked operations.';
   END IF;
 
-  INSERT INTO log.history ("tableName", "schemaName", operation, "consumerId", "consumerName", record)
-    VALUES (p_table_name, p_schema_name, p_operation, v_consumer_id, v_consumer_name, record_new);
+  INSERT INTO log.history ("tableName", "schemaName", operation, "userId", "userName", record)
+    VALUES (p_table_name, p_schema_name, p_operation, v_user_id, v_user_name, record_new);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

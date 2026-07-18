@@ -7,16 +7,16 @@ SET search_path TO log;
 -- create history table
 --
 CREATE TABLE IF NOT EXISTS log.history (
-  id             serial,
-  tstamp         timestamp DEFAULT now(),
-  "schemaName"   text,
-  "tableName"    text,
-  operation      text,
-  "dbUser"       text DEFAULT current_user,
+  id                serial,
+  tstamp            timestamp DEFAULT now(),
+  "schemaName"      text,
+  "tableName"       text,
+  operation         text,
+  "dbUser"          text DEFAULT current_user,
   -- user generating this history record
-  "consumerId"   int NULL,
-  "consumerName" text DEFAULT 'system',
-  record         jsonb
+  "userId"  int NULL,
+  "userName"    text DEFAULT 'system',
+  record            jsonb
 );
 
 -- DROP SCHEMA IF EXISTS public CASCADE;
@@ -29,11 +29,11 @@ SET search_path TO public;
 CREATE OR REPLACE FUNCTION change_trigger() RETURNS trigger AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
-    INSERT INTO log.history ("schemaName", "tableName", operation, "consumerId", "consumerName", record)
+    INSERT INTO log.history ("schemaName", "tableName", operation, "userId", "userName", record)
       VALUES (TG_TABLE_SCHEMA, TG_RELNAME, TG_OP, NEW."creatorId", NEW."creatorName", row_to_json(NEW));
     RETURN NEW;
   ELSIF TG_OP = 'UPDATE' THEN
-    INSERT INTO log.history ("schemaName", "tableName", operation, "consumerId", "consumerName", record)
+    INSERT INTO log.history ("schemaName", "tableName", operation, "userId", "userName", record)
       VALUES (TG_TABLE_SCHEMA, TG_RELNAME, TG_OP, NEW."updaterId", NEW."updaterName", row_to_json(NEW));
     RETURN NEW;
   ELSIF TG_OP = 'DELETE' THEN

@@ -230,6 +230,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (3, 41,  2, ARRAY['id', 'name', 'description', 'color'], (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchRoles
 (3, 63,  2, NULL, NULL, -1, 'system'),  -- getPreferences
 (3, 64,  6, NULL, NULL, -1, 'system'),  -- addPreferences
+(3, 65,  5, NULL, NULL, -1, 'system'),  -- updatePreferences
 (3, 66, 10, NULL, NULL, -1, 'system'),  -- deletePreference
 (3, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
 
