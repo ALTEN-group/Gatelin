@@ -21,7 +21,6 @@ RUN --mount=type=secret,id=npmrc,target=${NPMRC_PATH},required=true,uid=${UID}
 
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --chmod=640 package*.json ./
-COPY --chown=user:usergroup --chmod=640 dwtechs-ngx-crud-builder-*.tgz ./
 
 RUN npm i --loglevel=error --ignore-scripts --no-fund
 
