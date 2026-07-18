@@ -21,6 +21,7 @@ import { provideAppConfig } from "@core/app-config/app.config";
 import { authInterceptor } from "@core/auth/auth.interceptor";
 import { errorInterceptor } from "@core/interceptors/error.interceptor";
 import { locationInterceptor } from "@core/interceptors/location.interceptor";
+import { preferencesInterceptor } from "@core/interceptors/preferences.interceptor";
 import Aura from "@primeng/themes/aura";
 import { ROUTES } from "app/app.routes";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -55,6 +56,7 @@ bootstrapApplication(AppComponent, {
       withInterceptorsFromDi(),
       withInterceptors([
         authInterceptor,
+        preferencesInterceptor,
         errorInterceptor,
         locationInterceptor,
       ]),
