@@ -13,6 +13,9 @@ const router = express.Router();
 
 import uEnt from "../entities/user.js";
 import sEnt from "../entities/session.js";
+import { filterByUserIdAndPwd } from "../middlewares/filters/byUserIdAndPwd.js";
+import { filterByEmailNotArchived } from "../middlewares/filters/byEmailNotArchived.js";
+import { filterByIdAndActiveNotArchived } from "../middlewares/filters/byIdAndActiveNotArchived.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
@@ -33,11 +36,16 @@ import { resolvePermissions } from "../middlewares/mappers/resolve-permissions.j
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { send204 } from "../middlewares/res/send-204.js";
 
-// middleware sub-stacks
-const checkEmail = [uEnt.normalizeOne, uEnt.validateOne, getUserByEmail];
+const checkEmail = [
+  uEnt.normalizeOne,
+  uEnt.validateOne,
+  filterByEmailNotArchived,
+  getUserByEmail,
+];
 // const activate = [ activateUser, uEnt.update ];
 const getSession = [...checkRequest, createRow]; // get session from tokens
 const addSession = [
+  filterByUserIdAndPwd,
   checkPwd,
   createTokens,
   sEnt.add,
@@ -48,6 +56,7 @@ const addSession = [
 ];
 const updateSession = [
   refreshTokens,
+  filterByIdAndActiveNotArchived,
   getUserById,
   sEnt.update,
   updateCache,

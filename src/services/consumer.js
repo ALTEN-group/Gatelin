@@ -35,7 +35,7 @@ function init() {
   const filters = {
     archived: {
       value: false,
-      matchMode: "equals",
+      matchMode: "IS",
     },
   };
   const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);

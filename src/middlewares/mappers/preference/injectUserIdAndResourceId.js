@@ -13,9 +13,6 @@
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @param {Array<object>} res.locals.rows - Resource row(s) fetched by rEnt.get
- * @param {Array<object>} [res.locals.pendingRows] - Preference rows stashed by filterResourceByName
- * @param {number} res.locals.consumer.userId - Authenticated user ID
  * @param {import('express').NextFunction} next
  */
 export function injectUserIdAndResourceId(req, res, next) {

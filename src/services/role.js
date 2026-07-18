@@ -28,7 +28,7 @@ function init() {
   const filters = {
     archived: {
       value: false,
-      matchMode: "equals",
+      matchMode: "IS",
     },
   };
   const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
@@ -46,10 +46,10 @@ function init() {
                 ...p,
                 _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
               },
-            ])
+            ]),
           ),
         },
-      ])
+      ]),
     );
   });
 }

@@ -20,9 +20,9 @@ import { execute } from "@dwtechs/antity-pgsql";
 export async function getMany(userId, resource) {
   const { rows } = await execute(
     `SELECT v.id, v."resourceId", v."resourceName", v.name, v.conf, v.locked,
-            COALESCE(v.id = u."preferenceId", false) AS "isActive"
+            COALESCE(v.id = ps."preferenceId", false) AS "isActive"
      FROM preferences v
-     LEFT JOIN preference_selection u ON u."resourceId" = v."resourceId" AND u."userId" = $1
+     LEFT JOIN preference_selection ps ON ps."resourceId" = v."resourceId" AND ps."userId" = $1
      WHERE v."resourceName" = $2 AND (v.locked OR v."userId" = $1)
      ORDER BY v.name`,
     [userId, resource],
@@ -30,21 +30,3 @@ export async function getMany(userId, resource) {
   );
   return rows;
 }
-
-// /**
-//  * Fetches the current templates and user preferences matching a resource
-//  *
-//  * @param {number} userId
-//  * @param {string} resource
-//  * @returns {Promise<Array<object>>}
-//  */
-// export async function getByResourceAndUserId(userId, resource) {
-//   const { rows } = await execute(
-//     `SELECT id, name, conf, locked
-//      FROM preferences
-//      WHERE "resourceName" = $2 AND (locked OR "userId" = $1)`,
-//     [userId, resource],
-//     null,
-//   );
-//   return rows;
-// }
