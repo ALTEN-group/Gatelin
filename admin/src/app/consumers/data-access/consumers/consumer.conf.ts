@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
+import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
   CONTROL_TYPES,
@@ -65,6 +66,18 @@ export const CONSUMER_COLUMNS: (
         },
       },
       {
+        key: "refreshToken",
+        label: "Refresh Token",
+        controlType: CONTROL_TYPES.INPUT,
+        columnOptions: {
+          defaultWidth: "100px",
+        },
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          validators: [required, minlength(28), maxlength(8000)],
+        },
+      },
+      {
         key: "roles",
         label: "Roles",
         controlType: CONTROL_TYPES.MULTISELECT,
@@ -93,6 +106,9 @@ export const CONSUMER_COLUMNS: (
         },
       },
       ...buildArchivedConfig(),
+      ...buildAuditConfig().filter(
+        (field) => field.key !== "creatorName" && field.key !== "updaterName",
+      ),
     ] as StrictCrudItemOptions<Consumer>[],
     acls,
   );

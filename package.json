@@ -14,7 +14,7 @@
   "author": "Ludovic Cluber",
   "license": "ISC",
   "dependencies": {
-    "@dwtechs/antity-pgsql": "0.21.0",
+    "@dwtechs/antity-pgsql": "0.21.1",
     "@dwtechs/checkard": "3.6.1",
     "cookie-parser": "1.4.7",
     "@dwtechs/errandler-express": "0.1.0",

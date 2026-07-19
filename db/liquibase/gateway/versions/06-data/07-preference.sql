@@ -20,7 +20,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
   {"key":"updaterName",   "isVisible":false},
-  {"key":"archived",      "isVisible":false},
+  {"key":"archived",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",    "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'routes'), 'Compact', '[
@@ -42,7 +42,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
   {"key":"updaterName",   "isVisible":false},
-  {"key":"archived",      "isVisible":false},
+  {"key":"archived",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",    "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'routes'), 'Archives', '[
@@ -64,7 +64,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",   "isVisible":false},
   {"key":"updatedAt",     "isVisible":false},
   {"key":"updaterName",   "isVisible":false},
-  {"key":"archived",      "isVisible":true},
+  {"key":"archived",      "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",    "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'routes'), 'Audit', '[
@@ -86,7 +86,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",   "isVisible":true},
   {"key":"updatedAt",     "isVisible":true},
   {"key":"updaterName",   "isVisible":true},
-  {"key":"archived",      "isVisible":false},
+  {"key":"archived",      "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",    "isVisible":false}
 ]', -1, 'system'),
 
@@ -99,10 +99,8 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"refreshToken", "isVisible":true, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
   {"key":"createdAt",    "isVisible":false},
-  {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
-  {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":true},
+  {"key":"archived",     "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'consumers'), 'Compact', '[
@@ -113,10 +111,8 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
   {"key":"createdAt",    "isVisible":false},
-  {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
-  {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":false},
+  {"key":"archived",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'consumers'), 'Archives', '[
@@ -127,10 +123,8 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"refreshToken", "isVisible":false, "defaultWidth":"300px"},
   {"key":"roles",        "isVisible":true},
   {"key":"createdAt",    "isVisible":false},
-  {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
-  {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":true},
+  {"key":"archived",     "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":true}
 ]', -1, 'system'),
 
@@ -144,7 +138,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'services'), 'Compact', '[
@@ -156,7 +150,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'services'), 'Archives', '[
@@ -168,7 +162,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":true},
+  {"key":"archived",   "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'services'), 'Audit', '[
@@ -180,7 +174,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":true},
   {"key":"updatedAt",  "isVisible":true},
   {"key":"updaterName","isVisible":true},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 
@@ -195,7 +189,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'resources'), 'Compact', '[
@@ -208,7 +202,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'resources'), 'Archives', '[
@@ -221,7 +215,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":true},
+  {"key":"archived",    "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'resources'), 'Audit', '[
@@ -234,7 +228,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
   {"key":"updaterName", "isVisible":true},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 
@@ -243,50 +237,53 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
+  {"key":"credentials", "isVisible":true},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'cors'), 'Compact', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":false},
+  {"key":"credentials", "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'cors'), 'Archives', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":false},
+  {"key":"credentials", "isVisible":false},
   {"key":"createdAt",  "isVisible":false},
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":true},
+  {"key":"archived",   "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'cors'), 'Audit', '[
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":false},
+  {"key":"credentials", "isVisible":false},
   {"key":"createdAt",  "isVisible":true},
   {"key":"creatorName","isVisible":true},
   {"key":"updatedAt",  "isVisible":true},
   {"key":"updaterName","isVisible":true},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 
 -- operations
 ((SELECT id FROM resource WHERE name = 'operations'), 'Default', '[
-  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -295,11 +292,10 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'operations'), 'Compact', '[
-  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -307,11 +303,10 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'operations'), 'Archives', '[
-  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":true},
@@ -319,11 +314,10 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":true},
+  {"key":"archived",    "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'operations'), 'Audit', '[
-  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",          "isVisible":false},
   {"key":"name",        "isVisible":true},
   {"key":"description", "isVisible":false},
@@ -331,7 +325,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
   {"key":"updaterName", "isVisible":true},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 
@@ -339,20 +333,23 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
 ((SELECT id FROM resource WHERE name = 'fields'), 'Default', '[
   {"key":"core",         "isVisible":true,  "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
+  {"key":"serviceId",    "isVisible":false},
+  {"key":"serviceName",  "isVisible":true},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
-  {"key":"serviceName",  "isVisible":true},
   {"key":"name",         "isVisible":true},
   {"key":"createdAt",    "isVisible":false},
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
   {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":false},
+  {"key":"archived",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'fields'), 'Compact', '[
   {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
+  {"key":"serviceId",    "isVisible":false},
+  {"key":"serviceName",  "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
@@ -360,12 +357,14 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
   {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":false},
+  {"key":"archived",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'fields'), 'Archives', '[
   {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
+  {"key":"serviceId",    "isVisible":false},
+  {"key":"serviceName",  "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
@@ -373,12 +372,14 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",  "isVisible":false},
   {"key":"updatedAt",    "isVisible":false},
   {"key":"updaterName",  "isVisible":false},
-  {"key":"archived",     "isVisible":true},
+  {"key":"archived",     "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'fields'), 'Audit', '[
   {"key":"core",         "isVisible":false, "defaultWidth":"60px"},
   {"key":"id",           "isVisible":false},
+  {"key":"serviceId",    "isVisible":false},
+  {"key":"serviceName",  "isVisible":false},
   {"key":"resourceId",   "isVisible":false},
   {"key":"resourceName", "isVisible":true},
   {"key":"name",         "isVisible":true},
@@ -386,58 +387,69 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName",  "isVisible":true},
   {"key":"updatedAt",    "isVisible":true},
   {"key":"updaterName",  "isVisible":true},
-  {"key":"archived",     "isVisible":false},
+  {"key":"archived",     "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",   "isVisible":false}
 ]', -1, 'system'),
 
 -- scopes
 ((SELECT id FROM resource WHERE name = 'scopes'), 'Default', '[
   {"key":"id",          "isVisible":false},
+  {"key":"core",        "isVisible":true,  "defaultWidth":"60px"},
   {"key":"routeId",     "isVisible":false},
   {"key":"routeName",   "isVisible":true},
+  {"key":"resourceId",  "isVisible":false},
   {"key":"resourceName","isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'scopes'), 'Compact', '[
   {"key":"id",          "isVisible":false},
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
   {"key":"routeId",     "isVisible":false},
   {"key":"routeName",   "isVisible":true},
+  {"key":"resourceId",  "isVisible":false},
+  {"key":"resourceName","isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'scopes'), 'Archives', '[
   {"key":"id",          "isVisible":false},
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
   {"key":"routeId",     "isVisible":false},
   {"key":"routeName",   "isVisible":true},
+  {"key":"resourceId",  "isVisible":false},
+  {"key":"resourceName","isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"createdAt",   "isVisible":false},
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":true},
+  {"key":"archived",    "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'scopes'), 'Audit', '[
   {"key":"id",          "isVisible":false},
+  {"key":"core",        "isVisible":false, "defaultWidth":"60px"},
   {"key":"routeId",     "isVisible":false},
   {"key":"routeName",   "isVisible":true},
+  {"key":"resourceId",  "isVisible":false},
+  {"key":"resourceName","isVisible":true},
   {"key":"name",        "isVisible":true},
   {"key":"createdAt",   "isVisible":true},
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
   {"key":"updaterName", "isVisible":true},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 
@@ -453,7 +465,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'roles'), 'Compact', '[
@@ -465,7 +477,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'roles'), 'Archives', '[
@@ -477,7 +489,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":true},
+  {"key":"archived",    "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'roles'), 'Audit', '[
@@ -489,7 +501,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
   {"key":"updaterName", "isVisible":true},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 
@@ -506,7 +518,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'conditions'), 'Compact', '[
@@ -521,7 +533,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'conditions'), 'Archives', '[
@@ -536,7 +548,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":false},
   {"key":"updatedAt",  "isVisible":false},
   {"key":"updaterName","isVisible":false},
-  {"key":"archived",   "isVisible":true},
+  {"key":"archived",   "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'conditions'), 'Audit', '[
@@ -551,7 +563,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName","isVisible":true},
   {"key":"updatedAt",  "isVisible":true},
   {"key":"updaterName","isVisible":true},
-  {"key":"archived",   "isVisible":false},
+  {"key":"archived",   "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt", "isVisible":false}
 ]', -1, 'system'),
 
@@ -565,7 +577,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'applications'), 'Compact', '[
@@ -577,7 +589,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'applications'), 'Archives', '[
@@ -589,7 +601,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":false},
   {"key":"updatedAt",   "isVisible":false},
   {"key":"updaterName", "isVisible":false},
-  {"key":"archived",    "isVisible":true},
+  {"key":"archived",    "isVisible":true, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":true}
 ]', -1, 'system'),
 ((SELECT id FROM resource WHERE name = 'applications'), 'Audit', '[
@@ -601,7 +613,7 @@ INSERT INTO preference ("resourceId", name, conf, "creatorId", "creatorName") VA
   {"key":"creatorName", "isVisible":true},
   {"key":"updatedAt",   "isVisible":true},
   {"key":"updaterName", "isVisible":true},
-  {"key":"archived",    "isVisible":false},
+  {"key":"archived",    "isVisible":false, "defaultWidth":"60px"},
   {"key":"archivedAt",  "isVisible":false}
 ]', -1, 'system'),
 
