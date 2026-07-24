@@ -37,6 +37,22 @@ function filterFields(item, allowed) {
   );
 }
 
+// Extracts the URL segment following resourceName, e.g.
+// /preferences/session → resourceName "preferences" → "session"
+export function getScopeSegment(req, resourceName) {
+  const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
+  const resourceIndex = urlSegments.indexOf(resourceName);
+  return resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+}
+
+// Only parse URL segments when this permission actually uses URL scopes
+export function matchesScope(perm, req, resourceName) {
+  if (!isArray(perm.scopes, "!0")) return true;
+  const urlScopes = scopeService.getValues(perm.scopes);
+  if (!isArray(urlScopes, "!0")) return true;
+  return urlScopes.includes(getScopeSegment(req, resourceName));
+}
+
 function findMatchingPermission(
   roles,
   routeId,
@@ -52,27 +68,9 @@ function findMatchingPermission(
     const perm = role.permissions.get(routeId);
     if (!perm) continue;
     if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
+    if (!matchesScope(perm, req, resourceName)) continue;
 
-    let conditions = null;
-    if (isArray(perm.scopes, "!0")) {
-      const urlScopes = scopeService.getValues(perm.scopes);
-      if (isArray(urlScopes, "!0")) {
-        // Only parse URL segments when this permission actually uses URL scopes
-        const urlSegments = req.originalUrl
-          .split("?")[0]
-          .split("/")
-          .filter(Boolean);
-        const resourceIndex = urlSegments.indexOf(resourceName);
-        const scopeSegment =
-          resourceIndex !== -1
-            ? (urlSegments[resourceIndex + 1] ?? null)
-            : null;
-        if (!urlScopes.includes(scopeSegment)) continue;
-      }
-    }
-    if (isArray(perm.conditions, "!0")) {
-      conditions = perm.conditions;
-    }
+    const conditions = isArray(perm.conditions, "!0") ? perm.conditions : null;
     return { perm, conditions };
   }
   return null;
