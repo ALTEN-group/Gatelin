@@ -37,6 +37,12 @@ import { TreeTableModule } from "primeng/treetable";
 import { of, tap } from "rxjs";
 import { OperationNodeData, PermTreeNodeData } from "./permissions-tree.model";
 
+type PermResourceEntry = { name: string; routes: Route[] };
+type PermServiceEntry = {
+  name: string;
+  resources: Map<number, PermResourceEntry>;
+};
+
 @Component({
   selector: "adm-permissions-tree",
   templateUrl: "./permissions-tree.component.html",
@@ -332,50 +338,8 @@ export class PermissionsTreeComponent {
     operationColorById: Map<number, string | null>,
     operationNameById: Map<number, string>,
   ): TreeNode<PermTreeNodeData>[] {
-    // Build routeId → operationId → Permission map
-    // (perms are already scoped to the selected role by the resource loader)
-    const permMap = new Map<number, Map<number, Permission>>();
-    for (const p of perms) {
-      if (p.routeId === null || p.operationId === null) continue;
-      let routeEntry = permMap.get(p.routeId);
-      if (!routeEntry) {
-        routeEntry = new Map();
-        permMap.set(p.routeId, routeEntry);
-      }
-      const opIds = Array.isArray(p.operationId)
-        ? p.operationId
-        : [Number(p.operationId)];
-      for (const opId of opIds) {
-        routeEntry.set(opId, p);
-      }
-    }
-
-    // Group routes: serviceId → resourceId → routes[]
-    type ResourceEntry = { name: string; routes: Route[] };
-    type ServiceEntry = { name: string; resources: Map<number, ResourceEntry> };
-    const serviceMap = new Map<number, ServiceEntry>();
-
-    for (const route of routes) {
-      if (
-        route.id === null ||
-        route.serviceId === null ||
-        route.resourceId === null
-      )
-        continue;
-
-      let svc = serviceMap.get(route.serviceId);
-      if (!svc) {
-        svc = { name: route.serviceName, resources: new Map() };
-        serviceMap.set(route.serviceId, svc);
-      }
-
-      let resource = svc.resources.get(route.resourceId);
-      if (!resource) {
-        resource = { name: route.resourceName, routes: [] };
-        svc.resources.set(route.resourceId, resource);
-      }
-      resource.routes.push(route);
-    }
+    const permMap = this.buildPermMap(perms);
+    const serviceMap = this.groupRoutesByServiceAndResource(routes);
 
     return Array.from(serviceMap.entries()).map(([serviceId, svc]) => ({
       data: { type: "service" as const, id: serviceId, name: svc.name },
@@ -386,39 +350,107 @@ export class PermissionsTreeComponent {
           expanded: true,
           children: res.routes
             .filter((r): r is Route & { id: number } => r.id !== null)
-            .map((r) => {
-              const sortedOpIds = [...r.operationId].sort((a, b) => a - b);
-              const routePerms = permMap.get(r.id);
-              const availableScopes = scopesByRoute.get(r.id) ?? [];
-              return {
-                data: {
-                  type: "route" as const,
-                  id: r.id,
-                  name: r.name,
-                  protected: r.protected,
-                },
-                expanded: true,
-                children: sortedOpIds.map((opId) => ({
-                  data: {
-                    type: "operation" as const,
-                    id: opId,
-                    routeId: r.id,
-                    routeName: r.name,
-                    routeProtected: r.protected,
-                    name: operationNameById.get(opId) ?? "",
-                    color: operationColorById.get(opId) ?? null,
-                    perm: routePerms?.get(opId),
-                    resourceName: r.resourceName,
-                    methodNames: r.methodNames,
-                    availableScopes,
-                    availableConditions: allConditions,
-                  },
-                  leaf: true,
-                })),
-              };
-            }),
+            .map((r) =>
+              this.buildRouteNode(
+                r,
+                permMap,
+                scopesByRoute,
+                allConditions,
+                operationColorById,
+                operationNameById,
+              ),
+            ),
         }),
       ),
     }));
+  }
+
+  // Build routeId → operationId → Permission map
+  // (perms are already scoped to the selected role by the resource loader)
+  private buildPermMap(
+    perms: Permission[],
+  ): Map<number, Map<number, Permission>> {
+    const permMap = new Map<number, Map<number, Permission>>();
+    for (const p of perms) {
+      if (p.routeId === null || p.operationId === null) continue;
+      const routeEntry =
+        permMap.get(p.routeId) ?? new Map<number, Permission>();
+      permMap.set(p.routeId, routeEntry);
+      const opIds = Array.isArray(p.operationId)
+        ? p.operationId
+        : [Number(p.operationId)];
+      for (const opId of opIds) {
+        routeEntry.set(opId, p);
+      }
+    }
+    return permMap;
+  }
+
+  // Group routes: serviceId → resourceId → routes[]
+  private groupRoutesByServiceAndResource(
+    routes: Route[],
+  ): Map<number, PermServiceEntry> {
+    const serviceMap = new Map<number, PermServiceEntry>();
+    for (const route of routes) {
+      if (
+        route.id === null ||
+        route.serviceId === null ||
+        route.resourceId === null
+      )
+        continue;
+
+      const svc = serviceMap.get(route.serviceId) ?? {
+        name: route.serviceName,
+        resources: new Map<number, PermResourceEntry>(),
+      };
+      serviceMap.set(route.serviceId, svc);
+
+      const resource = svc.resources.get(route.resourceId) ?? {
+        name: route.resourceName,
+        routes: [],
+      };
+      svc.resources.set(route.resourceId, resource);
+      resource.routes.push(route);
+    }
+    return serviceMap;
+  }
+
+  private buildRouteNode(
+    route: Route & { id: number },
+    permMap: Map<number, Map<number, Permission>>,
+    scopesByRoute: Map<number, string[]>,
+    allConditions: { id: number; name: string; color: string | null }[],
+    operationColorById: Map<number, string | null>,
+    operationNameById: Map<number, string>,
+  ): TreeNode<PermTreeNodeData> {
+    const sortedOpIds = [...route.operationId].sort((a, b) => a - b);
+    const routePerms = permMap.get(route.id);
+    const availableScopes = scopesByRoute.get(route.id) ?? [];
+    return {
+      data: {
+        type: "route" as const,
+        id: route.id,
+        name: route.name,
+        protected: route.protected,
+      },
+      expanded: true,
+      children: sortedOpIds.map((opId) => ({
+        data: {
+          type: "operation" as const,
+          id: opId,
+          routeId: route.id,
+          routeName: route.name,
+          routeProtected: route.protected,
+          name: operationNameById.get(opId) ?? "",
+          color: operationColorById.get(opId) ?? null,
+          perm: routePerms?.get(opId),
+          resourceName: route.resourceName,
+          methodNames: route.methodNames,
+          availableScopes,
+          availableConditions: allConditions,
+        },
+        leaf: true,
+      })),
+    };
   }
 }
