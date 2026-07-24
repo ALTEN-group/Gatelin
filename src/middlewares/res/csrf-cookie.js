@@ -1,5 +1,5 @@
 // @ts-check
-import { randomBytes } from "crypto";
+import { randomBytes } from "node:crypto";
 
 const CSRF_COOKIE_NAME = process.env.CSRF_COOKIE_NAME || "csrfToken";
 const SAME_SITE_VALUES = ["strict", "lax", "none"];

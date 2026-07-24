@@ -1,5 +1,5 @@
 import { log } from "@dwtechs/winstan";
-const VerbsWithBody = ["post", "put", "patch"];
+const VerbsWithBody = new Set(["post", "put", "patch"]);
 const LOG_PREFIX = "HTTP ";
 
 /**
@@ -23,7 +23,7 @@ function query(verb, url, params, data, headers) {
     headers: { "Content-Type": "application/json", ...headers },
   };
 
-  if (VerbsWithBody.includes(method) && data) init.body = JSON.stringify(data);
+  if (VerbsWithBody.has(method) && data) init.body = JSON.stringify(data);
 
   return fetch(fullUrl, init)
     .then(async (res) => {

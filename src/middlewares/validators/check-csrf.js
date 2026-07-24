@@ -1,5 +1,5 @@
 // @ts-check
-import { timingSafeEqual } from "crypto";
+import { timingSafeEqual } from "node:crypto";
 import { log } from "@dwtechs/winstan";
 
 const cookieName = process.env.CSRF_COOKIE_NAME || "csrfToken";
