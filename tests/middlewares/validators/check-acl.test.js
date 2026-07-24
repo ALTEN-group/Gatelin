@@ -219,6 +219,97 @@ describe("checkAcl middleware", () => {
 
     expect(next).toHaveBeenCalledWith();
   });
+
+  it("should set req.aclConditions when the matched permission has conditions", () => {
+    const conditions = [{ field: "archived", op: "=", value: false }];
+    roleService.getOne.mockReturnValue({
+      name: "viewer",
+      permissions: new Map([[10, { route: 10, operations: [2], conditions }]]),
+    });
+
+    checkAcl(req, res, next);
+
+    expect(req.aclConditions).toBe(conditions);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should not set req.aclConditions when the matched permission has none", () => {
+    roleService.getOne.mockReturnValue({
+      name: "viewer",
+      permissions: new Map([[10, { route: 10, operations: [2] }]]),
+    });
+
+    checkAcl(req, res, next);
+
+    expect(req.aclConditions).toBeUndefined();
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should filter req.body.rows down to allowed fields (plus id) when the permission restricts fields", () => {
+    roleService.getOne.mockReturnValue({
+      name: "editor",
+      permissions: new Map([
+        [10, { route: 10, operations: [2], _fieldsSet: new Set(["name"]) }],
+      ]),
+    });
+    req.body = {
+      rows: [
+        { id: 1, name: "a", secret: "x" },
+        { id: 2, name: "b", other: 1 },
+      ],
+    };
+
+    checkAcl(req, res, next);
+
+    expect(req.body.rows).toEqual([
+      { id: 1, name: "a" },
+      { id: 2, name: "b" },
+    ]);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should filter req.body itself down to allowed fields when it has no rows property", () => {
+    roleService.getOne.mockReturnValue({
+      name: "editor",
+      permissions: new Map([
+        [10, { route: 10, operations: [2], _fieldsSet: new Set(["name"]) }],
+      ]),
+    });
+    req.body = { name: "a", secret: "x" };
+
+    checkAcl(req, res, next);
+
+    expect(req.body).toEqual({ name: "a" });
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should leave req.body untouched when it has a non-array rows property", () => {
+    roleService.getOne.mockReturnValue({
+      name: "editor",
+      permissions: new Map([
+        [10, { route: 10, operations: [2], _fieldsSet: new Set(["name"]) }],
+      ]),
+    });
+    req.body = { rows: "not-an-array", name: "a" };
+
+    checkAcl(req, res, next);
+
+    expect(req.body).toEqual({ rows: "not-an-array", name: "a" });
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should store perm.fields on res.locals.aclFields", () => {
+    const fields = ["name"];
+    roleService.getOne.mockReturnValue({
+      name: "editor",
+      permissions: new Map([[10, { route: 10, operations: [2], fields }]]),
+    });
+
+    checkAcl(req, res, next);
+
+    expect(res.locals.aclFields).toBe(fields);
+    expect(next).toHaveBeenCalledWith();
+  });
 });
 
 describe("getScopeSegment", () => {

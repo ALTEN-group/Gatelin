@@ -2,6 +2,39 @@
 import roleSvc from "../../services/role.js";
 
 /**
+ * Merges a single role's route permission into the accumulator map, unioning
+ * operations and fields in place when the route was already contributed by
+ * another role.
+ *
+ * @param {Map<any, {route: any, operations: Set<any>, fields: Set<any>|null}>} permMap
+ * @param {{route: any, operations: any[], fields: any[]|null}} p
+ * @return {void}
+ */
+function mergeRoutePermission(permMap, p) {
+  const existing = permMap.get(p.route);
+
+  // First time this route is seen — seed the Sets from the cache arrays.
+  if (!existing) {
+    permMap.set(p.route, {
+      route: p.route,
+      operations: new Set(p.operations),
+      fields: p.fields ? new Set(p.fields) : null,
+    });
+    return;
+  }
+
+  // Route already contributed by a previous role — merge in place.
+  // Mutate the existing Set directly — no new array allocation per merge.
+  for (const op of p.operations) existing.operations.add(op);
+
+  // null means "no field restriction". If either side is null the merged
+  // result must also be null (least restrictive wins).
+  if (existing.fields === null) return;
+  if (p.fields === null) existing.fields = null;
+  else for (const f of p.fields) existing.fields.add(f);
+}
+
+/**
  * Express middleware that resolves and merges permissions from all roles assigned
  * to the authenticated consumer, then stores the result in res.locals.permissions
  * for downstream middlewares (e.g. sendSession).
@@ -60,30 +93,7 @@ export function resolvePermissions(_req, res, next) {
     // Role not found in cache (stale token edge case) — skip silently.
     if (!perms) continue;
 
-    for (const p of perms.values()) {
-      if (permMap.has(p.route)) {
-        // Route already contributed by a previous role — merge in place.
-        const existing = permMap.get(p.route);
-
-        // Mutate the existing Set directly — no new array allocation per merge.
-        for (const op of p.operations) existing.operations.add(op);
-
-        // null means "no field restriction". If either side is null the merged
-        // result must also be null (least restrictive wins).
-        if (existing.fields !== null) {
-          if (p.fields === null)
-            existing.fields = null;
-          else
-            for (const f of p.fields) existing.fields.add(f);
-        }
-      } else
-        // First time this route is seen — seed the Sets from the cache arrays.
-        permMap.set(p.route, {
-          route: p.route,
-          operations: new Set(p.operations),
-          fields: p.fields ? new Set(p.fields) : null,
-        });
-    }
+    for (const p of perms.values()) mergeRoutePermission(permMap, p);
   }
 
   // Serialise: convert Sets → Arrays for JSON output.
