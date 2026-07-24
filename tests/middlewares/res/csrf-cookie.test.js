@@ -11,6 +11,10 @@ describe("csrf-cookie middlewares", () => {
   let next;
 
   beforeAll(async () => {
+    // These env vars are read once at module-load time, so pin them here
+    // to keep the test deterministic regardless of the ambient shell env.
+    delete process.env.REFRESH_TOKEN_COOKIE_HTTPS_ONLY;
+    delete process.env.REFRESH_TOKEN_COOKIE_SAMESITE;
     const module = await import("../../../src/middlewares/res/csrf-cookie.js");
     setCsrfCookie = module.setCsrfCookie;
     clearCsrfCookie = module.clearCsrfCookie;

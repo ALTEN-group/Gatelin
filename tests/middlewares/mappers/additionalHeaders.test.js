@@ -73,6 +73,26 @@ describe("updateHeaderWithConsumer middleware", () => {
       });
       expect(next).toHaveBeenCalledWith();
     });
+
+    it("should add x-acl-conditions header when req.aclConditions is a non-empty array", () => {
+      req.aclConditions = [{ field: "archived", op: "=", value: false }];
+
+      updateHeaderWithConsumer(req, res, next);
+
+      expect(req.additionalHeaders["x-acl-conditions"]).toBe(
+        JSON.stringify(req.aclConditions),
+      );
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should not add x-acl-conditions header when req.aclConditions is empty", () => {
+      req.aclConditions = [];
+
+      updateHeaderWithConsumer(req, res, next);
+
+      expect(req.additionalHeaders["x-acl-conditions"]).toBeUndefined();
+      expect(next).toHaveBeenCalledWith();
+    });
   });
 
   describe("unprotected route", () => {
