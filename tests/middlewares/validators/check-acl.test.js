@@ -311,3 +311,80 @@ describe("checkAcl middleware", () => {
     expect(next).toHaveBeenCalledWith();
   });
 });
+
+describe("getScopeSegment", () => {
+  let getScopeSegment;
+
+  beforeAll(async () => {
+    const module = await import(
+      "../../../src/middlewares/validators/check-acl.js"
+    );
+    getScopeSegment = module.getScopeSegment;
+  });
+
+  it("should return the segment following resourceName", () => {
+    const req = { originalUrl: "/gateway/preferences/session" };
+    expect(getScopeSegment(req, "preferences")).toBe("session");
+  });
+
+  it("should strip the query string before parsing segments", () => {
+    const req = { originalUrl: "/gateway/preferences/session?foo=bar" };
+    expect(getScopeSegment(req, "preferences")).toBe("session");
+  });
+
+  it("should return null when resourceName is not found in the URL", () => {
+    const req = { originalUrl: "/gateway/routes/1" };
+    expect(getScopeSegment(req, "preferences")).toBeNull();
+  });
+
+  it("should return null when resourceName is the last URL segment", () => {
+    const req = { originalUrl: "/gateway/preferences" };
+    expect(getScopeSegment(req, "preferences")).toBeNull();
+  });
+});
+
+describe("matchesScope", () => {
+  let matchesScope;
+  let scopeService;
+
+  const scopeSvcPath = path.join(__dirname, "../../../src/services/scope.js");
+
+  beforeAll(async () => {
+    const scopeModule = await import(scopeSvcPath);
+    scopeService = scopeModule.default;
+    const module = await import(
+      "../../../src/middlewares/validators/check-acl.js"
+    );
+    matchesScope = module.matchesScope;
+  });
+
+  beforeEach(() => {
+    scopeService.getValues.mockClear();
+  });
+
+  it("should return true when perm.scopes is not set", () => {
+    const req = { originalUrl: "/gateway/preferences/session" };
+    expect(matchesScope({}, req, "preferences")).toBe(true);
+    expect(scopeService.getValues).not.toHaveBeenCalled();
+  });
+
+  it("should return true when perm.scopes resolves to an empty list", () => {
+    scopeService.getValues.mockReturnValueOnce([]);
+    const req = { originalUrl: "/gateway/preferences/session" };
+    expect(matchesScope({ scopes: ["x"] }, req, "preferences")).toBe(true);
+  });
+
+  it("should return true when the URL scope segment matches perm.scopes", () => {
+    const req = { originalUrl: "/gateway/preferences/session" };
+    expect(
+      matchesScope({ scopes: ["session", "routes"] }, req, "preferences"),
+    ).toBe(true);
+  });
+
+  it("should return false when the URL scope segment does not match perm.scopes", () => {
+    const req = { originalUrl: "/gateway/preferences/services" };
+    expect(
+      matchesScope({ scopes: ["session", "routes"] }, req, "preferences"),
+    ).toBe(false);
+  });
+});
