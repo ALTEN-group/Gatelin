@@ -41,7 +41,3 @@ Liquibase file artifacts are disabled by default in this project to avoid genera
 - Set `LIQUIBASE_ENABLE_SNAPSHOT=1` to enable JSON snapshot files.
 
 If not set (or set to `0`), these files are not created.
-
-## License
-
-[MIT](LICENSE) © 2025 DWTechs
