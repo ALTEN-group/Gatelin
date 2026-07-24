@@ -107,4 +107,28 @@ describe("checkConsumer middleware", () => {
     expect(csmerSvc.getOne).toHaveBeenCalledWith("token-xyz");
     expect(debugMessages()).toContain("checkConsumer(accessToken=<present>)");
   });
+
+  it("should call next(401) without querying the cache when res.locals.tokens.access is missing", async () => {
+    res.locals.tokens = {};
+
+    await checkConsumer(req, res, next);
+
+    expect(csmerSvc.getOne).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith({
+      status: 401,
+      message: "Unauthorized",
+    });
+  });
+
+  it("should call next(401) without querying the cache when res.locals.tokens is missing entirely", async () => {
+    res.locals = {};
+
+    await checkConsumer(req, res, next);
+
+    expect(csmerSvc.getOne).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith({
+      status: 401,
+      message: "Unauthorized",
+    });
+  });
 });

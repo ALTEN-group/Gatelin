@@ -37,9 +37,14 @@ describe("checkPwd middleware", () => {
     checkPwd = module.checkPwd;
   });
 
+  const filters = {
+    userId: { value: 1, matchMode: "=" },
+    pwd: { value: "testpassword", matchMode: "=" },
+  };
+
   beforeEach(() => {
     req = {
-      body: { pwd: "testpassword" },
+      body: { pwd: "testpassword", filters },
       additionalHeaders: { "x-consumer-id": "consumer123" },
     };
     res = { locals: { user: { id: 1 } } };
@@ -55,19 +60,17 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      {
-        filters: {
-          userId: { value: 1, matchMode: "equals" },
-          pwd: { value: "testpassword", matchMode: "equals" },
-        },
-      },
+      { filters },
       { "x-consumer-id": "consumer123" },
     );
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should use userId from res.locals.user.id", async () => {
-    res.locals.user.id = 42;
+  it("should forward req.body.filters as-is set by an upstream middleware", async () => {
+    req.body.filters = {
+      userId: { value: 42, matchMode: "=" },
+      pwd: { value: "testpassword", matchMode: "=" },
+    };
     mockQuery.mockResolvedValueOnce({ data: {} });
 
     await checkPwd(req, res, next);
@@ -76,12 +79,7 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      {
-        filters: {
-          userId: { value: 42, matchMode: "equals" },
-          pwd: { value: "testpassword", matchMode: "equals" },
-        },
-      },
+      { filters: req.body.filters },
       expect.any(Object),
     );
     expect(next).toHaveBeenCalledWith();
@@ -97,12 +95,7 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      {
-        filters: {
-          userId: { value: 1, matchMode: "equals" },
-          pwd: { value: "testpassword", matchMode: "equals" },
-        },
-      },
+      { filters },
       {},
     );
     expect(next).toHaveBeenCalledWith();

@@ -217,6 +217,100 @@ describe("resolvePermissions middleware", () => {
     });
   });
 
+  describe("multiple roles — three or more roles on the same route", () => {
+    it("should union operations and fields across three roles contributing the same route", () => {
+      res.locals.rows = [{ roles: [1, 2, 3] }];
+      roleSvc.getOne
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: ["id"] }],
+          ]),
+        })
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [3], fields: ["name"] }],
+          ]),
+        })
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [2, 5], fields: ["description"] }],
+          ]),
+        });
+
+      resolvePermissions(req, res, next);
+
+      expect(res.locals.permissions).toHaveLength(1);
+      expect(res.locals.permissions[0].operations).toEqual(
+        expect.arrayContaining([2, 3, 5]),
+      );
+      expect(res.locals.permissions[0].operations).toHaveLength(3);
+      expect(res.locals.permissions[0].fields).toEqual(
+        expect.arrayContaining(["id", "name", "description"]),
+      );
+      expect(res.locals.permissions[0].fields).toHaveLength(3);
+    });
+
+    it("should keep fields null once set, even if a later role restricts fields", () => {
+      res.locals.rows = [{ roles: [1, 2, 3] }];
+      roleSvc.getOne
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [2], fields: ["id"] }],
+          ]),
+        })
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [3], fields: null }],
+          ]),
+        })
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [11, { route: 11, operations: [5], fields: ["name"] }],
+          ]),
+        });
+
+      resolvePermissions(req, res, next);
+
+      expect(res.locals.permissions[0].fields).toBeNull();
+      expect(res.locals.permissions[0].operations).toEqual(
+        expect.arrayContaining([2, 3, 5]),
+      );
+    });
+
+    it("should skip roles missing from the cache while still merging the others", () => {
+      res.locals.rows = [{ roles: [1, 99, 2] }];
+      roleSvc.getOne
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [6, { route: 6, operations: [2], fields: null }],
+          ]),
+        })
+        .mockReturnValueOnce(undefined) // role 99 not found in cache (stale token)
+        .mockReturnValueOnce({
+          permissions: new Map([
+            [6, { route: 6, operations: [3], fields: null }],
+          ]),
+        });
+
+      resolvePermissions(req, res, next);
+
+      expect(res.locals.permissions).toHaveLength(1);
+      expect(res.locals.permissions[0].operations).toEqual(
+        expect.arrayContaining([2, 3]),
+      );
+    });
+
+    it("should return empty permissions when all roles are missing from the cache", () => {
+      res.locals.rows = [{ roles: [98, 99] }];
+      roleSvc.getOne.mockReturnValue(undefined);
+
+      resolvePermissions(req, res, next);
+
+      expect(res.locals.permissions).toEqual([]);
+      expect(next).toHaveBeenCalledWith();
+    });
+  });
+
   describe("output does not include internal cache properties", () => {
     it("should not include _fieldsSet in permissions output", () => {
       res.locals.rows = [{ roles: [1] }];
