@@ -20,7 +20,7 @@ Authorization: Bearer <access_token>
 {
   "pagination": true,
   "first": 0,
-  "rows": 10,
+  "limit": 10,
   "sortField": "roleId",
   "sortOrder": "ASC",
   "filters": {
