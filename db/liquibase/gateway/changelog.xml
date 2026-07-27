@@ -33,44 +33,48 @@
     <sqlFile path="versions/02-func/02-set-archived.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-03" author="lcluber">
-    <comment></comment>
-    <sqlFile path="versions/02-func/03-route.sql" splitStatements="false"/>
+    <comment>Before update archived trigger function</comment>
+    <sqlFile path="versions/02-func/03-before-update-archived.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-04" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/02-func/04-resource.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/04-route.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-05" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/02-func/05-scope.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/05-resource.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-06" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/02-func/06-field.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/06-scope.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-07" author="lcluber">
-    <comment>Preference limit trigger function</comment>
-    <sqlFile path="versions/02-func/07-preference.sql" splitStatements="false"/>
+    <comment></comment>
+    <sqlFile path="versions/02-func/07-field.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-08" author="lcluber">
-    <comment>Consumer iud trigger function</comment>
-    <sqlFile path="versions/02-func/08-consumer.sql" splitStatements="false"/>
+    <comment>Preference limit trigger function</comment>
+    <sqlFile path="versions/02-func/08-preference.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-09" author="lcluber">
-    <comment>Permission iud trigger function</comment>
-    <sqlFile path="versions/02-func/09-permission.sql" splitStatements="false"/>
+    <comment>Consumer iud trigger function</comment>
+    <sqlFile path="versions/02-func/09-consumer.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-10" author="lcluber">
-    <comment>Method before update trigger function: restricts updates to color only</comment>
-    <sqlFile path="versions/02-func/10-method.sql" splitStatements="false"/>
+    <comment>Permission iud trigger function</comment>
+    <sqlFile path="versions/02-func/10-permission.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-11" author="lcluber">
-    <comment>Condition iud trigger function</comment>
-    <sqlFile path="versions/02-func/11-condition.sql" splitStatements="false"/>
+    <comment>Method before update trigger function: restricts updates to color only</comment>
+    <sqlFile path="versions/02-func/11-method.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="02-func-12" author="lcluber">
+    <comment>Condition iud trigger function</comment>
+    <sqlFile path="versions/02-func/12-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-13" author="lcluber">
     <comment>Role iud trigger function</comment>
-    <sqlFile path="versions/02-func/12-role.sql" splitStatements="false"/>
+    <sqlFile path="versions/02-func/13-role.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- structures -->
