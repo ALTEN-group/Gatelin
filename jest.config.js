@@ -11,6 +11,9 @@ export default {
   // The directory where Jest should output its coverage files
   coverageDirectory: "./tests/coverage",
 
+  // Coverage reporters
+  coverageReporters: ["text", "lcov", "json-summary"],
+
   // Test match patterns
   testMatch: ["**/tests/**/*.test.js", "**/?(*.)+(spec|test).js"],
 

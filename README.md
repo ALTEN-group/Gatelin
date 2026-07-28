@@ -1,5 +1,8 @@
 ﻿# Gatelin
 
+[![Tests](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml/badge.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+[![coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+
 API Gateway for routing and forwarding HTTP requests to internal microservices, with JWT-based authentication, role-based access control, and a built-in admin interface.
 
 ## Features
