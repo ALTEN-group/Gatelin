@@ -1,7 +1,9 @@
 ﻿# Gatelin
 
-[![Tests](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml/badge.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
 [![coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Version](https://img.shields.io/github/v/release/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
+[![Last release](https://img.shields.io/github/release-date/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
 
 API Gateway for routing and forwarding HTTP requests to internal microservices, with JWT-based authentication, role-based access control, and a built-in admin interface.
 
