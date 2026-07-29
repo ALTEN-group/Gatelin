@@ -31,6 +31,7 @@ SVGEOF
 
 git config user.name  "github-actions[bot]"
 git config user.email "github-actions[bot]@users.noreply.github.com"
+git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 git fetch origin badges 2>/dev/null || true
 
 if git ls-remote --exit-code origin badges >/dev/null 2>&1; then
@@ -45,4 +46,4 @@ cp "$SVG_FILE" /tmp/badges/badges/coverage.svg
 cd /tmp/badges
 git add badges/coverage.svg
 git diff --cached --quiet || git commit -m "chore: update coverage badge [skip ci]"
-git push origin badges
+git push origin HEAD:badges

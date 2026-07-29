@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-slim
+    permissions:
+      contents: write
 
     steps:
       - name: Setup Node
