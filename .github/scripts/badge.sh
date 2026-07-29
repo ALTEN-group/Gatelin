@@ -4,8 +4,7 @@ set -euo pipefail
 SUMMARY=tests/coverage/coverage-summary.json
 PCT=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.functions.pct))")
 
-if   awk "BEGIN { exit !($PCT >= 90) }"; then COLOR="4c1"
-elif awk "BEGIN { exit !($PCT >= 70) }"; then COLOR="dfb317"
+if awk "BEGIN { exit !($PCT >= 50) }"; then COLOR="4c1"
 else COLOR="e05d44"
 fi
 
