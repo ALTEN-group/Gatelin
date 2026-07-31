@@ -7,6 +7,14 @@
 
 API Gateway for routing and forwarding HTTP requests to internal microservices, with JWT-based authentication, role-based access control, and a built-in admin interface.
 
+## Images
+
+| Image | Registry |
+|---|---|
+| Gateway | `ghcr.io/alten-group/gatelin` |
+| Migration | `ghcr.io/alten-group/gatelin-migration` |
+| Admin UI | `ghcr.io/alten-group/gatelin-admin` |
+
 ## Features
 
 - **Proxy** — Dynamic route matching and forwarding to target microservices

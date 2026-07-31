@@ -79,27 +79,25 @@ See [tests/README.md](tests/README.md) for more details.
 
 ### Images
 
-Gatelin ships two releasable images:
+Gatelin ships three releasable images, published to the GitHub Container Registry (GHCR) on every GitHub Release:
 
 | Image | Description |
 |---|---|
-| `dwtechs/gatelin` | The Node.js gateway service. Runs continuously as an API server. |
-| `dwtechs/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. The gateway will not start until this container completes successfully. |
+| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Runs continuously as an API server. |
+| `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. The gateway will not start until this container completes successfully. |
+| `ghcr.io/alten-group/gatelin-admin` | Angular admin frontend served by Caddy. |
 
-The `migration` image has the full Gatelin schema and core data baked in. Consumers can mount their own Gatelin registration data (services, routes, roles) at `/liquibase/data` without rebuilding the image — see [DB Migration](#db-migration) below.
-
-Two additional images exist for the Gatelin project itself but are not required by consumers:
+A fourth image exists for the Gatelin project itself but is not required by consumers:
 
 | Image | Description |
 |---|---|
-| `dwtechs/gatelin-admin` | Angular admin frontend. |
 | `dwtechs/gatelin-website` | Static documentation website. |
 
 ### Build production images
 
 Requires `docker/conf/.env.prod` to exist. Create it by copying `.env.dev.example` and filling in production values (passwords, secrets, versions).
 
-Builds production images from their respective `dockerfile.prod` files. Each image is tagged as `dwtechs/gatelin-<target>:<version>` and `dwtechs/gatelin-<target>:latest`, where `<version>` is read from `package.json`.
+Builds production images from their respective `dockerfile.prod` files. Each image is tagged as `ghcr.io/alten-group/gatelin-<target>:<version>` and `ghcr.io/alten-group/gatelin-<target>:latest`, where `<version>` is read from `package.json`.
 
 ```sh
 ./scripts/build-prod.sh                   # build all four images
@@ -109,6 +107,23 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 ./scripts/build-prod.sh website           # website only
 ./scripts/build-prod.sh gateway migration # multiple targets
 ```
+
+### Publish to GHCR
+
+Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
+
+Each release produces three images with the following tag variants (e.g. for `v1.2.3`):
+
+| Tag | Example |
+|---|---|
+| Full semver | `1.2.3` |
+| Major.minor | `1.2` |
+| Major | `1` |
+| Floating | `latest` |
+
+Images include SBOM and provenance attestations (SLSA) by default.
+
+To trigger a publish: create a Release in the GitHub UI (or via `gh release create v<version>`).
 
 ### Start production environment
 
@@ -142,7 +157,7 @@ When `UPDATE=1`, the container runs the following steps in order:
 
 ```yaml
 gatelin_migration:
-  image: dwtechs/gatelin-migration:latest
+  image: ghcr.io/alten-group/gatelin-migration:latest
   volumes:
     - ./db/gatelin/data:/liquibase/data
   environment:
