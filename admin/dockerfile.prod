@@ -1,44 +1,49 @@
 ARG NODE_VERSION
-ARG NGINX_VERSION
-FROM node:${NODE_VERSION} AS build
+ARG CADDY_VERSION
 
-# change apk repos
-RUN rm /etc/apk/repositories
-RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true apk update \
-    && apk add tzdata 
+# Build stage runs on the native builder platform; Angular output is arch-independent.
+FROM --platform=$BUILDPLATFORM node:${NODE_VERSION} AS build
+
+# Optional internal Alpine mirror (secret is optional; CI uses default Alpine mirrors).
+RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories \
+    apk update && apk add --no-cache tzdata
 
 ARG TZ
 ENV TZ=${TZ}
-# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Create a new basic user 
 ARG UID
 ARG GID
-RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
-USER user
-
-ARG NPMRC_PATH
-RUN --mount=type=secret,id=npmrc,target=${NPMRC_PATH},required=true,uid=${UID}
-
-ENV NODE_ENV=production
+RUN deluser --remove-home node \
+    && addgroup -S usergroup -g ${GID} \
+    && adduser -G usergroup -S user -u ${UID} \
+    && mkdir -p /usr/src/app \
+    && chown user:usergroup /usr/src/app
 
 WORKDIR /usr/src/app
+USER user
+
+# Copy manifests first so dependency install is cached across source changes.
+COPY --chown=user:usergroup package.json package-lock.json ./
+RUN npm i --no-progress --no-fund --loglevel=error --ignore-scripts
+
 COPY --chown=user:usergroup . .
-
-RUN npm i -no-progress --ignore-scripts --production --omit=optional --loglevel=error --no-fund \
-    && npm i @angular/cli -no-progress --ignore-scripts --omit=optional --loglevel=error --no-fund
-
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
 RUN npm run build:prod
 
 ############
 ### prod ###
 ############
+# Caddy on Alpine, run as non-root on port 8080 behind Traefik.
+FROM caddy:${CADDY_VERSION}-alpine
 
-FROM nginx:${NGINX_VERSION}
+ARG UID
+ARG GID
+RUN mkdir -p /data/caddy /config/caddy \
+    && chown -R ${UID}:${GID} /data /config /usr/share/caddy
 
-RUN rm -f /etc/nginx/conf.d/*.conf
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
-# copy artifact build from the 'build environment'
-COPY --from=build /usr/src/app/dist/ /usr/share/nginx/html
+COPY --chown=${UID}:${GID} Caddyfile /etc/caddy/Caddyfile
+COPY --from=build --chown=${UID}:${GID} /usr/src/app/dist/ /usr/share/caddy/admin/
+
+USER ${UID}:${GID}
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget -qO- http://127.0.0.1:8080/healthz >/dev/null 2>&1 || exit 1

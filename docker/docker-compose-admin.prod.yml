@@ -3,8 +3,6 @@ name: ${APP_NAME}
 secrets:
   apk_repository:
     environment: APK_REPOSITORY
-  npmrc:
-    environment: NPMRC
 
 services:
   admin:
@@ -13,15 +11,13 @@ services:
       dockerfile: dockerfile.prod
       secrets:
         - apk_repository
-        - npmrc
       args:
         NODE_VERSION: ${NODE_VERSION}
-        NGINX_VERSION: ${NGINX_VERSION}
+        CADDY_VERSION: ${CADDY_VERSION}
         TZ: ${TZ}
         UID: ${UID}
         GID: ${GID}
-        NPMRC_PATH: ${HOME_PATH}.npmrc
-    image: dwtechs/gatelin-admin:${VERSION:-latest}
+    image: ghcr.io/alten-group/gatelin-admin:${VERSION:-latest}
     container_name: ${ADMIN_HOST}
     hostname: ${ADMIN_HOST}
     networks:
@@ -32,7 +28,7 @@ services:
       - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
       - "traefik.http.routers.admin.entrypoints=web"
       - "traefik.http.routers.admin.service=admin"
-      - "traefik.http.services.admin.loadbalancer.server.port=80"
+      - "traefik.http.services.admin.loadbalancer.server.port=8080"
 
 networks:
   internal:
