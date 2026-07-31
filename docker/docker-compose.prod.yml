@@ -72,7 +72,7 @@ services:
       dockerfile: dockerfile.prod
       args:
         LIQUIBASE_VERSION: ${LIQUIBASE_VERSION}
-    image: dwtechs/gatelin-migration:${VERSION:-latest}
+    image: ghcr.io/alten-group/gatelin-migration:${VERSION:-latest}
     container_name: ${GATELIN_MIGRATION_HOST}
     hostname: ${GATELIN_MIGRATION_HOST}
     environment:
@@ -130,7 +130,7 @@ services:
       - internal
 
   gatelin:
-    image: dwtechs/gatelin:${VERSION:-latest}
+    image: ghcr.io/alten-group/gatelin:${VERSION:-latest}
     container_name: ${GATELIN_HOST}
     hostname: ${GATELIN_HOST}
     environment:

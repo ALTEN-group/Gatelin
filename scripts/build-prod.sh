@@ -63,7 +63,7 @@ echo -e "${BLUE}🔖 Version: ${VERSION}${NC}"
 
 # ─── Gateway ────────────────────────────────────────────────────────────────
 if [[ "$BUILD_GATEWAY" == true ]]; then
-  IMAGE="dwtechs/gatelin:${VERSION}"
+  IMAGE="ghcr.io/alten-group/gatelin:${VERSION}"
   echo -e "${YELLOW}🏗️  Building gateway image ${IMAGE}...${NC}"
   docker build \
     --file dockerfile.prod \
@@ -73,40 +73,37 @@ if [[ "$BUILD_GATEWAY" == true ]]; then
     --build-arg UID="${APP_UID}" \
     --build-arg GID="${APP_GID}" \
     --tag "${IMAGE}" \
-    --tag "dwtechs/gatelin:latest" \
+    --tag "ghcr.io/alten-group/gatelin:latest" \
     .
   echo -e "${GREEN}✅ Gateway image built: ${IMAGE}${NC}"
 fi
 
 # ─── Migration ──────────────────────────────────────────────────────────────
 if [[ "$BUILD_MIGRATION" == true ]]; then
-  IMAGE="dwtechs/gatelin-migration:${VERSION}"
+  IMAGE="ghcr.io/alten-group/gatelin-migration:${VERSION}"
   echo -e "${YELLOW}🏗️  Building migration image ${IMAGE}...${NC}"
   docker build \
     --file db/liquibase/dockerfile.prod \
     --build-arg LIQUIBASE_VERSION="${LIQUIBASE_VERSION}" \
     --tag "${IMAGE}" \
-    --tag "dwtechs/gatelin-migration:latest" \
+    --tag "ghcr.io/alten-group/gatelin-migration:latest" \
     db/liquibase
   echo -e "${GREEN}✅ Migration image built: ${IMAGE}${NC}"
 fi
 
 # ─── Admin ──────────────────────────────────────────────────────────────────
 if [[ "$BUILD_ADMIN" == true ]]; then
-  IMAGE="dwtechs/gatelin-admin:${VERSION}"
+  IMAGE="ghcr.io/alten-group/gatelin-admin:${VERSION}"
   echo -e "${YELLOW}🏗️  Building admin image ${IMAGE}...${NC}"
   docker build \
     --file admin/dockerfile.prod \
-    --secret id=apk_repository,env=APK_REPOSITORY \
-    --secret id=npmrc,env=NPMRC \
     --build-arg NODE_VERSION="${NODE_VERSION}" \
     --build-arg NGINX_VERSION="${NGINX_VERSION}" \
     --build-arg TZ="${TZ}" \
     --build-arg UID="${APP_UID}" \
     --build-arg GID="${APP_GID}" \
-    --build-arg NPMRC_PATH="${HOME_PATH}.npmrc" \
     --tag "${IMAGE}" \
-    --tag "dwtechs/gatelin-admin:latest" \
+    --tag "ghcr.io/alten-group/gatelin-admin:latest" \
     admin
   echo -e "${GREEN}✅ Admin image built: ${IMAGE}${NC}"
 fi

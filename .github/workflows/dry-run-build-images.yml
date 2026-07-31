@@ -1,0 +1,89 @@
+name: Dry run image builds
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-gateway:
+    name: Build gateway image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build gateway image (dry run)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfile.prod
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: gatelin-gateway:dry-run
+          cache-from: type=gha,scope=dry-run-gateway
+          cache-to: type=gha,scope=dry-run-gateway,mode=max
+          build-args: |
+            NODE_VERSION=24.11.0-alpine3.22
+            NODE_ENV=production
+            TZ=Europe/Paris
+            UID=1000
+            GID=1000
+
+  build-migration:
+    name: Build migration image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build migration image (dry run)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./db/liquibase
+          file: dockerfile.prod
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: gatelin-migration:dry-run
+          cache-from: type=gha,scope=dry-run-migration
+          cache-to: type=gha,scope=dry-run-migration,mode=max
+          build-args: |
+            LIQUIBASE_VERSION=${{ vars.LIQUIBASE_VERSION }}
+
+  build-admin:
+    name: Build admin image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build admin image (dry run)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./admin
+          file: dockerfile.prod
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: gatelin-admin:dry-run
+          cache-from: type=gha,scope=dry-run-admin
+          cache-to: type=gha,scope=dry-run-admin,mode=max
+          build-args: |
+            NODE_VERSION=24.11.0-alpine3.22
+            NODE_ENV=production
+            TZ=Europe/Paris
+            UID=1000
+            GID=1000
+            NGINX_VERSION=${{ vars.NGINX_VERSION }}

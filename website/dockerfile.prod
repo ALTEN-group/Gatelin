@@ -1,28 +1,18 @@
-ARG NODE_VERSION
-ARG NGINX_VERSION
+ARG NODE_VERSION=24.11.0-alpine3.22
+ARG NGINX_VERSION=1.27.5-alpine
+
 FROM node:${NODE_VERSION} AS build
-
-RUN apk update && apk add tzdata
-
-ARG TZ
-ENV TZ=${TZ}
-
-ARG UID
-ARG GID
-RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
-USER user
-
-ENV NODE_ENV=production
-
 WORKDIR /usr/src/app
-COPY --chown=user:usergroup . .
+ARG UID=1000
+# ARG NPMRC_PATH=/root/.npmrc
+# RUN --mount=type=secret,id=npmrc,target=${NPMRC_PATH},required=true,uid=${UID} \
+#   npm install --ignore-scripts --no-fund --no-audit --loglevel=error
 
-RUN npm i --loglevel=error --ignore-scripts --no-fund \
-    && npm run build
+COPY package*.json ./
+RUN npm install --ignore-scripts --no-fund --no-audit --loglevel=error
 
-############
-### prod ###
-############
+COPY . .
+RUN npm run build
 
 FROM nginx:${NGINX_VERSION}
 
