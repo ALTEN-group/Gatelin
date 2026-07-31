@@ -1,7 +1,12 @@
 name: Dry run image builds
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - ci/build-images
+  pull_request:
+    branches:
+      - ci/build-images
 
 permissions:
   contents: read
