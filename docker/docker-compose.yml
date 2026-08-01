@@ -136,7 +136,7 @@ services:
         TZ: ${TZ}
         NODE_VERSION: ${NODE_VERSION}
         NODE_ENV: ${NODE_ENV}
-    image: dwtechs/gatelin:${NODE_ENV:-development}
+    image: gatelin:${NODE_ENV:-development}
     container_name: ${GATELIN_HOST}
     hostname: ${GATELIN_HOST}
     depends_on:
