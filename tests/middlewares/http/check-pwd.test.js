@@ -45,7 +45,7 @@ describe("checkPwd middleware", () => {
   beforeEach(() => {
     req = {
       body: { pwd: "testpassword", filters },
-      additionalHeaders: { "x-consumer-id": "consumer123" },
+      additionalHeaders: { "x-consumer-user-id": "consumer123" },
     };
     res = { locals: { user: { id: 1 } } };
     next = jest.fn();
@@ -61,7 +61,7 @@ describe("checkPwd middleware", () => {
       "https://auth.example.com",
       undefined,
       { filters },
-      { "x-consumer-id": "consumer123" },
+      { "x-consumer-user-id": "consumer123" },
     );
     expect(next).toHaveBeenCalledWith();
   });

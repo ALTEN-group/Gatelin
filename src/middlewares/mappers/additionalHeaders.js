@@ -9,7 +9,7 @@ export default function updateHeaderWithConsumer(req, res, next) {
   const c = res.locals.consumer;
 
   req.additionalHeaders = {
-    "x-consumer-id": dat.iss,
+    "x-consumer-user-id": dat.iss,
     "x-consumer-name": c.nickname,
   };
   if (req.aclConditions?.length)

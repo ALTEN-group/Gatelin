@@ -33,7 +33,7 @@ Client Response
 | `checkConsumer` | Ensures consumer session exists and is valid |
 | `checkAcl` | Validates user has required roles/permissions for the route |
 | `applyAclConditions` | Enforces ACL-scoped filters on search requests |
-| `additionalHeaders` | Adds `x-consumer-id`/`x-consumer-name` headers before forwarding |
+| `additionalHeaders` | Adds `x-consumer-user-id`/`x-consumer-name` headers before forwarding |
 
 ## Production Stack
 

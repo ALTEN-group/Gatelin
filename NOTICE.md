@@ -40,6 +40,37 @@ Then start the development environment with `./scripts/start-dev.sh`.
 
 ---
 
+## setup-mocks.sh Script
+
+The `setup-mocks.sh` script creates the mock auth service credentials and the matching swagger login examples from their committed templates. It must be run once after cloning the repository, before starting the development environment.
+
+### What It Does
+
+1. **Copies** `mocks/ms_auth/src/data/credentials.example.js` to `mocks/ms_auth/src/data/credentials.js`
+2. **Copies** `swagger/src/gatelin.openapi.example.json` to `swagger/src/gatelin.openapi.json`
+3. **Generates** a random strong password per mock user and fills in both files
+4. **Prints** the generated email/password pairs to the console
+
+Both `credentials.js` and `gatelin.openapi.json` are gitignored and never committed. The example files contain placeholder tokens instead of real passwords.
+
+### When to Use It
+
+Run this script:
+- After cloning the repository for the first time
+- When a new mock user has been added to `credentials.example.js` / `gatelin.openapi.example.json`
+
+### How to Run
+
+```bash
+./scripts/setup-mocks.sh
+```
+
+### After Running
+
+Use the printed email/password pairs to log in locally via the admin UI or the swagger UI.
+
+---
+
 ## start-dev.sh Script
 
 The `start-dev.sh` script is a convenience utility for quickly starting the development environment with a single command. It builds and runs all services using docker-compose.

@@ -118,6 +118,6 @@ For protected routes, Gatelin decodes the JWT and injects the following headers 
 
 | Header | Description |
 |---|---|
-| `x-consumer-id` | ID of the authenticated user |
+| `x-consumer-user-id` | ID of the authenticated user |
 | `x-consumer-name` | Nickname of the authenticated user |
 | `x-acl-conditions` | JSON array of ACL condition values, if any apply |

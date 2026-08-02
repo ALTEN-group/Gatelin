@@ -46,7 +46,7 @@ describe("updateHeaderWithConsumer middleware", () => {
       updateHeaderWithConsumer(req, res, next);
 
       expect(req.additionalHeaders).toEqual({
-        "x-consumer-id": "consumer-123",
+        "x-consumer-user-id": "consumer-123",
         "x-consumer-name": "testuser",
       });
       expect(next).toHaveBeenCalledWith();
@@ -57,7 +57,7 @@ describe("updateHeaderWithConsumer middleware", () => {
         "updateHeaderWithConsumer(decodedAccessToken=<present>)",
       );
       expect(debugMessages).toContain(
-        `updateHeaders(${JSON.stringify({ "x-consumer-id": "consumer-123", "x-consumer-name": "testuser" })})`,
+        `updateHeaders(${JSON.stringify({ "x-consumer-user-id": "consumer-123", "x-consumer-name": "testuser" })})`,
       );
     });
 
@@ -68,7 +68,7 @@ describe("updateHeaderWithConsumer middleware", () => {
       updateHeaderWithConsumer(req, res, next);
 
       expect(req.additionalHeaders).toEqual({
-        "x-consumer-id": "other-consumer",
+        "x-consumer-user-id": "other-consumer",
         "x-consumer-name": "other_user",
       });
       expect(next).toHaveBeenCalledWith();

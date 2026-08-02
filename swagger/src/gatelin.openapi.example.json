@@ -1,0 +1,6218 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Gateway service API document",
+    "description": "API Gateway service for authentication, consumer management, and request forwarding"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8100/api/",
+      "description": "Gatelin local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "user email",
+            "minLength": 5,
+            "maxLength": 50
+          },
+          "pwd": {
+            "type": "string",
+            "description": "user password"
+          }
+        },
+        "required": [
+          "email",
+          "pwd"
+        ],
+        "examples": {
+          "gatelin_super_admin": {
+            "summary": "Gatelin super admin â€” full permissions (roles: Gatelin super admin, eBoutique admin)",
+            "value": {
+              "email": "coco@example.com",
+              "pwd": "__PWD_GATELIN_SUPER_ADMIN__"
+            }
+          },
+          "gatelin_admin": {
+            "summary": "Gatelin admin â€” most permissions except locking",
+            "value": {
+              "email": "admin@example.com",
+              "pwd": "__PWD_GATELIN_ADMIN__"
+            }
+          },
+          "gatelin_user": {
+            "summary": "Gatelin user â€” standard read-only access",
+            "value": {
+              "email": "standard@example.com",
+              "pwd": "__PWD_GATELIN_USER__"
+            }
+          },
+          "gatelin_guest": {
+            "summary": "Gatelin guest â€” minimal permissions",
+            "value": {
+              "email": "guest@example.com",
+              "pwd": "__PWD_GATELIN_GUEST__"
+            }
+          },
+          "wrong_credentials": {
+            "summary": "Wrong credentials (invalid â€” expect 401)",
+            "value": {
+              "email": "standard@example.com",
+              "pwd": "WrongPassword123!"
+            }
+          }
+        }
+      },
+      "consumer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user account linked to this consumer session"
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30,
+            "example": "john_doe"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token (only present in session responses)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token (only present in session responses)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2
+            ]
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the consumer session is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this consumer",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this consumer",
+            "example": "moderator_user"
+          }
+        },
+        "required": [
+          "nickname",
+          "accessToken",
+          "refreshToken",
+          "roles"
+        ]
+      },
+      "route": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the service this route belongs to",
+            "example": 1
+          },
+          "serviceName": {
+            "type": "string",
+            "maxLength": 10,
+            "description": "Name of the service",
+            "example": "ms-user"
+          },
+          "resourceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the resource",
+            "example": 1
+          },
+          "resourceName": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Name of the resource",
+            "example": "users"
+          },
+          "operationId": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "IDs of the operations associated with this route",
+            "example": [
+              1,
+              2
+            ]
+          },
+          "operationName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the operations associated with this route",
+            "example": [
+              "get",
+              "search"
+            ]
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "URL pattern (can include regex when prefixed with ~)",
+            "example": "/api/users"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Resolved upstream service URL",
+            "example": "http://ms-user:3000/api/users"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Route name identifier",
+            "example": "searchUsers"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Route description",
+            "example": "Search users"
+          },
+          "methodIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "IDs of the HTTP methods allowed on this route",
+            "example": [
+              1,
+              7
+            ]
+          },
+          "methodNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the HTTP methods allowed on this route",
+            "example": [
+              "POST",
+              "OPTIONS"
+            ]
+          },
+          "protected": {
+            "type": "boolean",
+            "description": "Whether the route is protected (requires authentication)"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system route"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the route is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this route",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this route",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the route was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the route was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "serviceId",
+          "resourceId",
+          "name",
+          "pattern",
+          "description",
+          "methodIds",
+          "protected"
+        ]
+      },
+      "service": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 10,
+            "description": "Service name identifier",
+            "example": "ms-user"
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "URL pattern prefix for routing to this service",
+            "example": "/api/users"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system service"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the service is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this service",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this service",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the service was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the service was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "cors": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "CORS origin name",
+            "example": "http://localhost:3000"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "CORS origin description",
+            "example": "Admin panel front-end"
+          },
+          "credentials": {
+            "type": "boolean",
+            "description": "Whether credentials (cookies, authorization headers) are allowed for this origin"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this CORS entry",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this CORS entry",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this CORS entry",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this CORS entry",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the CORS entry was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the CORS entry was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "resource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the service this resource belongs to",
+            "example": 1
+          },
+          "serviceName": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Name of the service",
+            "example": "ms-user"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 20,
+            "description": "Resource name",
+            "example": "users"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system resource"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the resource is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this resource",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this resource",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the resource was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the resource was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "serviceId",
+          "serviceName",
+          "name"
+        ]
+      },
+      "operation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Operation name",
+            "example": "get"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Operation description",
+            "example": "Retrieve records"
+          },
+          "color": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 7,
+            "description": "Hex color code",
+            "example": "#4B0082"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system operation"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the operation is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this operation",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this operation",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the operation was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the operation was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "role": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "appId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the application this role belongs to",
+            "example": 1
+          },
+          "appName": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Name of the application this role belongs to",
+            "example": "admin-panel"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Role name",
+            "example": "editor"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Role description",
+            "example": "Can edit content"
+          },
+          "color": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 7,
+            "description": "Hex color code",
+            "example": "#4B0082"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the role is active"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the role is archived"
+          },
+          "archivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the role was archived",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this role",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this role",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the role was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the role was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name",
+          "appId"
+        ]
+      },
+      "permission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the role",
+            "example": 2
+          },
+          "serviceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the service",
+            "example": 1
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "Name of the service",
+            "example": "ms-user"
+          },
+          "resourceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the resource",
+            "example": 1
+          },
+          "resourceName": {
+            "type": "string",
+            "description": "Name of the resource",
+            "example": "users"
+          },
+          "routeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the route",
+            "example": 5
+          },
+          "routeName": {
+            "type": "string",
+            "description": "Name of the route",
+            "example": "searchUsers"
+          },
+          "routeProtected": {
+            "type": "boolean",
+            "description": "Whether the associated route requires authentication"
+          },
+          "operationId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the operation",
+            "example": 1
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the permission is active"
+          },
+          "operationName": {
+            "type": "string",
+            "description": "Name of the operation",
+            "example": "search"
+          },
+          "conditionId": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "IDs of the filter conditions (optional)",
+            "example": [
+              1
+            ]
+          },
+          "conditionName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the conditions",
+            "example": [
+              "Non-archived only"
+            ]
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Scope names granted by this permission"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Field names visible under this permission"
+          }
+        },
+        "required": [
+          "roleId",
+          "routeId",
+          "operationId"
+        ]
+      },
+      "scope": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "routeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the associated route",
+            "example": 5
+          },
+          "routeName": {
+            "type": "string",
+            "description": "Name of the route",
+            "example": "searchUsers"
+          },
+          "resourceName": {
+            "type": "string",
+            "description": "Name of the resource",
+            "example": "users"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Scope name",
+            "example": "users:search"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system scope"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the scope is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this scope",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this scope",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the scope was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the scope was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "routeId",
+          "name"
+        ]
+      },
+      "field": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resourceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the resource this field belongs to",
+            "example": 1
+          },
+          "resourceName": {
+            "type": "string",
+            "description": "Name of the resource",
+            "example": "users"
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "Name of the service",
+            "example": "ms-user"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Field identifier in table.column format",
+            "example": "consumers.archived"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system field"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the field is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this field",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this field",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the field was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the field was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "resourceId",
+          "name"
+        ]
+      },
+      "method": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10,
+            "description": "HTTP method name",
+            "example": "GET"
+          },
+          "color": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 7,
+            "description": "Hex color code",
+            "example": "#4B0082"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this method",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this method",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the method was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the method was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "application": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Application name",
+            "example": "admin-panel"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Application description",
+            "example": "Internal admin interface"
+          },
+          "core": {
+            "type": "boolean",
+            "description": "Whether this is a core system application"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the application is archived"
+          },
+          "archivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the application was archived",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who created this application",
+            "example": 123
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this application",
+            "example": "admin_user"
+          },
+          "updaterId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who last updated this application",
+            "example": 456
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this application",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the application was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the application was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "condition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Condition label",
+            "example": "Non-archived only"
+          },
+          "fieldId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the field to filter on",
+            "example": 7
+          },
+          "fieldName": {
+            "type": "string",
+            "description": "Name of the field",
+            "example": "consumers.archived"
+          },
+          "op": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10,
+            "description": "Comparison operator",
+            "example": "="
+          },
+          "value": {
+            "type": "string",
+            "description": "Value to compare against",
+            "example": "false"
+          },
+          "color": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 7,
+            "description": "Hex color code",
+            "example": "#4B0082"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the condition is archived"
+          },
+          "creatorName": {
+            "type": "string",
+            "description": "Name of the user who created this condition",
+            "example": "admin_user"
+          },
+          "updaterName": {
+            "type": "string",
+            "description": "Name of the user who last updated this condition",
+            "example": "moderator_user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the condition was created",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the condition was last updated",
+            "example": "2025-07-22T15:45:00Z"
+          }
+        },
+        "required": [
+          "name",
+          "fieldId",
+          "op",
+          "value"
+        ]
+      },
+      "preference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the user who owns this preference (-1 for shared system defaults)",
+            "example": 5
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource name (e.g. routes, roles, services)",
+            "example": "routes"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of this saved view",
+            "example": "Default view"
+          },
+          "conf": {
+            "type": "array",
+            "description": "Column configuration (visibility, order and width) for this view",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "Column field key"
+                },
+                "isVisible": {
+                  "type": "boolean",
+                  "description": "Whether the column is visible"
+                },
+                "defaultWidth": {
+                  "type": "integer",
+                  "description": "Column display width"
+                }
+              }
+            },
+            "example": [
+              {
+                "key": "id",
+                "isVisible": true,
+                "defaultWidth": 80
+              },
+              {
+                "key": "name",
+                "isVisible": true,
+                "defaultWidth": 200
+              }
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether this view is the currently active one for the resource",
+            "example": true
+          },
+          "locked": {
+            "type": "boolean",
+            "description": "Whether this is a shared system default that cannot be edited directly (customizing it creates a personal copy)",
+            "example": false
+          }
+        },
+        "required": [
+          "resource",
+          "name",
+          "conf"
+        ]
+      },
+      "historyEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tstamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the change occurred",
+            "example": "2025-07-22T10:30:00Z"
+          },
+          "schemaName": {
+            "type": "string",
+            "description": "Database schema name",
+            "example": "public"
+          },
+          "tableName": {
+            "type": "string",
+            "description": "Database table name",
+            "example": "route"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "INSERT",
+              "UPDATE",
+              "DELETE"
+            ],
+            "description": "Type of database operation",
+            "example": "UPDATE"
+          },
+          "dbUser": {
+            "type": "string",
+            "description": "Database user who performed the operation",
+            "example": "ms_gateway_user"
+          },
+          "consumerId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the consumer who made the change",
+            "example": 123
+          },
+          "consumerName": {
+            "type": "string",
+            "description": "Name of the consumer who made the change",
+            "example": "admin_user"
+          },
+          "record": {
+            "type": "object",
+            "description": "JSON representation of the affected record",
+            "example": {
+              "id": 1,
+              "name": "test-route",
+              "pattern": "/api/test"
+            }
+          }
+        },
+        "required": [
+          "tstamp",
+          "schemaName",
+          "tableName",
+          "operation",
+          "consumerId",
+          "consumerName",
+          "record"
+        ]
+      },
+      "tokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Token expiration time in seconds"
+          }
+        }
+      },
+      "refreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token to validate"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "errorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "details": {
+            "type": "string",
+            "example": "Invalid request parameters"
+          }
+        }
+      },
+      "entityProperty": {
+        "type": "object",
+        "description": "Field metadata describing a single property of an entity",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Field name",
+            "example": "name"
+          },
+          "type": {
+            "type": "string",
+            "description": "Field data type",
+            "example": "string"
+          },
+          "min": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Minimum length or value"
+          },
+          "max": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Maximum length or value"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "SQL operations this field participates in",
+            "example": [
+              "SELECT",
+              "INSERT",
+              "UPDATE"
+            ]
+          },
+          "requiredFor": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "HTTP methods for which this field is required",
+            "example": [
+              "POST"
+            ]
+          },
+          "isFilterable": {
+            "type": "boolean",
+            "description": "Whether this field can be used as a search filter"
+          }
+        }
+      },
+      "entitySchemaResponse": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/entityProperty"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Number of properties returned"
+          }
+        }
+      }
+    },
+    "responses": {
+      "unauthorizedError": {
+        "description": "Unauthorized. Access token is missing or invalid",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "notFoundError": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "unexpectedError": {
+        "description": "Unexpected error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      },
+      "badRequestError": {
+        "description": "Missing parameter in request body or params",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/errorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/gateway/sessions": {
+      "post": {
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Create a new session (login)",
+        "description": "Create a new consumer session by authenticating with email and password. Returns access and refresh tokens for subsequent requests.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              },
+              "examples": {
+                "gatelin_super_admin": {
+                  "summary": "Gatelin super admin + eBoutique admin (coco@example.com)",
+                  "value": {
+                    "email": "coco@example.com",
+                    "pwd": "__PWD_GATELIN_SUPER_ADMIN__"
+                  }
+                },
+                "gatelin_admin": {
+                  "summary": "Gatelin admin (admin@example.com)",
+                  "value": {
+                    "email": "admin@example.com",
+                    "pwd": "__PWD_GATELIN_ADMIN__"
+                  }
+                },
+                "gatelin_user": {
+                  "summary": "Gatelin user â€” read-only (standard@example.com)",
+                  "value": {
+                    "email": "standard@example.com",
+                    "pwd": "__PWD_GATELIN_USER__"
+                  }
+                },
+                "gatelin_guest": {
+                  "summary": "Gatelin guest â€” minimal permissions (guest@example.com)",
+                  "value": {
+                    "email": "guest@example.com",
+                    "pwd": "__PWD_GATELIN_GUEST__"
+                  }
+                },
+                "eboutique_user": {
+                  "summary": "eBoutique user (ebuser@example.com)",
+                  "value": {
+                    "email": "ebuser@example.com",
+                    "pwd": "__PWD_EBOUTIQUE_USER__"
+                  }
+                },
+                "eboutique_super_admin": {
+                  "summary": "eBoutique super admin (ebsuperadmin@example.com)",
+                  "value": {
+                    "email": "ebsuperadmin@example.com",
+                    "pwd": "__PWD_EBOUTIQUE_SUPER_ADMIN__"
+                  }
+                },
+                "eboutique_admin": {
+                  "summary": "eBoutique admin (ebadmin@example.com)",
+                  "value": {
+                    "email": "ebadmin@example.com",
+                    "pwd": "__PWD_EBOUTIQUE_ADMIN__"
+                  }
+                },
+                "wrong_credentials": {
+                  "summary": "Wrong credentials â€” expect 401",
+                  "value": {
+                    "email": "standard@example.com",
+                    "pwd": "WrongPassword123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created successfully (login successful)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/consumer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Refresh session tokens",
+        "description": "Update a consumer session with new access and refresh tokens (used for automatic login and token refresh).\n\n**IMPORTANT:** This endpoint requires valid tokens from a previous login. You must:\n1. First call POST /sessions to login and receive real tokens\n2. Copy the accessToken and refreshToken from the login response\n3. Use those exact tokens in both the Authorization header and request body\n4. The tokens are validated against the cache - fake tokens will fail with 401",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refreshTokenRequest"
+              },
+              "example": {
+                "refreshToken": "REPLACE_WITH_REAL_REFRESH_TOKEN_FROM_LOGIN"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session updated successfully (tokens refreshed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/consumer"
+                },
+                "example": {
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newAccessToken.signature",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.newRefreshToken.signature"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Delete session (logout)",
+        "description": "Delete a consumer session from the system (archive and remove from cache). Requires JWT access token in Authorization header.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Session deleted successfully (logout successful)"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/consumers/search": {
+      "post": {
+        "tags": [
+          "Consumer Management"
+        ],
+        "summary": "Search consumers",
+        "description": "Search and retrieve active consumer sessions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Number of rows to return",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field to sort by",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of consumers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/consumer"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of consumers (when pagination enabled)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/consumers/archive": {
+      "post": {
+        "tags": [
+          "Consumer Management"
+        ],
+        "summary": "Archive consumers",
+        "description": "Archive one or more consumer sessions by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Consumers archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/consumers/schema": {
+      "get": {
+        "tags": [
+          "Consumer Management"
+        ],
+        "summary": "Get consumer schema",
+        "description": "Retrieve field metadata for the consumer entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consumer schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources/search": {
+      "post": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Search resources",
+        "description": "Search and retrieve resources configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/resource"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources": {
+      "post": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Add resources",
+        "description": "Add one or more resources to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/resource"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resources created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/resource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Update resources",
+        "description": "Update one or more resources",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/resource"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resources updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/resource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources/archive": {
+      "post": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Archive resources",
+        "description": "Archive one or more resources by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Resources archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources/{id}/history": {
+      "get": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Get resource history",
+        "description": "Retrieve the change history for a specific resource",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Resource ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/resources/schema": {
+      "get": {
+        "tags": [
+          "Resource Management"
+        ],
+        "summary": "Get resource schema",
+        "description": "Retrieve field metadata for the resource entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/operations/search": {
+      "post": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Search operations",
+        "description": "Search and retrieve operations configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of operations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/operation"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/operations": {
+      "post": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Add operations",
+        "description": "Add one or more operations to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/operation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operations created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/operation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Update operations",
+        "description": "Update one or more operations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/operation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operations updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/operation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/operations/archive": {
+      "post": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Archive operations",
+        "description": "Archive one or more operations by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Operations archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/operations/{id}/history": {
+      "get": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Get operation history",
+        "description": "Retrieve the change history for a specific operation",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Operation ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/operations/schema": {
+      "get": {
+        "tags": [
+          "Operation Management"
+        ],
+        "summary": "Get operation schema",
+        "description": "Retrieve field metadata for the operation entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes/search": {
+      "post": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Search registered routes",
+        "description": "Search and retrieve routes configured in the gateway based on criteria. Use pagination=true to get the total count of matching routes.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination and total count in response",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset - number of records to skip",
+                    "default": 0,
+                    "minimum": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Limit - maximum number of records to return (null means no limit)",
+                    "default": null,
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field name to sort by",
+                    "example": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "description": "Sort order",
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria for search",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "description": "Value to filter by"
+                        },
+                        "matchMode": {
+                          "type": "string",
+                          "enum": [
+                            "equals",
+                            "contains",
+                            "startsWith",
+                            "endsWith",
+                            "lt",
+                            "lte",
+                            "gt",
+                            "gte",
+                            "in",
+                            "is",
+                            "isNot"
+                          ],
+                          "description": "Matching mode for the filter"
+                        }
+                      }
+                    },
+                    "example": {
+                      "protected": {
+                        "value": true,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "withPagination": {
+                  "summary": "Search with pagination (recommended)",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {}
+                  }
+                },
+                "filterProtectedEnabled": {
+                  "summary": "Filter: protected routes (require authentication)",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "protected": {
+                        "value": true,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterProtectedDisabled": {
+                  "summary": "Filter: unprotected (public) routes",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "protected": {
+                        "value": false,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterByNameContains": {
+                  "summary": "Filter: serviceName contains 'gatelin'",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "serviceName",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "serviceName": {
+                        "value": "gatelin",
+                        "matchMode": "contains"
+                      }
+                    }
+                  }
+                },
+                "filterByServiceStartsWith": {
+                  "summary": "Filter: serviceName starts with 'gate'",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "serviceName": {
+                        "value": "gate",
+                        "matchMode": "startsWith"
+                      }
+                    }
+                  }
+                },
+                "filterByServiceId": {
+                  "summary": "Filter: By service ID",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "serviceId",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "id": {
+                        "value": 1,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterMultipleConditions": {
+                  "summary": "Filter: Multiple conditions (protected + id)",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "protected": {
+                        "value": true,
+                        "matchMode": "equals"
+                      },
+                      "id": {
+                        "value": 1,
+                        "matchMode": "equals"
+                      }
+                    }
+                  }
+                },
+                "filterIdGreaterThan": {
+                  "summary": "Filter: ID greater than 5",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {
+                      "id": {
+                        "value": 5,
+                        "matchMode": "gt"
+                      }
+                    }
+                  }
+                },
+                "filterIdInArray": {
+                  "summary": "Filter: ID in specific set",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "filters": {
+                      "id": {
+                        "value": [
+                          1,
+                          3,
+                          5,
+                          7
+                        ],
+                        "matchMode": "in"
+                      }
+                    }
+                  }
+                },
+                "sortByServiceDesc": {
+                  "summary": "Sort: By serviceName descending",
+                  "value": {
+                    "paginate": true,
+                    "first": 0,
+                    "rows": 10,
+                    "sortField": "serviceName",
+                    "sortOrder": "DESC",
+                    "filters": {}
+                  }
+                },
+                "paginationSecondPage": {
+                  "summary": "Pagination: Second page (10-20)",
+                  "value": {
+                    "paginate": true,
+                    "first": 10,
+                    "rows": 10,
+                    "sortField": "id",
+                    "sortOrder": "ASC",
+                    "filters": {}
+                  }
+                },
+                "withoutPagination": {
+                  "summary": "Search without pagination",
+                  "value": {
+                    "paginate": false,
+                    "filters": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of routes matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/route"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of routes matching criteria (only present when pagination=true)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes": {
+      "post": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Add routes",
+        "description": "Add one or more route configurations to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/route"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Routes created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/route"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Update routes",
+        "description": "Update one or more route configurations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/route"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Routes updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/route"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes/archive": {
+      "post": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Archive routes",
+        "description": "Archive one or more routes by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Routes archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes/{id}/history": {
+      "get": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Get route history",
+        "description": "Retrieve the change history for a specific route",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/routes/schema": {
+      "get": {
+        "tags": [
+          "Route Management"
+        ],
+        "summary": "Get route schema",
+        "description": "Retrieve field metadata for the route entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/services/search": {
+      "post": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Search registered services",
+        "description": "Retrieve all services configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Number of rows to return",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field to sort by",
+                    "default": "id"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/service"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of services"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/services": {
+      "post": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Add services",
+        "description": "Add one or more service configurations to the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Services created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/service"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Update services",
+        "description": "Update one or more service configurations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Services updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/service"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/services/archive": {
+      "post": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Archive services",
+        "description": "Archive one or more services by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Services archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/services/{id}/history": {
+      "get": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Get service history",
+        "description": "Retrieve the change history for a specific service",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Service ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/services/schema": {
+      "get": {
+        "tags": [
+          "Service Management"
+        ],
+        "summary": "Get service schema",
+        "description": "Retrieve field metadata for the service entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/cors/search": {
+      "post": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Search CORS configurations",
+        "description": "Retrieve all CORS origins configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "description": "Enable pagination",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "Offset",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "description": "Number of rows to return",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "description": "Field to sort by",
+                    "default": "id"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Filter criteria"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of CORS configurations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/cors"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of CORS configurations"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/cors": {
+      "post": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Add CORS origins",
+        "description": "Add one or more CORS origins to the gateway whitelist",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/cors"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CORS configurations created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/cors"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Update CORS origins",
+        "description": "Update one or more CORS origin configurations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/cors"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CORS configurations updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/cors"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/cors/archive": {
+      "post": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Archive CORS origins",
+        "description": "Archive one or more CORS origins by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "CORS origins archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/cors/{id}/history": {
+      "get": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Get CORS origin history",
+        "description": "Retrieve the change history for a specific CORS origin",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "CORS origin ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CORS origin history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/cors/schema": {
+      "get": {
+        "tags": [
+          "CORS Management"
+        ],
+        "summary": "Get CORS schema",
+        "description": "Retrieve field metadata for the cors entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CORS schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles/search": {
+      "post": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Search roles",
+        "description": "Search and retrieve roles configured in the gateway",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/role"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles": {
+      "post": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Add roles",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/role"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Roles created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/role"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Update roles",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/role"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Roles updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/role"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles/archive": {
+      "post": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Archive roles",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Roles archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles/{id}/history": {
+      "get": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Get role history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Role ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/roles/schema": {
+      "get": {
+        "tags": [
+          "Role Management"
+        ],
+        "summary": "Get role schema",
+        "description": "Retrieve field metadata for the role entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/permissions/search": {
+      "post": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Search permissions",
+        "description": "Search permissions by roleId, routeId, or other fields",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "roleId"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "pagination": true,
+                "first": 0,
+                "rows": 10,
+                "sortField": "roleId",
+                "sortOrder": "ASC",
+                "filters": {
+                  "roleId": {
+                    "value": 2,
+                    "matchMode": "equals"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/permission"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/permissions": {
+      "post": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Add permissions",
+        "description": "Add one or more permissions (role + route combinations)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Permissions created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/permission"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Update permissions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permissions updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/permission"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Delete permissions",
+        "description": "Permanently delete permissions by their IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 10
+                      },
+                      {
+                        "id": 11
+                      },
+                      {
+                        "id": 12
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Permissions deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/permissions/history/route/{routeId}": {
+      "get": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Get permission history by route",
+        "description": "Retrieve the change history for all permissions associated with a specific route",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "routeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission history records for the route",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/permissions/schema": {
+      "get": {
+        "tags": [
+          "Permission Management"
+        ],
+        "summary": "Get permission schema",
+        "description": "Retrieve field metadata for the permission entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes/search": {
+      "post": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Search scopes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of scopes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/scope"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes": {
+      "post": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Add scopes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/scope"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Scopes created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/scope"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Update scopes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/scope"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scopes updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/scope"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes/archive": {
+      "post": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Archive scopes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Scopes archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes/{id}/history": {
+      "get": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Get scope history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Scope ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scope history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/scopes/schema": {
+      "get": {
+        "tags": [
+          "Scope Management"
+        ],
+        "summary": "Get scope schema",
+        "description": "Retrieve field metadata for the scope entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scope schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/fields/search": {
+      "post": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Search fields",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/field"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/fields": {
+      "post": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Add fields",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/field"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fields created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/field"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Update fields",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/field"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fields updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/field"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/fields/archive": {
+      "post": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Archive fields",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Fields archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/fields/{id}/history": {
+      "get": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Get field history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Field ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/fields/schema": {
+      "get": {
+        "tags": [
+          "Field Management"
+        ],
+        "summary": "Get field schema",
+        "description": "Retrieve field metadata for the field entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/methods/search": {
+      "post": {
+        "tags": [
+          "Method Management"
+        ],
+        "summary": "Search methods",
+        "description": "Retrieve HTTP methods available in the gateway (read-only reference data)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of HTTP methods",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/method"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/methods": {
+      "put": {
+        "tags": [
+          "Method Management"
+        ],
+        "summary": "Update methods",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/method"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Methods updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/method"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/methods/schema": {
+      "get": {
+        "tags": [
+          "Method Management"
+        ],
+        "summary": "Get method schema",
+        "description": "Retrieve field metadata for the method entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Method schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/applications/search": {
+      "post": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Search applications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/application"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/applications": {
+      "post": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Add applications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/application"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Applications created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/application"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Update applications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/application"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Applications updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/application"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/applications/archive": {
+      "post": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Archive applications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Applications archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/applications/{id}/history": {
+      "get": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Get application history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Application ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/applications/schema": {
+      "get": {
+        "tags": [
+          "Application Management"
+        ],
+        "summary": "Get application schema",
+        "description": "Retrieve field metadata for the application entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/conditions/search": {
+      "post": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Search conditions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pagination": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "first": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "default": 10
+                  },
+                  "sortField": {
+                    "type": "string",
+                    "default": "id"
+                  },
+                  "sortOrder": {
+                    "type": "string",
+                    "enum": [
+                      "ASC",
+                      "DESC"
+                    ],
+                    "default": "ASC"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of conditions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/condition"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/conditions": {
+      "post": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Add conditions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/condition"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Conditions created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/condition"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Update conditions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/condition"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conditions updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/condition"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/conditions/archive": {
+      "post": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Archive conditions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "id": 1
+                      },
+                      {
+                        "id": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Conditions archived successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/conditions/{id}/history": {
+      "get": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Get condition history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Condition ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Condition history records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/historyEntry"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/conditions/schema": {
+      "get": {
+        "tags": [
+          "Condition Management"
+        ],
+        "summary": "Get condition schema",
+        "description": "Retrieve field metadata for the condition entity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Condition schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/entitySchemaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/preferences/{resource}": {
+      "get": {
+        "tags": [
+          "Preference Management"
+        ],
+        "summary": "Get preferences for a resource",
+        "description": "Returns saved view presets (column visibility, order and width) for the given resource, merging shared system defaults with any user-owned views.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resource name (e.g. routes, roles, services)",
+            "example": "routes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preferences for the resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/preference"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Preference Management"
+        ],
+        "summary": "Upsert preferences for a resource",
+        "description": "Creates user preference rows from system defaults on first call; updates existing rows on subsequent calls. Never deletes rows - use the DELETE endpoint to remove a preference.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resource name (e.g. routes, roles, services)",
+            "example": "routes"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rows"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/preference"
+                    }
+                  }
+                }
+              },
+              "example": {
+                "rows": [
+                  {
+                    "id": 1,
+                    "name": "Default view",
+                    "conf": [
+                      {
+                        "key": "id",
+                        "isVisible": true,
+                        "defaultWidth": 80
+                      },
+                      {
+                        "key": "name",
+                        "isVisible": true,
+                        "defaultWidth": 200
+                      }
+                    ],
+                    "isActive": true,
+                    "locked": false
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preferences upserted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/preference"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/preferences/{resource}/{id}": {
+      "delete": {
+        "tags": [
+          "Preference Management"
+        ],
+        "summary": "Delete a preference",
+        "description": "Permanently deletes a single user-owned preference. The row must belong to the authenticated user for this resource - a shared system default (userId=-1) or another user's row can never be deleted.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resource name (e.g. routes, roles, services)",
+            "example": "routes"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Preference id",
+            "example": 12
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Preference deleted successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/notFoundError"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    },
+    "/gateway/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Check the health of the gateway service",
+        "description": "Health check endpoint to verify service availability",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "uptime": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "Service uptime in seconds"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Gateway service is running"
+                    },
+                    "timestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "Current timestamp"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "$ref": "#/components/responses/unexpectedError"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Session Management",
+      "description": "Session lifecycle management: login, token refresh, and logout"
+    },
+    {
+      "name": "Consumer Management",
+      "description": "Active consumer session management"
+    },
+    {
+      "name": "Service Management",
+      "description": "Service registration and management for the gateway"
+    },
+    {
+      "name": "Resource Management",
+      "description": "Resource registration and management"
+    },
+    {
+      "name": "Operation Management",
+      "description": "Operation registration and management"
+    },
+    {
+      "name": "Route Management",
+      "description": "Gateway route configuration and validation"
+    },
+    {
+      "name": "CORS Management",
+      "description": "Cross-Origin Resource Sharing configuration management"
+    },
+    {
+      "name": "Role Management",
+      "description": "Role creation, archival, and history"
+    },
+    {
+      "name": "Permission Management",
+      "description": "Per-role, per-route permission management"
+    },
+    {
+      "name": "Scope Management",
+      "description": "Scope (route + resource + operation) management"
+    },
+    {
+      "name": "Field Management",
+      "description": "Field registration for use in conditions"
+    },
+    {
+      "name": "Method Management",
+      "description": "HTTP method reference data management"
+    },
+    {
+      "name": "Application Management",
+      "description": "Client application registration and management"
+    },
+    {
+      "name": "Condition Management",
+      "description": "Filter condition management for permissions"
+    },
+    {
+      "name": "Preference Management",
+      "description": "Per-user saved view presets (column visibility, order and width) for list/table resources"
+    },
+    {
+      "name": "Health",
+      "description": "Service health and status checks"
+    }
+  ]
+}

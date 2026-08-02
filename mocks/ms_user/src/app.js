@@ -44,11 +44,11 @@ app.post("/users/users/search/", (req, res) => {
 // GET /users/me - Get authenticated user's essential info (for login/navbar)
 app.get("/users/users/me/", (req, res) => {
   log.info(
-    "GET /users/users/me/ - Get authenticated user essentials from x-consumer-id header",
+    "GET /users/users/me/ - Get authenticated user essentials from x-consumer-user-id header",
   );
 
-  const userId = req.headers["x-consumer-id"];
-  log.debug(`Extracted userId from x-consumer-id header: ${userId}`);
+  const userId = req.headers["x-consumer-user-id"];
+  log.debug(`Extracted userId from x-consumer-user-id header: ${userId}`);
   const user = mockUsers.find((u) => u.id === +userId);
   if (!user) return res.status(404).json({ error: "User not found" });
 
