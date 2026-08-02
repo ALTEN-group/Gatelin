@@ -20,7 +20,7 @@ export default new SQLEntity("service", [
     key: "name",
     type: "string",
     min: 1,
-    max: 10,
+    max: 20,
     isTypeChecked: true,
     isFilterable: true,
     requiredFor: ["POST"],
