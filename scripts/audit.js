@@ -46,7 +46,7 @@ async function runAudit() {
   const checks = [
     {
       label: 'Tests',
-      cmd: "NODE_OPTIONS='--experimental-vm-modules' npm test --silent || true",
+      cmd: "NODE_OPTIONS='--experimental-vm-modules' npm test || true",
     },
     { label: 'npm audit', cmd: 'npm audit || true' },
     { label: 'Lint (Biome)', cmd: 'npx biome check . || true' },
@@ -69,10 +69,10 @@ async function runAudit() {
 
   const prompt = `You are a concise codebase auditor.
    Only audit src/ folder.
-
+   Only report issues, no positive findings.
+   Do not run npm audit / npm outdated, npx biome check and npm test.
    Summarize this project audit and produce a Markdown report with: a 2-line executive summary,
-   top findings (bullet list), and prioritized action items (High / Medium / Low severity).
-${rawReport.slice(0, 12000)}`;
+   top findings (bullet list), and prioritized action items (High / Medium / Low severity).`;
 
   const summary = callCopilot(prompt);
   const body = `${rawReport}\n---\n\n## Copilot Summary\n\n${summary}`;

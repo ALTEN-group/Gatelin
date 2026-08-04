@@ -32,4 +32,5 @@ jobs:
       - name: Run weekly audit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: npm run audit:report
