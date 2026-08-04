@@ -38,6 +38,8 @@ RUN deluser --remove-home node \
 
 USER user
 
+LABEL org.opencontainers.image.description="Gatelin API gateway"
+
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --from=deps /usr/src/app/node_modules ./node_modules
 COPY --chown=user:usergroup package.json ./
