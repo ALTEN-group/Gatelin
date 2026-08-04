@@ -1,9 +1,9 @@
 // scripts/audit.js
-// Monthly AI audit — runs checks on main, calls GitHub Copilot (via GitHub Models API),
-// and posts a Markdown report as a GitHub issue.
+// Weekly AI audit — runs checks on main, calls GitHub Copilot CLI to summarize
+// them, and posts a Markdown report as a GitHub issue.
 
 import { Octokit } from '@octokit/rest';
-import { execSync } from 'node:child_process';
+import { execSync, execFileSync } from 'node:child_process';
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const [owner, repo] = (process.env.GITHUB_REPOSITORY || 'OWNER/REPO').split('/');
@@ -20,37 +20,23 @@ function run(cmd) {
   }
 }
 
-async function callCopilot(prompt) {
-  const token = process.env.GITHUB_MODELS_TOKEN;
-  if (!token) return '_No `GITHUB_MODELS_TOKEN` configured — skipping Copilot summary._';
+function callCopilot(prompt) {
+  const hasToken =
+    process.env.COPILOT_GITHUB_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+  if (!hasToken)
+    return '_No Copilot-capable token configured (`COPILOT_GITHUB_TOKEN`/`GH_TOKEN`/`GITHUB_TOKEN`) — skipping Copilot summary._';
 
-  const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a concise codebase auditor. Produce a Markdown report with: a 2-line executive summary, top findings (bullet list), and prioritized action items (High / Medium / Low severity).',
-        },
-        { role: 'user', content: prompt },
-      ],
-      max_tokens: 1000,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    return `_Copilot API call failed (${res.status}): ${err}_`;
+  try {
+    // No --allow-tool grants: the prompt is self-contained (raw report inline),
+    // so Copilot only needs to reason over text, not touch the filesystem or shell.
+    const output = execFileSync('copilot', ['-p', prompt, '-s', '--no-ask-user'], {
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024,
+    }).trim();
+    return output || '_No content returned._';
+  } catch (e) {
+    return `_Copilot CLI call failed: ${(e.stderr || e.message || '').toString().trim()}_`;
   }
-
-  const j = await res.json();
-  return j.choices?.[0]?.message?.content?.trim() || '_No content returned._';
 }
 
 async function runAudit() {
@@ -67,7 +53,7 @@ async function runAudit() {
     { label: 'TODOs / FIXMEs', cmd: 'git grep -n "TODO\\|FIXME" -- src/ || true' },
   ];
 
-  const rawParts = [`# Monthly Audit — ${date}`, ''];
+  const rawParts = [`# Weekly Audit — ${date}`, ''];
 
   for (const { label, cmd } of checks) {
     const output = run(cmd);
@@ -80,11 +66,14 @@ async function runAudit() {
 
   const rawReport = rawParts.join('\n');
 
-  const prompt = `Summarize this project audit and produce a Markdown report.
+  const prompt = `You are a concise codebase auditor.
+   Only audit src/ folder.
 
+   Summarize this project audit and produce a Markdown report with: a 2-line executive summary,
+   top findings (bullet list), and prioritized action items (High / Medium / Low severity).
 ${rawReport.slice(0, 12000)}`;
 
-  const summary = await callCopilot(prompt);
+  const summary = callCopilot(prompt);
   const body = `${rawReport}\n---\n\n## Copilot Summary\n\n${summary}`;
 
   if (process.env.DRY_RUN === 'true') {
@@ -96,7 +85,7 @@ ${rawReport.slice(0, 12000)}`;
   const { data: issue } = await octokit.issues.create({
     owner,
     repo,
-    title: `Monthly Audit — ${date}`,
+    title: `Weekly Audit — ${date}`,
     body,
     labels: ['audit'],
   });
