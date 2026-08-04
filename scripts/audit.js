@@ -29,7 +29,8 @@ function callCopilot(prompt) {
   try {
     // No --allow-tool grants: the prompt is self-contained (raw report inline),
     // so Copilot only needs to reason over text, not touch the filesystem or shell.
-    const output = execFileSync('copilot', ['-p', prompt, '-s', '--no-ask-user'], {
+    const modelArgs = process.env.COPILOT_AUDITS_MODEL ? ['--model', process.env.COPILOT_AUDITS_MODEL] : [];
+    const output = execFileSync('copilot', ['-p', prompt, '-s', '--no-ask-user', ...modelArgs], {
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024,
     }).trim();
