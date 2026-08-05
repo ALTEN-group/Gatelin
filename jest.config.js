@@ -44,7 +44,7 @@ export default {
   setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
 
   // Coverage settings
-  collectCoverageFrom: ["src/**/*.js", "!src/app.js", "!**/node_modules/**"],
+  collectCoverageFrom: ["src/**/*.js", "!src/server.js", "!**/node_modules/**"],
 
   // Test timeout
   testTimeout: 10000,
