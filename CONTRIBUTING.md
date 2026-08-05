@@ -83,6 +83,23 @@ npm run test:coverage     # with coverage report
 
 See [tests/README.md](tests/README.md) for more details.
 
+## API Fuzzing (RESTler)
+
+[RESTler](https://github.com/microsoft/restler-fuzzer) is a stateful REST API fuzzer. It compiles the Gatelin OpenAPI spec into a test grammar, logs in as one of the mock personas (see `swagger/src/gatelin.openapi.json` examples), and exercises every endpoint through Traefik.
+
+Requires `docker/conf/.env.dev` and `swagger/src/gatelin.openapi.json` — run `./scripts/setup-env.sh` and `./scripts/setup-mocks.sh` first if you haven't.
+
+```sh
+./scripts/run-restler.sh            # test mode (smoketest, default)
+./scripts/run-restler.sh fuzz-lean  # fuzz each endpoint once with default checkers
+./scripts/run-restler.sh fuzz       # full fuzzing run ($RESTLER_TIME_BUDGET hours, default 1)
+./scripts/run-restler.sh test --keep  # leave the dependency stack running afterwards
+```
+
+This starts postgres, traefik, the migration job, gatelin, and the auth/user mocks, waits for gatelin to become healthy, then runs RESTler in a container attached to the same docker network. Results (grammar, network logs, coverage, bug buckets) are written to `tests/restler/results/`.
+
+The run fails if spec coverage drops below `RESTLER_MIN_COVERAGE` (default 50%) or if RESTler reports bugs (5xx responses or checker violations) — set `RESTLER_FAIL_ON_BUGS=false` to only report them. See `docker/restler/` for the auth module, engine settings, and pass/fail gate, and `.github/workflows/restler.yml` for the CI job (smoketest on PRs touching the spec, weekly `fuzz-lean` on schedule, or on-demand via `workflow_dispatch`).
+
 ## Production
 
 ### Images

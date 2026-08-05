@@ -1,0 +1,36 @@
+name: ${APP_NAME}-restler
+
+# Runs Microsoft's RESTler fuzzer (https://github.com/microsoft/restler-fuzzer)
+# against the Gatelin OpenAPI spec. Joins the network created by
+# docker-compose.yml, so the main dev stack (traefik, gatelin, postgres,
+# migrations, mocks) must already be up and healthy — see scripts/run-restler.sh.
+services:
+
+  restler:
+    image: mcr.microsoft.com/restlerfuzzer/restler:v9.2.4
+    container_name: ${APP_NAME}-restler-${ENV_NAME}
+    hostname: ${APP_NAME}-restler-${ENV_NAME}
+    user: "${UID}:${GID}"
+    entrypoint: ["/bin/sh", "/opt/restler/entrypoint.sh"]
+    working_dir: /work
+    environment:
+      RESTLER_MODE: ${RESTLER_MODE:-test}
+      RESTLER_TARGET_HOST: ${TRAEFIK_HOST}
+      RESTLER_TARGET_PORT: "80"
+      RESTLER_PERSONA: ${RESTLER_PERSONA:-gatelin_super_admin}
+      RESTLER_TIME_BUDGET: ${RESTLER_TIME_BUDGET:-1}
+      RESTLER_MIN_COVERAGE: ${RESTLER_MIN_COVERAGE:-50}
+      RESTLER_FAIL_ON_BUGS: ${RESTLER_FAIL_ON_BUGS:-true}
+    volumes:
+      - ${PWD}/docker/restler/auth:/opt/restler/auth:ro
+      - ${PWD}/docker/restler/config:/opt/restler/config:ro
+      - ${PWD}/docker/restler/entrypoint.sh:/opt/restler/entrypoint.sh:ro
+      - ${PWD}/swagger/src/gatelin.openapi.json:/opt/restler/spec/gatelin.openapi.json:ro
+      - ${PWD}/tests/restler/results:/work
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: ${APP_NAME}-internal-${ENV_NAME}
+    external: true

@@ -1,0 +1,20 @@
+{
+  "authentication": {
+    "token": {
+      "module": {
+        "file": "/opt/restler/auth/acquire_token.py",
+        "function": "acquire_token",
+        "data": {
+          "spec_path": "/opt/restler/spec/gatelin.openapi.json",
+          "login_url": "http://__TRAEFIK_HOST__/api/gateway/sessions",
+          "persona": "__RESTLER_PERSONA__"
+        }
+      },
+      "token_refresh_interval": 10
+    }
+  },
+  "host": "__TRAEFIK_HOST__",
+  "no_ssl": true,
+  "custom_bug_codes": ["5*"],
+  "max_request_execution_time": 30
+}
