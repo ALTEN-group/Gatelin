@@ -16,37 +16,13 @@ OPENAPI_FILE="swagger/src/gatelin.openapi.json"
 cp "$CREDENTIALS_EXAMPLE" "$CREDENTIALS_FILE"
 cp "$OPENAPI_EXAMPLE" "$OPENAPI_FILE"
 
-# Strong random password: uppercase + lowercase + digit + special char + random hex suffix
-gen_pwd() {
-  echo "Aa1!$(openssl rand -hex 6)"
-}
+# Load MSAUTH_PWD_SECRET (used to hash mock passwords, must match the ms_auth_mock container's env)
+if [[ -f docker/conf/.env.dev ]]; then
+  source <(grep -v '^#' docker/conf/.env.dev | grep -v '^UID=')
+fi
 
-PWD_GATELIN_ADMIN=$(gen_pwd)
-PWD_GATELIN_USER=$(gen_pwd)
-PWD_GATELIN_SUPER_ADMIN=$(gen_pwd)
-PWD_GATELIN_GUEST=$(gen_pwd)
-PWD_EBOUTIQUE_USER=$(gen_pwd)
-PWD_EBOUTIQUE_SUPER_ADMIN=$(gen_pwd)
-PWD_EBOUTIQUE_ADMIN=$(gen_pwd)
+# @dwtechs/passken + @dwtechs/hashitaka are needed on the host to generate/hash mock passwords
+npm install --prefix mocks/ms_auth --loglevel=error --no-fund
 
-sedi \
-  -e "s|__PWD_GATELIN_ADMIN__|${PWD_GATELIN_ADMIN}|g" \
-  -e "s|__PWD_GATELIN_USER__|${PWD_GATELIN_USER}|g" \
-  -e "s|__PWD_GATELIN_SUPER_ADMIN__|${PWD_GATELIN_SUPER_ADMIN}|g" \
-  -e "s|__PWD_GATELIN_GUEST__|${PWD_GATELIN_GUEST}|g" \
-  -e "s|__PWD_EBOUTIQUE_USER__|${PWD_EBOUTIQUE_USER}|g" \
-  -e "s|__PWD_EBOUTIQUE_SUPER_ADMIN__|${PWD_EBOUTIQUE_SUPER_ADMIN}|g" \
-  -e "s|__PWD_EBOUTIQUE_ADMIN__|${PWD_EBOUTIQUE_ADMIN}|g" \
-  "$CREDENTIALS_FILE" "$OPENAPI_FILE"
+node mocks/ms_auth/scripts/generate-credentials.mjs "$CREDENTIALS_FILE" "$OPENAPI_FILE"
 
-echo "$CREDENTIALS_FILE created from $CREDENTIALS_EXAMPLE."
-echo "$OPENAPI_FILE created from $OPENAPI_EXAMPLE."
-echo ""
-echo "Auto-generated mock passwords:"
-echo "  admin@example.com          = ${PWD_GATELIN_ADMIN}"
-echo "  standard@example.com       = ${PWD_GATELIN_USER}"
-echo "  coco@example.com           = ${PWD_GATELIN_SUPER_ADMIN}"
-echo "  guest@example.com          = ${PWD_GATELIN_GUEST}"
-echo "  ebuser@example.com         = ${PWD_EBOUTIQUE_USER}"
-echo "  ebsuperadmin@example.com   = ${PWD_EBOUTIQUE_SUPER_ADMIN}"
-echo "  ebadmin@example.com        = ${PWD_EBOUTIQUE_ADMIN}"
