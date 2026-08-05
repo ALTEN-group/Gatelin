@@ -70,7 +70,7 @@ async function runAudit() {
 
   const prompt = `As a codebase auditor :
    - Audit src/ folder only
-   - Do not run npm audit / npm outdated, npx biome check nor npm test
+   - Do not run "npm audit", "npm outdated", "npx biome check" nor "npm test"
    - Look for bugs, security, performance & code quality improvements
    - Report issues, not positive findings
    - Prioritize issues by severity and suggest solutions
