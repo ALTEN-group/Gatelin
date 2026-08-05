@@ -18,6 +18,15 @@ jest.unstable_mockModule("@dwtechs/winstan", () => ({
     error: jest.fn(),
   },
 }));
+// Real toker-express throws at import time without TOKEN_SECRET; mock it like the other route tests.
+jest.unstable_mockModule("@dwtechs/toker-express", () => ({
+  parseBearer: jest.fn((_req, _res, next) => next()),
+  decodeAccess: jest.fn((_req, _res, next) => next()),
+  decodeRefresh: jest.fn((_req, _res, next) => next()),
+  createTokens: jest.fn(),
+  refreshTokens: jest.fn(),
+  clearRefreshCookie: jest.fn(),
+}));
 // Cache never initialized in tests (app.js no longer calls svc.init()) so getOne is fully controlled here.
 jest.unstable_mockModule(routeSvcPath, () => ({
   __esModule: true,
