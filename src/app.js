@@ -8,6 +8,7 @@ import healixRouter from "@dwtechs/healix-express";
 import cookieParser from "cookie-parser";
 import { security } from "./conf/sec.js";
 import { corsMiddleware } from "./conf/cors.js";
+import { startAdminServer } from "./admin-server.js";
 import rateLimit from "express-rate-limit";
 
 const app = express();
@@ -108,6 +109,7 @@ Promise.all([
     // Start cron jobs
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();
+    startAdminServer();
     listen(app);
   })
   .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));
