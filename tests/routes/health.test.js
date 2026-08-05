@@ -42,6 +42,11 @@ describe("GET /gateway/health", () => {
     const res = await supertest(app).get("/gateway/health");
 
     expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      uptime: expect.any(Number),
+      message: "OK",
+      timestamp: expect.any(Number),
+    });
     expect(routeSvc.getOne).not.toHaveBeenCalled();
   });
 });

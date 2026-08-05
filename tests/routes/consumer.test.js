@@ -59,7 +59,21 @@ const archive = jest.fn((req, res, next) => {
 });
 jest.unstable_mockModule(consumerEntityPath, () => ({
   __esModule: true,
-  default: { get, archive, properties: [] },
+  default: {
+    get,
+    archive,
+    properties: [
+      { key: "id", type: "integer", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
+      { key: "userId", type: "integer", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
+      { key: "nickname", type: "string", min: 3, max: 30, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
+      { key: "accessToken", type: "jwt", min: 28, max: 8000, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: true },
+      { key: "refreshToken", type: "jwt", min: 28, max: 8000, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: true },
+      { key: "roles", type: "array", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
+      { key: "archived", type: "boolean", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
+      { key: "creatorName", type: "string", min: 1, max: 100, operations: ["SELECT"], requiredFor: [], isFilterable: false, isPrivate: false },
+      { key: "updaterName", type: "string", min: 1, max: 100, operations: ["SELECT"], requiredFor: [], isFilterable: false, isPrivate: false },
+    ],
+  },
 }));
 
 const deleteFromCache = jest.fn((_req, _res, next) => next());
@@ -138,5 +152,51 @@ describe("POST /gateway/consumers/archive", () => {
     expect(res.status).toBe(204);
     expect(archive).toHaveBeenCalledTimes(1);
     expect(deleteFromCache).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("GET /gateway/consumers/schema", () => {
+  let app;
+  let routeSvc;
+  let consumerSvc;
+  const authedRoute = { id: 3, url: "/gateway/consumers/schema", protected: false };
+
+  beforeAll(async () => {
+    ({ default: routeSvc } = await import("../../src/services/route.js"));
+    ({ default: consumerSvc } = await import(
+      "../../src/services/consumer.js"
+    ));
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset().mockReturnValue(authedRoute);
+    consumerSvc.getOne.mockReset();
+  });
+
+  it("rejects an unauthenticated request", async () => {
+    const res = await supertest(app).get("/gateway/consumers/schema");
+
+    expect(res.status).toBe(401);
+  });
+
+  it("returns only the non-private fields", async () => {
+    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+
+    const res = await supertest(app)
+      .get("/gateway/consumers/schema")
+      .set("Authorization", "Bearer valid-token");
+
+    expect(res.status).toBe(200);
+    expect(res.body.total).toBe(7);
+    expect(res.body.rows.map((r) => r.key)).toEqual([
+      "id",
+      "userId",
+      "nickname",
+      "roles",
+      "archived",
+      "creatorName",
+      "updaterName",
+    ]);
   });
 });

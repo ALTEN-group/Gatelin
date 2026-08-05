@@ -108,4 +108,46 @@ describe("catch-all proxy route", () => {
       undefined,
     );
   });
+
+  it("forwards a POST body and preserves the query string in the target URL", async () => {
+    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+    query.mockResolvedValue({ status: 201, data: { id: 1 } });
+
+    const res = await supertest(app)
+      .post("/downstream/ping?foo=bar")
+      .set("Authorization", "Bearer valid-token")
+      .send({ hello: "world" });
+
+    expect(res.status).toBe(201);
+    expect(query).toHaveBeenCalledWith(
+      "POST",
+      "http://ms-downstream:3000/downstream/ping?foo=bar",
+      undefined,
+      { hello: "world" },
+      undefined,
+    );
+  });
+
+  it("forwards the downstream response status as-is", async () => {
+    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+    query.mockResolvedValue({ status: 404, data: { message: "not found" } });
+
+    const res = await supertest(app)
+      .get("/downstream/ping")
+      .set("Authorization", "Bearer valid-token");
+
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ message: "not found" });
+  });
+
+  it("passes downstream failures to the error handler instead of hanging", async () => {
+    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+    query.mockRejectedValue(new Error("connect ECONNREFUSED"));
+
+    const res = await supertest(app)
+      .get("/downstream/ping")
+      .set("Authorization", "Bearer valid-token");
+
+    expect(res.status).toBeGreaterThanOrEqual(500);
+  });
 });
