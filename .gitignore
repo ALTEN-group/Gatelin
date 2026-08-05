@@ -5,6 +5,7 @@ website/node_modules/*
 Thumbs.db
 src/public/*
 tests/coverage/
+tests/restler/results/
 docker/conf/.env.dev
 docker/conf/.env.prod
 website/docs/.vitepress/cache
@@ -14,3 +15,4 @@ mocks/ms_auth/src/data/credentials.js
 swagger/src/gatelin.openapi.json
 # APM dependencies
 apm_modules/
+**/__pycache__/

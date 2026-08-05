@@ -1,0 +1,52 @@
+name: RESTler API Fuzzing
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: RESTler mode
+        required: true
+        default: test
+        type: choice
+        options: [test, fuzz-lean, fuzz]
+  schedule:
+    # Every Monday at 07:00 UTC — deeper fuzz-lean run
+    - cron: '0 7 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  restler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate dev environment
+        run: ./scripts/setup-env.sh
+
+      - name: Generate mock credentials and swagger spec
+        run: ./scripts/setup-mocks.sh
+
+      - name: Determine RESTler mode
+        id: mode
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "mode=fuzz-lean" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=test" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run RESTler
+        run: ./scripts/run-restler.sh ${{ steps.mode.outputs.mode }}
+
+      - name: Upload RESTler results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: restler-results-${{ steps.mode.outputs.mode }}
+          path: tests/restler/results
+          retention-days: 14

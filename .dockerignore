@@ -13,3 +13,4 @@ test/
 *.spec.js
 .github/
 docs/
+**/__pycache__
