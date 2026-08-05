@@ -30,9 +30,14 @@ const parseBearer = jest.fn((req, res, next) => {
   next();
 });
 const decodeAccess = jest.fn((_req, _res, next) => next());
+const decodeRefresh = jest.fn((_req, _res, next) => next());
 jest.unstable_mockModule("@dwtechs/toker-express", () => ({
   parseBearer,
   decodeAccess,
+  decodeRefresh,
+  createTokens: jest.fn(),
+  refreshTokens: jest.fn(),
+  clearRefreshCookie: jest.fn(),
 }));
 
 // Cache never initialized in tests (app.js no longer calls svc.init()) so getOne is fully controlled here.
@@ -104,9 +109,10 @@ const historyMiddleware = jest.fn((_req, res, next) => {
   next();
 });
 const historyGet = jest.fn(() => historyMiddleware);
+const historyGetByField = jest.fn(() => jest.fn((_req, _res, next) => next()));
 jest.unstable_mockModule(historyPath, () => ({
   __esModule: true,
-  default: { get: historyGet, getByField: jest.fn() },
+  default: { get: historyGet, getByField: historyGetByField },
 }));
 
 describe("POST /gateway/routes/search", () => {
@@ -121,9 +127,7 @@ describe("POST /gateway/routes/search", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -174,13 +178,15 @@ describe("GET /gateway/routes/:id/history", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const mockRoute = { id: 1, url: "/gateway/routes/1/history", protected: false };
+  const mockRoute = {
+    id: 1,
+    url: "/gateway/routes/1/history",
+    protected: false,
+  };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -207,7 +213,11 @@ describe("GET /gateway/routes/:id/history", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       rows: [
-        { id: 1, operation: "UPDATE", record: { id: 1, url: "/gateway/things" } },
+        {
+          id: 1,
+          operation: "UPDATE",
+          record: { id: 1, url: "/gateway/things" },
+        },
       ],
       total: 1,
     });
@@ -222,9 +232,7 @@ describe("POST /gateway/routes (create)", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -275,9 +283,7 @@ describe("PUT /gateway/routes (update)", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -319,9 +325,7 @@ describe("POST /gateway/routes/archive", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -353,9 +357,7 @@ describe("GET /gateway/routes/schema", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 

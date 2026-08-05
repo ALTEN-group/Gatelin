@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
- * consumer.js has its own inline `send`/`send204` (not the outer app.js `send`).
  */
 
+// consumer.js has its own inline `send`/`send204` (not the outer app.js `send`).
 import { jest } from "@jest/globals";
 import supertest from "supertest";
 import path from "node:path";
@@ -11,7 +11,10 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
 const consumerSvcPath = path.join(__dirname, "../../src/services/consumer.js");
-const consumerEntityPath = path.join(__dirname, "../../src/entities/consumer.js");
+const consumerEntityPath = path.join(
+  __dirname,
+  "../../src/entities/consumer.js",
+);
 const cacheConsumerPath = path.join(
   __dirname,
   "../../src/middlewares/cache/consumer.js",
@@ -34,9 +37,14 @@ const parseBearer = jest.fn((req, res, next) => {
   next();
 });
 const decodeAccess = jest.fn((_req, _res, next) => next());
+const decodeRefresh = jest.fn((_req, _res, next) => next());
 jest.unstable_mockModule("@dwtechs/toker-express", () => ({
   parseBearer,
   decodeAccess,
+  decodeRefresh,
+  createTokens: jest.fn(),
+  refreshTokens: jest.fn(),
+  clearRefreshCookie: jest.fn(),
 }));
 
 jest.unstable_mockModule(routeSvcPath, () => ({
@@ -63,15 +71,96 @@ jest.unstable_mockModule(consumerEntityPath, () => ({
     get,
     archive,
     properties: [
-      { key: "id", type: "integer", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-      { key: "userId", type: "integer", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-      { key: "nickname", type: "string", min: 3, max: 30, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-      { key: "accessToken", type: "jwt", min: 28, max: 8000, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: true },
-      { key: "refreshToken", type: "jwt", min: 28, max: 8000, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: true },
-      { key: "roles", type: "array", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-      { key: "archived", type: "boolean", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-      { key: "creatorName", type: "string", min: 1, max: 100, operations: ["SELECT"], requiredFor: [], isFilterable: false, isPrivate: false },
-      { key: "updaterName", type: "string", min: 1, max: 100, operations: ["SELECT"], requiredFor: [], isFilterable: false, isPrivate: false },
+      {
+        key: "id",
+        type: "integer",
+        min: null,
+        max: null,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: false,
+      },
+      {
+        key: "userId",
+        type: "integer",
+        min: null,
+        max: null,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: false,
+      },
+      {
+        key: "nickname",
+        type: "string",
+        min: 3,
+        max: 30,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: false,
+      },
+      {
+        key: "accessToken",
+        type: "jwt",
+        min: 28,
+        max: 8000,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: true,
+      },
+      {
+        key: "refreshToken",
+        type: "jwt",
+        min: 28,
+        max: 8000,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: true,
+      },
+      {
+        key: "roles",
+        type: "array",
+        min: null,
+        max: null,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: false,
+      },
+      {
+        key: "archived",
+        type: "boolean",
+        min: null,
+        max: null,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: true,
+        isPrivate: false,
+      },
+      {
+        key: "creatorName",
+        type: "string",
+        min: 1,
+        max: 100,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: false,
+        isPrivate: false,
+      },
+      {
+        key: "updaterName",
+        type: "string",
+        min: 1,
+        max: 100,
+        operations: ["SELECT"],
+        requiredFor: [],
+        isFilterable: false,
+        isPrivate: false,
+      },
     ],
   },
 }));
@@ -87,13 +176,15 @@ describe("POST /gateway/consumers/search", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const authedRoute = { id: 1, url: "/gateway/consumers/search", protected: false };
+  const authedRoute = {
+    id: 1,
+    url: "/gateway/consumers/search",
+    protected: false,
+  };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -103,9 +194,7 @@ describe("POST /gateway/consumers/search", () => {
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app)
-      .post("/gateway/consumers/search")
-      .send({});
+    const res = await supertest(app).post("/gateway/consumers/search").send({});
 
     expect(res.status).toBe(401);
     expect(get).not.toHaveBeenCalled();
@@ -128,13 +217,15 @@ describe("POST /gateway/consumers/archive", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const authedRoute = { id: 2, url: "/gateway/consumers/archive", protected: false };
+  const authedRoute = {
+    id: 2,
+    url: "/gateway/consumers/archive",
+    protected: false,
+  };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -159,13 +250,15 @@ describe("GET /gateway/consumers/schema", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const authedRoute = { id: 3, url: "/gateway/consumers/schema", protected: false };
+  const authedRoute = {
+    id: 3,
+    url: "/gateway/consumers/schema",
+    protected: false,
+  };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 

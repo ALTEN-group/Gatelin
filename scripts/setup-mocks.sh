@@ -18,7 +18,13 @@ cp "$OPENAPI_EXAMPLE" "$OPENAPI_FILE"
 
 # Load MSAUTH_PWD_SECRET (used to hash mock passwords, must match the ms_auth_mock container's env)
 if [[ -f docker/conf/.env.dev ]]; then
-  source <(grep -v '^#' docker/conf/.env.dev | grep -v '^UID=')
+  # source <(...) process substitution failed to export vars here, so use a real temp file instead
+  ENV_TMP=$(mktemp)
+  grep -v '^#' docker/conf/.env.dev | grep -v '^UID=' > "$ENV_TMP"
+  set -a
+  source "$ENV_TMP"
+  set +a
+  rm -f "$ENV_TMP"
 fi
 
 # @dwtechs/passken + @dwtechs/hashitaka are needed on the host to generate/hash mock passwords

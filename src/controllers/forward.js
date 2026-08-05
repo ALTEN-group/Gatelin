@@ -32,5 +32,5 @@ export function forwardToService(req, res, next) {
   http
     .query(method, url, undefined, body, req.additionalHeaders)
     .then((r) => res.status(r.status).send(r.data))
-    .catch((e) => next(e));
+    .catch((e) => next({ statusCode: 502, message: e.message }));
 }

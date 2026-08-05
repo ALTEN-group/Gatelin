@@ -1,12 +1,12 @@
 /**
  * @jest-environment node
- * Parameterized wiring check for the generic CRUD resources: each mounts
- * `...checkRequest, <router>, send` in app.js with `router.post("/search", XEnt.get)`.
- * Also covers /:id/history, add, update, archive and /schema for the resources that
- * expose them (method has no history/add/archive; permission has a differently
- * shaped history route and DELETE instead of archive - see the dedicated blocks below).
  */
 
+// Parameterized wiring check for the generic CRUD resources: each mounts
+// `...checkRequest, <router>, send` in app.js with `router.post("/search", XEnt.get)`.
+// Also covers /:id/history, add, update, archive and /schema for the resources that
+// expose them (method has no history/add/archive; permission has a differently
+// shaped history route and DELETE instead of archive - see the dedicated blocks below).
 import { jest } from "@jest/globals";
 import supertest from "supertest";
 import path from "node:path";
@@ -54,9 +54,14 @@ const parseBearer = jest.fn((req, res, next) => {
   next();
 });
 const decodeAccess = jest.fn((_req, _res, next) => next());
+const decodeRefresh = jest.fn((_req, _res, next) => next());
 jest.unstable_mockModule("@dwtechs/toker-express", () => ({
   parseBearer,
   decodeAccess,
+  decodeRefresh,
+  createTokens: jest.fn(),
+  refreshTokens: jest.fn(),
+  clearRefreshCookie: jest.fn(),
 }));
 
 jest.unstable_mockModule(routeSvcPath, () => ({
@@ -116,8 +121,26 @@ for (const { entity } of RESOURCES) {
         archive,
         delete: del,
         properties: [
-          { key: entity, type: "string", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: false },
-          { key: `${entity}Secret`, type: "string", min: null, max: null, operations: ["SELECT"], requiredFor: [], isFilterable: true, isPrivate: true },
+          {
+            key: entity,
+            type: "string",
+            min: null,
+            max: null,
+            operations: ["SELECT"],
+            requiredFor: [],
+            isFilterable: true,
+            isPrivate: false,
+          },
+          {
+            key: `${entity}Secret`,
+            type: "string",
+            min: null,
+            max: null,
+            operations: ["SELECT"],
+            requiredFor: [],
+            isFilterable: true,
+            isPrivate: true,
+          },
         ],
       },
     }),
@@ -128,7 +151,9 @@ for (const { entity } of RESOURCES) {
 const historyMiddlewares = {};
 const historyGet = jest.fn((tableName) => {
   const mw = jest.fn((_req, res, next) => {
-    res.locals.rows = [{ id: 1, operation: "UPDATE", record: { id: 1, entity: tableName } }];
+    res.locals.rows = [
+      { id: 1, operation: "UPDATE", record: { id: 1, entity: tableName } },
+    ];
     res.locals.total = 1;
     next();
   });
@@ -155,16 +180,16 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
   beforeEach(() => {
-    routeSvc.getOne
-      .mockReset()
-      .mockReturnValue({ id: 1, url: `/gateway/${name}/search`, protected: false });
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: `/gateway/${name}/search`,
+      protected: false,
+    });
     consumerSvc.getOne.mockReset();
   });
 
@@ -189,49 +214,49 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
   });
 });
 
-describe.each(STANDARD_CRUD)(
-  "GET /gateway/$name/:id/history",
-  ({ name, entity }) => {
-    let app;
-    let routeSvc;
-    let consumerSvc;
+describe.each(STANDARD_CRUD)("GET /gateway/$name/:id/history", ({
+  name,
+  entity,
+}) => {
+  let app;
+  let routeSvc;
+  let consumerSvc;
 
-    beforeAll(async () => {
-      ({ default: routeSvc } = await import("../../src/services/route.js"));
-      ({ default: consumerSvc } = await import(
-        "../../src/services/consumer.js"
-      ));
-      ({ default: app } = await import("../../src/app.js"));
+  beforeAll(async () => {
+    ({ default: routeSvc } = await import("../../src/services/route.js"));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: `/gateway/${name}/1/history`,
+      protected: false,
     });
+    consumerSvc.getOne.mockReset();
+    historyMiddlewares[entity].mockClear();
+  });
 
-    beforeEach(() => {
-      routeSvc.getOne
-        .mockReset()
-        .mockReturnValue({ id: 1, url: `/gateway/${name}/1/history`, protected: false });
-      consumerSvc.getOne.mockReset();
-      historyMiddlewares[entity].mockClear();
-    });
+  it("rejects an unauthenticated request", async () => {
+    const res = await supertest(app).get(`/gateway/${name}/1/history`);
 
-    it("rejects an unauthenticated request", async () => {
-      const res = await supertest(app).get(`/gateway/${name}/1/history`);
+    expect(res.status).toBe(401);
+    expect(historyMiddlewares[entity]).not.toHaveBeenCalled();
+  });
 
-      expect(res.status).toBe(401);
-      expect(historyMiddlewares[entity]).not.toHaveBeenCalled();
-    });
+  it("routes an authenticated request to its own entity's history", async () => {
+    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
-    it("routes an authenticated request to its own entity's history", async () => {
-      consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+    const res = await supertest(app)
+      .get(`/gateway/${name}/1/history`)
+      .set("Authorization", "Bearer valid-token");
 
-      const res = await supertest(app)
-        .get(`/gateway/${name}/1/history`)
-        .set("Authorization", "Bearer valid-token");
-
-      expect(res.status).toBe(200);
-      expect(res.body.rows[0].record.entity).toBe(entity);
-      expect(historyMiddlewares[entity]).toHaveBeenCalledTimes(1);
-    });
-  },
-);
+    expect(res.status).toBe(200);
+    expect(res.body.rows[0].record.entity).toBe(entity);
+    expect(historyMiddlewares[entity]).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
   let app;
@@ -240,9 +265,7 @@ describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -284,9 +307,7 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -321,52 +342,52 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
   });
 });
 
-describe.each(STANDARD_CRUD)(
-  "POST /gateway/$name/archive",
-  ({ name, entity }) => {
-    let app;
-    let routeSvc;
-    let consumerSvc;
+describe.each(STANDARD_CRUD)("POST /gateway/$name/archive", ({
+  name,
+  entity,
+}) => {
+  let app;
+  let routeSvc;
+  let consumerSvc;
 
-    beforeAll(async () => {
-      ({ default: routeSvc } = await import("../../src/services/route.js"));
-      ({ default: consumerSvc } = await import(
-        "../../src/services/consumer.js"
-      ));
-      ({ default: app } = await import("../../src/app.js"));
+  beforeAll(async () => {
+    ({ default: routeSvc } = await import("../../src/services/route.js"));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: `/gateway/${name}/archive`,
+      protected: false,
     });
+    consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
+    entityArchives[entity].mockClear();
+  });
 
-    beforeEach(() => {
-      routeSvc.getOne
-        .mockReset()
-        .mockReturnValue({ id: 1, url: `/gateway/${name}/archive`, protected: false });
-      consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
-      entityArchives[entity].mockClear();
-    });
+  it("rejects an unauthenticated request", async () => {
+    const res = await supertest(app)
+      .post(`/gateway/${name}/archive`)
+      .send({ rows: [{ id: 1 }] });
 
-    it("rejects an unauthenticated request", async () => {
-      const res = await supertest(app)
-        .post(`/gateway/${name}/archive`)
-        .send({ rows: [{ id: 1 }] });
+    expect(res.status).toBe(401);
+    expect(entityArchives[entity]).not.toHaveBeenCalled();
+  });
 
-      expect(res.status).toBe(401);
-      expect(entityArchives[entity]).not.toHaveBeenCalled();
-    });
+  it("routes an authenticated request to its own entity", async () => {
+    const rows = [{ id: 1 }];
 
-    it("routes an authenticated request to its own entity", async () => {
-      const rows = [{ id: 1 }];
+    const res = await supertest(app)
+      .post(`/gateway/${name}/archive`)
+      .set("Authorization", "Bearer valid-token")
+      .send({ rows });
 
-      const res = await supertest(app)
-        .post(`/gateway/${name}/archive`)
-        .set("Authorization", "Bearer valid-token")
-        .send({ rows });
-
-      expect(res.status).toBe(200);
-      expect(res.body).toEqual({ rows, total: 1 });
-      expect(entityArchives[entity]).toHaveBeenCalledTimes(1);
-    });
-  },
-);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ rows, total: 1 });
+    expect(entityArchives[entity]).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
   let app;
@@ -375,16 +396,16 @@ describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
   beforeEach(() => {
-    routeSvc.getOne
-      .mockReset()
-      .mockReturnValue({ id: 1, url: `/gateway/${name}/schema`, protected: false });
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: `/gateway/${name}/schema`,
+      protected: false,
+    });
     consumerSvc.getOne.mockReset();
   });
 
@@ -402,7 +423,20 @@ describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ rows: [{ key: entity }], total: 1 });
+    expect(res.body).toEqual({
+      rows: [
+        {
+          key: entity,
+          type: "string",
+          min: null,
+          max: null,
+          operations: ["SELECT"],
+          requiredFor: [],
+          isFilterable: true,
+        },
+      ],
+      total: 1,
+    });
   });
 });
 
@@ -414,9 +448,7 @@ describe("GET /gateway/permissions/history/route/:routeId", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
@@ -460,16 +492,16 @@ describe("DELETE /gateway/permissions", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
   beforeEach(() => {
-    routeSvc.getOne
-      .mockReset()
-      .mockReturnValue({ id: 1, url: "/gateway/permissions", protected: false });
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: "/gateway/permissions",
+      protected: false,
+    });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
     entityDeletes.permission.mockClear();
   });

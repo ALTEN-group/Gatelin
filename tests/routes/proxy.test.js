@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
- * proxy.js is the catch-all mounted at "/" after every named resource route in app.js.
  */
 
+// proxy.js is the catch-all mounted at "/" after every named resource route in app.js.
 import { jest } from "@jest/globals";
 import supertest from "supertest";
 import path from "node:path";
@@ -30,9 +30,14 @@ const parseBearer = jest.fn((req, res, next) => {
   next();
 });
 const decodeAccess = jest.fn((_req, _res, next) => next());
+const decodeRefresh = jest.fn((_req, _res, next) => next());
 jest.unstable_mockModule("@dwtechs/toker-express", () => ({
   parseBearer,
   decodeAccess,
+  decodeRefresh,
+  createTokens: jest.fn(),
+  refreshTokens: jest.fn(),
+  clearRefreshCookie: jest.fn(),
 }));
 
 const getServiceBaseUrl = jest.fn(() => "http://ms-downstream:3000");
@@ -69,9 +74,7 @@ describe("catch-all proxy route", () => {
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import(
-      "../../src/services/consumer.js"
-    ));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
