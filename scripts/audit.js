@@ -44,10 +44,11 @@ async function runAudit() {
   const date = new Date().toISOString().slice(0, 10);
 
   const checks = [
-    {
-      label: 'Tests',
-      cmd: "NODE_OPTIONS='--experimental-vm-modules' npm test || true",
-    },
+    // we do not need to unit tests because they run on every PR
+    // {
+    //   label: 'Tests',
+    //   cmd: "NODE_OPTIONS='--experimental-vm-modules' npm test || true",
+    // },
     { label: 'npm audit', cmd: 'npm audit || true' },
     { label: 'Lint (Biome)', cmd: 'npx biome check . || true' },
     { label: 'Outdated dependencies', cmd: 'npm outdated || true' },
@@ -67,15 +68,16 @@ async function runAudit() {
 
   const rawReport = rawParts.join('\n');
 
-  const prompt = `You are a concise codebase auditor.
-   Only audit src/ folder.
-   Only report issues, no positive findings.
-   Do not run npm audit / npm outdated, npx biome check and npm test.
-   Summarize this project audit and produce a Markdown report with: a 2-line executive summary,
-   top findings (bullet list), and prioritized action items (High / Medium / Low severity).`;
+  const prompt = `As a codebase auditor :
+   - Audit src/ folder only
+   - Do not run npm audit / npm outdated, npx biome check nor npm test
+   - Look for bugs, security, performance & code quality improvements
+   - Report issues, not positive findings
+   - Prioritize issues by severity and suggest solutions
+   - Summarize the audit in a Markdown executive summary`;
 
   const summary = callCopilot(prompt);
-  const body = `${rawReport}\n---\n\n## Copilot Summary\n\n${summary}`;
+  const body = `${rawReport}\n---\n\n## AI Audit Summary\n\n${summary}`;
 
   if (process.env.DRY_RUN === 'true') {
     console.log('DRY RUN — report preview:\n');
