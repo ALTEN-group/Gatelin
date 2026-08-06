@@ -3,6 +3,7 @@ import helmet from "helmet";
 import healixRouter from "@dwtechs/healix-express";
 import { listen } from "@dwtechs/servpico-express";
 import { log } from "@dwtechs/winstan";
+import { errorHandler } from "@dwtechs/errandler-express";
 import { mockUsers } from "./data/users.js";
 
 const app = express();
@@ -81,5 +82,7 @@ app.get("/users/users/me/", (req, res) => {
 //   log.debug(`GET /users/users/${userId} - success: ${user.nickname}`);
 //   res.status(200).json(user);
 // });
+
+errorHandler(app);
 
 listen(app);
