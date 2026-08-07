@@ -1,29 +1,16 @@
 // @ts-check
 import express from "express";
-import { log } from "@dwtechs/winstan";
 import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
-import { listen } from "@dwtechs/servpico-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import healixRouter from "@dwtechs/healix-express";
 import cookieParser from "cookie-parser";
 import { security } from "./conf/sec.js";
-import { corsMiddleware } from "./conf/cors.js";
 import rateLimit from "express-rate-limit";
 
 const app = express();
 app.set("trust proxy", 1); // Trust first proxy (Traefik)
 app.use(security);
 app.disable("x-powered-by");
-
-import consumerSvc from "./services/consumer.js";
-import routeSvc from "./services/route.js";
-import corsSvc from "./services/cors.js";
-import roleSvc from "./services/role.js";
-import scopeSvc from "./services/scope.js";
-
-// Cron jobs
-import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
-import { startDeleteOldHistoryJob } from "./jobs/delete-old-history.js";
 
 // middlewares
 import { send } from "./middlewares/res/send.js";
@@ -95,19 +82,4 @@ app.use(endTimer);
 // Error handling
 errorHandler(app);
 
-// Init cached reference data
-Promise.all([
-  routeSvc.init(),
-  consumerSvc.init(),
-  corsSvc.init(),
-  roleSvc.init(),
-  scopeSvc.init(),
-])
-  .then(() => {
-    app.use(corsMiddleware);
-    // Start cron jobs
-    startDeleteArchivedEntitiesJob();
-    startDeleteOldHistoryJob();
-    listen(app);
-  })
-  .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));
+export default app;

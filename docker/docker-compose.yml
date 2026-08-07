@@ -343,6 +343,7 @@ services:
     hostname: ${MSAUTH_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
+      PWD_SECRET: ${MSAUTH_PWD_SECRET}
     networks:
       - internal
     volumes:

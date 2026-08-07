@@ -126,6 +126,7 @@ services:
     hostname: ${MSAUTH_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
+      PWD_SECRET: ${MSAUTH_PWD_SECRET}
     networks:
       - internal
 
@@ -143,7 +144,6 @@ services:
       DB_USER: ${GATELIN_DB_USER}
       DB_PWD: ${GATELIN_DB_PWD}
       TOKEN_SECRET: ${GATELIN_TOKEN_SECRET}
-      PWD_SECRET: ${MSAUTH_PWD_SECRET}
       APP_NAME: ${APP_NAME}
       ENV_NAME: ${ENV_NAME}
       SERVER_SCHEME: ${SERVER_SCHEME}
