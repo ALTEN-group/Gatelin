@@ -39,6 +39,7 @@ export const CRUD_LABELS_CONFIG: Partial<CrudLabels> = {
   editionDialog: {
     historyHeader: "History of changes",
     archive: "Archive",
+    restore: "Restore",
     modeCreate: "Create",
     modeConsult: "Consult",
     modeEdit: "Edit",
