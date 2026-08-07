@@ -22,7 +22,7 @@
     "@angular/router": "21.2.18",
     "@angular/service-worker": "21.2.18",
     "@dwtechs/checkard": "3.6.1",
-    "@dwtechs/ngx-crud-builder": "0.1.8",
+    "@dwtechs/ngx-crud-builder": "0.1.9",
     "@dwtechs/csvx": "0.3.1",
     "@dwtechs/ctrltab": "3.0.1",
     "@lcluber/frameratjs": "1.1.0",
