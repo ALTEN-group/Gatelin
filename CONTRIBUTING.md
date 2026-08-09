@@ -104,15 +104,14 @@ The run fails if spec coverage drops below `RESTLER_MIN_COVERAGE` (default 50%) 
 
 ### Images
 
-Gatelin ships three releasable images, published to the GitHub Container Registry (GHCR) on every GitHub Release:
+Gatelin ships two releasable images, published to the GitHub Container Registry (GHCR) on every GitHub Release:
 
 | Image | Description |
 |---|---|
-| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Runs continuously as an API server. |
+| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Also serves the Angular admin frontend under `/admin` (built into the image, enabled by setting `ADMIN_PORT`). Runs continuously as an API server. |
 | `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. The gateway will not start until this container completes successfully. |
-| `ghcr.io/alten-group/gatelin-admin` | Angular admin frontend served by Caddy. |
 
-A fourth image exists for the Gatelin project itself but is not required by consumers:
+A third image exists for the Gatelin project itself but is not required by consumers:
 
 | Image | Description |
 |---|---|
@@ -125,10 +124,9 @@ Requires `docker/conf/.env.prod` to exist. Create it by copying `.env.dev.exampl
 Builds production images from their respective `dockerfile.prod` files. Each image is tagged as `ghcr.io/alten-group/gatelin-<target>:<version>` and `ghcr.io/alten-group/gatelin-<target>:latest`, where `<version>` is read from `package.json`.
 
 ```sh
-./scripts/build-prod.sh                   # build all four images
-./scripts/build-prod.sh gateway           # gateway only
+./scripts/build-prod.sh                   # build all three images
+./scripts/build-prod.sh gateway           # gateway only (includes the admin UI)
 ./scripts/build-prod.sh migration         # migration only
-./scripts/build-prod.sh admin             # admin only
 ./scripts/build-prod.sh website           # website only
 ./scripts/build-prod.sh gateway migration # multiple targets
 ```
@@ -137,7 +135,7 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 
 Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
 
-Each release produces three images with the following tag variants (e.g. for `v1.2.3`):
+Each release produces two images with the following tag variants (e.g. for `v1.2.3`):
 
 | Tag | Example |
 |---|---|

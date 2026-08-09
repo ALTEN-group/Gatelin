@@ -43,7 +43,6 @@ Thumbs.db
 
 # Docker
 dockerfile
-dockerfile.prod
 .dockerignore
 
 # Docs

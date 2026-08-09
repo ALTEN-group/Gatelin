@@ -111,6 +111,9 @@ services:
       PORT: ${DEFAULT_PORT}
     networks:
       - internal
+    volumes:
+      - ${PWD}/mocks/ms_user/src:/usr/src/app/src
+      - ms_user_mock_node_modules:/usr/src/app/node_modules
 
   ms_auth_mock:
     build:
@@ -129,6 +132,9 @@ services:
       PWD_SECRET: ${MSAUTH_PWD_SECRET}
     networks:
       - internal
+    volumes:
+      - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
+      - ms_auth_mock_node_modules:/usr/src/app/node_modules
 
   gatelin:
     image: ghcr.io/alten-group/gatelin:${VERSION:-latest}
@@ -137,8 +143,8 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
-      MSAUTH_VERIFY_URL: ${MSAUTH_VERIFY_URL}
-      MSUSER_SEARCH_URL: ${MSUSER_SEARCH_URL}
+      PWD_CHECK_URL: ${MSAUTH_VERIFY_URL}
+      USER_SEARCH_URL: ${MSUSER_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
       DB_USER: ${GATELIN_DB_USER}
@@ -215,3 +221,5 @@ networks:
 volumes:
   postgres_data:
     driver: local
+  ms_user_mock_node_modules:
+  ms_auth_mock_node_modules:
