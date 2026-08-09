@@ -13,7 +13,7 @@ const router = express.Router();
 
 import uEnt from "../entities/user.js";
 import sEnt from "../entities/session.js";
-import { filterByUserIdAndPwd } from "../middlewares/filters/byUserIdAndPwd.js";
+import { attachUserId } from "../middlewares/mappers/consumer/attachUserId.js";
 import { filterByEmailNotArchived } from "../middlewares/filters/byEmailNotArchived.js";
 import { filterByIdAndActiveNotArchived } from "../middlewares/filters/byIdAndActiveNotArchived.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
@@ -45,7 +45,7 @@ const checkEmail = [
 // const activate = [ activateUser, uEnt.update ];
 const getSession = [...checkRequest, createRow]; // get session from tokens
 const addSession = [
-  filterByUserIdAndPwd,
+  attachUserId,
   checkPwd,
   createTokens,
   sEnt.add,
