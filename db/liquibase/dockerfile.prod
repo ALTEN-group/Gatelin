@@ -1,6 +1,8 @@
 ARG LIQUIBASE_VERSION
 FROM liquibase/liquibase:${LIQUIBASE_VERSION}
 
+LABEL org.opencontainers.image.description="Gatelin database migrations (Liquibase)"
+
 USER root
 
 RUN apk update && apk add --no-cache postgresql-client curl

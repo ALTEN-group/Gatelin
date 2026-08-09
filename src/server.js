@@ -3,6 +3,7 @@ import { log } from "@dwtechs/winstan";
 import { listen } from "@dwtechs/servpico-express";
 import app from "./app.js";
 import { corsMiddleware } from "./conf/cors.js";
+import { startAdminServer } from "./admin-server.js";
 
 import consumerSvc from "./services/consumer.js";
 import routeSvc from "./services/route.js";
@@ -27,6 +28,7 @@ Promise.all([
     // Start cron jobs
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();
+    startAdminServer();
     listen(app);
   })
   .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));

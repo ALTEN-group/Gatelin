@@ -91,23 +91,6 @@ if [[ "$BUILD_MIGRATION" == true ]]; then
   echo -e "${GREEN}✅ Migration image built: ${IMAGE}${NC}"
 fi
 
-# ─── Admin ──────────────────────────────────────────────────────────────────
-if [[ "$BUILD_ADMIN" == true ]]; then
-  IMAGE="ghcr.io/alten-group/gatelin-admin:${VERSION}"
-  echo -e "${YELLOW}🏗️  Building admin image ${IMAGE}...${NC}"
-  docker build \
-    --file admin/dockerfile.prod \
-    --secret id=apk_repository,env=APK_REPOSITORY \
-    --build-arg NODE_VERSION="${NODE_VERSION}" \
-    --build-arg CADDY_VERSION="${CADDY_VERSION}" \
-    --build-arg TZ="${TZ}" \
-    --build-arg UID="${APP_UID}" \
-    --build-arg GID="${APP_GID}" \
-    --tag "${IMAGE}" \
-    --tag "ghcr.io/alten-group/gatelin-admin:latest" \
-    admin
-  echo -e "${GREEN}✅ Admin image built: ${IMAGE}${NC}"
-fi
 
 # ─── Website ────────────────────────────────────────────────────────────────
 if [[ "$BUILD_WEBSITE" == true ]]; then
