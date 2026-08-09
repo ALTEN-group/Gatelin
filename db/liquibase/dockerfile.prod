@@ -1,0 +1,20 @@
+ARG LIQUIBASE_VERSION
+FROM liquibase/liquibase:${LIQUIBASE_VERSION}
+
+USER root
+
+RUN apk update && apk add --no-cache postgresql-client curl
+
+USER liquibase
+
+# Owned by root with no write bit for group/other so the non-root
+# liquibase user (running at container start) can read/execute but not modify it.
+COPY --chown=root:root --chmod=755 ./entrypoint.sh /docker-entrypoint.sh
+
+# Bake the gateway schema changelog into the image
+COPY --chown=liquibase:liquibase ./gateway /liquibase/changelog
+
+# Optional user data volume (mount a data/changelog.xml at runtime)
+VOLUME ["/liquibase/data"]
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

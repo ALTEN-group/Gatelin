@@ -1,0 +1,72 @@
+{
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never"
+    }
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+  "workbench.colorCustomizations": {
+    "statusBar.noFolderBackground": "#7C21D7",
+    "statussBar.prominentBackground": "#7C21D7",
+    "activityBar.activeBackground": "#1f6fd0",
+    "activityBar.background": "#1f6fd0",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#ee90bb",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#1f6fd0",
+    "statusBar.background": "#1857a4",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#1f6fd0",
+    "statusBarItem.remoteBackground": "#530c2c",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#1857a4",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#1857a499",
+    "titleBar.inactiveForeground": "#e7e7e799",
+    "activityBarTop.activeBackground": "#1f6fd0",
+    "activityBarTop.background": "#1f6fd0",
+    "activityBarTop.foreground": "#e7e7e7",
+    "activityBarTop.inactiveForeground": "#e7e7e799",
+    "commandCenter.foreground": "#e7e7e7",
+    "statusBar.debuggingBackground": "#1857a4",
+    "statusBar.debuggingForeground": "#e7e7e7"
+  },
+  "peacock.remoteColor": "#1857a4",
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use conventional commit format: type(scope): description"
+    },
+    {
+      "text": "Use imperative mood: 'Add feature' not 'Added feature'"
+    },
+    {
+      "text": "Use types: feat, fix, docs, style, refactor, perf, test, chore, ci."
+    },
+    {
+      "text": "Include scope when relevant (e.g., api, ui, auth)"
+    },
+    {
+      "text": "Keep subject line under 50 characters"
+    }
+  ],
+  "editor.indentSize": 2
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <!--
+    Add your initial data changesets here.
+    Example:
+    <changeSet id="data-01" author="you">
+      <sqlFile path="insert-services.sql"/>
+    </changeSet>
+  -->
+
+  <changeSet id="data-01" author="lcluber">
+    <comment>Default CORS origins</comment>
+    <sqlFile path="01-insert-example-bugged-cors.sql"/>
+  </changeSet>
+  <changeSet id="data-05" author="lcluber">
+    <comment>eBoutique test applications</comment>
+    <sqlFile path="05-insert-example-wrong-data.sql"/>
+  </changeSet>
+  <changeSet id="data-06" author="lcluber">
+    <comment>eBoutique test roles</comment>
+    <sqlFile path="06-insert-example-fixed-data.sql"/>
+  </changeSet>
+
+</databaseChangeLog>

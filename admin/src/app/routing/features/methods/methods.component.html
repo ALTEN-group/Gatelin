@@ -1,0 +1,20 @@
+<div class="page-container">
+
+  <tbl-table
+      [config]="config()"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+      [filterLevel]="tableInformation.filterLevel"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [shouldSyncIdWithUrl]="tableInformation.shouldSyncIdWithUrl"
+      [shouldSyncPageWithUrl]="tableInformation.shouldSyncPageWithUrl"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [isCsvExportEnabled]="false"
+      [excelExportMode]="tableInformation.excelExportMode"
+  />
+
+</div>

@@ -1,0 +1,93 @@
+.p-chip {
+    border-radius: 8px;
+    padding: 0.25rem;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: var(--secondary-bg-color);
+    color: var(--primary-font-color);
+}
+
+tbl-table-cell .p-chip {
+    padding: 0 5px !important;
+}
+
+.p-chip.green {
+    background: var(--p-green-500);
+    color: #fff;
+}
+
+.p-chip.blue {
+    background: var(--p-blue-500);
+    color: #fff;
+}
+
+.p-chip.red {
+    background: var(--error-color);
+    color: #fff;
+}
+
+.p-chip.orange {
+    background: var(--p-orange-500);
+    color: #fff;
+}
+
+.p-chip.yellow {
+    background: var(--p-yellow-500);
+}
+
+.p-chip.burgundy {
+    background: var(--p-pink-600);
+    color: #fff;
+}
+
+.p-chip.indigo {
+    background: var(--p-indigo-400);
+    color: #fff;
+}
+
+.p-chip.cyan {
+    background: var(--p-cyan-600);
+}
+
+.p-chip.purple {
+    background: var(--p-purple-500);
+    color: #fff;
+}
+
+.pi.green {
+    color: var(--p-green-500);
+}
+
+.pi.blue {
+    color: var(--p-blue-500);
+}
+
+.pi.red {
+    color: var(--p-red-500);
+}
+
+.pi.orange {
+    color: var(--p-orange-500);
+}
+
+.pi.yellow {
+    color: var(--p-yellow-500);
+}
+
+.pi.burgundy {
+    color: var(--p-pink-600);
+}
+
+.pi.indigo {
+    color: var(--p-indigo-400);
+}
+
+.pi.cyan {
+    color: var(--p-cyan-600);
+}
+
+.pi.purple {
+    color: var(--p-purple-500);
+}

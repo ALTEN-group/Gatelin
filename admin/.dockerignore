@@ -1,0 +1,50 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (installed inside build stage)
+node_modules
+
+# Build artifacts
+dist
+tmp
+out-tsc
+.angular
+
+# Test / coverage
+coverage
+__screenshots__
+
+# IDE / editor
+.vscode
+.idea
+.project
+.classpath
+.c9
+.settings
+*.launch
+*.sublime-workspace
+.history
+
+# Logs
+*.log
+npm-debug.log
+yarn-error.log
+testem.log
+
+# Environment
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+dockerfile
+dockerfile.prod
+.dockerignore
+
+# Docs
+README.md

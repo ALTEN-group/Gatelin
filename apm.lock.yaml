@@ -1,0 +1,64 @@
+lockfile_version: '1'
+generated_at: '2026-07-20T06:38:51.712613+00:00'
+apm_version: 0.20.0
+dependencies:
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: agents/unit-test.agent.md
+  is_virtual: true
+  deployed_files:
+  - .github/agents/unit-test.agent.md
+  deployed_file_hashes:
+    .github/agents/unit-test.agent.md: sha256:24b1191b83cfaf2d1a5c0dad7e028cf86d2eee7a370b47ac233fafa2f4cbaa57
+  content_hash: sha256:a1558903932823dfee0a0c7b132d91abfdc057b2936148c958ee75e4370fec30
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: instructions/angular-admin.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/angular-admin.instructions.md
+  deployed_file_hashes:
+    .github/instructions/angular-admin.instructions.md: sha256:0bae91628cb44434a2615c6a2407abb4a5d43a172a8d15e3c60855ac81412157
+  content_hash: sha256:a01b4ac857c6472c4c6ad0b463065044a72e2dc1f1fac568005aca9f81c8bd61
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: instructions/docker.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/docker.instructions.md
+  deployed_file_hashes:
+    .github/instructions/docker.instructions.md: sha256:b19fc27a481d4e83703a428fa28bae3e3bf736467e152db25de73f352fb199cf
+  content_hash: sha256:aa3d2885f638f70dfb0e331af622be529b266fd6a2c8bd7c8ac148b3749157a2
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: instructions/node-express.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/node-express.instructions.md
+  deployed_file_hashes:
+    .github/instructions/node-express.instructions.md: sha256:4e8b6e90013530d359a6ba563024d4f385d8d4a67cedf4b78955b9a1ece2dc68
+  content_hash: sha256:11e3595086faf04f764fa05fa0eb9997f9663b43a9af6edfa4dae9dda723a474
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: instructions/postgres-liquibase.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/postgres-liquibase.instructions.md
+  deployed_file_hashes:
+    .github/instructions/postgres-liquibase.instructions.md: sha256:4666e6595bf2fc4f22e7b3b0f346932623111877355f8b04c28d5b71f70a576b
+  content_hash: sha256:b58a948ec1e5eae1bf6d560f35c6eb7166754365a085e0672314cbe90d9bd10c
+- repo_url: ALTEN-group/coding-pal
+  host: github.com
+  resolved_commit: 65478caf765f747417202794170d029e560652ce
+  virtual_path: instructions/sharp-agent.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .github/instructions/sharp-agent.instructions.md
+  deployed_file_hashes:
+    .github/instructions/sharp-agent.instructions.md: sha256:7ab9c7ae2cfbaf32002b41ee45d37ac5548648b4b17b823a4fcf2c0f4b86167b
+  content_hash: sha256:71eb4304e847e674bc11da35a7a61bfbe2fb6cc2c5108a89f8a777b44edee9fc

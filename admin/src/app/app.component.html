@@ -1,0 +1,26 @@
+<div class="adm-container"
+  [class.sidenav-expanded]="getExpanded"
+  [class.sidenav-pinned]="getPinned"
+  [class.mobile]="getMobileDisplay">
+  @if (isAuthenticated() && areAclResolved()) {
+    <adm-sidenav  />
+    <adm-navbar class="adm-navbar" />
+  }
+  <div class="adm-content">
+    <router-outlet />
+  </div>
+</div>
+
+<p-toast key="bottomCenter" position="bottom-center" />
+<p-toast key="topRight" position="top-right" />
+
+@if (isLoading()) {
+  @switch (loadingMode()) {
+    @case ('spin') {
+      <p-progressSpinner class="spinner" />
+    }
+    @default {
+      <p-progressBar class="progress-bar" mode="indeterminate" />
+    }
+  }
+}

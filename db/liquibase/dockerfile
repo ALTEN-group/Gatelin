@@ -1,0 +1,20 @@
+ARG LIQUIBASE_VERSION
+FROM liquibase/liquibase:${LIQUIBASE_VERSION}
+
+USER root
+
+# change apk repos
+# RUN rm /etc/apk/repositories
+# RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true 
+RUN apk update && apk add --no-cache postgresql-client curl
+
+# Return to liquibase user space
+USER liquibase
+
+# copy entrypoints files
+# Owned by root with no write bit for group/other so the non-root
+# liquibase user (running at container start) can read/execute but not modify it.
+COPY --chown=root:root --chmod=755 ./entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+# CMD ["sleep","36000"]

@@ -1,0 +1,30 @@
+ARG NODE_VERSION
+FROM node:${NODE_VERSION}
+
+# change apk repos
+RUN rm /etc/apk/repositories
+RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true apk update \
+    && apk add tzdata 
+
+ARG TZ
+ENV TZ=${TZ}
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Create a new simple user 
+ARG UID
+ARG GID
+RUN deluser --remove-home node && addgroup -S usergroup -g ${GID} && adduser -G usergroup -S user -u ${UID}
+USER user
+
+ARG NPMRC_PATH
+RUN --mount=type=secret,id=npmrc,target=${NPMRC_PATH},required=true,uid=${UID}
+
+WORKDIR /usr/src/app
+COPY --chown=user:usergroup --chmod=640 package*.json ./
+
+RUN npm i --loglevel=error --ignore-scripts --no-fund
+
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+CMD [ "npm", "start" ]
+# CMD ["sleep","3600"]

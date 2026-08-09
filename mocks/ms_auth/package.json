@@ -1,0 +1,24 @@
+{
+  "name": "ms_auth_mock",
+  "version": "0.1.0",
+  "description": "Mock server for ms_auth microservice",
+  "main": "src/app.js",
+  "type": "module",
+  "author": "Ludovic Cluber",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "dependencies": {
+    "@dwtechs/checkard": "3.6.1",
+    "@dwtechs/errandler-express": "0.1.0",
+    "@dwtechs/hashitaka": "0.5.0",
+    "@dwtechs/healix-express": "0.1.0",
+    "@dwtechs/servpico-express": "0.2.0",
+    "@dwtechs/passken": "0.6.2",
+    "@dwtechs/passken-express": "0.5.0",
+    "@dwtechs/winstan": "0.7.0",
+    "express": "5.1.0",
+    "helmet": "8.1.0"
+  }
+}

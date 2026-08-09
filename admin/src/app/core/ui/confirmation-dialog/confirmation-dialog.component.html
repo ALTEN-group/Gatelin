@@ -1,0 +1,20 @@
+<p>
+  {{ message }}
+</p>
+
+<div class="actions">
+  <button pButton
+    type="button"
+    label="Annuler"
+    i18n-label="@@confirmRejectLabel"
+    icon="pi pi-times"
+    class="p-button-info"
+    (click)="reject()"></button>
+  <button pButton
+    type="button"
+    label="Confirmer"
+    i18n-label="@@confirmAcceptLabel"
+    icon="pi pi-check"
+    class="p-button-success"
+    (click)="accept()"></button>
+</div>

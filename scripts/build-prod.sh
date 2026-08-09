@@ -1,0 +1,129 @@
+#!/bin/bash
+
+# Build Production Docker Images Script
+# Builds all production-ready images using dockerfile.prod files and docker/conf/.env.prod
+# Usage: ./scripts/build-prod.sh [gateway] [migration] [admin] [website]
+#   With no arguments, all images are built.
+
+set -e
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+ENV_FILE="docker/conf/.env.prod"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo -e "${RED}❌ $ENV_FILE not found. Cannot build production images.${NC}"
+  exit 1
+fi
+
+# Load env vars (avoid sourcing to prevent readonly variable conflicts)
+get_env() { grep -E "^${1}=" "$ENV_FILE" | cut -d'=' -f2-; }
+
+NODE_VERSION=$(get_env NODE_VERSION)
+NODE_ENV=$(get_env NODE_ENV)
+TZ=$(get_env TZ)
+APP_UID=$(get_env UID)
+APP_GID=$(get_env GID)
+CADDY_VERSION=$(get_env CADDY_VERSION)
+LIQUIBASE_VERSION=$(get_env LIQUIBASE_VERSION)
+HOME_PATH=$(get_env HOME_PATH)
+
+# Read version from package.json
+VERSION=$(node -p "require('./package.json').version")
+
+# Determine which targets to build (default: all)
+BUILD_GATEWAY=false
+BUILD_MIGRATION=false
+BUILD_ADMIN=false
+BUILD_WEBSITE=false
+
+if [[ $# -eq 0 ]]; then
+  BUILD_GATEWAY=true
+  BUILD_MIGRATION=true
+  BUILD_ADMIN=true
+  BUILD_WEBSITE=true
+else
+  for arg in "$@"; do
+    case "$arg" in
+      gateway)   BUILD_GATEWAY=true ;;
+      migration) BUILD_MIGRATION=true ;;
+      admin)     BUILD_ADMIN=true ;;
+      website)   BUILD_WEBSITE=true ;;
+      *) echo -e "${RED}❌ Unknown target: $arg (valid: gateway, migration, admin, website)${NC}"; exit 1 ;;
+    esac
+  done
+fi
+
+echo -e "${BLUE}🔖 Version: ${VERSION}${NC}"
+
+# ─── Gateway ────────────────────────────────────────────────────────────────
+if [[ "$BUILD_GATEWAY" == true ]]; then
+  IMAGE="ghcr.io/alten-group/gatelin:${VERSION}"
+  echo -e "${YELLOW}🏗️  Building gateway image ${IMAGE}...${NC}"
+  docker build \
+    --file dockerfile.prod \
+    --build-arg NODE_VERSION="${NODE_VERSION}" \
+    --build-arg NODE_ENV="${NODE_ENV}" \
+    --build-arg TZ="${TZ}" \
+    --build-arg UID="${APP_UID}" \
+    --build-arg GID="${APP_GID}" \
+    --tag "${IMAGE}" \
+    --tag "ghcr.io/alten-group/gatelin:latest" \
+    .
+  echo -e "${GREEN}✅ Gateway image built: ${IMAGE}${NC}"
+fi
+
+# ─── Migration ──────────────────────────────────────────────────────────────
+if [[ "$BUILD_MIGRATION" == true ]]; then
+  IMAGE="ghcr.io/alten-group/gatelin-migration:${VERSION}"
+  echo -e "${YELLOW}🏗️  Building migration image ${IMAGE}...${NC}"
+  docker build \
+    --file db/liquibase/dockerfile.prod \
+    --build-arg LIQUIBASE_VERSION="${LIQUIBASE_VERSION}" \
+    --tag "${IMAGE}" \
+    --tag "ghcr.io/alten-group/gatelin-migration:latest" \
+    db/liquibase
+  echo -e "${GREEN}✅ Migration image built: ${IMAGE}${NC}"
+fi
+
+# ─── Admin ──────────────────────────────────────────────────────────────────
+if [[ "$BUILD_ADMIN" == true ]]; then
+  IMAGE="ghcr.io/alten-group/gatelin-admin:${VERSION}"
+  echo -e "${YELLOW}🏗️  Building admin image ${IMAGE}...${NC}"
+  docker build \
+    --file admin/dockerfile.prod \
+    --secret id=apk_repository,env=APK_REPOSITORY \
+    --build-arg NODE_VERSION="${NODE_VERSION}" \
+    --build-arg CADDY_VERSION="${CADDY_VERSION}" \
+    --build-arg TZ="${TZ}" \
+    --build-arg UID="${APP_UID}" \
+    --build-arg GID="${APP_GID}" \
+    --tag "${IMAGE}" \
+    --tag "ghcr.io/alten-group/gatelin-admin:latest" \
+    admin
+  echo -e "${GREEN}✅ Admin image built: ${IMAGE}${NC}"
+fi
+
+# ─── Website ────────────────────────────────────────────────────────────────
+if [[ "$BUILD_WEBSITE" == true ]]; then
+  IMAGE="dwtechs/gatelin-website:${VERSION}"
+  echo -e "${YELLOW}🏗️  Building website image ${IMAGE}...${NC}"
+  docker build \
+    --file website/dockerfile.prod \
+    --build-arg NODE_VERSION="${NODE_VERSION}" \
+    --build-arg NGINX_VERSION="${NGINX_VERSION}" \
+    --build-arg TZ="${TZ}" \
+    --build-arg UID="${APP_UID}" \
+    --build-arg GID="${APP_GID}" \
+    --tag "${IMAGE}" \
+    --tag "dwtechs/gatelin-website:latest" \
+    website
+  echo -e "${GREEN}✅ Website image built: ${IMAGE}${NC}"
+fi
+
+echo -e "${GREEN}✅ All requested images built successfully.${NC}"

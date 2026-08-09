@@ -1,0 +1,24 @@
+<div class="page-container">
+
+  <app-info-message i18n="@@Fields_Info">
+    Declaring fields allow you to restrict permissions at the property level of a resource.
+    They only need to be declared for resources where you want to grant different permissions depending on the field.
+    For example, a <strong>user</strong> resource could expose a <strong>salary</strong> field that only a manager role is allowed to read, while other roles can access the rest of the resource.
+  </app-info-message>
+  <tbl-table
+      [config]="config"
+      [httpCalls]="fieldsService.httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+      [filterLevel]="tableInformation.filterLevel"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [shouldSyncIdWithUrl]="tableInformation.shouldSyncIdWithUrl"
+      [shouldSyncPageWithUrl]="tableInformation.shouldSyncPageWithUrl"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [excelExportMode]="tableInformation.excelExportMode"
+  />
+
+</div>

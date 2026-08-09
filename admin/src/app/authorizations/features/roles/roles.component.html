@@ -1,0 +1,30 @@
+<div class="page-container">
+
+  <tbl-table 
+      [config]="config"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+      [filterLevel]="tableInformation.filterLevel"
+      [customActionsTemplate]="customActionsCell"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [shouldSyncIdWithUrl]="tableInformation.shouldSyncIdWithUrl"
+      [shouldSyncPageWithUrl]="tableInformation.shouldSyncPageWithUrl"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [excelExportMode]="tableInformation.excelExportMode"
+  />
+
+  <ng-template #customActionsCell let-rowData>
+    <p-button
+      icon="pi pi-directions"
+      i18n-title="@@Roles_ConsultPermissions"
+      title="Consult permissions"
+      (onClick)="goToPermissions(rowData)"
+    />
+
+  </ng-template>
+
+</div>

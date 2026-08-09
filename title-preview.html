@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gatelin – Brand Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --c1: #10B981;
+      --c2: #059669;
+      --bg: #111;
+      --card: #1a1a1a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: sans-serif;
+      padding: 48px 32px;
+    }
+
+    /* ── wordmark ── */
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.05em;
+      line-height: 1;
+    }
+    .wordmark svg {
+      display: block;
+      height: 1em;
+      width: auto;
+      flex-shrink: 0;
+    }
+    .wm-text {
+      font-family: 'Nunito', Arial, sans-serif;
+      font-weight: 800;
+      font-size: 1em;
+      color: var(--c1);
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── icon only ── */
+    .icon-only svg {
+      display: block;
+      height: 1em;
+      width: auto;
+    }
+
+    /* ── section layout ── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 20px;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid #222;
+      border-radius: 14px;
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .panel-light {
+      background: #f0f0f0;
+      border-color: #ddd;
+    }
+    .sizes {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO — dark background -->
+  <p class="section-label">Wordmark — dark background</p>
+  <div class="panel">
+    <div class="wordmark" style="font-size: 120px">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="20" fill="#10B981"/>
+        <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+      </svg>
+      <span class="wm-text">atelin</span>
+    </div>
+  </div>
+
+  <!-- HERO — light background -->
+  <p class="section-label">Wordmark — light background</p>
+  <div class="panel panel-light">
+    <div class="wordmark" style="font-size: 120px">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="20" fill="#10B981"/>
+        <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+      </svg>
+      <span class="wm-text">atelin</span>
+    </div>
+  </div>
+
+  <!-- ICON ONLY -->
+  <p class="section-label">Icon only</p>
+  <div class="panel">
+    <div class="icon-only" style="font-size: 60px">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="20" fill="#10B981"/>
+        <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- SIZE SCALE -->
+  <p class="section-label">Size scale</p>
+  <div class="panel">
+    <div class="sizes">
+
+      <!-- large -->
+      <div class="wordmark" style="font-size: 80px">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+        </svg>
+        <span class="wm-text">atelin</span>
+      </div>
+
+      <!-- medium -->
+      <div class="wordmark" style="font-size: 48px">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+        </svg>
+        <span class="wm-text">atelin</span>
+      </div>
+
+      <!-- small -->
+      <div class="wordmark" style="font-size: 28px">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+        </svg>
+        <span class="wm-text">atelin</span>
+      </div>
+
+      <!-- xsmall -->
+      <div class="wordmark" style="font-size: 16px">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="20" r="20" fill="#10B981"/>
+          <text x="9" y="31" transform="rotate(-25, 22, 16)" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="36" fill="white">G</text>
+        </svg>
+        <span class="wm-text">atelin</span>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

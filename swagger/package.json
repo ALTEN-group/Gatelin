@@ -1,0 +1,21 @@
+{
+  "name": "wapstr-swagger",
+  "version": "0.1.0-alpha.2",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "build": "rollup --config rollup.config.mjs",
+    "test": "echo \"No test specified\" && exit 1"
+  },
+  "author": "Ludovic Cluber",
+  "license": "MIT",
+  "dependencies": {
+    "@dwtechs/winstan": "0.4.0",
+    "swagger-jsdoc": "6.2.8",
+    "swagger-ui-express": "5.0.1",
+    "helmet": "7.1.0",
+    "express": "4.20.0"
+  }
+}

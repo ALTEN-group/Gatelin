@@ -1,0 +1,152 @@
+adm-permissions-tree {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+
+  --p-treetable-body-cell-padding: 0 !important;
+}
+
+.permissions-tree-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  p-select {
+    width: 200px;
+  }
+}
+
+p-treetable {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+
+  tr th:first-child,
+  tr td:first-child {
+    width: 200px;
+  }
+}
+
+.permissions-tree__active-col {
+  text-align: center;
+  width: 6rem;
+}
+
+.permissions-tree__active-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+
+  p-checkbox {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.permissions-tree__row--clickable {
+  cursor: pointer;
+}
+
+.permissions-tree__op-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  height: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
+  color: var(--text-color);
+  border: 1px solid var(--p-content-border-color, rgba(0, 0, 0, 0.08));
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+:host ::ng-deep .p-treetable .p-treetable-tbody > tr > td.permissions-tree__active-col {
+  text-align: center;
+
+  p-checkbox {
+    display: inline-flex;
+  }
+}
+
+.permissions-tree__label--service {
+  font-weight: 700;
+}
+
+.permissions-tree__label--resource {
+  font-weight: 500;
+}
+
+.permissions-tree__label--route {
+  font-weight: 400;
+}
+
+.permissions-tree__values {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.permissions-tree__row--operation {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--p-treetable-row-hover-background, rgba(0, 0, 0, 0.04));
+  }
+}
+
+.permissions-tree__row--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+
+  &:hover {
+    background: none !important;
+  }
+}
+
+.permissions-tree__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.permissions-tree__chip {
+  font-size: 0.75rem;
+  height: 1.4rem;
+}
+
+.perm-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
+}
+
+.permissions-tree__placeholder {
+  color: var(--text-color-secondary);
+  font-style: italic;
+  padding: 1rem 0;
+}

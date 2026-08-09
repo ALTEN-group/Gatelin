@@ -1,0 +1,25 @@
+<div class="page-container">
+
+  <app-info-message i18n="@@Cors_Info">
+    CORS entries define which external origins are allowed to call this gateway.
+    Each entry specifies an origin and whether credentials (cookies, authorization headers) are permitted.
+    Only origins listed here will receive the appropriate <strong>Access-Control-Allow-Origin</strong> response headers — all other origins will be blocked by the browser.
+  </app-info-message>
+
+  <tbl-table
+      [config]="config()"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [filterLevel]="tableInformation.filterLevel"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [shouldSyncIdWithUrl]="tableInformation.shouldSyncIdWithUrl"
+      [shouldSyncPageWithUrl]="tableInformation.shouldSyncPageWithUrl"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [excelExportMode]="tableInformation.excelExportMode"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+  />
+
+</div>

@@ -1,0 +1,47 @@
+// @ts-check
+import { SQLEntity } from "@dwtechs/antity-pgsql";
+
+export default new SQLEntity("role_cache", [
+  {
+    key: "id",
+    type: "integer",
+    min: null,
+    max: null,
+    isTypeChecked: true,
+    isFilterable: true,
+    requiredFor: [],
+    operations: ["SELECT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
+  {
+    key: "archived",
+    type: "boolean",
+    min: null,
+    max: null,
+    isTypeChecked: true,
+    isFilterable: true,
+    requiredFor: [],
+    operations: ["SELECT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
+  {
+    key: "permissions",
+    type: "array",
+    min: null,
+    max: null,
+    isTypeChecked: false,
+    isFilterable: false,
+    requiredFor: [],
+    operations: ["SELECT"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: null,
+  },
+]);

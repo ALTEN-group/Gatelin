@@ -1,0 +1,118 @@
+<div class="permissions-tree-container">
+
+  <p-select
+    [options]="roles"
+    [(ngModel)]="selectedRole"
+    (onChange)="onRoleSelect($event.value)"
+    [showClear]="true"
+    placeholder="Select a role"
+    i18n-placeholder="@@Permissions_SelectRole"
+    appendTo="body"
+  >
+    <ng-template #item let-role>{{ role.id }} - {{ role.name }}</ng-template>
+    <ng-template #selectedItem let-role>{{ role.id }} - {{ role.name }}</ng-template>
+  </p-select>
+
+  @if (selectedRoleId() === null) {
+    <p class="permissions-tree__placeholder" i18n="@@PermissionsTree_SelectRolePlaceholder">
+      Please select a role to view its permissions.
+    </p>
+  } @else {
+  <p-treetable
+    [value]="treeNodes()"
+    [loading]="isLoading()"
+    [scrollable]="true"
+    scrollHeight="flex"
+  >
+    <ng-template #header>
+      <tr>
+        <th scope="col" i18n="@@PermissionsTree_RouteCol">Route</th>
+        <th scope="col" class="permissions-tree__active-col" i18n="@@PermissionsTree_ActiveCol">Active</th>
+        <th scope="col" i18n="@@PermissionsTree_FieldsCol">Fields</th>
+        <th scope="col" i18n="@@PermissionsTree_ScopeCol">Scope</th>
+        <th scope="col" i18n="@@PermissionsTree_ConditionCol">Conditions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-rowNode let-rowData="rowData">
+      <tr
+        [ttRow]="rowNode"
+        [class.permissions-tree__row--operation]="rowData.type === 'operation'"
+        [class.permissions-tree__row--clickable]="rowData.type === 'operation' && rowData.perm?.active"
+        (click)="rowData.type === 'operation' && rowData.perm?.active && onEditOperation(rowData)"
+      >
+        <td>
+          <p-treeTableToggler [rowNode]="rowNode" />
+          @if (rowData.type === 'operation') {
+            <span
+              class="permissions-tree__op-chip"
+              [style]="rowData.color ? {'background': rowData.color, 'color': '#fff', 'border-color': rowData.color} : {}"
+            >{{ rowData.name }}</span>
+          } @else {
+            <span [class]="'permissions-tree__label--' + rowData.type">{{ rowData.name }}</span>
+          }
+        </td>
+        <td class="permissions-tree__active-col" (click)="$event.stopPropagation()">
+          @if (rowData.type === 'operation') {
+            <div class="permissions-tree__active-cell">
+              <p-checkbox
+                [inputId]="'op-' + rowData.routeId + '-' + rowData.id"
+                [binary]="true"
+                [ngModel]="rowData.perm?.active === true"
+                [disabled]="!rowData.routeProtected && !rowData.perm"
+                (onChange)="onToggleOperation(rowData, $event.checked)"
+                (click)="$event.stopPropagation()"
+              />
+            </div>
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'operation') {
+            <div class="permissions-tree__chips">
+              @for (field of (rowData.perm?.active ? (rowData.perm?.fields ?? []) : []); track field) {
+                <p-chip [label]="field" styleClass="permissions-tree__chip" />
+              }
+            </div>
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'operation') {
+            <div class="permissions-tree__chips">
+              @for (scope of (rowData.perm?.active ? (rowData.perm?.scopes ?? []) : []); track scope) {
+                <p-chip [label]="scope" styleClass="permissions-tree__chip" />
+              }
+            </div>
+          }
+        </td>
+        <td>
+          @if (rowData.type === 'operation') {
+            <div class="permissions-tree__chips">
+              @for (condId of (rowData.perm?.active ? (rowData.perm?.conditionId ?? []) : []); track condId) {
+                @let cond = conditionById.get(condId);
+                <p-chip
+                  [label]="cond?.name ?? ''"
+                  styleClass="permissions-tree__chip"
+                  [style]="{'background': cond?.color ?? '', 'color': cond?.color ? '#fff' : ''}"
+                />
+              }
+            </div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-treetable>
+  }
+
+  <crd-edition-dialog
+    [(editedEntry)]="editedPermEntry"
+    [config]="dialogConfig()"
+    [features]="dialogFeatures"
+    [isVisible]="dialogVisible()"
+    [isCreation]="false"
+    [customHeader]="dialogHeader()"
+    [size]="'s'"
+    (saved)="onPermSaved($event)"
+    (hide)="dialogVisible.set(false)"
+  />
+
+</div>

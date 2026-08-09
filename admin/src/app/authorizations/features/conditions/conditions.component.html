@@ -1,0 +1,25 @@
+<div class="page-container">
+
+  <app-info-message i18n="@@Conditions_Info">
+    Conditions define rules that evaluate a specific field against a value using a comparison operator (=, !=, &lt;, &gt;, &lt;=, &gt;=).
+    They are linked to permissions to make access control dynamic — a permission with a condition only applies when that condition is satisfied at runtime.
+    For example, a condition checking <strong>user.status = active</strong> attached to a permission means the permission only grants access when the user's status field equals <strong>active</strong>.
+  </app-info-message>
+
+  <tbl-table
+      [config]="config"
+      [httpCalls]="httpCalls"
+      [entityFactory]="entityFactory"
+      [entityId]="tableInformation.entityId"
+      [entityLabel]="tableInformation.label"
+      [tableTitle]="tableInformation.title"
+      [additionalReadonlyProperties]="tableInformation.additionalReadonlyProperties"
+      [filterLevel]="tableInformation.filterLevel"
+      [isPreferencesModeEnabled]="tableInformation.isPreferencesModeEnabled"
+      [shouldSyncIdWithUrl]="tableInformation.shouldSyncIdWithUrl"
+      [shouldSyncPageWithUrl]="tableInformation.shouldSyncPageWithUrl"
+      [isExcelExportEnabled]="tableInformation.isExcelExportEnabled"
+      [excelExportMode]="tableInformation.excelExportMode"
+  />
+
+</div>

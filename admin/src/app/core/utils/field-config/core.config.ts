@@ -1,0 +1,24 @@
+import { buildLockedCellRenderer } from "@core/utils/renderers/locked.renderer";
+import { CONTROL_TYPES, StrictCrudItemOptions } from "@dwtechs/ngx-crud-builder";
+
+export const CORE_CONFIG: StrictCrudItemOptions<{ core: boolean }> = {
+  key: "core",
+  label: "Core",
+  controlType: CONTROL_TYPES.CHECKBOX,
+  columnOptions: {
+    defaultWidth: "60px",
+    filterType: CONTROL_TYPES.CHECKBOX,
+    customCellRenderer: buildLockedCellRenderer(),
+    customHeaderRenderer: () => `<span>🔒</span>`,
+    headerTooltip: "Core",
+  },
+  controlOptions: {
+    disabled: true,
+  },
+  conditions: {
+    controlOptions: {
+      hidden: ({ model }: { model: { core: boolean } & { id?: number } }) =>
+        !model.id,
+    },
+  },
+};
