@@ -21,7 +21,7 @@ Generate the mock auth service credentials and the matching swagger login exampl
 ./scripts/setup-mocks.sh
 ```
 
-This generates `mocks/ms_auth/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users. The generated passwords are printed to the console.
+This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users. The generated passwords are printed to the console.
 
 ## Development
 

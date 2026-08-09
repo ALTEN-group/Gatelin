@@ -1,7 +1,7 @@
 {
-  "name": "ms_auth_mock",
+  "name": "ms_pwd_mock",
   "version": "0.1.0",
-  "description": "Mock server for ms_auth microservice",
+  "description": "Mock server for ms_pwd microservice",
   "main": "src/app.js",
   "type": "module",
   "author": "Ludovic Cluber",

@@ -70,7 +70,7 @@ docker volume rm "${APP_NAME}_postgres_data" >/dev/null 2>&1 || true
 
 echo -e "${YELLOW}🚀 Starting dependency stack (postgres, traefik, migrations, gatelin, mocks)...${NC}"
 docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" up --build -d \
-  postgres traefik gatelin_migration gatelin ms_auth_mock ms_user_mock
+  postgres traefik gatelin_migration gatelin ms_pwd_mock ms_user_mock
 
 echo -e "${YELLOW}⏳ Waiting for gatelin to become healthy...${NC}"
 GATELIN_CID=$(docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" ps -q gatelin)

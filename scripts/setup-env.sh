@@ -19,7 +19,7 @@ POSTGRES_ROOT_PWD=$(openssl rand -base64 24)
 GATELIN_DB_USER="gatelin_$(openssl rand -hex 4)"
 GATELIN_DB_PWD=$(openssl rand -base64 24)
 GATELIN_TOKEN_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
-MSAUTH_PWD_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
+MSPWD_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
 
 sedi \
   -e "s|^LIQUIBASE_DB_PWD=.*|LIQUIBASE_DB_PWD=${LIQUIBASE_DB_PWD}|" \
@@ -27,7 +27,7 @@ sedi \
   -e "s|^GATELIN_DB_USER=.*|GATELIN_DB_USER=${GATELIN_DB_USER}|" \
   -e "s|^GATELIN_DB_PWD=.*|GATELIN_DB_PWD=${GATELIN_DB_PWD}|" \
   -e "s|^GATELIN_TOKEN_SECRET=.*|GATELIN_TOKEN_SECRET=${GATELIN_TOKEN_SECRET}|" \
-  -e "s|^MSAUTH_PWD_SECRET=.*|MSAUTH_PWD_SECRET=${MSAUTH_PWD_SECRET}|" \
+  -e "s|^MSPWD_SECRET=.*|MSPWD_SECRET=${MSPWD_SECRET}|" \
   "$ENV_FILE"
 
 # Load registry vars from the generated env file
@@ -57,7 +57,7 @@ echo "  POSTGRES_ROOT_PWD    = ${POSTGRES_ROOT_PWD}"
 echo "  GATELIN_DB_USER      = ${GATELIN_DB_USER}"
 echo "  GATELIN_DB_PWD       = ${GATELIN_DB_PWD}"
 echo "  GATELIN_TOKEN_SECRET = ${GATELIN_TOKEN_SECRET}"
-echo "  MSAUTH_PWD_SECRET    = ${MSAUTH_PWD_SECRET}"
+echo "  MSPWD_SECRET         = ${MSPWD_SECRET}"
 echo ""
 echo "Fill in the required values before starting the stack:"
 echo "  NPM_REGISTRY_DOMAIN        (your npm registry domain)"
