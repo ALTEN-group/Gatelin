@@ -10,7 +10,7 @@ docker/conf/.env.prod
 website/docs/.vitepress/cache
 .github/instructions/
 .github/agents/
-mocks/ms_auth/src/data/credentials.js
+mocks/ms_pwd/src/data/credentials.js
 swagger/src/gatelin.openapi.json
 apm_modules/
 tests/restler/results/*

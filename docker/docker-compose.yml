@@ -329,9 +329,9 @@ services:
       - ${PWD}/mocks/ms_user/src:/usr/src/app/src
       - ms_user_mock_node_modules:/usr/src/app/node_modules
 
-  ms_auth_mock:
+  ms_pwd_mock:
     build:
-      context: ${PWD}/mocks/ms_auth
+      context: ${PWD}/mocks/ms_pwd
       dockerfile: dockerfile
       args:
         UID: ${UID}
@@ -339,16 +339,16 @@ services:
         TZ: ${TZ}
         NODE_VERSION: ${NODE_VERSION}
         NODE_ENV: ${NODE_ENV}
-    container_name: ${MSAUTH_HOST}
-    hostname: ${MSAUTH_HOST}
+    container_name: ${MSPWD_HOST}
+    hostname: ${MSPWD_HOST}
     environment:
       PORT: ${DEFAULT_PORT}
-      PWD_SECRET: ${MSAUTH_PWD_SECRET}
+      PWD_SECRET: ${MSPWD_SECRET}
     networks:
       - internal
     volumes:
-      - ${PWD}/mocks/ms_auth/src:/usr/src/app/src
-      - ms_auth_mock_node_modules:/usr/src/app/node_modules
+      - ${PWD}/mocks/ms_pwd/src:/usr/src/app/src
+      - ms_pwd_mock_node_modules:/usr/src/app/node_modules
 
 networks:
   internal:
@@ -385,4 +385,4 @@ volumes:
   swagger_node_modules:
   website_node_modules:
   ms_user_mock_node_modules:
-  ms_auth_mock_node_modules:
+  ms_pwd_mock_node_modules:

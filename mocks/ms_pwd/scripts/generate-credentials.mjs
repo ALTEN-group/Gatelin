@@ -4,9 +4,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { randomPwd } from "@dwtechs/passken";
 import { encrypt } from "@dwtechs/hashitaka";
 
-const secret = process.env.MSAUTH_PWD_SECRET;
+const secret = process.env.MSPWD_SECRET;
 if (!secret)
-  throw new Error("Missing MSAUTH_PWD_SECRET environment variable");
+  throw new Error("Missing MSPWD_SECRET environment variable");
 
 const [credentialsPath, openapiPath] = process.argv.slice(2);
 if (!credentialsPath || !openapiPath)

@@ -46,7 +46,7 @@ The `setup-mocks.sh` script creates the mock auth service credentials and the ma
 
 ### What It Does
 
-1. **Copies** `mocks/ms_auth/src/data/credentials.example.js` to `mocks/ms_auth/src/data/credentials.js`
+1. **Copies** `mocks/ms_pwd/src/data/credentials.example.js` to `mocks/ms_pwd/src/data/credentials.js`
 2. **Copies** `swagger/src/gatelin.openapi.example.json` to `swagger/src/gatelin.openapi.json`
 3. **Generates** a random strong password per mock user and fills in both files
 4. **Prints** the generated email/password pairs to the console

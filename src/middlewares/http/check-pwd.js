@@ -5,7 +5,7 @@ const { PWD_CHECK_URL } = process.env;
 const url = PWD_CHECK_URL;
 
 /**
- * Validates user credentials against ms_auth service
+ * Validates user credentials against ms_pwd service
  * Part of the POST /consumers route authentication flow
  *
  * @param {Object} req - Express request

@@ -1,5 +1,5 @@
 // Mock credentials database (based on wapstr pwd entity)
-// pwd placeholders are filled in by mocks/ms_auth/scripts/generate-credentials.mjs -> credentials.js (gitignored)
+// pwd placeholders are filled in by mocks/ms_pwd/scripts/generate-credentials.mjs -> credentials.js (gitignored)
 // pwdHash is the @dwtechs/hashitaka encrypted form of the plaintext password shown in swagger
 export const mockCredentials = [
   {

@@ -109,7 +109,7 @@ sequenceDiagram
 
   rect rgb(220, 220, 220, 0.1)
     note over msg,pdb: Password Validation Block
-    msg->>msp: post(/auth/verify) { filters: {userId, pwd} }
+    msg->>msp: post(/pwd/compare) { userId, pwd }
     deactivate msg
     activate msp
     rect rgb(100, 200, 100, 0.2)

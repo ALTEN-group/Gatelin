@@ -9,9 +9,9 @@ sequenceDiagram
   participant f as front
   participant msg as ms_gateway
   participant msu as ms_user
-  participant msa as ms_auth
+  participant msp as ms_pwd
   participant udb as user_db
-  participant adb as auth_db
+  participant pdb as pwd_db
   participant gdb as gateway_db
   participant msm as ms_mail
   u->>f: Open URL
@@ -94,21 +94,21 @@ sequenceDiagram
     rect rgb(150, 50, 50, 0.5)
       break when user is inactive
         msg--)msg: log 403 account not activated
-        msg->>msa: post(activate/) { id }
+        msg->>msp: post(activate/) { id }
         deactivate msg
-        activate msa
-        msa-->>msa: Check input : id
-        msa--)msa: generate activation token
-        msa->>adb: insert activation token
-        deactivate msa
-        activate adb
-        adb->>msa: activation token created
-        deactivate adb
-        activate msa
-        msa--)msa: prepare activation email
-        msa->>msm: post(send/) { to: email, subject, body }
-        msa->>msu: return 204 activation email sent
-        deactivate msa
+        activate msp
+        msp-->>msp: Check input : id
+        msp--)msp: generate activation token
+        msp->>pdb: insert activation token
+        deactivate msp
+        activate pdb
+        pdb->>msp: activation token created
+        deactivate pdb
+        activate msp
+        msp--)msp: prepare activation email
+        msp->>msm: post(send/) { to: email, subject, body }
+        msp->>msu: return 204 activation email sent
+        deactivate msp
         activate msu
         msu->>msg: return 403 account not activated
         deactivate msu
@@ -124,60 +124,59 @@ sequenceDiagram
   end
 
   rect rgb(220, 220, 220, 0.1)
-    note over msg,adb: Password Validation Block
+    note over msg,pdb: Password Validation Block
     activate msg
-    msg--)msg: Prepare filters for pwd verification : { userId: { value: id, matchMode }, pwd: { value, matchMode } }
-    msg->>msa: post(/auth/verify) { filters }
+    msg--)msg: Attach userId from res.locals.user.id to req.body
+    msg->>msp: post(/pwd/compare) { userId, pwd }
     deactivate msg
-    activate msa
+    activate msp
     rect rgb(100, 200, 100, 0.2)
-      note over msa: Antity-pgsql Library Block
-      msa--)msa: Check input : pwd
-      msa--)msa: Check filters : userId
-      msa->>adb: get pwd hash by userId
+      note over msp: Antity-pgsql Library Block
+      msp--)msp: Check input : userId, pwd
+      msp->>pdb: get pwd hash by userId
     end
-    deactivate msa
-    activate adb
+    deactivate msp
+    activate pdb
     rect rgb(150, 50, 50, 0.5) 
       break when pwd  is not found
-        adb->>msa: Pwd not found
-        deactivate adb
-        activate msa
-        msa--)msa: log 404 resource not found
-        msa->>msg: return 404 resource not found
-        deactivate msa
+        pdb->>msp: Pwd not found
+        deactivate pdb
+        activate msp
+        msp--)msp: log 404 resource not found
+        msp->>msg: return 404 resource not found
+        deactivate msp
         activate msg
         msg->>f: return 404 resource not found
         deactivate msg
         activate f
         f->>u: display error message
         deactivate f   
-        activate adb
+        activate pdb
       end
     end
-    adb->>msa: pwd hash found
-    deactivate adb
-    activate msa
+    pdb->>msp: pwd hash found
+    deactivate pdb
+    activate msp
     rect rgb(100, 200, 100, 0.2)
-      note over msa: Passken-express Library Block
-      msa--)msa: compare password sent with password hash in db
+      note over msp: Passken-express Library Block
+      msp--)msp: compare password sent with password hash in db
     end
     rect rgb(150, 50, 50, 0.5)
       break when passwords comparison fails
-        msa--)msa: log 401 wrong password
-        msa->>msg: return 401 wrong password
-        deactivate msa
+        msp--)msp: log 401 wrong password
+        msp->>msg: return 401 wrong password
+        deactivate msp
         activate msg
         msg->>f: return 401 wrong password
         deactivate msg
         activate f
         f->>u: display error message
         deactivate f
-        activate msa
+        activate msp
       end
     end
-    msa->>msg: return 204 No content ok
-    deactivate msa
+    msp->>msg: return 204 No content ok
+    deactivate msp
     activate msg
   end
   rect rgb(220, 220, 220, 0.1)
