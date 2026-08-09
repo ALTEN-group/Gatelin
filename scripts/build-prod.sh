@@ -2,8 +2,9 @@
 
 # Build Production Docker Images Script
 # Builds all production-ready images using dockerfile.prod files and docker/conf/.env.prod
-# Usage: ./scripts/build-prod.sh [gateway] [migration] [admin] [website]
+# Usage: ./scripts/build-prod.sh [gateway] [migration] [website]
 #   With no arguments, all images are built.
+#   Note: the admin UI is built as part of the gateway image (see dockerfile.prod), not a separate target.
 
 set -e
 
@@ -39,22 +40,19 @@ VERSION=$(node -p "require('./package.json').version")
 # Determine which targets to build (default: all)
 BUILD_GATEWAY=false
 BUILD_MIGRATION=false
-BUILD_ADMIN=false
 BUILD_WEBSITE=false
 
 if [[ $# -eq 0 ]]; then
   BUILD_GATEWAY=true
   BUILD_MIGRATION=true
-  BUILD_ADMIN=true
   BUILD_WEBSITE=true
 else
   for arg in "$@"; do
     case "$arg" in
       gateway)   BUILD_GATEWAY=true ;;
       migration) BUILD_MIGRATION=true ;;
-      admin)     BUILD_ADMIN=true ;;
       website)   BUILD_WEBSITE=true ;;
-      *) echo -e "${RED}❌ Unknown target: $arg (valid: gateway, migration, admin, website)${NC}"; exit 1 ;;
+      *) echo -e "${RED}❌ Unknown target: $arg (valid: gateway, migration, website)${NC}"; exit 1 ;;
     esac
   done
 fi

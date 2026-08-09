@@ -11,9 +11,8 @@ API Gateway for routing and forwarding HTTP requests to internal microservices, 
 
 | Image | Registry |
 |---|---|
-| Gateway | `ghcr.io/alten-group/gatelin` |
+| Gateway (includes Admin UI under `/admin`) | `ghcr.io/alten-group/gatelin` |
 | Migration | `ghcr.io/alten-group/gatelin-migration` |
-| Admin UI | `ghcr.io/alten-group/gatelin-admin` |
 
 ## Features
 

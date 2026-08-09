@@ -2,9 +2,8 @@
 
 Gatelin is distributed as Docker images on Docker Hub:
 
-- **`dwtechs/gatelin`** — the gateway itself
+- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under `/admin`
 - **`dwtechs/gatelin-migration`** — the Liquibase migration container
-- **`dwtechs/gatelin-admin`** - the gateway management front-end
 
 See the [Integration](./integration) page for a full `docker-compose.yml` template.
 
@@ -67,11 +66,11 @@ These variables must be set on the `gatelin` container:
 
 ### Admin
 
-The admin is an Angular app. Its API URLs (`apiGateway`, `apiUsers`) are baked into the build via the `environment.ts` / `environment.prod.ts` files and are not configurable at runtime through environment variables.
+The admin is an Angular app built into the `gatelin` image and served under `/admin` by the gateway itself. Its API URLs (`apiGateway`, `apiUsers`) are baked into the build via the `environment.ts` / `environment.prod.ts` files and are not configurable at runtime through environment variables.
 
 | Variable | Required | Description |
 |---|---|---|
-| `TZ` | ⬜ | Timezone (default: `Europe/Paris`) |
+| `ADMIN_PORT` | ⬜ | Port the admin UI is served on. Unset to disable the admin UI entirely. |
 
 
 ## docker-compose.yml template
@@ -171,6 +170,8 @@ services:
       SERVICE_NAME: my-project-gatelin-local
       ACCESS_TOKEN_DURATION: 600
       REFRESH_TOKEN_DURATION: 86400
+      # Unset to disable the admin UI; set to enable it on a dedicated internal port
+      ADMIN_PORT: 4200
     networks:
       - internal
     labels:
@@ -182,28 +183,16 @@ services:
       - "traefik.http.routers.gateway.middlewares=strip-prefix"
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
-      - "traefik.http.services.gateway.loadbalancer.server.port=3000"
+      - "traefik.http.services.gateway.loadBalancer.server.port=3000"
+      - "traefik.http.routers.admin-ui.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin-ui.entrypoints=web"
+      - "traefik.http.routers.admin-ui.service=admin-ui"
+      - "traefik.http.services.admin-ui.loadBalancer.server.port=4200"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  gatelin-admin:
-    image: dwtechs/gatelin-admin:latest
-    container_name: my-project-gatelin-admin-local
-    hostname: my-project-gatelin-admin-local
-    environment:
-      TZ: Europe/Paris
-    networks:
-      - internal
-    labels:
-      - "traefik.enable=true"
-      - "stack.name=my-project-local"
-      - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
-      - "traefik.http.routers.admin.entrypoints=web"
-      - "traefik.http.routers.admin.service=admin"
-      - "traefik.http.services.admin.loadbalancer.server.port=4200"
 
   my-service:
     image: my-org/my-service:latest
