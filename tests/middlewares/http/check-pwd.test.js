@@ -44,7 +44,7 @@ describe("checkPwd middleware", () => {
 
   beforeEach(() => {
     req = {
-      body: { pwd: "testpassword", filters },
+      body: { userId: 1, pwd: "testpassword", filters },
       additionalHeaders: { "x-consumer-user-id": "consumer123" },
     };
     res = { locals: { user: { id: 1 } } };
@@ -60,17 +60,14 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      { filters },
+      { userId: 1, pwd: "testpassword" },
       { "x-consumer-user-id": "consumer123" },
     );
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should forward req.body.filters as-is set by an upstream middleware", async () => {
-    req.body.filters = {
-      userId: { value: 42, matchMode: "=" },
-      pwd: { value: "testpassword", matchMode: "=" },
-    };
+  it("should forward req.body.userId/pwd as-is set by an upstream middleware", async () => {
+    req.body.userId = 42;
     mockQuery.mockResolvedValueOnce({ data: {} });
 
     await checkPwd(req, res, next);
@@ -79,7 +76,7 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      { filters: req.body.filters },
+      { userId: 42, pwd: "testpassword" },
       expect.any(Object),
     );
     expect(next).toHaveBeenCalledWith();
@@ -95,7 +92,7 @@ describe("checkPwd middleware", () => {
       "POST",
       "https://auth.example.com",
       undefined,
-      { filters },
+      { userId: 1, pwd: "testpassword" },
       {},
     );
     expect(next).toHaveBeenCalledWith();

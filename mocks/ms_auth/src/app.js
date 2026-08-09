@@ -3,7 +3,7 @@ import helmet from "helmet";
 import healixRouter from "@dwtechs/healix-express";
 import { listen } from "@dwtechs/servpico-express";
 import { log } from "@dwtechs/winstan";
-import { isStringOfLength } from "@dwtechs/checkard";
+import { isStringOfLength, isValidInteger } from "@dwtechs/checkard";
 import { compare } from "@dwtechs/passken-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import { mockCredentials } from "./data/credentials.js";
@@ -19,19 +19,17 @@ function validateBody(req, _res, next) {
     `POST /auth/verify - Full request body: ${JSON.stringify(req.body, null, 2)}`,
   );
 
-  // Extract filters
-  const userId = req.body.filters?.userId?.value;
-  const pwd = req.body.filters?.pwd?.value;
+  const userId = req.body.userId;
+  const pwd = req.body.pwd;
 
   // Validate userId format
-  if (!Number.isInteger(userId) || userId <= 0)
+  if (!isValidInteger(userId, 1, undefined, true))
     return next({ statusCode: 400, message: "Invalid userId format" });
 
   // Validate pwd (min 1, max 255 characters)
   if (!isStringOfLength(pwd, 1, 255))
     return next({ statusCode: 400, message: "Invalid pwd format" });
 
-  req.body.pwd = pwd;
   req.userId = userId;
   next();
 }

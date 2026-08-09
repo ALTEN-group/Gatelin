@@ -9,17 +9,17 @@ const url = PWD_CHECK_URL;
  * Part of the POST /consumers route authentication flow
  *
  * @param {Object} req - Express request
- * @param {Object} req.body
- * @param {Object} req.body.filters
+ * @param {number} req.body.userId
+ * @param {string} req.body.pwd
  * @param {Object} [req.additionalHeaders] - Optional additional headers
  * @param {Object} res - Express response
  * @param {Function} next - Express next middleware
  */
 export function checkPwd(req, res, next) {
-  const filters = req.body.filters;
+  const { userId, pwd } = req.body;
   const headers = req.additionalHeaders || {};
   http
-    .query("POST", url, undefined, { filters }, headers)
+    .query("POST", url, undefined, { userId, pwd }, headers)
     .then(() => {
       next(); // Password is valid, proceed to next middleware
     })

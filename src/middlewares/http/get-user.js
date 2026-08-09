@@ -1,6 +1,6 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
-import { isString, isArray } from "@dwtechs/checkard";
+import { isString, isArray, isValidInteger } from "@dwtechs/checkard";
 import http from "../../utils/http.js";
 
 const { USER_SEARCH_URL } = process.env;
@@ -22,6 +22,8 @@ export function getUserByEmail(req, res, next) {
       const u = r.data.rows[0]; // Expecting single user object
       // if (!isObject(u)) return next({ statusCode: 404, message: "User not found" });
       const { id, nickname, email, roles, active } = u ?? {};
+      if (!isValidInteger(id, 1, undefined, true))
+        return next({ statusCode: 422, message: "Invalid user id" });
       if (!isString(nickname, "!0"))
         return next({ statusCode: 422, message: "Invalid user nickname" });
       if (!isArray(roles, "!0"))

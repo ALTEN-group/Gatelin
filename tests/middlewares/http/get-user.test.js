@@ -50,7 +50,7 @@ describe("getUserByEmail middleware", () => {
 
   it("should populate req.body.rows and res.locals.user on success", async () => {
     const user = {
-      id: "u1",
+      id: 1,
       nickname: "alice",
       roles: [1, 2],
       active: true,
@@ -68,19 +68,19 @@ describe("getUserByEmail middleware", () => {
       undefined,
     );
     expect(req.body.rows).toEqual([
-      { userId: "u1", nickname: "alice", roles: [1, 2] },
+      { userId: 1, nickname: "alice", roles: [1, 2] },
     ]);
-    expect(res.locals.user).toEqual({ id: "u1", active: true });
+    expect(res.locals.user).toEqual({ id: 1, active: true });
     expect(next).toHaveBeenCalledWith();
   });
 
   it("should set active: false for inactive user", async () => {
-    const user = { id: "u2", nickname: "bob", roles: [4], active: false };
+    const user = { id: 2, nickname: "bob", roles: [4], active: false };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserByEmail(req, res, next);
 
-    expect(res.locals.user).toEqual({ id: "u2", active: false });
+    expect(res.locals.user).toEqual({ id: 2, active: false });
     expect(next).toHaveBeenCalledWith();
   });
 
@@ -89,7 +89,7 @@ describe("getUserByEmail middleware", () => {
       email: { value: "other@example.com", matchMode: "equals" },
       archived: { value: false, matchMode: "IS" },
     };
-    const user = { id: "u3", nickname: "carol", roles: [3], active: true };
+    const user = { id: 3, nickname: "carol", roles: [3], active: true };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserByEmail(req, res, next);
@@ -113,8 +113,26 @@ describe("getUserByEmail middleware", () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 
+  it("should call next(422) when the returned user has an invalid/missing id", async () => {
+    const user = {
+      id: "not-an-integer",
+      nickname: "eve",
+      roles: [1],
+      active: true,
+    };
+    mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
+
+    await getUserByEmail(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 422,
+      message: "Invalid user id",
+    });
+    expect(req.body.rows).toBeUndefined();
+  });
+
   it("should call next(422) when the returned user has an invalid/missing nickname", async () => {
-    const user = { id: "u4", nickname: 123, roles: [1], active: true };
+    const user = { id: 4, nickname: 123, roles: [1], active: true };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserByEmail(req, res, next);
@@ -128,7 +146,7 @@ describe("getUserByEmail middleware", () => {
 
   it("should call next(422) when the returned user has invalid/missing roles", async () => {
     const user = {
-      id: "u5",
+      id: 5,
       nickname: "dave",
       roles: "not-an-array",
       active: true,
@@ -150,7 +168,7 @@ describe("getUserByEmail middleware", () => {
 
     expect(next).toHaveBeenCalledWith({
       statusCode: 422,
-      message: "Invalid user nickname",
+      message: "Invalid user id",
     });
   });
 });
