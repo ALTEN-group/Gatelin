@@ -12,5 +12,6 @@ website/docs/.vitepress/cache
 .github/agents/
 mocks/ms_auth/src/data/credentials.js
 swagger/src/gatelin.openapi.json
-# APM dependencies
 apm_modules/
+tests/restler/results/*
+**/__pycache__/
