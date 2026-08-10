@@ -8,7 +8,6 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
-    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "audit:report": "node scripts/audit.js"
   },
