@@ -3,8 +3,8 @@ name: Weekly Audit
 on:
   workflow_dispatch:
   schedule:
-    # Every Monday at 06:00 UTC
-    - cron: '0 6 * * 1'
+    # Every Monday at 06:17 UTC (offset from :00 to avoid GitHub's peak scheduling congestion)
+    - cron: '17 6 * * 1'
 
 permissions:
   contents: read
