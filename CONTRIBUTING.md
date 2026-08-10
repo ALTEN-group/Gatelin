@@ -3,25 +3,24 @@
 ## Prerequisites
 
 - [Docker](https://www.docker.com/) and Docker Compose
-- [Node.js](https://nodejs.org/) (for running tests locally)
 
 ## First-time Setup
 
-Copy and configure the development environment file with auto-generated secrets:
+Configure the development environment file with auto-generated files:
 
 ```sh
 ./scripts/setup-env.sh
 ```
 
-This generates `docker/conf/.env.dev` from the example file and fills in random values for all passwords and secrets.
+This generates a `docker/conf/.env.dev` for your instance.
 
-Generate the mock auth service credentials and the matching swagger login examples:
+Configure the mock pwd service and swagger login examples:
 
 ```sh
 ./scripts/setup-mocks.sh
 ```
 
-This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users. The generated passwords are printed to the console.
+This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users.
 
 ## Development
 
@@ -31,7 +30,7 @@ This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.o
 ./scripts/start-dev.sh
 ```
 
-Builds and starts all services (gateway, admin, postgres, migrations, mocks) via Docker Compose using `docker/conf/.env.dev`.
+Builds and starts all services via Docker Compose.
 
 ### Stop
 
@@ -45,27 +44,25 @@ Stops and removes all containers and the postgres volume.
 ./scripts/stop-dev.sh --rmi   # also remove Docker images
 ```
 
-## Reset
+### Reset the database
 
-### Reset the database only
-
-Removes the postgres and migration containers and the postgres data volume. The next `start-dev.sh` will re-run all migrations from scratch.
+Removes the postgres and migration containers and the postgres data volume and re-run all migrations from scratch.
 
 ```sh
 ./scripts/reset-db.sh
 ```
 
-### Reset the gateway service only
+### Reset the gateway
 
-Removes only the Gatelin container and image, leaving postgres and other services intact.
+Removes the Gatelin container and image and re-run the service.
 
 ```sh
 ./scripts/reset-gatelin.sh
 ```
 
-### Reset the admin frontend only
+### Reset the admin
 
-Removes the admin container, image, and node_modules volume so it rebuilds from scratch on next start.
+Removes the admin container, image, and volume and rebuilds from scratch.
 
 ```sh
 ./scripts/reset-admin.sh
@@ -73,15 +70,12 @@ Removes the admin container, image, and node_modules volume so it rebuilds from 
 
 ## Tests
 
-Run from the project root (requires `npm install` first):
+Run from Gatelin service.
 
 ```sh
 npm test                  # run all tests
-npm run test:watch        # watch mode
 npm run test:coverage     # with coverage report
 ```
-
-See [tests/README.md](tests/README.md) for more details.
 
 ## API Fuzzing (RESTler)
 
@@ -96,7 +90,7 @@ run `./scripts/setup-env.sh` and `./scripts/setup-mocks.sh` first if you haven't
 ./scripts/run-restler.sh test --keep  # leave the dependency stack running afterwards
 ```
 
-This starts postgres, traefik, the migration job, gatelin, and the auth/user mocks, waits for gatelin to become healthy, then runs RESTler in a container attached to the same docker network. Results (grammar, network logs, coverage, bug buckets) are written to `tests/restler/results/`.
+This starts and waits for gatelin to become healthy, then runs RESTler in a container attached to the same docker network. Results are written to `tests/restler/results/`.
 
 The run fails if spec coverage drops below `RESTLER_MIN_COVERAGE` (default 50%) or if RESTler reports bugs (5xx responses or checker violations) — set `RESTLER_FAIL_ON_BUGS=false` to only report them. See `docker/restler/` for the auth module, engine settings, and pass/fail gate, and `.github/workflows/restler.yml` for the CI job (smoketest on PRs touching the spec, weekly `fuzz-lean` on schedule, or on-demand via `workflow_dispatch`).
 
@@ -109,13 +103,7 @@ Gatelin ships two releasable images, published to the GitHub Container Registry 
 | Image | Description |
 |---|---|
 | `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Also serves the Angular admin frontend under `/admin` (built into the image, enabled by setting `ADMIN_PORT`). Runs continuously as an API server. |
-| `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. The gateway will not start until this container completes successfully. |
-
-A third image exists for the Gatelin project itself but is not required by consumers:
-
-| Image | Description |
-|---|---|
-| `dwtechs/gatelin-website` | Static documentation website. |
+| `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. It will also apply application-specific seed data when mounted to `/liquibase/data`. |
 
 ### Build production images
 
@@ -124,10 +112,9 @@ Requires `docker/conf/.env.prod` to exist. Create it by copying `.env.dev.exampl
 Builds production images from their respective `dockerfile.prod` files. Each image is tagged as `ghcr.io/alten-group/gatelin-<target>:<version>` and `ghcr.io/alten-group/gatelin-<target>:latest`, where `<version>` is read from `package.json`.
 
 ```sh
-./scripts/build-prod.sh                   # build all three images
+./scripts/build-prod.sh                   # build all images
 ./scripts/build-prod.sh gateway           # gateway only (includes the admin UI)
 ./scripts/build-prod.sh migration         # migration only
-./scripts/build-prod.sh website           # website only
 ./scripts/build-prod.sh gateway migration # multiple targets
 ```
 

@@ -17,19 +17,25 @@ API Gateway for routing and forwarding HTTP requests to internal microservices, 
 ## Features
 
 - **Proxy** — Dynamic route matching and forwarding to target microservices
-- **Authentication** — JWT access and refresh token management
-- **Authorization** — Role-based access control (RBAC) with per-route permissions
-- **Session management** — Consumer sessions with automatic token refresh
-- **Route management** — Applications, services, resources, routes, methods, operations
-- **CORS** — Database-driven CORS origins, applied without restart
-- **Admin UI** — Angular-based front-end to manage the gateway
-- **Scheduled jobs** — Automatic cleanup of archived entities and old history
+- **Authentication** — Consumer session management with JWT access and refresh token issuance, validation, and refresh
+- **Authorization** — Role-based access control (RBAC/ACL) validation per route, per property, per condition...
+- **Route management** — Organize and control endpoints (applications, services, resources, routes, methods, operations)
+- **Role management** — Define, scope, and assign permissions to application roles
+- **Permission management** — Granular operation access (GET, POST, etc.) per API, route, with optional condition and field restrictions
+- **CORS management** — Control allowed origins
+- **Admin UI** — Angular-based front-end to manage the entire gateway
 
 ## Documentation
 
 Full documentation is available at **[https://gatelin.fr](https://gatelin.fr)**.
 
-## Quick Start
+## Quick Start for off the shelf usage
+
+Integrate Gatelin into your application using published Docker images : 
+- [Integration Guide](https://gatelin.fr/guide/integration)
+- [Frontend Integration Guide](https://gatelin.fr/guide/frontend)
+
+## Quick Start for contributors
 
 ```bash
 # 1. Clone the repository
