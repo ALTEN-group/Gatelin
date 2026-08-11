@@ -14,7 +14,7 @@ export function startDeleteOldHistoryJob() {
       const deletedCount = await deleteOldHistory();
       log.info(`Successfully deleted ${deletedCount} old history record(s)`);
     } catch (err) {
-      log.error(`Failed to delete old history records: ${err.message || err.msg}`);
+      log.error(`Failed to delete old history records: ${err.message}`);
     }
   });
 

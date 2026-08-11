@@ -94,8 +94,8 @@ describe("updateCache middleware", () => {
       [1, 2],
     );
     expect(next).toHaveBeenCalledWith({
-      status: 404,
-      msg: "Consumer not updated in cache",
+      statusCode: 404,
+      message: "Consumer not updated in cache",
     });
   });
 

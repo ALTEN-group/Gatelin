@@ -81,7 +81,7 @@ describe("checkConsumer middleware", () => {
 
     expect(csmerSvc.getOne).toHaveBeenCalledWith("valid-access-token");
     expect(next).toHaveBeenCalledWith({
-      status: 401,
+      statusCode: 401,
       message: "Unauthorized",
     });
     expect(res.locals.consumer).toBeUndefined();
@@ -93,7 +93,7 @@ describe("checkConsumer middleware", () => {
     await checkConsumer(req, res, next);
 
     expect(next).toHaveBeenCalledWith({
-      status: 401,
+      statusCode: 401,
       message: "Unauthorized",
     });
   });
@@ -115,7 +115,7 @@ describe("checkConsumer middleware", () => {
 
     expect(csmerSvc.getOne).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith({
-      status: 401,
+      statusCode: 401,
       message: "Unauthorized",
     });
   });
@@ -127,7 +127,7 @@ describe("checkConsumer middleware", () => {
 
     expect(csmerSvc.getOne).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith({
-      status: 401,
+      statusCode: 401,
       message: "Unauthorized",
     });
   });

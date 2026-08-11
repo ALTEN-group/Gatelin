@@ -30,9 +30,14 @@ function query(verb, url, params, data, headers) {
       const responseData =
         res.status !== 204 ? await res.json().catch(() => null) : null;
       if (!res.ok) {
-        const err = new Error(`HTTP ${res.status}`);
-        err.status = res.status;
-        err.msg = `HTTP(${res.status}): ${res.statusText}`;
+        // Rich context (`HTTP(<code>): <statusText>`) goes into `err.message`,
+        // not a parallel `err.msg` field. `@dwtechs/errandler-express`'s
+        // clientErrorHandler reads `err.message` for the response body and
+        // ignores every other name — so this is the ONLY field that reaches
+        // the client. See tests/contracts/errandler-express-error-shape.test.js
+        // for the wire contract.
+        const err = new Error(`HTTP(${res.status}): ${res.statusText}`);
+        err.statusCode = res.status;
         throw err;
       }
       const result = { status: res.status, data: responseData };
@@ -40,9 +45,14 @@ function query(verb, url, params, data, headers) {
       return result;
     })
     .catch((err) => {
-      if (!err.status) {
-        err.status = 503;
-        err.msg = `HTTP(503): ${err.message}`;
+      // Network failure / non-HTTP error path (ECONNREFUSED, DNS, TLS, etc.).
+      // The `!err.statusCode` guard prevents double-wrapping the HTTP-error
+      // path above, which has already populated statusCode on the same object.
+      // 503 (Service Unavailable) is the RFC-correct signal for "upstream
+      // unreachable" and is what forward.js's default falls back to.
+      if (!err.statusCode) {
+        err.statusCode = 503;
+        err.message = `HTTP(503): ${err.message}`;
       }
       throw err;
     });

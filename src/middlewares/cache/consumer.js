@@ -71,8 +71,8 @@ function updateCache(req, res, next) {
   );
   if (!updatedC)
     return next({
-      status: 404,
-      msg: "Consumer not updated in cache",
+      statusCode: 404,
+      message: "Consumer not updated in cache",
     });
 
   next();

@@ -75,7 +75,7 @@ export function startDeleteArchivedEntitiesJob() {
       );
     } catch (err) {
       log.error(
-        `Failed to complete archived entities deletion job: ${err.message || err.msg}`,
+        `Failed to complete archived entities deletion job: ${err.message}`,
       );
     }
   });
