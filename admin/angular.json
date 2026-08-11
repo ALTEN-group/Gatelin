@@ -43,9 +43,14 @@
               "browser": ""
             },
             "index": "src/index.html",
-            "polyfills": ["@angular/localize/init"],
+            "polyfills": [
+              "@angular/localize/init"
+            ],
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.svg", "src/assets"],
+            "assets": [
+              "src/favicon.svg",
+              "src/assets"
+            ],
             "styles": [
               "src/styles.scss",
               "./node_modules/primeicons/primeicons.css"
@@ -54,7 +59,9 @@
               "node_modules/chart.js/dist/chart.js"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": [
+                "src/styles"
+              ]
             },
             "extractLicenses": false,
             "sourceMap": true,
@@ -87,6 +94,9 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "serve": {
+              "baseHref": "/gatelin/"
             }
           },
           "defaultConfiguration": ""
@@ -94,8 +104,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "admin:build",
-            "servePath": "admin"
+            "buildTarget": "admin:build:serve"
           },
           "configurations": {
             "production": {

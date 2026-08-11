@@ -38,7 +38,7 @@ RUN deluser --remove-home node \
 
 USER user
 
-LABEL org.opencontainers.image.description="Gatelin API gateway"
+LABEL org.opencontainers.image.description="Gatelin API gateway (serves the Angular admin UI under a configurable ADMIN_BASE_PATH)"
 
 WORKDIR /usr/src/app
 COPY --chown=user:usergroup --from=deps /usr/src/app/node_modules ./node_modules
