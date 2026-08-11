@@ -25,7 +25,8 @@
     "@dwtechs/winstan-plugin-express-perf": "0.2.1",
     "cookie-parser": "1.4.7",
     "express": "5.1.0",
-    "express-rate-limit": "8.5.0"
+    "express-rate-limit": "8.5.0",
+    "safe-regex2": "5.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.28.4",

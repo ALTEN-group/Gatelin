@@ -37,15 +37,18 @@ import condition from "./routes/condition.js";
 
 const s = "/gateway/";
 
+const SESSION_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const PROXY_WINDOW_MS = 60 * 1000; // 1 minute
+
 // Rate limiters
 const sessionLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: SESSION_WINDOW_MS,
   max: 20, // max 20 login/refresh attempts per IP per window
   standardHeaders: true,
   legacyHeaders: false,
 });
 const proxyLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: PROXY_WINDOW_MS,
   max: 200, // max 200 proxied requests per IP per minute
   standardHeaders: true,
   legacyHeaders: false,

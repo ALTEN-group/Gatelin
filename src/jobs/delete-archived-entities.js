@@ -11,9 +11,11 @@ import roleSvc from "../services/role.js";
 import applicationSvc from "../services/application.js";
 import scopeSvc from "../services/scope.js";
 
+const ARCHIVE_RETENTION_MONTHS = 2;
+
 /**
  * Cron job to delete archived entities from the database.
- * All entities must be archived for at least 2 months before deletion.
+ * All entities must be archived for at least ARCHIVE_RETENTION_MONTHS before deletion.
  * Runs once daily at 2:00 AM.
  *
  * Deletes archived records from: consumers, services, CORS origins, operations, resources, routes, roles, applications, and scopes.
@@ -28,12 +30,11 @@ import scopeSvc from "../services/scope.js";
 export function startDeleteArchivedEntitiesJob() {
   scheduleDailyAt(2, async () => {
     try {
-      // Calculate date for 2 months ago
-      const twoMonthsAgo = new Date();
-      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+      const cutoff = new Date();
+      cutoff.setMonth(cutoff.getMonth() - ARCHIVE_RETENTION_MONTHS);
 
       log.info(
-        "Starting scheduled deletion of archived entities (archived > 2 months)...",
+        `Starting scheduled deletion of archived entities (archived > ${ARCHIVE_RETENTION_MONTHS} months)...`,
       );
 
       // Define all entities to process
@@ -54,7 +55,7 @@ export function startDeleteArchivedEntitiesJob() {
       // Process all entities concurrently
       const results = await Promise.allSettled(
         entities.map((entity) =>
-          entity.service.deleteArchived(twoMonthsAgo).then((count) => ({ entity, count }))
+          entity.service.deleteArchived(cutoff).then((count) => ({ entity, count }))
         )
       );
 
@@ -80,5 +81,5 @@ export function startDeleteArchivedEntitiesJob() {
     }
   });
 
-  log.info("Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > 2 months)");
+  log.info(`Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > ${ARCHIVE_RETENTION_MONTHS} months)`);
 }

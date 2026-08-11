@@ -3,8 +3,10 @@ import { log } from "@dwtechs/winstan";
 import { execute } from "@dwtechs/antity-pgsql";
 import { scheduleDailyAt } from "./scheduler.js";
 
+const HISTORY_RETENTION_MONTHS = 6;
+
 /**
- * Daily job to delete history records older than 6 months.
+ * Daily job to delete history records older than HISTORY_RETENTION_MONTHS.
  * Runs every day at 3:00 AM UTC.
  */
 export function startDeleteOldHistoryJob() {
@@ -22,16 +24,15 @@ export function startDeleteOldHistoryJob() {
 }
 
 /**
- * Deletes history records older than 6 months from log.history table
+ * Deletes history records older than HISTORY_RETENTION_MONTHS from log.history table
  *
  * @returns {Promise<number>} Number of deleted records
  */
 async function deleteOldHistory() {
-  // Calculate date for 6 months ago
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - HISTORY_RETENTION_MONTHS);
 
   const query = "DELETE FROM log.history WHERE created < $1";
-  const args = [sixMonthsAgo];
+  const args = [cutoff];
   return execute(query, args, null).then((r) => r.rowCount || 0);
 }

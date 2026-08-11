@@ -67,10 +67,7 @@ export function getUserById(req, res, next) {
         return next({ statusCode: 422, message: "Invalid user nickname" });
       if (!isArray(roles, "!0"))
         return next({ statusCode: 422, message: "Invalid user roles" });
-      log.debug(
-        () =>
-          `ms_user response: id=${u.id}, nickname=${nickname}, roles=${roles}`,
-      );
+      log.debug(() => `ms_user response: nickname=${nickname}, roles=${roles}`);
       // Attach user data to request body for db update in downstream middleware
       Object.assign(req.body.rows[0], { nickname, roles });
       next();

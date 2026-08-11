@@ -1,6 +1,7 @@
 // @ts-check
 import { execute } from "@dwtechs/antity-pgsql";
 import sEnt from "../entities/scope.js";
+import { makeDeleteArchived } from "../utils/delete-archived.js";
 
 /**
  * @typedef {Object} ScopeCache
@@ -47,10 +48,5 @@ function getValues(ids) {
 export default {
   init,
   getValues,
-  deleteArchived,
+  deleteArchived: makeDeleteArchived(sEnt),
 };
-
-function deleteArchived(date) {
-  const q = sEnt.query.deleteArchive();
-  return execute(q, [date], null).then((r) => r.rowCount || 0);
-}
