@@ -102,7 +102,7 @@ Gatelin ships two releasable images, published to the GitHub Container Registry 
 
 | Image | Description |
 |---|---|
-| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Also serves the Angular admin frontend under `/admin` (built into the image, enabled by setting `ADMIN_PORT`). Runs continuously as an API server. |
+| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Also serves the Angular admin frontend (built into the image, enabled by setting `ADMIN_PORT`, path set via `ADMIN_BASE_PATH`, default `/gatelin`). Runs continuously as an API server. |
 | `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. It will also apply application-specific seed data when mounted to `/liquibase/data`. |
 
 ### Build production images

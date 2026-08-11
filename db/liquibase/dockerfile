@@ -1,6 +1,8 @@
 ARG LIQUIBASE_VERSION
 FROM liquibase/liquibase:${LIQUIBASE_VERSION}
 
+LABEL org.opencontainers.image.description="Gatelin database migrations (Liquibase, development)"
+
 USER root
 
 # change apk repos

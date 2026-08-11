@@ -1,6 +1,8 @@
 ARG NODE_VERSION
 FROM node:${NODE_VERSION}
 
+LABEL org.opencontainers.image.description="Gatelin API gateway (development)"
+
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 

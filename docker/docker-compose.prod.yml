@@ -165,6 +165,7 @@ services:
       PWD_SYMBOLS_POLICY: ${GATELIN_PWD_SYMBOLS_LEGACY}
       # Unset to disable the admin UI; set to enable it on a dedicated internal port
       ADMIN_PORT: ${ADMIN_PORT}
+      ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
     depends_on:
       postgres:
         condition: service_healthy
@@ -182,7 +183,7 @@ services:
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
       - "traefik.http.services.gateway.loadBalancer.server.port=${DEFAULT_PORT}"
-      - "traefik.http.routers.admin-ui.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin-ui.rule=PathPrefix(`${ADMIN_BASE_PATH}`)"
       - "traefik.http.routers.admin-ui.entrypoints=web"
       - "traefik.http.routers.admin-ui.service=admin-ui"
       - "traefik.http.services.admin-ui.loadBalancer.server.port=${ADMIN_PORT}"
