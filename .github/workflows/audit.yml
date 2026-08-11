@@ -29,6 +29,16 @@ jobs:
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
 
+      - name: Install APM CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: curl -sSL https://aka.ms/apm-unix | sh
+
+      - name: Install APM packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: apm install
+
       - name: Run weekly audit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
