@@ -53,9 +53,17 @@ export default {
 	verbose: true,
 
 	// Jest 30 emits a "worker failed to exit gracefully" warning when a worker
-	// races past its shutdown deadline. With `--experimental-vm-modules`, ESM
-	// module-graph teardown can intermittently trip this even in leak-free code
-	// (see jestjs/jest#15709). Force-exiting after the run is completed keeps
-	// output clean; individual leaks would still be caught by `--detectOpenHandles`.
+	// exceeds the hard-coded 500 ms graceful shutdown deadline (see
+	// jest-worker/build/index.js `workerGracefulExitTimeout ?? 500`). With
+	// `--experimental-vm-modules`, ESM module-graph teardown intermittently
+	// exceeds that budget on child processes even in leak-free code. Using
+	// worker threads instead avoids the fork/exit overhead and shuts down
+	// well within the deadline.
+	workerThreads: true,
+
+	// `forceExit` covers the *main* Jest process (unrelated to the worker
+	// shutdown warning above): if for any reason the top-level process still
+	// has pending async work after tests finish, exit rather than hang.
+	// Real leaks are still surfaced by running with `--detectOpenHandles`.
 	forceExit: true,
 };
