@@ -1,6 +1,5 @@
 // @ts-check
-import { log } from "@dwtechs/winstan";
-import { listen } from "@dwtechs/servpico-express";
+import { listen, failFast } from "@dwtechs/servpico-express";
 import app from "./app.js";
 import { corsMiddleware } from "./conf/cors.js";
 import { startAdminServer } from "./admin-server.js";
@@ -31,4 +30,4 @@ Promise.all([
     startAdminServer();
     listen(app);
   })
-  .catch((err) => log.error(`App cannot start: ${err.message || err.msg}`));
+  .catch(failFast);

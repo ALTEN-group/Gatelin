@@ -14,11 +14,11 @@
   "author": "Ludovic Cluber",
   "license": "MIT",
   "dependencies": {
-    "@dwtechs/antity-pgsql": "0.21.4",
+    "@dwtechs/antity-pgsql": "0.22.0",
     "@dwtechs/checkard": "3.6.1",
     "@dwtechs/errandler-express": "0.1.0",
     "@dwtechs/healix-express": "0.1.1",
-    "@dwtechs/servpico-express": "0.2.1",
+    "@dwtechs/servpico-express": "0.3.1",
     "@dwtechs/sparray": "0.2.1",
     "@dwtechs/toker-express": "0.8.0",
     "@dwtechs/winstan": "0.7.1",

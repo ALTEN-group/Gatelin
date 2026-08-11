@@ -3,67 +3,257 @@
  */
 
 import { jest } from "@jest/globals";
-import applyAclConditions from "../../../src/middlewares/mappers/apply-acl-conditions.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const conditionOpSvcPath = path.join(
+  __dirname,
+  "../../../src/services/condition-op.js",
+);
+
+// The condition-op service exposes a static allowlist (const module-level
+// Set, kept in sync with db/liquibase/gateway/versions/03-struct/14-condition.sql
+// — see the service's docblock for rationale). Here we replace it with a
+// controlled fake so we can (a) test each mapping case in isolation and
+// (b) exercise the fail-closed path with a synthetic disallowed op without
+// pinning the middleware suite to the current 6-element real set.
+const isAllowed = jest.fn();
+const getAll = jest.fn(() => new Set());
+jest.unstable_mockModule(conditionOpSvcPath, () => ({
+  __esModule: true,
+  default: { isAllowed, getAll },
+}));
+
+jest.unstable_mockModule("@dwtechs/winstan", () => ({
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    log: jest.fn(),
+  },
+}));
+
+const DB_ALLOWED_OPS = new Set(["=", "!=", "<", ">", "<=", ">="]);
 
 describe("applyAclConditions middleware", () => {
+  let applyAclConditions;
+  let routeEntity;
+  let log;
   let req, res, next;
+
+  beforeAll(async () => {
+    ({ log } = await import("@dwtechs/winstan"));
+    ({ default: applyAclConditions } = await import(
+      "../../../src/middlewares/mappers/apply-acl-conditions.js"
+    ));
+    ({ default: routeEntity } = await import(
+      "../../../src/entities/route.js"
+    ));
+  });
 
   beforeEach(() => {
     req = {};
     res = {};
     next = jest.fn();
+    // Default: fake the service as if it had loaded the real DB CHECK
+    // (chk_condition_op) — accepting the six SQL operator symbols and
+    // rejecting anything else. Individual tests can override.
+    isAllowed.mockImplementation((op) => DB_ALLOWED_OPS.has(op));
   });
 
-  it("should call next() and leave req.body untouched when req.aclConditions is undefined", () => {
-    applyAclConditions(req, res, next);
+  describe("no-op paths", () => {
+    it("should call next() and leave req.body untouched when req.aclConditions is undefined", () => {
+      applyAclConditions(req, res, next);
 
-    expect(req.body).toBeUndefined();
-    expect(next).toHaveBeenCalledWith();
-  });
-
-  it("should call next() and leave req.body untouched when req.aclConditions is empty", () => {
-    req.aclConditions = [];
-
-    applyAclConditions(req, res, next);
-
-    expect(req.body).toBeUndefined();
-    expect(next).toHaveBeenCalledWith();
-  });
-
-  it("should inject a filter for each condition that has an op, creating req.body/filters as needed", () => {
-    req.aclConditions = [{ field: "archived", op: "equals", value: false }];
-
-    applyAclConditions(req, res, next);
-
-    expect(req.body.filters).toEqual({
-      archived: [{ value: false, op: "equals" }],
+      expect(req.body).toBeUndefined();
+      expect(next).toHaveBeenCalledWith();
     });
-    expect(next).toHaveBeenCalledWith();
-  });
 
-  it("should skip conditions without an op", () => {
-    req.aclConditions = [{ field: "archived", value: false }];
+    it("should call next() and leave req.body untouched when req.aclConditions is empty", () => {
+      req.aclConditions = [];
 
-    applyAclConditions(req, res, next);
+      applyAclConditions(req, res, next);
 
-    expect(req.body.filters).toEqual({});
-    expect(next).toHaveBeenCalledWith();
-  });
-
-  it("should preserve existing req.body.filters and add multiple conditions", () => {
-    req.body = { filters: { existing: [{ value: 1, op: "equals" }] } };
-    req.aclConditions = [
-      { field: "archived", op: "equals", value: false },
-      { field: "ownerId", op: "in", value: [1, 2] },
-    ];
-
-    applyAclConditions(req, res, next);
-
-    expect(req.body.filters).toEqual({
-      existing: [{ value: 1, op: "equals" }],
-      archived: [{ value: false, op: "equals" }],
-      ownerId: [{ value: [1, 2], op: "in" }],
+      expect(req.body).toBeUndefined();
+      expect(next).toHaveBeenCalledWith();
     });
-    expect(next).toHaveBeenCalledWith();
+  });
+
+  describe("op → matchMode mapping", () => {
+    // Inputs mirror what /db/liquibase/gateway/versions/03-struct/14-condition.sql
+    // allows in chk_condition_op and what the role_cache view emits.
+    it.each([
+      ["=", "="],
+      ["!=", "!="],
+      ["<", "<"],
+      ["<=", "<="],
+      [">", ">"],
+      [">=", ">="],
+    ])(
+      "emits { value, matchMode } forwarding DB op '%s' unchanged",
+      (op, expectedMatchMode) => {
+        req.aclConditions = [{ field: "archived", op, value: "false" }];
+
+        applyAclConditions(req, res, next);
+
+        expect(req.body.filters).toEqual({
+          archived: [{ value: "false", matchMode: expectedMatchMode }],
+        });
+        expect(next).toHaveBeenCalledWith();
+      },
+    );
+
+    it("creates req.body and req.body.filters if they are missing", () => {
+      req.aclConditions = [{ field: "archived", op: "=", value: "false" }];
+
+      applyAclConditions(req, res, next);
+
+      expect(req.body).toBeDefined();
+      expect(req.body.filters).toBeDefined();
+    });
+
+    it("preserves unrelated req.body.filters and appends the ACL-scoped ones", () => {
+      req.body = { filters: { name: [{ value: "cap", matchMode: "contains" }] } };
+      req.aclConditions = [
+        { field: "archived", op: "=", value: "false" },
+        { field: "coreOnly", op: "!=", value: "true" },
+      ];
+
+      applyAclConditions(req, res, next);
+
+      expect(req.body.filters).toEqual({
+        name: [{ value: "cap", matchMode: "contains" }],
+        archived: [{ value: "false", matchMode: "=" }],
+        coreOnly: [{ value: "true", matchMode: "!=" }],
+      });
+      expect(next).toHaveBeenCalledWith();
+    });
+  });
+
+  describe("fail-closed behavior", () => {
+    // Any op the condition-op service rejects (either because it isn't in
+    // the DB CHECK today, or because a future migration widens the CHECK
+    // without updating the service) must be dropped, not silently forwarded.
+    it.each([
+      ["LIKE"],
+      ["IS"],
+      ["<>"],
+      [""],
+      [undefined],
+      [null],
+    ])("drops conditions with unsupported op %p and logs a warning", (op) => {
+      req.aclConditions = [{ field: "archived", op, value: "false" }];
+
+      applyAclConditions(req, res, next);
+
+      expect(req.body.filters).toEqual({});
+      expect(log.warn).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("drops only the invalid conditions in a mixed batch", () => {
+      req.aclConditions = [
+        { field: "archived", op: "=", value: "false" },
+        { field: "coreOnly", op: "LIKE", value: "%bogus%" },
+        { field: "userId", op: ">=", value: "10" },
+      ];
+
+      applyAclConditions(req, res, next);
+
+      expect(req.body.filters).toEqual({
+        archived: [{ value: "false", matchMode: "=" }],
+        userId: [{ value: "10", matchMode: ">=" }],
+      });
+      expect(log.warn).toHaveBeenCalledTimes(1);
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("asks the service on every request (no local caching in the middleware)", () => {
+      // Guards against a future optimization that caches isAllowed's answer
+      // inside the middleware closure. If someone later swaps condition-op's
+      // constant for a mutable/reload-able source, the middleware must still
+      // ask fresh on every request rather than snapshot at first call.
+      req.aclConditions = [{ field: "archived", op: "=", value: "false" }];
+
+      isAllowed.mockReturnValueOnce(true);
+      applyAclConditions(req, res, next);
+      expect(req.body.filters).toEqual({
+        archived: [{ value: "false", matchMode: "=" }],
+      });
+
+      req = {};
+      isAllowed.mockReturnValueOnce(false);
+      req.aclConditions = [{ field: "archived", op: "=", value: "false" }];
+      applyAclConditions(req, res, jest.fn());
+      expect(req.body.filters).toEqual({});
+    });
+  });
+
+  // Regression test for the audit finding:
+  //   "Role-scoped ACL conditions are silently dropped (broken access control)"
+  // Before the fix, applyAclConditions emitted { value, op } while
+  // @dwtechs/antity-pgsql destructures { value, matchMode } — resulting in
+  // mapComparator(undefined) → null → the WHERE fragment vanished.
+  // This suite pins the actual generated SQL to prevent regression.
+  describe("regression: generated SQL WHERE clause for a scoped role", () => {
+    it("produces WHERE archived = $1 for the 'Non-archived only' condition on routes/search", () => {
+      req.aclConditions = [{ field: "archived", op: "=", value: "false" }];
+
+      applyAclConditions(req, res, next);
+
+      const { query, args } = routeEntity.query.select(
+        0,
+        25,
+        "id",
+        "ASC",
+        req.body.filters,
+      );
+
+      expect(query).toMatch(/WHERE\s+"?archived"?\s*=\s*\$1/i);
+      expect(args).toContain("false");
+    });
+
+    it("produces WHERE archived <> $1 for a role scoped with op '!='", () => {
+      req.aclConditions = [{ field: "archived", op: "!=", value: "true" }];
+
+      applyAclConditions(req, res, next);
+
+      const { query, args } = routeEntity.query.select(
+        0,
+        25,
+        "id",
+        "ASC",
+        req.body.filters,
+      );
+
+      // "!=" is normalized to "<>" by @dwtechs/antity-pgsql's mapComparator
+      // (added in 0.21.5). Before this fix, the WHERE clause was empty.
+      expect(query).toMatch(/WHERE\s+"?archived"?\s*<>\s*\$1/i);
+      expect(args).toContain("true");
+    });
+
+    it("emits no WHERE clause at all when the only ACL condition has an unsupported op", () => {
+      // Fail-closed at the middleware level means the filter never reaches
+      // the query builder, so no unscoped query is emitted either. The route
+      // still runs (next is called) but the calling controller should treat
+      // a missing ACL scope as a policy violation — that's out of scope here.
+      req.aclConditions = [
+        { field: "archived", op: "LIKE", value: "%anything%" },
+      ];
+
+      applyAclConditions(req, res, next);
+
+      const { query } = routeEntity.query.select(
+        0,
+        25,
+        "id",
+        "ASC",
+        req.body.filters,
+      );
+
+      expect(query).not.toMatch(/WHERE/i);
+    });
   });
 });

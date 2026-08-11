@@ -46,6 +46,53 @@ describe("resolvePermissions middleware", () => {
     });
   });
 
+  // Regression pack for the audit finding:
+  //   "Unguarded roles access can throw / return an unhandled 500"
+  // Before the `?? []` normalization in resolve-permissions.js, any consumer
+  // record whose `roles` column was missing (schema drift, RETURNING clause
+  // without roles, upstream payload without the key) or explicitly null
+  // (nullable column with no roles assigned) would trip
+  // `roles.length === 1` with a TypeError → Express 5 generic 500.
+  //
+  // Post-fix contract: all three "no roles" shapes normalize to `[]`, skip
+  // the fast path, iterate the multi-role loop zero times, and produce an
+  // empty permissions array — same fail-closed outcome as the "role not in
+  // cache" branch above.
+  describe("no-roles source shapes (audit regression)", () => {
+    it.each([
+      ["undefined roles key", [{}]],
+      ["explicit null roles column", [{ roles: null }]],
+      ["explicit undefined roles column", [{ roles: undefined }]],
+    ])(
+      "should set empty permissions and call next() for %s",
+      (_label, rows) => {
+        res.locals.rows = rows;
+
+        expect(() => resolvePermissions(req, res, next)).not.toThrow();
+
+        expect(res.locals.permissions).toEqual([]);
+        expect(next).toHaveBeenCalledWith();
+        // No role lookup should ever be attempted for a consumer with no
+        // roles — proves the fast path is skipped AND the multi-role loop
+        // exits without dereferencing anything from the cache.
+        expect(roleSvc.getOne).not.toHaveBeenCalled();
+      },
+    );
+
+    it.each([
+      ["missing rows array", { locals: {} }],
+      ["empty rows array", { locals: { rows: [] } }],
+    ])("should not throw when the whole rows source is %s", (_label, mock) => {
+      res = mock;
+
+      expect(() => resolvePermissions(req, res, next)).not.toThrow();
+
+      expect(res.locals.permissions).toEqual([]);
+      expect(next).toHaveBeenCalledWith();
+      expect(roleSvc.getOne).not.toHaveBeenCalled();
+    });
+  });
+
   describe("single role", () => {
     it("should map permissions from a single role", () => {
       res.locals.rows = [{ roles: [1] }];
