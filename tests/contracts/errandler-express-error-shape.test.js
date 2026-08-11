@@ -29,8 +29,8 @@
  *   an empty response body months later.
  */
 
-import { jest } from "@jest/globals";
 import { errorHandler } from "@dwtechs/errandler-express";
+import { jest } from "@jest/globals";
 
 /**
  * Reproduces the production wiring: `errorHandler(app)` calls `app.use(fn)`
@@ -45,147 +45,142 @@ import { errorHandler } from "@dwtechs/errandler-express";
  * is intentional so the test isn't silently rebound to the wrong middleware.
  */
 function captureClientErrorHandler() {
-  const registered = [];
-  const mockApp = { use: (fn) => registered.push(fn) };
-  errorHandler(mockApp);
-  if (registered.length !== 4)
-    throw new Error(
-      `errandler-express registered ${registered.length} middlewares; ` +
-        `expected 4 — the library's wiring changed, revisit this contract test`,
-    );
-  return registered[2];
+	const registered = [];
+	const mockApp = { use: (fn) => registered.push(fn) };
+	errorHandler(mockApp);
+	if (registered.length !== 4)
+		throw new Error(
+			`errandler-express registered ${registered.length} middlewares; ` +
+				`expected 4 — the library's wiring changed, revisit this contract test`,
+		);
+	return registered[2];
 }
 
 describe("@dwtechs/errandler-express error-shape contract", () => {
-  let clientErrorHandler;
-  let res;
-  let next;
+	let clientErrorHandler;
+	let res;
+	let next;
 
-  beforeAll(() => {
-    clientErrorHandler = captureClientErrorHandler();
-  });
+	beforeAll(() => {
+		clientErrorHandler = captureClientErrorHandler();
+	});
 
-  beforeEach(() => {
-    res = {
-      status: jest.fn().mockReturnThis(),
-      send: jest.fn().mockReturnThis(),
-    };
-    next = jest.fn();
-  });
+	beforeEach(() => {
+		res = {
+			status: jest.fn().mockReturnThis(),
+			send: jest.fn().mockReturnThis(),
+		};
+		next = jest.fn();
+	});
 
-  describe("HTTP status source of truth", () => {
-    it("reads .statusCode as the primary field (canonical shape)", () => {
-      clientErrorHandler(
-        { statusCode: 403, message: "forbidden" },
-        {},
-        res,
-        next,
-      );
+	describe("HTTP status source of truth", () => {
+		it("reads .statusCode as the primary field (canonical shape)", () => {
+			clientErrorHandler(
+				{ statusCode: 403, message: "forbidden" },
+				{},
+				res,
+				next,
+			);
 
-      expect(res.status).toHaveBeenCalledWith(403);
-    });
+			expect(res.status).toHaveBeenCalledWith(403);
+		});
 
-    it("falls back to .status when .statusCode is absent", () => {
-      // Fallback exists but is not blessed for new call sites — always use
-      // .statusCode. This test documents the fallback so a future contributor
-      // reviewing legacy code understands why { status, ... } "worked" without
-      // being tempted to keep using it.
-      clientErrorHandler(
-        { status: 401, message: "unauthorized" },
-        {},
-        res,
-        next,
-      );
+		it("falls back to .status when .statusCode is absent", () => {
+			// Fallback exists but is not blessed for new call sites — always use
+			// .statusCode. This test documents the fallback so a future contributor
+			// reviewing legacy code understands why { status, ... } "worked" without
+			// being tempted to keep using it.
+			clientErrorHandler(
+				{ status: 401, message: "unauthorized" },
+				{},
+				res,
+				next,
+			);
 
-      expect(res.status).toHaveBeenCalledWith(401);
-    });
+			expect(res.status).toHaveBeenCalledWith(401);
+		});
 
-    it("prefers .statusCode over .status when both are present", () => {
-      // Guards against a subtle regression where a middleware sets both keys
-      // (e.g. carelessly spreading an upstream error). The library must
-      // always resolve to .statusCode's value, never .status's.
-      clientErrorHandler(
-        { statusCode: 422, status: 500, message: "unprocessable" },
-        {},
-        res,
-        next,
-      );
+		it("prefers .statusCode over .status when both are present", () => {
+			// Guards against a subtle regression where a middleware sets both keys
+			// (e.g. carelessly spreading an upstream error). The library must
+			// always resolve to .statusCode's value, never .status's.
+			clientErrorHandler(
+				{ statusCode: 422, status: 500, message: "unprocessable" },
+				{},
+				res,
+				next,
+			);
 
-      expect(res.status).toHaveBeenCalledWith(422);
-    });
+			expect(res.status).toHaveBeenCalledWith(422);
+		});
 
-    it("defaults to 400 when neither .statusCode nor .status is present", () => {
-      clientErrorHandler({ message: "malformed" }, {}, res, next);
+		it("defaults to 400 when neither .statusCode nor .status is present", () => {
+			clientErrorHandler({ message: "malformed" }, {}, res, next);
 
-      expect(res.status).toHaveBeenCalledWith(400);
-    });
-  });
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+	});
 
-  describe("response body source of truth", () => {
-    it("reads .message for the response body (canonical shape)", () => {
-      clientErrorHandler(
-        { statusCode: 400, message: "missing id" },
-        {},
-        res,
-        next,
-      );
+	describe("response body source of truth", () => {
+		it("reads .message for the response body (canonical shape)", () => {
+			clientErrorHandler(
+				{ statusCode: 400, message: "missing id" },
+				{},
+				res,
+				next,
+			);
 
-      expect(res.send).toHaveBeenCalledWith("missing id");
-    });
+			expect(res.send).toHaveBeenCalledWith("missing id");
+		});
 
-    it("does NOT read .msg — this is the audit-4 bug shape", () => {
-      // Regression pin: this documents the failure mode our historical
-      // { status, msg } call sites produced (empty response body). If a
-      // future version of errandler-express ever starts reading .msg as a
-      // fallback, this test breaks — alerting the maintainer to decide
-      // whether we should embrace that or keep enforcing .message only.
-      // Recommendation is to keep enforcing .message: fewer legal shapes
-      // means less drift risk and simpler grep-audits.
-      clientErrorHandler(
-        { statusCode: 400, msg: "missing id" },
-        {},
-        res,
-        next,
-      );
+		it("does NOT read .msg — this is the audit-4 bug shape", () => {
+			// Regression pin: this documents the failure mode our historical
+			// { status, msg } call sites produced (empty response body). If a
+			// future version of errandler-express ever starts reading .msg as a
+			// fallback, this test breaks — alerting the maintainer to decide
+			// whether we should embrace that or keep enforcing .message only.
+			// Recommendation is to keep enforcing .message: fewer legal shapes
+			// means less drift risk and simpler grep-audits.
+			clientErrorHandler({ statusCode: 400, msg: "missing id" }, {}, res, next);
 
-      expect(res.send).toHaveBeenCalledWith(undefined);
-    });
+			expect(res.send).toHaveBeenCalledWith(undefined);
+		});
 
-    it("sends undefined body when .message is missing entirely", () => {
-      // Same failure mode as { msg: ... }, reached by a different route.
-      // Any new middleware that omits .message will surface as an empty
-      // response body — no exception, no log, just silence.
-      clientErrorHandler({ statusCode: 400 }, {}, res, next);
+		it("sends undefined body when .message is missing entirely", () => {
+			// Same failure mode as { msg: ... }, reached by a different route.
+			// Any new middleware that omits .message will surface as an empty
+			// response body — no exception, no log, just silence.
+			clientErrorHandler({ statusCode: 400 }, {}, res, next);
 
-      expect(res.send).toHaveBeenCalledWith(undefined);
-    });
-  });
+			expect(res.send).toHaveBeenCalledWith(undefined);
+		});
+	});
 
-  describe("canonical shape for all future next() error calls", () => {
-    it("{ statusCode, message } produces the expected status AND body", () => {
-      // If you're writing a new middleware that calls next({...}) with an
-      // error, use exactly these two keys and no others. Concrete examples
-      // that follow this shape:
-      //   src/middlewares/validators/check-consumer.js
-      //   src/middlewares/validators/check-refreshToken.js
-      //   src/middlewares/validators/check-csrf.js
-      //   src/middlewares/validators/check-route.js
-      //   src/middlewares/validators/check-acl.js
-      //   src/middlewares/http/get-user.js
-      //   src/middlewares/history.js
-      //   src/middlewares/cache/consumer.js
-      //   src/middlewares/mappers/preference/assertRowsOwnedAndUnlocked.js
-      //   src/controllers/forward.js
-      //   src/conf/cors.js
-      clientErrorHandler(
-        { statusCode: 422, message: "invalid payload" },
-        {},
-        res,
-        next,
-      );
+	describe("canonical shape for all future next() error calls", () => {
+		it("{ statusCode, message } produces the expected status AND body", () => {
+			// If you're writing a new middleware that calls next({...}) with an
+			// error, use exactly these two keys and no others. Concrete examples
+			// that follow this shape:
+			//   src/middlewares/validators/check-consumer.js
+			//   src/middlewares/validators/check-refreshToken.js
+			//   src/middlewares/validators/check-csrf.js
+			//   src/middlewares/validators/check-route.js
+			//   src/middlewares/validators/check-acl.js
+			//   src/middlewares/http/get-user.js
+			//   src/middlewares/history.js
+			//   src/middlewares/cache/consumer.js
+			//   src/middlewares/mappers/preference/assertRowsOwnedAndUnlocked.js
+			//   src/controllers/forward.js
+			//   src/conf/cors.js
+			clientErrorHandler(
+				{ statusCode: 422, message: "invalid payload" },
+				{},
+				res,
+				next,
+			);
 
-      expect(res.status).toHaveBeenCalledWith(422);
-      expect(res.send).toHaveBeenCalledWith("invalid payload");
-    });
-  });
+			expect(res.status).toHaveBeenCalledWith(422);
+			expect(res.send).toHaveBeenCalledWith("invalid payload");
+		});
+	});
 });

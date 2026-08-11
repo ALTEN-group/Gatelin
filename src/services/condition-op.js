@@ -55,7 +55,7 @@ const ALLOWED_OPS = new Set(["=", "!=", "<", ">", "<=", ">="]);
  * @returns {boolean}
  */
 function isAllowed(op) {
-  return typeof op === "string" && ALLOWED_OPS.has(op);
+	return typeof op === "string" && ALLOWED_OPS.has(op);
 }
 
 /**
@@ -67,10 +67,10 @@ function isAllowed(op) {
  * @returns {Set<string>}
  */
 function getAll() {
-  return new Set(ALLOWED_OPS);
+	return new Set(ALLOWED_OPS);
 }
 
 export default {
-  isAllowed,
-  getAll,
+	isAllowed,
+	getAll,
 };

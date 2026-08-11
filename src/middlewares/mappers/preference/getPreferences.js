@@ -15,16 +15,16 @@ import { getMany } from "../../../services/preference.js";
  * @param {import('express').NextFunction} next
  */
 export async function getPreferences(req, res, next) {
-  const userId = res.locals.consumer.userId;
-  const { resource } = req.params;
-  log.debug(() => `getPreferences(userId=${userId}, resource=${resource})`);
+	const userId = res.locals.consumer.userId;
+	const { resource } = req.params;
+	log.debug(() => `getPreferences(userId=${userId}, resource=${resource})`);
 
-  try {
-    const rows = await getMany(userId, resource);
-    res.locals.rows = rows;
-    res.locals.total = rows.length;
-    next();
-  } catch (err) {
-    next(err);
-  }
+	try {
+		const rows = await getMany(userId, resource);
+		res.locals.rows = rows;
+		res.locals.total = rows.length;
+		next();
+	} catch (err) {
+		next(err);
+	}
 }

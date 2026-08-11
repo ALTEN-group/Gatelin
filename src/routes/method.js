@@ -1,5 +1,6 @@
 // @ts-check
 import express from "express";
+
 const router = express.Router();
 
 import mEnt from "../entities/method.js";

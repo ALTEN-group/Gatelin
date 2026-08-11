@@ -8,24 +8,24 @@
  * @returns {Function} Express middleware function
  */
 function get(entity) {
-  return function (_req, res, next) {
-    const rows = entity.properties
-      .filter((p) => !p.isPrivate)
-      .map(
-        ({ key, type, min, max, operations, requiredFor, isFilterable }) => ({
-          key,
-          type,
-          min,
-          max,
-          operations,
-          requiredFor,
-          isFilterable,
-        }),
-      );
-    res.locals.rows = rows;
-    res.locals.total = rows.length;
-    next();
-  };
+	return (_req, res, next) => {
+		const rows = entity.properties
+			.filter((p) => !p.isPrivate)
+			.map(
+				({ key, type, min, max, operations, requiredFor, isFilterable }) => ({
+					key,
+					type,
+					min,
+					max,
+					operations,
+					requiredFor,
+					isFilterable,
+				}),
+			);
+		res.locals.rows = rows;
+		res.locals.total = rows.length;
+		next();
+	};
 }
 
 export default { get };

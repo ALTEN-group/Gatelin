@@ -33,17 +33,17 @@ let consumerIdIndex = new Map();
  * console.log('Consumer cache initialized');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
-    consumers = new Map(r.rows.map((c) => [c.accessToken, c]));
-    consumerIdIndex = new Map(r.rows.map((c) => [c.id, c.accessToken]));
-  });
+	const filters = {
+		archived: {
+			value: false,
+			matchMode: "IS",
+		},
+	};
+	const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
+	return execute(query, args, null).then((r) => {
+		consumers = new Map(r.rows.map((c) => [c.accessToken, c]));
+		consumerIdIndex = new Map(r.rows.map((c) => [c.id, c.accessToken]));
+	});
 }
 
 /**
@@ -84,7 +84,7 @@ function init() {
  * if (consumer) log.debug(`Found consumer: ${consumer.nickname}`);
  */
 function getOne(accessToken) {
-  return consumers.get(accessToken);
+	return consumers.get(accessToken);
 }
 
 /**
@@ -96,8 +96,8 @@ function getOne(accessToken) {
  * addToCache({ id: 1, userId: 123, nickname: 'user', accessToken: '...', refreshToken: '...', roles: [1, 2] });
  */
 function addToCache(consumer) {
-  consumers.set(consumer.accessToken, { ...consumer });
-  consumerIdIndex.set(consumer.id, consumer.accessToken);
+	consumers.set(consumer.accessToken, { ...consumer });
+	consumerIdIndex.set(consumer.id, consumer.accessToken);
 }
 
 /**
@@ -112,17 +112,17 @@ function addToCache(consumer) {
  * @return {boolean} True if a consumer was found and updated, false otherwise
  */
 function updateCache(id, accessToken, refreshToken, roles) {
-  const numId = +id;
-  const oldToken = consumerIdIndex.get(numId);
-  if (!oldToken) return false;
-  const c = consumers.get(oldToken);
-  consumers.delete(oldToken);
-  c.accessToken = accessToken;
-  c.refreshToken = refreshToken;
-  c.roles = roles;
-  consumers.set(accessToken, c);
-  consumerIdIndex.set(numId, accessToken);
-  return true;
+	const numId = +id;
+	const oldToken = consumerIdIndex.get(numId);
+	if (!oldToken) return false;
+	const c = consumers.get(oldToken);
+	consumers.delete(oldToken);
+	c.accessToken = accessToken;
+	c.refreshToken = refreshToken;
+	c.roles = roles;
+	consumers.set(accessToken, c);
+	consumerIdIndex.set(numId, accessToken);
+	return true;
 }
 
 /**
@@ -131,18 +131,18 @@ function updateCache(id, accessToken, refreshToken, roles) {
  * @param {string|number} id - The unique identifier of the consumer to be removed from the cache.
  */
 function deleteFromCache(id) {
-  const numId = +id;
-  const token = consumerIdIndex.get(numId);
-  if (!token) return;
-  consumers.delete(token);
-  consumerIdIndex.delete(numId);
+	const numId = +id;
+	const token = consumerIdIndex.get(numId);
+	if (!token) return;
+	consumers.delete(token);
+	consumerIdIndex.delete(numId);
 }
 
 export default {
-  init,
-  getOne,
-  addToCache,
-  updateCache,
-  deleteFromCache,
-  deleteArchived: makeDeleteArchived(cEnt),
+	init,
+	getOne,
+	addToCache,
+	updateCache,
+	deleteFromCache,
+	deleteArchived: makeDeleteArchived(cEnt),
 };

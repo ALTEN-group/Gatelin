@@ -26,33 +26,33 @@ let roles = new Map();
  * console.log('Role cache initialized');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
-    roles = new Map(
-      r.rows.map((role) => [
-        role.id,
-        {
-          ...role,
-          // Index permissions by routeId for O(1) lookup in checkAcl
-          permissions: new Map(
-            (role.permissions ?? []).map((p) => [
-              p.route,
-              {
-                ...p,
-                _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
-              },
-            ]),
-          ),
-        },
-      ]),
-    );
-  });
+	const filters = {
+		archived: {
+			value: false,
+			matchMode: "IS",
+		},
+	};
+	const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
+	return execute(query, args, null).then((r) => {
+		roles = new Map(
+			r.rows.map((role) => [
+				role.id,
+				{
+					...role,
+					// Index permissions by routeId for O(1) lookup in checkAcl
+					permissions: new Map(
+						(role.permissions ?? []).map((p) => [
+							p.route,
+							{
+								...p,
+								_fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+							},
+						]),
+					),
+				},
+			]),
+		);
+	});
 }
 
 /**
@@ -68,11 +68,11 @@ function init() {
  * }
  */
 function getOne(id) {
-  return roles.get(id);
+	return roles.get(id);
 }
 
 export default {
-  init,
-  getOne,
-  deleteArchived: makeDeleteArchived(rEnt),
+	init,
+	getOne,
+	deleteArchived: makeDeleteArchived(rEnt),
 };

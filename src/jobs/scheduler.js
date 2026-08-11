@@ -10,21 +10,21 @@ const DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
  * @param {Function} fn - The function to call
  */
 export function scheduleDailyAt(utcHour, fn) {
-  const now = new Date();
-  const next = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate(),
-      utcHour,
-      0,
-      0,
-      0,
-    ),
-  );
-  if (next <= now) next.setUTCDate(next.getUTCDate() + 1);
-  setTimeout(() => {
-    fn();
-    setInterval(fn, DAY_MS);
-  }, next - now);
+	const now = new Date();
+	const next = new Date(
+		Date.UTC(
+			now.getUTCFullYear(),
+			now.getUTCMonth(),
+			now.getUTCDate(),
+			utcHour,
+			0,
+			0,
+			0,
+		),
+	);
+	if (next <= now) next.setUTCDate(next.getUTCDate() + 1);
+	setTimeout(() => {
+		fn();
+		setInterval(fn, DAY_MS);
+	}, next - now);
 }

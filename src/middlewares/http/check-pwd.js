@@ -12,16 +12,16 @@ const url = PWD_CHECK_URL;
  * @param {number} req.body.userId
  * @param {string} req.body.pwd
  * @param {Object} [req.additionalHeaders] - Optional additional headers
- * @param {Object} res - Express response
+ * @param {Object} _res - Express response (unused)
  * @param {Function} next - Express next middleware
  */
-export function checkPwd(req, res, next) {
-  const { userId, pwd } = req.body;
-  const headers = req.additionalHeaders || {};
-  http
-    .query("POST", url, undefined, { userId, pwd }, headers)
-    .then(() => {
-      next(); // Password is valid, proceed to next middleware
-    })
-    .catch((err) => next(err)); // Password is invalid
+export function checkPwd(req, _res, next) {
+	const { userId, pwd } = req.body;
+	const headers = req.additionalHeaders || {};
+	http
+		.query("POST", url, undefined, { userId, pwd }, headers)
+		.then(() => {
+			next(); // Password is valid, proceed to next middleware
+		})
+		.catch((err) => next(err)); // Password is invalid
 }

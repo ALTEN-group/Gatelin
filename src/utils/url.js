@@ -14,5 +14,5 @@ const TRAILING_SLASH_RE = /\/$/;
  * stripTrailingSlash('/api/users')  // returns '/api/users'
  */
 export function stripTrailingSlash(url) {
-  return url.replace(TRAILING_SLASH_RE, "");
+	return url.replace(TRAILING_SLASH_RE, "");
 }

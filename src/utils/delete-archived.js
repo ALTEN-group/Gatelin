@@ -9,8 +9,8 @@ import { execute } from "@dwtechs/antity-pgsql";
  * @returns {(date: Date) => Promise<number>} deleted row count
  */
 export function makeDeleteArchived(entity) {
-  return function deleteArchived(date) {
-    const q = entity.query.deleteArchive();
-    return execute(q, [date], null).then((r) => r.rowCount || 0);
-  };
+	return function deleteArchived(date) {
+		const q = entity.query.deleteArchive();
+		return execute(q, [date], null).then((r) => r.rowCount || 0);
+	};
 }

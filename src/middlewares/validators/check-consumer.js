@@ -44,7 +44,7 @@ import csmerSvc from "../../services/consumer.js";
  * boot by `consumerSvc.init()` and mutated on add/update/delete via the
  * cache middlewares in `src/middlewares/cache/consumer.js`.
  *
- * @param {import('express').Request} req - Express request object (unused
+ * @param {import('express').Request} _req - Express request object (unused
  *   here; the access token is read from `res.locals.tokens.access` set
  *   upstream, not from `req` directly).
  * @param {import('express').Response} res - Express response.
@@ -56,15 +56,15 @@ import csmerSvc from "../../services/consumer.js";
  *   `res.locals.tokens.access` OR is not found in the cache.
  * @return {Promise<void>}
  */
-export default async function checkConsumer(req, res, next) {
-  const at = res.locals.tokens?.access;
-  if (!at) return next({ statusCode: 401, message: "Unauthorized" });
-  log.debug(() => `checkConsumer(accessToken=<present>)`);
-  const c = csmerSvc.getOne(at);
+export default async function checkConsumer(_req, res, next) {
+	const at = res.locals.tokens?.access;
+	if (!at) return next({ statusCode: 401, message: "Unauthorized" });
+	log.debug(() => `checkConsumer(accessToken=<present>)`);
+	const c = csmerSvc.getOne(at);
 
-  if (!c) return next({ statusCode: 401, message: "Unauthorized" });
+	if (!c) return next({ statusCode: 401, message: "Unauthorized" });
 
-  log.debug(() => `checkConsumer(Consumer: ${c.id})`);
-  res.locals.consumer = c;
-  next();
+	log.debug(() => `checkConsumer(Consumer: ${c.id})`);
+	res.locals.consumer = c;
+	next();
 }

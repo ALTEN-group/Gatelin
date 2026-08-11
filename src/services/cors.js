@@ -24,21 +24,21 @@ const corsOriginNames = new Map();
  * console.log('CORS cache initialized with', corsOrigins.size, 'origins');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
-    corsOrigins.clear();
-    corsOriginNames.clear();
-    for (const row of r.rows) {
-      corsOrigins.set(row.id, { name: row.name, credentials: row.credentials });
-      corsOriginNames.set(row.name, row.credentials);
-    }
-  });
+	const filters = {
+		archived: {
+			value: false,
+			matchMode: "IS",
+		},
+	};
+	const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
+	return execute(query, args, null).then((r) => {
+		corsOrigins.clear();
+		corsOriginNames.clear();
+		for (const row of r.rows) {
+			corsOrigins.set(row.id, { name: row.name, credentials: row.credentials });
+			corsOriginNames.set(row.name, row.credentials);
+		}
+	});
 }
 
 /**
@@ -50,7 +50,7 @@ function init() {
  * if (!has('http://localhost:3000')) return next({ statusCode: 403 });
  */
 function has(origin) {
-  return corsOriginNames.has(origin);
+	return corsOriginNames.has(origin);
 }
 
 /**
@@ -60,7 +60,7 @@ function has(origin) {
  * @return {boolean} True if the origin allows credentials
  */
 function getCredentials(origin) {
-  return corsOriginNames.get(origin) ?? false;
+	return corsOriginNames.get(origin) ?? false;
 }
 
 /**
@@ -71,11 +71,11 @@ function getCredentials(origin) {
  * addToCache({ id: 1, name: 'http://localhost:3000' });
  */
 function addToCache(corsOrigin) {
-  corsOrigins.set(corsOrigin.id, {
-    name: corsOrigin.name,
-    credentials: corsOrigin.credentials,
-  });
-  corsOriginNames.set(corsOrigin.name, corsOrigin.credentials);
+	corsOrigins.set(corsOrigin.id, {
+		name: corsOrigin.name,
+		credentials: corsOrigin.credentials,
+	});
+	corsOriginNames.set(corsOrigin.name, corsOrigin.credentials);
 }
 
 /**
@@ -86,13 +86,13 @@ function addToCache(corsOrigin) {
  * @return {boolean} True if updated, false if not found
  */
 function updateCache(id, name) {
-  const numId = +id;
-  if (!corsOrigins.has(numId)) return false;
-  const old = corsOrigins.get(numId);
-  corsOrigins.set(numId, { name, credentials: old.credentials });
-  corsOriginNames.delete(old.name);
-  corsOriginNames.set(name, old.credentials);
-  return true;
+	const numId = +id;
+	if (!corsOrigins.has(numId)) return false;
+	const old = corsOrigins.get(numId);
+	corsOrigins.set(numId, { name, credentials: old.credentials });
+	corsOriginNames.delete(old.name);
+	corsOriginNames.set(name, old.credentials);
+	return true;
 }
 
 /**
@@ -101,18 +101,18 @@ function updateCache(id, name) {
  * @param {number} id - The ID of the CORS origin to delete
  */
 function deleteFromCache(id) {
-  const numId = +id;
-  const entry = corsOrigins.get(numId);
-  corsOrigins.delete(numId);
-  if (entry) corsOriginNames.delete(entry.name);
+	const numId = +id;
+	const entry = corsOrigins.get(numId);
+	corsOrigins.delete(numId);
+	if (entry) corsOriginNames.delete(entry.name);
 }
 
 export default {
-  init,
-  has,
-  getCredentials,
-  addToCache,
-  updateCache,
-  deleteFromCache,
-  deleteArchived: makeDeleteArchived(cEnt),
+	init,
+	has,
+	getCredentials,
+	addToCache,
+	updateCache,
+	deleteFromCache,
+	deleteArchived: makeDeleteArchived(cEnt),
 };

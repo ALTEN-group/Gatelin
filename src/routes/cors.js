@@ -1,14 +1,15 @@
 // @ts-check
 import express from "express";
+
 const router = express.Router();
 
 import cEnt from "../entities/cors.js";
-import history from "../middlewares/history.js";
 import {
-  addToCache,
-  updateCache,
-  deleteFromCache,
+	addToCache,
+	deleteFromCache,
+	updateCache,
 } from "../middlewares/cache/cors.js";
+import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 
 const add = [cEnt.addArraySubstack, addToCache];

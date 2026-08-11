@@ -18,24 +18,24 @@ const ALLOWED_HISTORY_FIELDS = new Set(["routeId"]);
  * @returns {Array<object>} grouped history entries
  */
 function groupByAction(rows) {
-  const groups = new Map();
-  for (const row of rows) {
-    const tstamp =
-      row.tstamp instanceof Date ? row.tstamp.toISOString() : row.tstamp;
-    const key = `${tstamp}_${row.consumerId}_${row.record?.id}`;
-    const group = groups.get(key);
-    if (!group)
-      groups.set(key, {
-        id: row.id,
-        tstamp: row.tstamp,
-        operation: row.operation,
-        consumerId: row.consumerId,
-        consumerName: row.consumerName,
-        record: { ...row.record },
-      });
-    else Object.assign(group.record, row.record);
-  }
-  return [...groups.values()];
+	const groups = new Map();
+	for (const row of rows) {
+		const tstamp =
+			row.tstamp instanceof Date ? row.tstamp.toISOString() : row.tstamp;
+		const key = `${tstamp}_${row.consumerId}_${row.record?.id}`;
+		const group = groups.get(key);
+		if (!group)
+			groups.set(key, {
+				id: row.id,
+				tstamp: row.tstamp,
+				operation: row.operation,
+				consumerId: row.consumerId,
+				consumerName: row.consumerName,
+				record: { ...row.record },
+			});
+		else Object.assign(group.record, row.record);
+	}
+	return [...groups.values()];
 }
 
 /**
@@ -45,24 +45,24 @@ function groupByAction(rows) {
  * @returns {Function} Express middleware function
  */
 function get(tableName, schema = "public") {
-  return (req, res, next) => {
-    const id = req.params.id;
-    // log.debug(`getHistory(id=${id})`);
-    if (!id) return next({ statusCode: 400, message: "Missing id" });
+	return (req, res, next) => {
+		const id = req.params.id;
+		// log.debug(`getHistory(id=${id})`);
+		if (!id) return next({ statusCode: 400, message: "Missing id" });
 
-    query(tableName, id, schema)
-      .then((r) => {
-        if (!r.rowCount)
-          return next({ statusCode: 404, message: "history not found" });
-        const rows = groupByAction(r.rows);
-        if (rows.length === 1 && rows[0].operation === "INSERT")
-          return next({ statusCode: 404, message: "history not found" });
-        res.locals.rows = rows;
-        res.locals.total = rows.length;
-        next();
-      })
-      .catch((err) => next(err));
-  };
+		query(tableName, id, schema)
+			.then((r) => {
+				if (!r.rowCount)
+					return next({ statusCode: 404, message: "history not found" });
+				const rows = groupByAction(r.rows);
+				if (rows.length === 1 && rows[0].operation === "INSERT")
+					return next({ statusCode: 404, message: "history not found" });
+				res.locals.rows = rows;
+				res.locals.total = rows.length;
+				next();
+			})
+			.catch((err) => next(err));
+	};
 }
 
 /**
@@ -74,8 +74,8 @@ function get(tableName, schema = "public") {
  * @return {Promise} A promise that resolves with the history data.
  */
 function query(tableName, id, schema = "public") {
-  const tableNames = Array.isArray(tableName) ? tableName : [tableName];
-  const sql = `
+	const tableNames = Array.isArray(tableName) ? tableName : [tableName];
+	const sql = `
     SELECT id, tstamp, operation, "userId" AS "consumerId", "userName" AS "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1 
@@ -83,35 +83,34 @@ function query(tableName, id, schema = "public") {
       AND CAST(record->>'id' AS INT) = $3
     ORDER BY tstamp ASC, id ASC
   `;
-  return execute(sql, [schema, tableNames, id], null);
+	return execute(sql, [schema, tableNames, id], null);
 }
 
 function getByField(tableName, field, schema = "public") {
-  return (req, res, next) => {
-    const value = req.params[field];
-    if (!value)
-      return next({ statusCode: 400, message: `Missing ${field}` });
+	return (req, res, next) => {
+		const value = req.params[field];
+		if (!value) return next({ statusCode: 400, message: `Missing ${field}` });
 
-    queryByField(tableName, field, value, schema)
-      .then((r) => {
-        if (!r.rowCount)
-          return next({ statusCode: 404, message: "history not found" });
-        const rows = groupByAction(r.rows);
-        if (rows.length === 1 && rows[0].operation === "INSERT")
-          return next({ statusCode: 404, message: "history not found" });
-        res.locals.rows = rows;
-        res.locals.total = rows.length;
-        next();
-      })
-      .catch((err) => next(err));
-  };
+		queryByField(tableName, field, value, schema)
+			.then((r) => {
+				if (!r.rowCount)
+					return next({ statusCode: 404, message: "history not found" });
+				const rows = groupByAction(r.rows);
+				if (rows.length === 1 && rows[0].operation === "INSERT")
+					return next({ statusCode: 404, message: "history not found" });
+				res.locals.rows = rows;
+				res.locals.total = rows.length;
+				next();
+			})
+			.catch((err) => next(err));
+	};
 }
 
 function queryByField(tableName, field, value, schema = "public") {
-  if (!ALLOWED_HISTORY_FIELDS.has(field))
-    throw new Error(`Invalid history field: ${field}`);
-  const tableNames = Array.isArray(tableName) ? tableName : [tableName];
-  const sql = `
+	if (!ALLOWED_HISTORY_FIELDS.has(field))
+		throw new Error(`Invalid history field: ${field}`);
+	const tableNames = Array.isArray(tableName) ? tableName : [tableName];
+	const sql = `
     SELECT id, tstamp, operation, "userId" AS "consumerId", "userName" AS "consumerName", record
     FROM log.history
     WHERE "schemaName" = $1
@@ -119,11 +118,11 @@ function queryByField(tableName, field, value, schema = "public") {
       AND CAST(record->>'${field}' AS INT) = $3
     ORDER BY tstamp ASC, id ASC
   `;
-  return execute(sql, [schema, tableNames, value], null);
+	return execute(sql, [schema, tableNames, value], null);
 }
 
 export default {
-  get,
-  getByField,
-  groupByAction,
+	get,
+	getByField,
+	groupByAction,
 };

@@ -22,35 +22,35 @@ import safeRegex from "safe-regex2";
  * Applied to both POST (insert) and PUT (update) on the /gateway/routes endpoint.
  *
  * @param {import('express').Request} req
- * @param {import('express').Response} res
+ * @param {import('express').Response} _res
  * @param {import('express').NextFunction} next
  */
-export function checkRoutePattern(req, res, next) {
-  const rows = req.body?.rows;
-  if (!Array.isArray(rows)) return next();
+export function checkRoutePattern(req, _res, next) {
+	const rows = req.body?.rows;
+	if (!Array.isArray(rows)) return next();
 
-  for (const row of rows) {
-    const pattern = row.pattern;
-    if (typeof pattern !== "string") continue;
+	for (const row of rows) {
+		const pattern = row.pattern;
+		if (typeof pattern !== "string") continue;
 
-    // Compile first so invalid syntax gets a clear error (safe-regex2 also
-    // returns false for unparsable patterns, which would mislabel them as ReDoS).
-    try {
-      new RegExp(pattern);
-    } catch {
-      return next({
-        statusCode: 400,
-        message: `Route pattern "${pattern}" is not a valid regular expression.`,
-      });
-    }
+		// Compile first so invalid syntax gets a clear error (safe-regex2 also
+		// returns false for unparsable patterns, which would mislabel them as ReDoS).
+		try {
+			new RegExp(pattern);
+		} catch {
+			return next({
+				statusCode: 400,
+				message: `Route pattern "${pattern}" is not a valid regular expression.`,
+			});
+		}
 
-    if (!safeRegex(pattern)) {
-      return next({
-        statusCode: 400,
-        message: `Route pattern "${pattern}" may cause catastrophic backtracking (ReDoS).`,
-      });
-    }
-  }
+		if (!safeRegex(pattern)) {
+			return next({
+				statusCode: 400,
+				message: `Route pattern "${pattern}" may cause catastrophic backtracking (ReDoS).`,
+			});
+		}
+	}
 
-  next();
+	next();
 }

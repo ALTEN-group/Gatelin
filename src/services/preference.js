@@ -18,15 +18,15 @@ import { execute } from "@dwtechs/antity-pgsql";
  * @returns {Promise<Array<object>>}
  */
 export async function getMany(userId, resource) {
-  const { rows } = await execute(
-    `SELECT v.id, v."resourceId", v."resourceName", v.name, v.conf, v.locked,
+	const { rows } = await execute(
+		`SELECT v.id, v."resourceId", v."resourceName", v.name, v.conf, v.locked,
             COALESCE(v.id = ps."preferenceId", false) AS "isActive"
      FROM preferences v
      LEFT JOIN preference_selection ps ON ps."resourceId" = v."resourceId" AND ps."userId" = $1
      WHERE v."resourceName" = $2 AND (v.locked OR v."userId" = $1)
      ORDER BY v.name`,
-    [userId, resource],
-    null,
-  );
-  return rows;
+		[userId, resource],
+		null,
+	);
+	return rows;
 }

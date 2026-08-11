@@ -1,5 +1,5 @@
-import { log } from "@dwtechs/winstan";
 import { isArray, isProperty } from "@dwtechs/checkard";
+import { log } from "@dwtechs/winstan";
 import roleService from "../../services/role.js";
 import scopeService from "../../services/scope.js";
 
@@ -30,91 +30,91 @@ import scopeService from "../../services/scope.js";
  * // User with roles ['user'] would get 403 Forbidden
  */
 function filterFields(item, allowed) {
-  return Object.fromEntries(
-    // "id" is always kept: it identifies the row to update/delete and is not
-    // a writable field governed by the per-role field ACL.
-    Object.entries(item).filter(([k]) => k === "id" || allowed.has(k)),
-  );
+	return Object.fromEntries(
+		// "id" is always kept: it identifies the row to update/delete and is not
+		// a writable field governed by the per-role field ACL.
+		Object.entries(item).filter(([k]) => k === "id" || allowed.has(k)),
+	);
 }
 
 // Extracts the URL segment following resourceName, e.g.
 // /preferences/session → resourceName "preferences" → "session"
 export function getScopeSegment(req, resourceName) {
-  const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
-  const resourceIndex = urlSegments.indexOf(resourceName);
-  return resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
+	const urlSegments = req.originalUrl.split("?")[0].split("/").filter(Boolean);
+	const resourceIndex = urlSegments.indexOf(resourceName);
+	return resourceIndex !== -1 ? (urlSegments[resourceIndex + 1] ?? null) : null;
 }
 
 // Only parse URL segments when this permission actually uses URL scopes
 export function matchesScope(perm, req, resourceName) {
-  if (!isArray(perm.scopes, "!0")) return true;
-  const urlScopes = scopeService.getValues(perm.scopes);
-  if (!isArray(urlScopes, "!0")) return true;
-  return urlScopes.includes(getScopeSegment(req, resourceName));
+	if (!isArray(perm.scopes, "!0")) return true;
+	const urlScopes = scopeService.getValues(perm.scopes);
+	if (!isArray(urlScopes, "!0")) return true;
+	return urlScopes.includes(getScopeSegment(req, resourceName));
 }
 
 function findMatchingPermission(
-  roles,
-  routeId,
-  routeOperations,
-  req,
-  resourceName,
+	roles,
+	routeId,
+	routeOperations,
+	req,
+	resourceName,
 ) {
-  for (const id of roles) {
-    const role = roleService.getOne(id);
-    if (!role) continue;
+	for (const id of roles) {
+		const role = roleService.getOne(id);
+		if (!role) continue;
 
-    // O(1) lookup by routeId instead of array scan
-    const perm = role.permissions.get(routeId);
-    if (!perm) continue;
-    if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
-    if (!matchesScope(perm, req, resourceName)) continue;
+		// O(1) lookup by routeId instead of array scan
+		const perm = role.permissions.get(routeId);
+		if (!perm) continue;
+		if (!perm.operations.some((op) => routeOperations.includes(op))) continue;
+		if (!matchesScope(perm, req, resourceName)) continue;
 
-    const conditions = isArray(perm.conditions, "!0") ? perm.conditions : null;
-    return { perm, conditions };
-  }
-  return null;
+		const conditions = isArray(perm.conditions, "!0") ? perm.conditions : null;
+		return { perm, conditions };
+	}
+	return null;
 }
 
 export default function checkAcl(req, res, next) {
-  const r = res.locals.route;
-  if (!r.protected) return next(); // if no jwt required for this route
+	const r = res.locals.route;
+	if (!r.protected) return next(); // if no jwt required for this route
 
-  const c = res.locals.consumer;
-  log.debug(
-    () =>
-      `checkAcl(consumer: ${c.id}, operations: ${r.operationId}, route: ${r.url}`,
-  );
+	const c = res.locals.consumer;
+	log.debug(
+		() =>
+			`checkAcl(consumer: ${c.id}, operations: ${r.operationId}, route: ${r.url}`,
+	);
 
-  // Extract URL path segments (strip query string first), then find the position
-  // of the resource name (e.g. "preferences") to identify the scope segment that
-  // follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
-  // scopeSegment is used to match scope-restricted permissions (perm.scopes).
-  const result = findMatchingPermission(
-    c.roles,
-    r.id,
-    r.operationId,
-    req,
-    r.resourceName,
-  );
-  if (!result) return next({ statusCode: 403, message: "Forbidden" });
+	// Extract URL path segments (strip query string first), then find the position
+	// of the resource name (e.g. "preferences") to identify the scope segment that
+	// follows it in the URL (e.g. /preferences/session → scopeSegment = "session").
+	// scopeSegment is used to match scope-restricted permissions (perm.scopes).
+	const result = findMatchingPermission(
+		c.roles,
+		r.id,
+		r.operationId,
+		req,
+		r.resourceName,
+	);
+	if (!result) return next({ statusCode: 403, message: "Forbidden" });
 
-  const { perm, conditions } = result;
-  if (conditions) req.aclConditions = conditions;
+	const { perm, conditions } = result;
+	if (conditions) req.aclConditions = conditions;
 
-  const allowed = perm._fieldsSet;
+	const allowed = perm._fieldsSet;
 
-  // Filter request body fields on write operations
-  if (allowed && req.body) {
-    const rows = req.body.rows;
-    if (isArray(rows))
-      req.body.rows = rows.map((item) => filterFields(item, allowed));
-    else if (!isProperty(req.body, "rows"))
-      req.body = filterFields(req.body, allowed);
-  }
+	// Filter request body fields on write operations
+	if (allowed && req.body) {
+		const rows = req.body.rows;
+		if (isArray(rows))
+			req.body.rows = rows.map((item) => filterFields(item, allowed));
+		else if (!isProperty(req.body, "rows"))
+			req.body = filterFields(req.body, allowed);
+	}
 
-  // Store field allowlist for request body filtering
-  res.locals.aclFields = perm.fields;
+	// Store field allowlist for request body filtering
+	res.locals.aclFields = perm.fields;
 
-  next();
+	next();
 }

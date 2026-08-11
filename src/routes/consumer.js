@@ -1,11 +1,12 @@
 // @ts-check
 import express from "express";
+
 const router = express.Router();
 
 import cEnt from "../entities/consumer.js";
 import { deleteFromCache } from "../middlewares/cache/consumer.js";
-import { send204 } from "../middlewares/res/send-204.js";
 import { send } from "../middlewares/res/send.js";
+import { send204 } from "../middlewares/res/send-204.js";
 import schema from "../middlewares/schema.js";
 
 // middleware sub-stacks

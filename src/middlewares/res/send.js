@@ -6,8 +6,8 @@
  * If res.locals doesn't exist, it sends a 204 status code (No Content) response.
  */
 function send(_req, res) {
-  const data = res.locals;
-  res.status(200).json({ rows: data.rows, total: data.total });
+	const data = res.locals;
+	res.status(200).json({ rows: data.rows, total: data.total });
 }
 
 export { send };

@@ -1,5 +1,6 @@
 // @ts-check
 import express from "express";
+
 const router = express.Router();
 
 import pEnt from "../entities/permission.js";
@@ -10,8 +11,8 @@ import schema from "../middlewares/schema.js";
 router.post("/search", pEnt.get);
 // Get history of permissions for a specific route, including condition assignment changes
 router.get(
-  "/history/route/:routeId",
-  history.getByField(["permission", "permission_condition"], "routeId"),
+	"/history/route/:routeId",
+	history.getByField(["permission", "permission_condition"], "routeId"),
 );
 // Add permissions
 router.post("/", pEnt.addArraySubstack);
