@@ -50,6 +50,9 @@
     "statusBar.debuggingBackground": "#1857a4",
     "statusBar.debuggingForeground": "#e7e7e7"
   },
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
   "peacock.remoteColor": "#1857a4",
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {

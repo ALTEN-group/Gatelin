@@ -1,6 +1,7 @@
 // @ts-check
 import { execute } from "@dwtechs/antity-pgsql";
 import cEnt from "../entities/consumer.js";
+import { makeDeleteArchived } from "../utils/delete-archived.js";
 
 /**
  * @typedef {Object} ConsumerCache
@@ -46,18 +47,41 @@ function init() {
 }
 
 /**
- * Retrieves a single consumer from the in-memory cache by their access and refresh tokens.
- * This function searches through the cached consumers array to find a matching consumer
- * with both the provided access token and refresh token.
+ * Retrieves a cached consumer record by access token.
  *
- * @param {string} accessToken - The access token of the consumer to retrieve
- * @return {object|undefined} The consumer object if found, undefined if no consumer matches the given tokens
+ * Pure cache accessor — a single `Map.get` keyed by access token (see `init()`
+ * and `addToCache()` for how the Map is populated). No cryptographic
+ * comparison, no side effects, no security decision on its own.
+ *
+ * NOT a full authentication check.
+ * ---
+ * `getOne` alone only proves "this access token exists in our cache" — a
+ * WEAKER guarantee than "the caller presented matching access AND refresh
+ * tokens." The full auth check is intentionally split across two middlewares
+ * that MUST both run on any refresh-flow request:
+ *
+ *   1. `checkConsumer`     (src/middlewares/validators/check-consumer.js)
+ *      Calls `getOne(accessToken)` and attaches the record to
+ *      `res.locals.consumer`.
+ *   2. `checkRefreshToken` (src/middlewares/validators/check-refreshToken.js)
+ *      Reads `res.locals.consumer.refreshToken` (populated by step 1) and
+ *      compares it against the request's refresh token via `timingSafeEqual`
+ *      — constant-time to protect against timing attacks.
+ *
+ * The chain is wired in `src/routes/session.js`'s `update` array (getSession
+ * → checkCsrf → checkRefreshToken → ...). Never use `getOne`'s return value
+ * alone as an authorization decision — always chain it with
+ * `checkRefreshToken` (or an equivalent crypto comparison) in the middleware
+ * pipeline.
+ *
+ * @param {string} accessToken - The consumer's access token (used directly as
+ *   the Map key; must be the exact string the record was cached under).
+ * @return {ConsumerCache|undefined} The cached consumer record if found,
+ *   otherwise `undefined`. Callers MUST NOT treat a truthy return as
+ *   authenticated — see the "NOT a full authentication check" section above.
  * @example
- * // Get consumer with specific tokens
- * const consumer = getOne('access-token-123', 'refresh-token-456');
- * if (consumer) {
- *   console.log(`Found consumer: ${consumer.nickname}`);
- * }
+ * const consumer = getOne('access-token-123');
+ * if (consumer) log.debug(`Found consumer: ${consumer.nickname}`);
  */
 function getOne(accessToken) {
   return consumers.get(accessToken);
@@ -114,29 +138,11 @@ function deleteFromCache(id) {
   consumerIdIndex.delete(numId);
 }
 
-/**
- * Deletes all archived routes from the database that have been archived for a specified duration.
- * This function is typically run by a scheduled job to clean up old/inactive route records.
- *
- * @param {Date} date - The date before which archived routes should be deleted.
- * @throws {Error} Database connection or query execution errors
- * @example
- * // Delete all routes archived for more than 2 months
- * const twoMonthsAgo = new Date();
- * twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
- * const deletedCount = await deleteArchived(twoMonthsAgo);
- * console.log(`Deleted ${deletedCount} archived route(s)`);
- */
-function deleteArchived(date) {
-  const q = cEnt.query.deleteArchive();
-  return execute(q, [date], null).then((r) => r.rowCount || 0);
-}
-
 export default {
   init,
   getOne,
   addToCache,
   updateCache,
   deleteFromCache,
-  deleteArchived,
+  deleteArchived: makeDeleteArchived(cEnt),
 };

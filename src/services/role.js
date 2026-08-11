@@ -2,6 +2,7 @@
 import { execute } from "@dwtechs/antity-pgsql";
 import rEnt from "../entities/role.js";
 import rpEnt from "../entities/role-cache.js";
+import { makeDeleteArchived } from "../utils/delete-archived.js";
 
 /**
  * @typedef {Object} roleCache
@@ -70,13 +71,8 @@ function getOne(id) {
   return roles.get(id);
 }
 
-function deleteArchived(date) {
-  const q = rEnt.query.deleteArchive();
-  return execute(q, [date], null).then((r) => r.rowCount || 0);
-}
-
 export default {
   init,
   getOne,
-  deleteArchived,
+  deleteArchived: makeDeleteArchived(rEnt),
 };

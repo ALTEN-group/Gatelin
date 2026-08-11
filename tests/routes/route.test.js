@@ -2,10 +2,10 @@
  * @jest-environment node
  */
 
-import { jest } from "@jest/globals";
-import supertest from "supertest";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { jest } from "@jest/globals";
+import supertest from "supertest";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");

@@ -1,5 +1,5 @@
-import { log } from "@dwtechs/winstan";
 import { isArray, isProperty } from "@dwtechs/checkard";
+import { log } from "@dwtechs/winstan";
 import roleService from "../../services/role.js";
 import scopeService from "../../services/scope.js";
 

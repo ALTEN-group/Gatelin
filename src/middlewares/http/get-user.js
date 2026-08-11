@@ -1,6 +1,7 @@
 // @ts-check
+
+import { isArray, isString, isValidInteger } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
-import { isString, isArray, isValidInteger } from "@dwtechs/checkard";
 import http from "../../utils/http.js";
 
 const { USER_SEARCH_URL } = process.env;
@@ -50,11 +51,11 @@ export function getUserByEmail(req, res, next) {
  * Fetches user details from ms_user service by id
  *
  * @param {Object} req - Express request
- * @param {Object} res - Express response
+ * @param {Object} _res - Express response (unused)
  * @param {Function} next - Express next middleware
  */
 
-export function getUserById(req, res, next) {
+export function getUserById(req, _res, next) {
   const filters = req.body.filters;
 
   http
@@ -67,10 +68,7 @@ export function getUserById(req, res, next) {
         return next({ statusCode: 422, message: "Invalid user nickname" });
       if (!isArray(roles, "!0"))
         return next({ statusCode: 422, message: "Invalid user roles" });
-      log.debug(
-        () =>
-          `ms_user response: id=${u.id}, nickname=${nickname}, roles=${roles}`,
-      );
+      log.debug(() => `ms_user response: nickname=${nickname}, roles=${roles}`);
       // Attach user data to request body for db update in downstream middleware
       Object.assign(req.body.rows[0], { nickname, roles });
       next();

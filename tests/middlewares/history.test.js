@@ -33,7 +33,10 @@ describe("history middleware", () => {
 
       history.get("route")(req, res, next);
 
-      expect(next).toHaveBeenCalledWith({ status: 400, msg: "Missing id" });
+      expect(next).toHaveBeenCalledWith({
+        statusCode: 400,
+        message: "Missing id",
+      });
       expect(execute).not.toHaveBeenCalled();
     });
 
@@ -69,8 +72,8 @@ describe("history middleware", () => {
       await Promise.resolve();
 
       expect(next).toHaveBeenCalledWith({
-        status: 404,
-        msg: "history not found",
+        statusCode: 404,
+        message: "history not found",
       });
     });
 
@@ -85,8 +88,8 @@ describe("history middleware", () => {
       await Promise.resolve();
 
       expect(next).toHaveBeenCalledWith({
-        status: 404,
-        msg: "history not found",
+        statusCode: 404,
+        message: "history not found",
       });
     });
 
@@ -198,8 +201,8 @@ describe("history middleware", () => {
       await Promise.resolve();
 
       expect(next).toHaveBeenCalledWith({
-        status: 404,
-        msg: "history not found",
+        statusCode: 404,
+        message: "history not found",
       });
     });
 
@@ -306,8 +309,8 @@ describe("history middleware", () => {
       history.getByField("route", "routeId")(req, res, next);
 
       expect(next).toHaveBeenCalledWith({
-        status: 400,
-        msg: "Missing routeId",
+        statusCode: 400,
+        message: "Missing routeId",
       });
       expect(execute).not.toHaveBeenCalled();
     });
@@ -389,8 +392,8 @@ describe("history middleware", () => {
       await Promise.resolve();
 
       expect(next).toHaveBeenCalledWith({
-        status: 404,
-        msg: "history not found",
+        statusCode: 404,
+        message: "history not found",
       });
     });
 

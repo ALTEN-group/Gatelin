@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
-import { jest } from "@jest/globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { jest } from "@jest/globals";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const scopeEntPath = path.join(__dirname, "../../src/entities/scope.js");

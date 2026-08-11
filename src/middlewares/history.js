@@ -48,14 +48,15 @@ function get(tableName, schema = "public") {
   return (req, res, next) => {
     const id = req.params.id;
     // log.debug(`getHistory(id=${id})`);
-    if (!id) return next({ status: 400, msg: "Missing id" });
+    if (!id) return next({ statusCode: 400, message: "Missing id" });
 
     query(tableName, id, schema)
       .then((r) => {
-        if (!r.rowCount) return next({ status: 404, msg: "history not found" });
+        if (!r.rowCount)
+          return next({ statusCode: 404, message: "history not found" });
         const rows = groupByAction(r.rows);
         if (rows.length === 1 && rows[0].operation === "INSERT")
-          return next({ status: 404, msg: "history not found" });
+          return next({ statusCode: 404, message: "history not found" });
         res.locals.rows = rows;
         res.locals.total = rows.length;
         next();
@@ -88,14 +89,15 @@ function query(tableName, id, schema = "public") {
 function getByField(tableName, field, schema = "public") {
   return (req, res, next) => {
     const value = req.params[field];
-    if (!value) return next({ status: 400, msg: `Missing ${field}` });
+    if (!value) return next({ statusCode: 400, message: `Missing ${field}` });
 
     queryByField(tableName, field, value, schema)
       .then((r) => {
-        if (!r.rowCount) return next({ status: 404, msg: "history not found" });
+        if (!r.rowCount)
+          return next({ statusCode: 404, message: "history not found" });
         const rows = groupByAction(r.rows);
         if (rows.length === 1 && rows[0].operation === "INSERT")
-          return next({ status: 404, msg: "history not found" });
+          return next({ statusCode: 404, message: "history not found" });
         res.locals.rows = rows;
         res.locals.total = rows.length;
         next();

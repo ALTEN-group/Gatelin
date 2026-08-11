@@ -2,11 +2,11 @@
  * @jest-environment node
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 // cors.js is mounted with the outer app.js `send`, but add/update run a cache-sync substack first.
 import { jest } from "@jest/globals";
 import supertest from "supertest";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");

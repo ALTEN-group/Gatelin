@@ -1,8 +1,8 @@
 // @ts-check
-import { parseBearer, decodeAccess } from "@dwtechs/toker-express";
+import { decodeAccess, parseBearer } from "@dwtechs/toker-express";
+import applyAclConditions from "../mappers/apply-acl-conditions.js";
 import checkAcl from "./check-acl.js";
 import checkConsumer from "./check-consumer.js";
-import applyAclConditions from "../mappers/apply-acl-conditions.js";
 
 // middleware sub-stacks
 export const checkRequest = [

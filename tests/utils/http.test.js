@@ -117,28 +117,42 @@ describe("http.query", () => {
   it("should throw an error carrying the status code on a non-ok response", async () => {
     fetchMock.mockResolvedValue(jsonResponse(404, { message: "not found" }));
 
+    // Full-message pin (not just stringContaining) — locks in the rich
+    // `HTTP(<code>): <statusText>` shape that @dwtechs/errandler-express
+    // then relays verbatim to the client. Before the audit-5 fix, this
+    // information lived on a parallel `err.msg` field that nobody read;
+    // `err.message` was the bare "HTTP 404" instead.
     await expect(query("get", "http://svc/users/1")).rejects.toMatchObject({
-      status: 404,
-      msg: expect.stringContaining("404"),
+      statusCode: 404,
+      message: "HTTP(404): Status",
     });
   });
 
   it("should default the status to 503 when fetch rejects with no status", async () => {
     fetchMock.mockRejectedValue(new Error("network down"));
 
+    // Network-error path (ECONNREFUSED / DNS / TLS etc.). The catch handler
+    // re-wraps the native fetch error into the same `HTTP(<code>): <ctx>`
+    // shape so downstream consumers see a single message convention regardless
+    // of whether the failure was HTTP-level or transport-level.
     await expect(query("get", "http://svc/users")).rejects.toMatchObject({
-      status: 503,
-      msg: expect.stringContaining("network down"),
+      statusCode: 503,
+      message: "HTTP(503): network down",
     });
   });
 
-  it("should preserve an existing status on a rejected error", async () => {
+  it("should preserve an existing statusCode on a rejected error", async () => {
+    // Guards the `if (!err.statusCode)` short-circuit in http.js's catch
+    // handler — if a pre-classified error already carries a statusCode,
+    // http.js must NOT clobber it with the 503 default, and must NOT
+    // re-wrap the message.
     const err = new Error("boom");
-    err.status = 418;
+    err.statusCode = 418;
     fetchMock.mockRejectedValue(err);
 
     await expect(query("get", "http://svc/users")).rejects.toMatchObject({
-      status: 418,
+      statusCode: 418,
+      message: "boom",
     });
   });
 

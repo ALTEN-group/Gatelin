@@ -8,7 +8,7 @@
  * @returns {Function} Express middleware function
  */
 function get(entity) {
-  return function (_req, res, next) {
+  return (_req, res, next) => {
     const rows = entity.properties
       .filter((p) => !p.isPrivate)
       .map(

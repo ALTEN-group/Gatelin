@@ -2,6 +2,8 @@
  * @jest-environment node
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 // Parameterized wiring check for the generic CRUD resources: each mounts
 // `...checkRequest, <router>, send` in app.js with `router.post("/search", XEnt.get)`.
 // Also covers /:id/history, add, update, archive and /schema for the resources that
@@ -9,8 +11,6 @@
 // shaped history route and DELETE instead of archive - see the dedicated blocks below).
 import { jest } from "@jest/globals";
 import supertest from "supertest";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
@@ -214,49 +214,51 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
   });
 });
 
-describe.each(STANDARD_CRUD)("GET /gateway/$name/:id/history", ({
-  name,
-  entity,
-}) => {
-  let app;
-  let routeSvc;
-  let consumerSvc;
+describe.each(STANDARD_CRUD)(
+  "GET /gateway/$name/:id/history",
+  ({ name, entity }) => {
+    let app;
+    let routeSvc;
+    let consumerSvc;
 
-  beforeAll(async () => {
-    ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
-    ({ default: app } = await import("../../src/app.js"));
-  });
-
-  beforeEach(() => {
-    routeSvc.getOne.mockReset().mockReturnValue({
-      id: 1,
-      url: `/gateway/${name}/1/history`,
-      protected: false,
+    beforeAll(async () => {
+      ({ default: routeSvc } = await import("../../src/services/route.js"));
+      ({ default: consumerSvc } = await import(
+        "../../src/services/consumer.js"
+      ));
+      ({ default: app } = await import("../../src/app.js"));
     });
-    consumerSvc.getOne.mockReset();
-    historyMiddlewares[entity].mockClear();
-  });
 
-  it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get(`/gateway/${name}/1/history`);
+    beforeEach(() => {
+      routeSvc.getOne.mockReset().mockReturnValue({
+        id: 1,
+        url: `/gateway/${name}/1/history`,
+        protected: false,
+      });
+      consumerSvc.getOne.mockReset();
+      historyMiddlewares[entity].mockClear();
+    });
 
-    expect(res.status).toBe(401);
-    expect(historyMiddlewares[entity]).not.toHaveBeenCalled();
-  });
+    it("rejects an unauthenticated request", async () => {
+      const res = await supertest(app).get(`/gateway/${name}/1/history`);
 
-  it("routes an authenticated request to its own entity's history", async () => {
-    consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
+      expect(res.status).toBe(401);
+      expect(historyMiddlewares[entity]).not.toHaveBeenCalled();
+    });
 
-    const res = await supertest(app)
-      .get(`/gateway/${name}/1/history`)
-      .set("Authorization", "Bearer valid-token");
+    it("routes an authenticated request to its own entity's history", async () => {
+      consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
-    expect(res.status).toBe(200);
-    expect(res.body.rows[0].record.entity).toBe(entity);
-    expect(historyMiddlewares[entity]).toHaveBeenCalledTimes(1);
-  });
-});
+      const res = await supertest(app)
+        .get(`/gateway/${name}/1/history`)
+        .set("Authorization", "Bearer valid-token");
+
+      expect(res.status).toBe(200);
+      expect(res.body.rows[0].record.entity).toBe(entity);
+      expect(historyMiddlewares[entity]).toHaveBeenCalledTimes(1);
+    });
+  },
+);
 
 describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
   let app;
@@ -342,52 +344,54 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
   });
 });
 
-describe.each(STANDARD_CRUD)("POST /gateway/$name/archive", ({
-  name,
-  entity,
-}) => {
-  let app;
-  let routeSvc;
-  let consumerSvc;
+describe.each(STANDARD_CRUD)(
+  "POST /gateway/$name/archive",
+  ({ name, entity }) => {
+    let app;
+    let routeSvc;
+    let consumerSvc;
 
-  beforeAll(async () => {
-    ({ default: routeSvc } = await import("../../src/services/route.js"));
-    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
-    ({ default: app } = await import("../../src/app.js"));
-  });
-
-  beforeEach(() => {
-    routeSvc.getOne.mockReset().mockReturnValue({
-      id: 1,
-      url: `/gateway/${name}/archive`,
-      protected: false,
+    beforeAll(async () => {
+      ({ default: routeSvc } = await import("../../src/services/route.js"));
+      ({ default: consumerSvc } = await import(
+        "../../src/services/consumer.js"
+      ));
+      ({ default: app } = await import("../../src/app.js"));
     });
-    consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
-    entityArchives[entity].mockClear();
-  });
 
-  it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app)
-      .post(`/gateway/${name}/archive`)
-      .send({ rows: [{ id: 1 }] });
+    beforeEach(() => {
+      routeSvc.getOne.mockReset().mockReturnValue({
+        id: 1,
+        url: `/gateway/${name}/archive`,
+        protected: false,
+      });
+      consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
+      entityArchives[entity].mockClear();
+    });
 
-    expect(res.status).toBe(401);
-    expect(entityArchives[entity]).not.toHaveBeenCalled();
-  });
+    it("rejects an unauthenticated request", async () => {
+      const res = await supertest(app)
+        .post(`/gateway/${name}/archive`)
+        .send({ rows: [{ id: 1 }] });
 
-  it("routes an authenticated request to its own entity", async () => {
-    const rows = [{ id: 1 }];
+      expect(res.status).toBe(401);
+      expect(entityArchives[entity]).not.toHaveBeenCalled();
+    });
 
-    const res = await supertest(app)
-      .post(`/gateway/${name}/archive`)
-      .set("Authorization", "Bearer valid-token")
-      .send({ rows });
+    it("routes an authenticated request to its own entity", async () => {
+      const rows = [{ id: 1 }];
 
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ rows, total: 1 });
-    expect(entityArchives[entity]).toHaveBeenCalledTimes(1);
-  });
-});
+      const res = await supertest(app)
+        .post(`/gateway/${name}/archive`)
+        .set("Authorization", "Bearer valid-token")
+        .send({ rows });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ rows, total: 1 });
+      expect(entityArchives[entity]).toHaveBeenCalledTimes(1);
+    });
+  },
+);
 
 describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
   let app;

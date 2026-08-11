@@ -1,9 +1,10 @@
 // @ts-check
-import express from "express";
-import http from "node:http";
+
 import { readFileSync } from "node:fs";
+import http from "node:http";
 import { join } from "node:path";
 import { log } from "@dwtechs/winstan";
+import express from "express";
 
 const { ADMIN_PORT, ADMIN_BASE_PATH, PORT } = process.env;
 // Path relative to src/ where the Angular dist is copied in the Docker image
@@ -17,10 +18,10 @@ export function startAdminServer() {
   // admin/angular.json) — the real prefix is injected into <base href> here at
   // runtime, so changing ADMIN_BASE_PATH only needs a container restart, never
   // an Angular rebuild.
-  const indexHtml = readFileSync(join(ADMIN_DIST, "index.html"), "utf8").replace(
-    /<base href="[^"]*">/,
-    () => `<base href="${BASE_PATH}/">`
-  );
+  const indexHtml = readFileSync(
+    join(ADMIN_DIST, "index.html"),
+    "utf8",
+  ).replace(/<base href="[^"]*">/, () => `<base href="${BASE_PATH}/">`);
 
   const app = express();
   app.disable("x-powered-by");
@@ -55,6 +56,6 @@ export function startAdminServer() {
   });
 
   app.listen(Number(ADMIN_PORT), () =>
-    log.info(`Admin UI listening on port ${ADMIN_PORT}`)
+    log.info(`Admin UI listening on port ${ADMIN_PORT}`),
   );
 }

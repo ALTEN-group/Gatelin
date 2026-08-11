@@ -60,8 +60,17 @@ export function resolvePermissions(_req, res, next) {
   // res.locals.rows[0] is the consumer record returned by sEnt.add / sEnt.update
   // via the RETURNING clause — roles were inserted/updated from req.body.rows[0].roles
   // which was populated upstream by getUserByEmail / getUserById.
-  // Optional chaining guards against missing rows (e.g. consumer with no roles).
-  const roles = res.locals.rows?.[0]?.roles;
+  //
+  // Fail-closed normalization: `?? []` collapses three "no roles" shapes
+  // (missing rows, missing rows[0], null/undefined roles column) into an empty
+  // array. This preserves the defensive intent signaled by `?.` and prevents
+  // an unhandled TypeError on `roles.length` from the fast-path check below —
+  // which would otherwise surface as a generic Express 500 for a consumer
+  // whose upstream data is legitimately empty. Downstream behavior for an
+  // empty array is already correct: the fast path is skipped, the multi-role
+  // loop iterates zero times, and `res.locals.permissions` is set to `[]` —
+  // consistent with the "role id not in cache" branches on lines below.
+  const roles = res.locals.rows?.[0]?.roles ?? [];
 
   // Fast path: single role — no merging needed, map directly to output shape.
   if (roles.length === 1) {

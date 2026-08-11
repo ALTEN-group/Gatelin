@@ -3,7 +3,7 @@
 /**
  * Express middleware that sends a 204 No Content response.
  * Used for successful operations that don't return any content (typically DELETE).
- * 
+ *
  * @param {import('express').Request} _req - Express request object (unused)
  * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} _next - Express next function (unused)

@@ -53,7 +53,31 @@ describe("checkRoutePattern middleware", () => {
     expect(next).toHaveBeenCalledWith({
       statusCode: 400,
       message:
-        'Route pattern "(a+)+" contains nested quantifiers that may cause catastrophic backtracking (ReDoS).',
+        'Route pattern "(a+)+" may cause catastrophic backtracking (ReDoS).',
+    });
+  });
+
+  it("should reject a pattern with high bounded repetition (ReDoS risk)", () => {
+    req = { body: { rows: [{ pattern: "(a+){10}" }] } };
+
+    checkRoutePattern(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 400,
+      message:
+        'Route pattern "(a+){10}" may cause catastrophic backtracking (ReDoS).',
+    });
+  });
+
+  it("should reject a quantified character class that is ReDoS-prone", () => {
+    req = { body: { rows: [{ pattern: "([a-zA-Z]+)*" }] } };
+
+    checkRoutePattern(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 400,
+      message:
+        'Route pattern "([a-zA-Z]+)*" may cause catastrophic backtracking (ReDoS).',
     });
   });
 

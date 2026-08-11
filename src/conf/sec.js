@@ -16,7 +16,7 @@ const CSP = [
  * Security headers middleware — replaces helmet.
  * Sets Content-Security-Policy, HSTS, X-Frame-Options, and other hardening headers.
  */
-export function security(req, res, next) {
+export function security(_req, res, next) {
   res.setHeader("Content-Security-Policy", CSP);
   res.setHeader(
     "Strict-Transport-Security",

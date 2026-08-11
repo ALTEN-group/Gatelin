@@ -1,5 +1,4 @@
-import { isArray } from '@dwtechs/checkard'
-
+import { isArray } from "@dwtechs/checkard";
 
 /**
  * Conditionally runs a middleware or an array of middlewares when condition is true.
@@ -20,8 +19,7 @@ import { isArray } from '@dwtechs/checkard'
  */
 export const when = (condition, middleware) => (req, res, next) => {
   if (condition(req, res)) {
-    if (isArray(middleware))
-      return runArray(middleware)(req, res, next);
+    if (isArray(middleware)) return runArray(middleware)(req, res, next);
     return middleware(req, res, next);
   }
   next();
@@ -38,19 +36,19 @@ export const when = (condition, middleware) => (req, res, next) => {
  */
 const runArray = (middlewares) => (req, res, next) => {
   let i = 0;
-  
+
   function runNext(err) {
     // If there's an error, pass it to the main next function
     if (err) return next(err);
-    
+
     // If we've run all middlewares, call the main next function
     if (i >= middlewares.length) return next();
-    
+
     // Run the current middleware and increment index
     const currentMiddleware = middlewares[i++];
     currentMiddleware(req, res, runNext);
   }
-  
+
   // Start running the first middleware
   runNext();
 };

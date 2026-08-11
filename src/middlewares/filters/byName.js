@@ -2,10 +2,10 @@
 
 /**
  * @param {import('express').Request} req
- * @param {import('express').Response} res
+ * @param {import('express').Response} _res
  * @param {import('express').NextFunction} next
  */
-export function filterByName(req, res, next) {
+export function filterByName(req, _res, next) {
   const { resource } = req.params;
   req.body = req.body || {};
   req.body.filters = {

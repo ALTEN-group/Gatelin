@@ -2,11 +2,11 @@
  * @jest-environment node
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 // proxy.js is the catch-all mounted at "/" after every named resource route in app.js.
 import { jest } from "@jest/globals";
 import supertest from "supertest";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
