@@ -14,38 +14,38 @@ jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
 const deleteArchive = jest.fn();
 jest.unstable_mockModule(serviceEntPath, () => ({
-	__esModule: true,
-	default: { query: { deleteArchive } },
+  __esModule: true,
+  default: { query: { deleteArchive } },
 }));
 
 describe("service service", () => {
-	let serviceSvc;
+  let serviceSvc;
 
-	beforeAll(async () => {
-		const module = await import("../../src/services/service.js");
-		serviceSvc = module.default;
-	});
+  beforeAll(async () => {
+    const module = await import("../../src/services/service.js");
+    serviceSvc = module.default;
+  });
 
-	beforeEach(() => {
-		execute.mockReset();
-		deleteArchive.mockReset();
-	});
+  beforeEach(() => {
+    execute.mockReset();
+    deleteArchive.mockReset();
+  });
 
-	it("should delete services archived before the given date and return the row count", async () => {
-		deleteArchive.mockReturnValue("DELETE FROM services");
-		execute.mockResolvedValue({ rowCount: 8 });
-		const date = new Date("2026-01-01");
+  it("should delete services archived before the given date and return the row count", async () => {
+    deleteArchive.mockReturnValue("DELETE FROM services");
+    execute.mockResolvedValue({ rowCount: 8 });
+    const date = new Date("2026-01-01");
 
-		const count = await serviceSvc.deleteArchived(date);
+    const count = await serviceSvc.deleteArchived(date);
 
-		expect(execute).toHaveBeenCalledWith("DELETE FROM services", [date], null);
-		expect(count).toBe(8);
-	});
+    expect(execute).toHaveBeenCalledWith("DELETE FROM services", [date], null);
+    expect(count).toBe(8);
+  });
 
-	it("should return 0 when no rows are deleted", async () => {
-		deleteArchive.mockReturnValue("DELETE FROM services");
-		execute.mockResolvedValue({ rowCount: 0 });
+  it("should return 0 when no rows are deleted", async () => {
+    deleteArchive.mockReturnValue("DELETE FROM services");
+    execute.mockResolvedValue({ rowCount: 0 });
 
-		expect(await serviceSvc.deleteArchived(new Date())).toBe(0);
-	});
+    expect(await serviceSvc.deleteArchived(new Date())).toBe(0);
+  });
 });

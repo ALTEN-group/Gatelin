@@ -7,29 +7,29 @@ process.env.NODE_ENV = "test";
 
 // Mock console to reduce test noise
 global.console = {
-	...console,
-	// Uncomment to silence console output during tests
-	// log: jest.fn(),
-	// debug: jest.fn(),
-	// info: jest.fn(),
-	// warn: jest.fn(),
-	// error: jest.fn(),
+  ...console,
+  // Uncomment to silence console output during tests
+  // log: jest.fn(),
+  // debug: jest.fn(),
+  // info: jest.fn(),
+  // warn: jest.fn(),
+  // error: jest.fn(),
 };
 
 // Global test helpers
 global.createMockRequest = (overrides = {}) => ({
-	body: { rows: [] },
-	params: {},
-	query: {},
-	headers: {},
-	...overrides,
+  body: { rows: [] },
+  params: {},
+  query: {},
+  headers: {},
+  ...overrides,
 });
 
 global.createMockResponse = (overrides = {}) => ({
-	status: jest.fn().mockReturnThis(),
-	json: jest.fn().mockReturnThis(),
-	send: jest.fn().mockReturnThis(),
-	...overrides,
+  status: jest.fn().mockReturnThis(),
+  json: jest.fn().mockReturnThis(),
+  send: jest.fn().mockReturnThis(),
+  ...overrides,
 });
 
 global.createMockNext = () => jest.fn();
