@@ -5,9 +5,9 @@ const router = express.Router();
 
 import cEnt from "../entities/cors.js";
 import {
-	addToCache,
-	deleteFromCache,
-	updateCache,
+  addToCache,
+  deleteFromCache,
+  updateCache,
 } from "../middlewares/cache/cors.js";
 import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";

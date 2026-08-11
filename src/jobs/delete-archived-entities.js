@@ -28,64 +28,64 @@ const ARCHIVE_RETENTION_MONTHS = 2;
  * startDeleteArchivedEntitiesJob();
  */
 export function startDeleteArchivedEntitiesJob() {
-	scheduleDailyAt(2, async () => {
-		try {
-			const cutoff = new Date();
-			cutoff.setMonth(cutoff.getMonth() - ARCHIVE_RETENTION_MONTHS);
+  scheduleDailyAt(2, async () => {
+    try {
+      const cutoff = new Date();
+      cutoff.setMonth(cutoff.getMonth() - ARCHIVE_RETENTION_MONTHS);
 
-			log.info(
-				`Starting scheduled deletion of archived entities (archived > ${ARCHIVE_RETENTION_MONTHS} months)...`,
-			);
+      log.info(
+        `Starting scheduled deletion of archived entities (archived > ${ARCHIVE_RETENTION_MONTHS} months)...`,
+      );
 
-			// Define all entities to process
-			const entities = [
-				{ name: "consumers", service: consumerSvc },
-				{ name: "services", service: serviceSvc },
-				{ name: "CORS origins", service: corsSvc },
-				{ name: "operations", service: operationSvc },
-				{ name: "resources", service: resourceSvc },
-				{ name: "routes", service: routeSvc },
-				{ name: "roles", service: roleSvc },
-				{ name: "applications", service: applicationSvc },
-				{ name: "scopes", service: scopeSvc },
-			];
+      // Define all entities to process
+      const entities = [
+        { name: "consumers", service: consumerSvc },
+        { name: "services", service: serviceSvc },
+        { name: "CORS origins", service: corsSvc },
+        { name: "operations", service: operationSvc },
+        { name: "resources", service: resourceSvc },
+        { name: "routes", service: routeSvc },
+        { name: "roles", service: roleSvc },
+        { name: "applications", service: applicationSvc },
+        { name: "scopes", service: scopeSvc },
+      ];
 
-			let totalDeleted = 0;
+      let totalDeleted = 0;
 
-			// Process all entities concurrently
-			const results = await Promise.allSettled(
-				entities.map((entity) =>
-					entity.service
-						.deleteArchived(cutoff)
-						.then((count) => ({ entity, count })),
-				),
-			);
+      // Process all entities concurrently
+      const results = await Promise.allSettled(
+        entities.map((entity) =>
+          entity.service
+            .deleteArchived(cutoff)
+            .then((count) => ({ entity, count })),
+        ),
+      );
 
-			for (const result of results) {
-				if (result.status === "fulfilled") {
-					const { entity, count } = result.value;
-					if (count > 0)
-						log.info(`    ✓ Deleted ${count} archived ${entity.name}`);
-					else log.info(`    • No archived ${entity.name} to delete`);
-					totalDeleted += count;
-				} else {
-					log.error(
-						`    ✗ Failed: ${result.reason?.message || result.reason?.msg}`,
-					);
-				}
-			}
+      for (const result of results) {
+        if (result.status === "fulfilled") {
+          const { entity, count } = result.value;
+          if (count > 0)
+            log.info(`    ✓ Deleted ${count} archived ${entity.name}`);
+          else log.info(`    • No archived ${entity.name} to delete`);
+          totalDeleted += count;
+        } else {
+          log.error(
+            `    ✗ Failed: ${result.reason?.message || result.reason?.msg}`,
+          );
+        }
+      }
 
-			log.info(
-				`Completed deletion of archived entities. Total deleted: ${totalDeleted}`,
-			);
-		} catch (err) {
-			log.error(
-				`Failed to complete archived entities deletion job: ${err.message}`,
-			);
-		}
-	});
+      log.info(
+        `Completed deletion of archived entities. Total deleted: ${totalDeleted}`,
+      );
+    } catch (err) {
+      log.error(
+        `Failed to complete archived entities deletion job: ${err.message}`,
+      );
+    }
+  });
 
-	log.info(
-		`Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > ${ARCHIVE_RETENTION_MONTHS} months)`,
-	);
+  log.info(
+    `Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > ${ARCHIVE_RETENTION_MONTHS} months)`,
+  );
 }

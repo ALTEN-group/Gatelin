@@ -57,14 +57,14 @@ import csmerSvc from "../../services/consumer.js";
  * @return {Promise<void>}
  */
 export default async function checkConsumer(_req, res, next) {
-	const at = res.locals.tokens?.access;
-	if (!at) return next({ statusCode: 401, message: "Unauthorized" });
-	log.debug(() => `checkConsumer(accessToken=<present>)`);
-	const c = csmerSvc.getOne(at);
+  const at = res.locals.tokens?.access;
+  if (!at) return next({ statusCode: 401, message: "Unauthorized" });
+  log.debug(() => `checkConsumer(accessToken=<present>)`);
+  const c = csmerSvc.getOne(at);
 
-	if (!c) return next({ statusCode: 401, message: "Unauthorized" });
+  if (!c) return next({ statusCode: 401, message: "Unauthorized" });
 
-	log.debug(() => `checkConsumer(Consumer: ${c.id})`);
-	res.locals.consumer = c;
-	next();
+  log.debug(() => `checkConsumer(Consumer: ${c.id})`);
+  res.locals.consumer = c;
+  next();
 }

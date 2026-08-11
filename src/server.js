@@ -14,18 +14,18 @@ import scopeSvc from "./services/scope.js";
 
 // Init cached reference data
 Promise.all([
-	routeSvc.init(),
-	consumerSvc.init(),
-	corsSvc.init(),
-	roleSvc.init(),
-	scopeSvc.init(),
+  routeSvc.init(),
+  consumerSvc.init(),
+  corsSvc.init(),
+  roleSvc.init(),
+  scopeSvc.init(),
 ])
-	.then(() => {
-		app.use(corsMiddleware);
-		// Start cron jobs
-		startDeleteArchivedEntitiesJob();
-		startDeleteOldHistoryJob();
-		startAdminServer();
-		listen(app);
-	})
-	.catch(failFast);
+  .then(() => {
+    app.use(corsMiddleware);
+    // Start cron jobs
+    startDeleteArchivedEntitiesJob();
+    startDeleteOldHistoryJob();
+    startAdminServer();
+    listen(app);
+  })
+  .catch(failFast);

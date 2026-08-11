@@ -17,7 +17,7 @@ import sEnt from "../../entities/session.js";
  * router.post('/sessions', addSession, sendSession);
  */
 export function sendSession(_req, res, _next) {
-	const permissions = res.locals.permissions ?? [];
-	const data = deleteProps(res.locals.rows, sEnt.privateProps);
-	res.status(200).json({ ...data[0], permissions });
+  const permissions = res.locals.permissions ?? [];
+  const data = deleteProps(res.locals.rows, sEnt.privateProps);
+  res.status(200).json({ ...data[0], permissions });
 }

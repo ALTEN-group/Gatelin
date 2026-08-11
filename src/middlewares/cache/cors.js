@@ -10,12 +10,12 @@ import corsSvc from "../../services/cors.js";
  * @param {import('express').NextFunction} next - Express next function
  */
 export function addToCache(req, _res, next) {
-	if (req.body.rows && Array.isArray(req.body.rows)) {
-		req.body.rows.forEach((corsOrigin) => {
-			corsSvc.addToCache(corsOrigin);
-		});
-	}
-	next();
+  if (req.body.rows && Array.isArray(req.body.rows)) {
+    req.body.rows.forEach((corsOrigin) => {
+      corsSvc.addToCache(corsOrigin);
+    });
+  }
+  next();
 }
 
 /**
@@ -27,12 +27,12 @@ export function addToCache(req, _res, next) {
  * @param {import('express').NextFunction} next - Express next function
  */
 export function updateCache(req, _res, next) {
-	if (req.body.rows && Array.isArray(req.body.rows)) {
-		req.body.rows.forEach((corsOrigin) => {
-			corsSvc.updateCache(corsOrigin.id, corsOrigin.name);
-		});
-	}
-	next();
+  if (req.body.rows && Array.isArray(req.body.rows)) {
+    req.body.rows.forEach((corsOrigin) => {
+      corsSvc.updateCache(corsOrigin.id, corsOrigin.name);
+    });
+  }
+  next();
 }
 
 /**
@@ -44,10 +44,10 @@ export function updateCache(req, _res, next) {
  * @param {import('express').NextFunction} next - Express next function
  */
 export function deleteFromCache(req, _res, next) {
-	if (req.body.rows && Array.isArray(req.body.rows)) {
-		req.body.rows.forEach((corsOrigin) => {
-			corsSvc.deleteFromCache(corsOrigin.id);
-		});
-	}
-	next();
+  if (req.body.rows && Array.isArray(req.body.rows)) {
+    req.body.rows.forEach((corsOrigin) => {
+      corsSvc.deleteFromCache(corsOrigin.id);
+    });
+  }
+  next();
 }

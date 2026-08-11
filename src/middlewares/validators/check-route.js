@@ -34,18 +34,18 @@ import routeSvc from "../../services/route.js";
  * // res.locals.route.serviceName - name of the service handling the route
  */
 export default function checkRoute(req, res, next) {
-	const u = req.originalUrl;
-	const m = req.method;
-	const safeU = u.replace(/[\r\n\t]/g, "");
-	log.debug(() => `checkRoute(url: ${safeU}, method: ${m})`);
+  const u = req.originalUrl;
+  const m = req.method;
+  const safeU = u.replace(/[\r\n\t]/g, "");
+  log.debug(() => `checkRoute(url: ${safeU}, method: ${m})`);
 
-	const r = routeSvc.getOne(u, m);
-	if (!r) return next({ statusCode: 404, message: "Route not found" });
+  const r = routeSvc.getOne(u, m);
+  if (!r) return next({ statusCode: 404, message: "Route not found" });
 
-	log.debug(() => `checkRoute(Route: ${JSON.stringify(r)})`);
+  log.debug(() => `checkRoute(Route: ${JSON.stringify(r)})`);
 
-	// Add custom properties to locals object for downstream middleware
-	res.locals.route = r;
+  // Add custom properties to locals object for downstream middleware
+  res.locals.route = r;
 
-	next();
+  next();
 }

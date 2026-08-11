@@ -30,19 +30,19 @@ import conditionOpSvc from "../../services/condition-op.js";
  * @param {import('express').NextFunction} next
  */
 export default function applyAclConditions(req, _res, next) {
-	if (req.aclConditions?.length) {
-		req.body ??= {};
-		req.body.filters ??= {};
-		for (const { field, op, value } of req.aclConditions) {
-			if (!conditionOpSvc.isAllowed(op)) {
-				log.warn(
-					() =>
-						`applyAclConditions: dropping ACL condition with unsupported op "${op}" on field "${field}"`,
-				);
-				continue;
-			}
-			req.body.filters[field] = [{ value, matchMode: op }];
-		}
-	}
-	next();
+  if (req.aclConditions?.length) {
+    req.body ??= {};
+    req.body.filters ??= {};
+    for (const { field, op, value } of req.aclConditions) {
+      if (!conditionOpSvc.isAllowed(op)) {
+        log.warn(
+          () =>
+            `applyAclConditions: dropping ACL condition with unsupported op "${op}" on field "${field}"`,
+        );
+        continue;
+      }
+      req.body.filters[field] = [{ value, matchMode: op }];
+    }
+  }
+  next();
 }

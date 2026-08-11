@@ -12,8 +12,8 @@ import { checkRoutePattern } from "../middlewares/validators/check-route-pattern
 router.post("/search", rEnt.get);
 // Get version history of a specific route, including method/operation assignment changes
 router.get(
-	"/:id/history",
-	history.get(["route", "route_operation", "route_method"]),
+  "/:id/history",
+  history.get(["route", "route_operation", "route_method"]),
 );
 // add a route.
 router.post("/", checkRoutePattern, rEnt.addArraySubstack);

@@ -42,16 +42,16 @@ const PROXY_WINDOW_MS = 60 * 1000; // 1 minute
 
 // Rate limiters
 const sessionLimiter = rateLimit({
-	windowMs: SESSION_WINDOW_MS,
-	max: 20, // max 20 login/refresh attempts per IP per window
-	standardHeaders: true,
-	legacyHeaders: false,
+  windowMs: SESSION_WINDOW_MS,
+  max: 20, // max 20 login/refresh attempts per IP per window
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 const proxyLimiter = rateLimit({
-	windowMs: PROXY_WINDOW_MS,
-	max: 200, // max 200 proxied requests per IP per minute
-	standardHeaders: true,
-	legacyHeaders: false,
+  windowMs: PROXY_WINDOW_MS,
+  max: 200, // max 200 proxied requests per IP per minute
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 app.use(express.json({ limit: "100kb" }));

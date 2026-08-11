@@ -13,5 +13,5 @@
  * router.delete('/resource', deleteResource, send204);
  */
 export function send204(_req, res, _next) {
-	res.status(204).send();
+  res.status(204).send();
 }

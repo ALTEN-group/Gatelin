@@ -18,16 +18,16 @@ let scopes = new Map();
  * @return {Promise<void>}
  */
 function init() {
-	const filters = {
-		archived: {
-			value: false,
-			matchMode: "IS",
-		},
-	};
-	const { query, args } = sEnt.query.select(0, 0, "id", "ASC", filters);
-	return execute(query, args, null).then((r) => {
-		scopes = new Map(r.rows.map((s) => [s.id, s.name]));
-	});
+  const filters = {
+    archived: {
+      value: false,
+      matchMode: "IS",
+    },
+  };
+  const { query, args } = sEnt.query.select(0, 0, "id", "ASC", filters);
+  return execute(query, args, null).then((r) => {
+    scopes = new Map(r.rows.map((s) => [s.id, s.name]));
+  });
 }
 
 /**
@@ -38,15 +38,15 @@ function init() {
  * @return {string[]} Array of scope name strings
  */
 function getValues(ids) {
-	return ids.reduce((acc, id) => {
-		const name = scopes.get(id);
-		if (name) acc.push(name);
-		return acc;
-	}, []);
+  return ids.reduce((acc, id) => {
+    const name = scopes.get(id);
+    if (name) acc.push(name);
+    return acc;
+  }, []);
 }
 
 export default {
-	init,
-	getValues,
-	deleteArchived: makeDeleteArchived(sEnt),
+  init,
+  getValues,
+  deleteArchived: makeDeleteArchived(sEnt),
 };

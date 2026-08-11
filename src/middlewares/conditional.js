@@ -18,11 +18,11 @@ import { isArray } from "@dwtechs/checkard";
  * when((req, res) => req.user?.isAdmin, [logAdmin, notifySecurity, auditAction])
  */
 export const when = (condition, middleware) => (req, res, next) => {
-	if (condition(req, res)) {
-		if (isArray(middleware)) return runArray(middleware)(req, res, next);
-		return middleware(req, res, next);
-	}
-	next();
+  if (condition(req, res)) {
+    if (isArray(middleware)) return runArray(middleware)(req, res, next);
+    return middleware(req, res, next);
+  }
+  next();
 };
 
 /**
@@ -35,20 +35,20 @@ export const when = (condition, middleware) => (req, res, next) => {
  * router.post('/login', [validate, runArray(activationFlow), generateTokens]);
  */
 const runArray = (middlewares) => (req, res, next) => {
-	let i = 0;
+  let i = 0;
 
-	function runNext(err) {
-		// If there's an error, pass it to the main next function
-		if (err) return next(err);
+  function runNext(err) {
+    // If there's an error, pass it to the main next function
+    if (err) return next(err);
 
-		// If we've run all middlewares, call the main next function
-		if (i >= middlewares.length) return next();
+    // If we've run all middlewares, call the main next function
+    if (i >= middlewares.length) return next();
 
-		// Run the current middleware and increment index
-		const currentMiddleware = middlewares[i++];
-		currentMiddleware(req, res, runNext);
-	}
+    // Run the current middleware and increment index
+    const currentMiddleware = middlewares[i++];
+    currentMiddleware(req, res, runNext);
+  }
 
-	// Start running the first middleware
-	runNext();
+  // Start running the first middleware
+  runNext();
 };

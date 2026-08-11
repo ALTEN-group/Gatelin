@@ -16,13 +16,13 @@
  * @param {import('express').NextFunction} next
  */
 export function injectUserIdAndResourceId(req, res, next) {
-	const userId = res.locals.consumer.userId;
-	const resourceId = res.locals.rows[0].id;
+  const userId = res.locals.consumer.userId;
+  const resourceId = res.locals.rows[0].id;
 
-	req.body.rows = req.body.rows.map((r) => ({
-		...r,
-		userId,
-		resourceId,
-	}));
-	next();
+  req.body.rows = req.body.rows.map((r) => ({
+    ...r,
+    userId,
+    resourceId,
+  }));
+  next();
 }

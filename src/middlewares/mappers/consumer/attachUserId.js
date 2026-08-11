@@ -6,7 +6,7 @@
  * @param {import('express').NextFunction} next
  */
 export function attachUserId(req, res, next) {
-	const userId = res.locals.user.id; // user id from previous middleware
-	req.body.userId = userId; // pwd is already flat on req.body from the client payload
-	next();
+  const userId = res.locals.user.id; // user id from previous middleware
+  req.body.userId = userId; // pwd is already flat on req.body from the client payload
+  next();
 }
