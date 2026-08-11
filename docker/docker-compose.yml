@@ -202,6 +202,7 @@ services:
     hostname: ${ADMIN_HOST}
     environment:
       <<: *defaultEnvs
+      ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
     networks:
       - internal
     volumes:
@@ -210,7 +211,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.admin.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin.rule=PathPrefix(`${ADMIN_BASE_PATH}`)"
       - "traefik.http.routers.admin.entrypoints=web"
       - "traefik.http.routers.admin.service=admin"
       - "traefik.http.services.admin.loadbalancer.server.port=${ADMIN_PORT}"

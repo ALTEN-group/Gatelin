@@ -1,6 +1,8 @@
 ARG NODE_VERSION
 FROM node:${NODE_VERSION}
 
+LABEL org.opencontainers.image.description="Gatelin admin UI (Angular dev server, served under ADMIN_BASE_PATH)"
+
 # change apk repos
 RUN rm /etc/apk/repositories
 RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true apk update \
@@ -26,5 +28,8 @@ RUN npm i --loglevel=error --ignore-scripts --no-fund
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-CMD [ "npm", "start" ]
+# Owned by root so the app user can read/execute but not modify it at runtime.
+COPY --chown=root:root --chmod=755 scripts/entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 # CMD ["sleep","3600"]
