@@ -35,6 +35,11 @@ export function checkRoutePattern(req, _res, next) {
 
     // Compile first so invalid syntax gets a clear error (safe-regex2 also
     // returns false for unparsable patterns, which would mislabel them as ReDoS).
+    // The compiled RegExp is intentionally discarded — this call exists purely
+    // to surface syntax errors before safe-regex2 runs. The pattern is then
+    // checked for ReDoS below, and the endpoint is admin-only, so this is not
+    // a regex-injection sink.
+    // codeql[js/regex-injection]
     try {
       new RegExp(pattern);
     } catch {
