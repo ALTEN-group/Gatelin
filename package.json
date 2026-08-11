@@ -12,8 +12,7 @@
     "lint": "biome check src/",
     "lint:fix": "biome check --write src/",
     "format": "biome format src/",
-    "format:fix": "biome format --write src/",
-		"audit:report": "node scripts/audit.js"
+    "format:fix": "biome format --write src/"
 	},
 	"author": "Ludovic Cluber",
 	"license": "MIT",
@@ -36,7 +35,6 @@
 		"@babel/core": "7.29.7",
 		"@babel/preset-env": "7.29.7",
 		"@biomejs/biome": "2.5.8",
-		"@octokit/rest": "22.0.1",
 		"@types/jest": "30.0.0",
 		"@types/node": "26.2.0",
 		"babel-jest": "30.4.1",

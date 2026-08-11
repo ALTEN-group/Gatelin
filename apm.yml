@@ -6,6 +6,7 @@ targets:
 dependencies:
   apm:
   - ALTEN-group/coding-pal/agents/unit-test.agent.md
+  - ALTEN-group/coding-pal/agents/node-express-back-end-code-audit.agent.md
   - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
   - ALTEN-group/coding-pal/instructions/node-express.instructions.md
   - ALTEN-group/coding-pal/instructions/postgres-liquibase.instructions.md
