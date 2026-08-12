@@ -1,13 +1,13 @@
 lockfile_version: '1'
-generated_at: '2026-08-12T12:14:42.305174+00:00'
+generated_at: '2026-08-12T13:03:34.665419+00:00'
 apm_version: 0.28.0
 dependencies:
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
-  version: unknown
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
+  version: 0.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/audit-reporting
@@ -16,22 +16,21 @@ dependencies:
   - .agents/skills/audit-reporting/scripts/audit-report.mjs
   - .agents/skills/audit-reporting/scripts/audit-report.test.mjs
   deployed_file_hashes:
-    .agents/skills/audit-reporting/SKILL.md: sha256:3c5d64f9a8a7692db08472ef71f57cd867d11cb59af4e11837eb983cfb51c0c4
+    .agents/skills/audit-reporting/SKILL.md: sha256:0f10c9f98af81d7db1dfbbae72d353e2b45b7f3f87e3dc5c4f8f6d01a0d4bf07
     .agents/skills/audit-reporting/references/report-contract.md: sha256:acaca07764179dbfa0ddb91a34fa2babc5fca93d5d19df171f8f42675a39df63
-    .agents/skills/audit-reporting/scripts/audit-report.mjs: sha256:4dac243b188275f291bfe42f495c8ec2b75ed964ad4642fdf7bd41da8fdb4306
-    .agents/skills/audit-reporting/scripts/audit-report.test.mjs: sha256:264979d6b49d724eb92b1459cf477f36acb27c2103484733c35dc5419e857a20
-  content_hash: sha256:e0998c35688f3d8cc3241ba6d506894f18a815d5cf4453e35768a59d7021bd7e
+    .agents/skills/audit-reporting/scripts/audit-report.mjs: sha256:bed7a64f0c3e9b2bbed14dba20ff19533ccfeb030a815d2cd38961f3daa830e9
+    .agents/skills/audit-reporting/scripts/audit-report.test.mjs: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+  content_hash: sha256:46a8e3cdc166d7b8bcdb48e3f61a89a5808bafbd9941f4a0819c20c1e4a0f520
   skill_subset:
   - audit-reporting
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-express-back-end-code-audit
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: agents/node-express-back-end-code-audit.agent.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/agents/node-express-back-end-code-audit.agent.md
   deployed_file_hashes:
@@ -41,11 +40,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-unit-test
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: agents/unit-test.agent.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/agents/unit-test.agent.md
   deployed_file_hashes:
@@ -55,11 +53,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-admin
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: instructions/angular-admin.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/angular-admin.instructions.md
   deployed_file_hashes:
@@ -69,11 +66,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-docker
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: instructions/docker.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/docker.instructions.md
   deployed_file_hashes:
@@ -83,11 +79,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-express
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/node-express.instructions.md
   deployed_file_hashes:
@@ -97,11 +92,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-postgres-liquibase
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: instructions/postgres-liquibase.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/postgres-liquibase.instructions.md
   deployed_file_hashes:
@@ -111,11 +105,10 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: b2ad8a57af783265bcf5f296fa8d5dec58c4b82b
+  resolved_commit: 829be847f5b8b75bf2d2e0e1702a5bf5bb72f64f
   version: 1.0.0
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
@@ -139,7 +132,7 @@ deployments:
   owners:
   - alten-group/coding-pal
   active_owner: alten-group/coding-pal
-  content_hash: sha256:3c5d64f9a8a7692db08472ef71f57cd867d11cb59af4e11837eb983cfb51c0c4
+  content_hash: sha256:0f10c9f98af81d7db1dfbbae72d353e2b45b7f3f87e3dc5c4f8f6d01a0d4bf07
 - kind: project-relative
   target: copilot
   value: .agents/skills/audit-reporting/references/report-contract.md
@@ -157,7 +150,7 @@ deployments:
   owners:
   - alten-group/coding-pal
   active_owner: alten-group/coding-pal
-  content_hash: sha256:4dac243b188275f291bfe42f495c8ec2b75ed964ad4642fdf7bd41da8fdb4306
+  content_hash: sha256:bed7a64f0c3e9b2bbed14dba20ff19533ccfeb030a815d2cd38961f3daa830e9
 - kind: project-relative
   target: copilot
   value: .agents/skills/audit-reporting/scripts/audit-report.test.mjs
@@ -166,7 +159,7 @@ deployments:
   owners:
   - alten-group/coding-pal
   active_owner: alten-group/coding-pal
-  content_hash: sha256:264979d6b49d724eb92b1459cf477f36acb27c2103484733c35dc5419e857a20
+  content_hash: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
 - kind: project-relative
   target: copilot
   value: .github/agents/node-express-back-end-code-audit.agent.md

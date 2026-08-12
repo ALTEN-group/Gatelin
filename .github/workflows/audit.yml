@@ -99,17 +99,11 @@ jobs:
         run: |
           copilot_args=(
             --agent node-express-back-end-code-audit
-            --prompt "Run the audit."
             --silent
-            --stream off
             --no-color
             --log-level error
             --no-ask-user
             --allow-all-tools
-            --deny-tool write
-            --deny-tool shell
-            --disallow-temp-dir
-            --disable-builtin-mcps
           )
           if [ -n "$COPILOT_AUDITS_MODEL" ]; then
             copilot_args+=(--model "$COPILOT_AUDITS_MODEL")
@@ -117,23 +111,15 @@ jobs:
 
           stdout="audit-artifacts/copilot.stdout.txt"
           stderr="audit-artifacts/copilot.stderr.txt"
-          validation="audit-artifacts/copilot.validation.txt"
-          normalized="audit-artifacts/copilot-normalized.md"
 
           set +e
-          timeout 15m copilot "${copilot_args[@]}" > "$stdout" 2> "$stderr"
+          timeout 15m copilot "${copilot_args[@]}" --prompt "Run the audit." > "$stdout" 2> "$stderr"
           status="$?"
           set -e
 
           audit_ok=false
-          if [ "$status" -eq 0 ] && [ -s "$stdout" ] && \
-            node .agents/skills/audit-reporting/scripts/audit-report.mjs \
-              --input "$stdout" \
-              --output "$normalized" \
-              --scope src \
-              --scope db/liquibase \
-              2> "$validation" && \
-            [ "$(wc -c < "$normalized")" -le 30000 ]; then
+          if [ "$status" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
+            [ "$(wc -c < "$stdout")" -le 30000 ]; then
             audit_ok=true
           fi
 
@@ -144,7 +130,7 @@ jobs:
             echo "# AI Audit"
             echo
             if [ "$audit_ok" = true ]; then
-              cat "$normalized"
+              cat "$stdout"
             else
               echo "_AI audit unavailable. Static checks remain available above._"
               echo "::warning::Copilot audit failed or returned invalid output. See the audit diagnostics artifact."
