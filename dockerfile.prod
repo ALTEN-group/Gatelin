@@ -1,4 +1,4 @@
-ARG NODE_VERSION=24.11.0-alpine3.22
+ARG NODE_VERSION=24.15.0-alpine3.22
 
 # Stage 1: build the Angular admin UI (output is arch-independent JS/CSS/HTML)
 FROM --platform=$BUILDPLATFORM node:${NODE_VERSION} AS admin-build

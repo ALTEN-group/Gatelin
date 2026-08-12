@@ -79,9 +79,10 @@
       </p-inputgroup>
       <div class="error-container">
         @if (
-          password?.dirty &&
-          password?.touched &&
-          password?.hasError('required')
+          password &&
+          password.dirty &&
+          password.touched &&
+          password.hasError('required')
           ) {
           <small
             class="p-error"

@@ -6,19 +6,19 @@ import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import {
-  toNamesSelectOptions,
-  toSelectItems,
-} from "@core/utils/primeng/to-select-items";
+    toNamesSelectOptions,
+    toSelectItems,
+} from "@core/utils/optimus/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
-  CONTROL_TYPES,
-  hexColor,
-  ID_CONFIG,
-  INPUT_TYPES,
-  maxlength,
-  minlength,
-  required,
-  StrictCrudItemOptions,
+    CONTROL_TYPES,
+    hexColor,
+    ID_CONFIG,
+    INPUT_TYPES,
+    maxlength,
+    minlength,
+    required,
+    StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
 import { GatewayApplication } from "app/authorizations/data-access/applications/application.model";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";

@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
@@ -21,8 +20,9 @@
     "skipLibCheck": true,
     "types": ["node"],
     "paths": {
-      "@messages/*": ["app/messages/*"],
-      "@core/*": ["app/core/*"],
+      "app/*": ["./src/app/*"],
+      "@messages/*": ["./src/app/messages/*"],
+      "@core/*": ["./src/app/core/*"],
     },
   },
   "angularCompilerOptions": {

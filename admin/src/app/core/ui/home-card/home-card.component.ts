@@ -1,9 +1,9 @@
 import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ButtonModule } from "primeng/button";
-import { CardModule } from "primeng/card";
-import { Tooltip } from "primeng/tooltip";
+import { ButtonModule } from "@openng/optimus-ui/button";
+import { CardModule } from "@openng/optimus-ui/card";
+import { Tooltip } from "@openng/optimus-ui/tooltip";
 
 @Component({
   selector: "app-home-card",
