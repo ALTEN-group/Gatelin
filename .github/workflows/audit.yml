@@ -7,8 +7,9 @@ on:
     - cron: '17 6 * * 1'
 
 permissions:
-  contents: read
+  contents: write
   issues: write
+  pull-requests: write
   copilot-requests: write
 
 concurrency:
@@ -19,6 +20,8 @@ jobs:
   audit:
     runs-on: ubuntu-slim
     timeout-minutes: 45
+    outputs:
+      issue_number: ${{ steps.create_issue.outputs.issue_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -149,6 +152,7 @@ jobs:
           retention-days: 30
 
       - name: Create or update audit issue
+        id: create_issue
         uses: actions/github-script@v7
         with:
           script: |
@@ -185,6 +189,7 @@ jobs:
             });
             const existing = issues.find((issue) => !issue.pull_request && issue.title === title);
 
+            let issueNumber;
             if (existing) {
               const issue = await github.rest.issues.update({
                 owner,
@@ -194,6 +199,7 @@ jobs:
                 body,
                 labels: ['audit'],
               });
+              issueNumber = issue.data.number;
               core.info(`Audit issue updated: ${issue.data.html_url}`);
             } else {
               const issue = await github.rest.issues.create({
@@ -203,5 +209,17 @@ jobs:
                 body,
                 labels: ['audit'],
               });
+              issueNumber = issue.data.number;
               core.info(`Audit issue created: ${issue.data.html_url}`);
             }
+            core.setOutput('issue_number', issueNumber);
+
+  fix:
+    needs: audit
+    if: ${{ needs.audit.outputs.issue_number != '' }}
+    uses: ./.github/workflows/audit-fix.yml
+    secrets: inherit
+    with:
+      issue_number: ${{ needs.audit.outputs.issue_number }}
+      max_findings: 5
+      severities: 'Critical,Important'
