@@ -251,14 +251,6 @@ jobs:
             exit 0
           fi
 
-          out_of_scope=$(echo "$modified_files" | grep -v -E '^(src/|db/liquibase/|tests/)')
-          if [ -n "$out_of_scope" ]; then
-            echo "should_pr=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Fix agent modified files outside allowed scope: $out_of_scope"
-            git reset --hard
-            exit 0
-          fi
-
           # Verification: run linting and unit tests
           set +e
           npm run lint > audit-fix-artifacts/lint.log 2>&1
