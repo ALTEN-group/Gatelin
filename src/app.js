@@ -6,11 +6,13 @@ import { endTimer, startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import cookieParser from "cookie-parser";
 import express from "express";
 import rateLimit from "express-rate-limit";
+import { corsMiddleware } from "./conf/cors.js";
 import { security } from "./conf/sec.js";
 
 const app = express();
 app.set("trust proxy", 1); // Trust first proxy (Traefik)
 app.use(security);
+app.use(corsMiddleware);
 app.disable("x-powered-by");
 
 // middlewares

@@ -2,7 +2,6 @@
 import { failFast, listen } from "@dwtechs/servpico-express";
 import { startAdminServer } from "./admin-server.js";
 import app from "./app.js";
-import { corsMiddleware } from "./conf/cors.js";
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
 import { startDeleteOldHistoryJob } from "./jobs/delete-old-history.js";
@@ -21,7 +20,6 @@ Promise.all([
   scopeSvc.init(),
 ])
   .then(() => {
-    app.use(corsMiddleware);
     // Start cron jobs
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();
