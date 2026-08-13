@@ -2,7 +2,7 @@
 
 Gatelin is distributed as Docker images on Docker Hub:
 
-- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under `/admin`
+- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/gatelin`)
 - **`dwtechs/gatelin-migration`** — the Liquibase migration container
 
 See the [Integration](./integration) page for a full `docker-compose.yml` template.
@@ -66,11 +66,12 @@ These variables must be set on the `gatelin` container:
 
 ### Admin
 
-The admin is an Angular app built into the `gatelin` image and served under `/admin` by the gateway itself. Its API URLs (`apiGateway`, `apiUsers`) are baked into the build via the `environment.ts` / `environment.prod.ts` files and are not configurable at runtime through environment variables.
+The admin is an Angular app built into the `gatelin` image and served by the gateway itself under `ADMIN_BASE_PATH`. Its API URLs (`apiGateway`, `apiUsers`) are baked into the build via the `environment.ts` / `environment.prod.ts` files and are not configurable at runtime through environment variables.
 
 | Variable | Required | Description |
 |---|---|---|
 | `ADMIN_PORT` | ⬜ | Port the admin UI is served on. Unset to disable the admin UI entirely. |
+| `ADMIN_BASE_PATH` | ⬜ | Path prefix the admin UI is served under, e.g. `/gatelin` (default). Only needs to match your reverse proxy's routing rule — no rebuild required. |
 
 
 ## docker-compose.yml template
@@ -172,6 +173,8 @@ services:
       REFRESH_TOKEN_DURATION: 86400
       # Unset to disable the admin UI; set to enable it on a dedicated internal port
       ADMIN_PORT: 4200
+      # Path prefix the admin UI is served under (must match the Traefik rule below)
+      ADMIN_BASE_PATH: /gatelin
     networks:
       - internal
     labels:
@@ -184,7 +187,7 @@ services:
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
       - "traefik.http.services.gateway.loadBalancer.server.port=3000"
-      - "traefik.http.routers.admin-ui.rule=PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin-ui.rule=PathPrefix(`/gatelin`)"
       - "traefik.http.routers.admin-ui.entrypoints=web"
       - "traefik.http.routers.admin-ui.service=admin-ui"
       - "traefik.http.services.admin-ui.loadBalancer.server.port=4200"
