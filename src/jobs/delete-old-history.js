@@ -35,7 +35,7 @@ async function deleteOldHistory() {
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - HISTORY_RETENTION_MONTHS);
 
-  const query = "DELETE FROM log.history WHERE created < $1";
+  const query = "DELETE FROM log.history WHERE tstamp < $1";
   const args = [cutoff];
   return execute(query, args, null).then((r) => r.rowCount || 0);
 }

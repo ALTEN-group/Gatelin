@@ -50,7 +50,7 @@ describe("startDeleteOldHistoryJob", () => {
     await callback();
 
     expect(execute).toHaveBeenCalledWith(
-      "DELETE FROM log.history WHERE created < $1",
+      "DELETE FROM log.history WHERE tstamp < $1",
       [expect.any(Date)],
       null,
     );
