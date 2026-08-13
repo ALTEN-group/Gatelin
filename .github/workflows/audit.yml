@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # Every Monday at 06:17 UTC (offset from :00 to avoid GitHub's peak scheduling congestion)
-    - cron: '17 6 * * 1'
+    - cron: '18 6 * * 5'
 
 permissions:
   contents: write
