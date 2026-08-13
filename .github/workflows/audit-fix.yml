@@ -270,7 +270,7 @@ jobs:
 
       - name: Commit and push branch
         if: ${{ steps.verify.outputs.should_pr == 'true' }}
-        env:
+        env:          
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           branch="audit-fix/issue-${{ inputs.issue_number }}/${{ matrix.finding.key }}"
@@ -311,6 +311,68 @@ jobs:
               });
             }
 
+            // Check if sub-issue already exists or create a new one
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              labels: 'audit-fix',
+              per_page: 100,
+            });
+            let subIssue = existingIssues.find((i) => !i.pull_request && i.title.includes(key));
+            let subIssueNumber;
+
+            if (!subIssue) {
+              const subIssueTitle = `[${key}] ${summary}`;
+              const subIssueBody = [
+                `## Audit Finding: ${key}`,
+                ``,
+                `Part of #${issue_number}`,
+                ``,
+                `### Description`,
+                findingMarkdown,
+              ].join('\n');
+
+              subIssue = await github.rest.issues.create({
+                owner,
+                repo,
+                title: subIssueTitle,
+                body: subIssueBody,
+                labels: ['audit-fix'],
+              });
+              subIssueNumber = subIssue.data.number;
+
+              // Attempt GraphQL sub-issue linking
+              try {
+                const parentRes = await github.graphql(`
+                  query($owner: String!, $repo: String!, $number: Int!) {
+                    repository(owner: $owner, name: $repo) {
+                      issue(number: $number) {
+                        id
+                      }
+                    }
+                  }
+                `, { owner, repo, number: issue_number });
+
+                const parentIssueId = parentRes.repository.issue.id;
+                const subIssueNodeId = subIssue.data.node_id;
+
+                await github.graphql(`
+                  mutation($issueId: ID!, $subIssueId: ID!) {
+                    addSubIssue(input: { issueId: $issueId, subIssueId: $subIssueId }) {
+                      subIssue {
+                        id
+                      }
+                    }
+                  }
+                `, { issueId: parentIssueId, subIssueId: subIssueNodeId });
+              } catch (graphqlErr) {
+                core.info(`GraphQL sub-issue link note: ${graphqlErr.message}`);
+              }
+            } else {
+              subIssueNumber = subIssue.number;
+            }
+
             const body = [
               `## Automated Fix for Audit Finding`,
               ``,
@@ -321,6 +383,7 @@ jobs:
               details,
               ``,
               `---`,
+              `Closes #${subIssueNumber}`,
               `Refs #${issue_number}`,
               `*This PR was generated automatically by the Copilot Audit Fix agent. Please review carefully before merging.*`,
             ].join('\n');
@@ -341,7 +404,7 @@ jobs:
               labels: ['audit-fix'],
             });
 
-            core.info(`Created pull request: ${pr.data.html_url}`);
+            core.info(`Created pull request: ${pr.data.html_url} (Closes #${subIssueNumber})`);
 
       - name: Upload fix diagnostics
         if: always()
