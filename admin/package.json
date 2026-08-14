@@ -8,7 +8,10 @@
     "build:prod": "ng build --configuration production",
     "test": "ng test",
     "test:ci": "ng test --no-watch --coverage",
-    "test:coverage": "ng test --no-watch --coverage"
+    "test:coverage": "ng test --no-watch --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:install": "playwright install chromium"
   },
   "private": true,
   "author": "Ludovic Cluber",
@@ -49,6 +52,7 @@
     "@angular/compiler": "22.1.1",
     "@angular/compiler-cli": "22.1.1",
     "@angular/language-service": "22.1.1",
+    "@playwright/test": "^1.62.1",
     "@types/chart.js": "2.9.37",
     "@types/file-saver": "2.0.7",
     "@types/node": "20.19.17",

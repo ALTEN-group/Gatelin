@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     DestroyRef,
     inject,
@@ -55,6 +56,7 @@ export class LoginComponent implements AfterViewInit {
   private readonly snackbarService = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly routingListener = inject(RoutingListener);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public readonly userServerUrl = inject(APP_CONFIG).apiGateway;
 
@@ -110,6 +112,7 @@ export class LoginComponent implements AfterViewInit {
           }
           this.loadingService.stop();
           this.isLoading = false;
+          this.cdr.markForCheck();
         });
     }
   }

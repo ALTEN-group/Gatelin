@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@dwtechs/checkard": "3.6.1",
-    "@dwtechs/errandler-express": "0.1.0",
+    "@dwtechs/errandler-express": "0.1.1",
     "@dwtechs/hashitaka": "0.5.0",
     "@dwtechs/healix-express": "0.1.0",
     "@dwtechs/servpico-express": "0.3.1",
     "@dwtechs/passken": "0.6.2",
-    "@dwtechs/passken-express": "0.5.0",
+    "@dwtechs/passken-express": "0.7.0",
     "@dwtechs/winstan": "0.7.1",
     "express": "5.1.0",
     "helmet": "8.1.0"

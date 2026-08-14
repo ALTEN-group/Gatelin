@@ -77,6 +77,24 @@ npm test                  # run all tests
 npm run test:coverage     # with coverage report
 ```
 
+### Admin unit tests
+
+```sh
+cd admin
+npm test                  # Vitest watch mode
+npm run test:coverage     # CI / coverage
+```
+
+### Admin end-to-end tests (Playwright)
+
+Requires the docker-compose stack to be running (`./scripts/start-dev.sh`).
+
+```sh
+cd admin
+npm run e2e:install       # once per machine
+npm run e2e
+```
+
 ## API Fuzzing (RESTler)
 
 [RESTler](https://github.com/microsoft/restler-fuzzer) compiles the Gatelin OpenAPI spec into a test grammar, logs in as one of the mock personas (see `swagger/src/gatelin.openapi.json` examples), and exercises every endpoint through Traefik.
