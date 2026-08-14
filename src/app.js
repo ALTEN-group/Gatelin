@@ -39,11 +39,12 @@ const s = "/gateway/";
 
 const SESSION_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const PROXY_WINDOW_MS = 60 * 1000; // 1 minute
+const SESSION_RATE_LIMIT_MAX = Number(process.env.SESSION_RATE_LIMIT_MAX) || 20;
 
 // Rate limiters
 const sessionLimiter = rateLimit({
   windowMs: SESSION_WINDOW_MS,
-  max: 20, // max 20 login/refresh attempts per IP per window
+  max: SESSION_RATE_LIMIT_MAX, // login/refresh attempts per IP per window
   standardHeaders: true,
   legacyHeaders: false,
 });

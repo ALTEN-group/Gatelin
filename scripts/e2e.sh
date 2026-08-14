@@ -18,16 +18,23 @@ if [[ ! -f "$ENV_FILE" ]]; then
   exit 1
 fi
 
+# `--no-deps`: rely on `start-dev.sh` having brought up admin/gatelin/traefik.
+# Without it, `docker compose run` reconciles the dep graph on every invocation
+# and can recreate already-running services when the profile scope changes,
+# which on CI (cold node_modules volume) leads to admin crash-looping and
+# Traefik returning 404 during the whole poll window.
+COMPOSE_RUN=(docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile e2e run --rm --no-deps admin-e2e)
+
 # `--` marks an arbitrary command to run inside the container (bypasses the
 # implicit `playwright test` wrapper). Anything else is forwarded as flags to
 # `playwright test`.
 if [[ "${1:-}" == "--" ]]; then
   shift
-  exec docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile e2e run --rm admin-e2e "$@"
+  exec "${COMPOSE_RUN[@]}" "$@"
 fi
 
 if [[ $# -gt 0 ]]; then
-  exec docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile e2e run --rm admin-e2e playwright test "$@"
+  exec "${COMPOSE_RUN[@]}" playwright test "$@"
 fi
 
-exec docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile e2e run --rm admin-e2e
+exec "${COMPOSE_RUN[@]}"
