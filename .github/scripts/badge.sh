@@ -1,29 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SUMMARY=tests/coverage/coverage-summary.json
+# Defaults match the backend Jest coverage layout.
+SUMMARY="${SUMMARY:-tests/coverage/coverage-summary.json}"
+BADGE_NAME="${BADGE_NAME:-coverage.svg}"
+BADGE_LABEL="${BADGE_LABEL:-coverage}"
+
 PCT=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.functions.pct))")
 
 if awk "BEGIN { exit !($PCT >= 50) }"; then COLOR="4c1"
 else COLOR="e05d44"
 fi
 
+# Keep the badge width readable for short labels like "coverage" / "admin".
+LABEL_WIDTH=63
+TOTAL_WIDTH=130
+VALUE_X=96
+LABEL_X=32
+
 SVG_FILE=$(mktemp)
 cat > "$SVG_FILE" <<SVGEOF
-<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20">
+<svg xmlns="http://www.w3.org/2000/svg" width="${TOTAL_WIDTH}" height="20">
   <linearGradient id="s" x2="0" y2="100%">
     <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
-  <rect rx="3" width="130" height="20" fill="#555"/>
-  <rect rx="3" x="63" width="67" height="20" fill="#${COLOR}"/>
-  <rect x="63" width="4" height="20" fill="#${COLOR}"/>
-  <rect rx="3" width="130" height="20" fill="url(#s)"/>
+  <rect rx="3" width="${TOTAL_WIDTH}" height="20" fill="#555"/>
+  <rect rx="3" x="${LABEL_WIDTH}" width="$((TOTAL_WIDTH - LABEL_WIDTH))" height="20" fill="#${COLOR}"/>
+  <rect x="${LABEL_WIDTH}" width="4" height="20" fill="#${COLOR}"/>
+  <rect rx="3" width="${TOTAL_WIDTH}" height="20" fill="url(#s)"/>
   <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
-    <text x="32" y="15" fill="#010101" fill-opacity=".3">coverage</text>
-    <text x="32" y="14">coverage</text>
-    <text x="96" y="15" fill="#010101" fill-opacity=".3">${PCT}%</text>
-    <text x="96" y="14">${PCT}%</text>
+    <text x="${LABEL_X}" y="15" fill="#010101" fill-opacity=".3">${BADGE_LABEL}</text>
+    <text x="${LABEL_X}" y="14">${BADGE_LABEL}</text>
+    <text x="${VALUE_X}" y="15" fill="#010101" fill-opacity=".3">${PCT}%</text>
+    <text x="${VALUE_X}" y="14">${PCT}%</text>
   </g>
 </svg>
 SVGEOF
@@ -40,9 +50,9 @@ else
 fi
 
 mkdir -p /tmp/badges/badges
-cp "$SVG_FILE" /tmp/badges/badges/coverage.svg
+cp "$SVG_FILE" "/tmp/badges/badges/${BADGE_NAME}"
 
 cd /tmp/badges
-git add badges/coverage.svg
-git diff --cached --quiet || git commit -m "chore: update coverage badge [skip ci]"
+git add "badges/${BADGE_NAME}"
+git diff --cached --quiet || git commit -m "chore: update ${BADGE_NAME} [skip ci]"
 git push origin HEAD:badges

@@ -131,7 +131,8 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "buildTarget": "admin:build:development",
-            "runnerConfig": "vitest.config.ts"
+            "runnerConfig": "vitest.config.ts",
+            "coverageReporters": ["text-summary", "json-summary", "html", "lcov"]
           }
         }
       }

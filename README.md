@@ -1,6 +1,7 @@
 ﻿# Gatelin
 
-[![coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+[![Gateway coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+[![admin coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/admin-coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Version](https://img.shields.io/github/v/release/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
 [![Last release](https://img.shields.io/github/release-date/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
