@@ -22,7 +22,7 @@
     "paths": {
       "app/*": ["./src/app/*"],
       "@messages/*": ["./src/app/messages/*"],
-      "@core/*": ["./src/app/core/*"],
+      "@core/*": ["./src/app/core/*"]
     },
   },
   "angularCompilerOptions": {

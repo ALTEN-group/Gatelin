@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "22.1.1",
+    "@angular/build": "^22.1.1",
     "@angular/cli": "22.1.1",
     "@angular/compiler": "22.1.1",
     "@angular/compiler-cli": "22.1.1",
@@ -49,7 +50,9 @@
     "@types/chart.js": "2.9.37",
     "@types/file-saver": "2.0.7",
     "@types/node": "20.19.17",
+    "jsdom": "^30.0.1",
     "ts-node": "10.9.1",
+    "vitest": "^4.1.10",
     "zone.js": "0.15.1"
   }
 }

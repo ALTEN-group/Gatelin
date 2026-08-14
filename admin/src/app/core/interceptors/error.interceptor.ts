@@ -1,41 +1,20 @@
 import {
   HttpErrorResponse,
   HttpInterceptorFn,
-  HttpRequest,
 } from "@angular/common/http";
-import { effect, inject } from "@angular/core";
+import { inject } from "@angular/core";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { TokenService } from "@core/auth/token.service";
 import { cloneReq } from "@core/interceptors/clone-req";
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
-import { OfflineService } from "@dwtechs/ngx-crud-builder";
-import {
-  bufferCount,
-  catchError,
-  EMPTY,
-  forkJoin,
-  switchMap,
-  throwError,
-} from "rxjs";
+import { catchError, EMPTY, switchMap, throwError } from "rxjs";
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const snackbarService = inject(SnackbarService);
   const loadingService = inject(LoadingService);
-  const offlineService = inject(OfflineService);
   const authenticationService = inject(AuthenticationService);
   const tokenService = inject(TokenService);
-
-  let pendingRequests: HttpRequest<unknown>[] = [];
-
-  effect(() => {
-    if (offlineService.isOnline() && pendingRequests.length) {
-      forkJoin(pendingRequests.map((r) => next(r)))
-        .pipe(bufferCount(pendingRequests.length))
-        .subscribe();
-      pendingRequests = [];
-    }
-  });
 
   const formatErrorMessage = (err: HttpErrorResponse) => {
     const { statusText, message, url } = err;
