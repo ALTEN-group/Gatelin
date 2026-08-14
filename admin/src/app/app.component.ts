@@ -5,9 +5,9 @@ import { AuthenticationService } from "@core/auth/auth.service";
 import { NavbarComponent } from "@core/ui/navbar/navbar.component";
 import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { LoadingService } from "@core/utils/loading/loading.service";
-import { ProgressBarModule } from "primeng/progressbar";
-import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { ToastModule } from "primeng/toast";
+import { ProgressBarModule } from "@openng/optimus-ui/progressbar";
+import { ProgressSpinnerModule } from "@openng/optimus-ui/progressspinner";
+import { ToastModule } from "@openng/optimus-ui/toast";
 import { SidenavComponent } from "./core/ui/sidenav/sidenav.component";
 
 @Component({

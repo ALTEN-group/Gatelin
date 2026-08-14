@@ -18,10 +18,10 @@ import {
   HistorizedData,
   HISTORY_MAPPER,
   provideCrudLabels,
-  provideFormFieldRenderer,
+  provideCrudRenderer,
 } from "@dwtechs/ngx-crud-builder";
-import { environment } from "environments/environment";
 import { filter, tap } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 /**
  * Main Config
@@ -56,7 +56,7 @@ export function provideAppConfig() {
       const authService = inject(AuthenticationService);
       return checkToken(authService);
     }),
-    provideFormFieldRenderer("primeng"),
+    provideCrudRenderer("optimus-ui"),
     { provide: LOCALE_ID, useValue: "fr" },
     { provide: APP_CONFIG, useValue: CONFIG },
     {

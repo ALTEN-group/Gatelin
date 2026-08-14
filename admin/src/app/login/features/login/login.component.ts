@@ -1,17 +1,17 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  ViewEncapsulation,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    ViewEncapsulation,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
 } from "@angular/forms";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
@@ -19,15 +19,15 @@ import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-t
 import { LoadingService } from "@core/utils/loading/loading.service";
 import { RoutingListener } from "@core/utils/routing.listener";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
+import { SharedModule } from "@openng/optimus-ui/api";
+import { AutoFocusModule } from "@openng/optimus-ui/autofocus";
+import { AvatarModule } from "@openng/optimus-ui/avatar";
+import { ButtonModule } from "@openng/optimus-ui/button";
+import { CardModule } from "@openng/optimus-ui/card";
+import { InputGroupModule } from "@openng/optimus-ui/inputgroup";
+import { InputGroupAddonModule } from "@openng/optimus-ui/inputgroupaddon";
+import { InputTextModule } from "@openng/optimus-ui/inputtext";
 import { LoginBackgroundComponent } from "app/login/ui/login-background/login-background.component";
-import { SharedModule } from "primeng/api";
-import { AutoFocusModule } from "primeng/autofocus";
-import { AvatarModule } from "primeng/avatar";
-import { ButtonModule } from "primeng/button";
-import { CardModule } from "primeng/card";
-import { InputGroupModule } from "primeng/inputgroup";
-import { InputGroupAddonModule } from "primeng/inputgroupaddon";
-import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-login",

@@ -2,7 +2,7 @@ import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ErrorTranslatePipe } from "@core/pages/error/error-translate.pipe";
-import { CardModule } from "primeng/card";
+import { CardModule } from "@openng/optimus-ui/card";
 import { map } from "rxjs";
 
 @Component({

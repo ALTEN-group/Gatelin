@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { CardModule } from "primeng/card";
+import { CardModule } from "@openng/optimus-ui/card";
 
 @Component({
   selector: "adm-not-found",
