@@ -202,6 +202,12 @@ services:
     hostname: ${ADMIN_HOST}
     environment:
       <<: *defaultEnvs
+      # Override defaultEnvs's PORT=${DEFAULT_PORT} so Vite/Angular's dev server
+      # binds to the port Traefik dials (admin.loadbalancer.server.port=${ADMIN_PORT}).
+      # Vite silently prefers the PORT env over `--port` in package.json, so without
+      # this override the container listens on ${DEFAULT_PORT} while Traefik expects
+      # ${ADMIN_PORT} → 502 Bad Gateway.
+      PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
     networks:
       - internal
