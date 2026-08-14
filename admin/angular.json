@@ -53,7 +53,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "./node_modules/primeicons/primeicons.css"
+              "./node_modules/@openng/icons/openng-icons.css"
             ],
             "scripts": [
               "node_modules/chart.js/dist/chart.js"

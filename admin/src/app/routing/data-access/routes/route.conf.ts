@@ -6,23 +6,23 @@ import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import {
-  buildIdNameAction,
-  buildIdsNamesAction,
+    buildIdNameAction,
+    buildIdsNamesAction,
 } from "@core/utils/field-config/on-select-action.config";
 import { PROTECTED_CONFIG } from "@core/utils/field-config/protected.config";
 import {
-  toNamesSelectOptions,
-  toSelectItems,
-} from "@core/utils/primeng/to-select-items";
+    toNamesSelectOptions,
+    toSelectItems,
+} from "@core/utils/optimus/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
-  CONTROL_TYPES,
-  ID_CONFIG,
-  INPUT_TYPES,
-  maxlength,
-  minlength,
-  required,
-  StrictCrudItemOptions,
+    CONTROL_TYPES,
+    ID_CONFIG,
+    INPUT_TYPES,
+    maxlength,
+    minlength,
+    required,
+    StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
 import { Method } from "app/routing/data-access/methods/method.model";
 import { Operation } from "app/routing/data-access/operations/operation.model";

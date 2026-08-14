@@ -1,4 +1,4 @@
-import { Translation } from "primeng/api";
+import { Translation } from "@openng/optimus-ui/api";
 
 export const PrimeNgTranslations: Translation = {
   accept: "Accept",

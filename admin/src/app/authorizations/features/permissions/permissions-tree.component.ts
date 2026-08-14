@@ -1,39 +1,39 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  signal,
-  ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    signal,
+    ViewEncapsulation,
 } from "@angular/core";
 import { rxResource, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import {
-  CONTROL_TYPES,
-  CrudItemOptions,
-  EditionDialogComponent,
-  RowsAndCount,
+    CONTROL_TYPES,
+    CrudItemOptions,
+    EditionDialogComponent,
+    RowsAndCount,
 } from "@dwtechs/ngx-crud-builder";
+import { TreeNode } from "@openng/optimus-ui/api";
+import { Checkbox } from "@openng/optimus-ui/checkbox";
+import { Chip } from "@openng/optimus-ui/chip";
+import { SelectModule } from "@openng/optimus-ui/select";
+import { TableLazyLoadEvent } from "@openng/optimus-ui/table";
+import { TreeTableModule } from "@openng/optimus-ui/treetable";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
 import { FieldsService } from "app/authorizations/data-access/fields/fields.service";
 import {
-  Permission,
-  permissionFactory,
+    Permission,
+    permissionFactory,
 } from "app/authorizations/data-access/permissions/permission.model";
 import { PermissionsService } from "app/authorizations/data-access/permissions/permissions.service";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 import { Scope } from "app/authorizations/data-access/scopes/scope.model";
 import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Route } from "app/routing/data-access/routes/route.model";
-import { TreeNode } from "primeng/api";
-import { Checkbox } from "primeng/checkbox";
-import { Chip } from "primeng/chip";
-import { SelectModule } from "primeng/select";
-import { TableLazyLoadEvent } from "primeng/table";
-import { TreeTableModule } from "primeng/treetable";
 import { of, tap } from "rxjs";
 import { OperationNodeData, PermTreeNodeData } from "./permissions-tree.model";
 

@@ -8,18 +8,18 @@ import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
-  CONTROL_TYPES,
-  hexColor,
-  ID_CONFIG,
-  INPUT_TYPES,
-  maxlength,
-  minlength,
-  required,
-  StrictCrudItemOptions,
+    CONTROL_TYPES,
+    hexColor,
+    ID_CONFIG,
+    INPUT_TYPES,
+    maxlength,
+    minlength,
+    required,
+    StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
+import { SelectItem } from "@openng/optimus-ui/api";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
 import { Field } from "app/authorizations/data-access/fields/field.model";
-import { SelectItem } from "primeng/api";
 
 const OP_OPTIONS = [
   { label: "=", value: "=" },

@@ -4,21 +4,21 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import {
-  buildIdNameAction,
-  buildIdsNamesAction,
+    buildIdNameAction,
+    buildIdsNamesAction,
 } from "@core/utils/field-config/on-select-action.config";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import { toSelectItems } from "@core/utils/optimus/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
 import {
-  CONTROL_TYPES,
-  ID_CONFIG,
-  INPUT_TYPES,
-  required,
-  StrictCrudItemOptions,
+    CONTROL_TYPES,
+    ID_CONFIG,
+    INPUT_TYPES,
+    required,
+    StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
 import { Condition } from "app/authorizations/data-access/conditions/condition.model";
-import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Permission } from "app/authorizations/data-access/permissions/permission.model";
+import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Resource } from "app/routing/data-access/resources/resource.model";
 import { Route } from "app/routing/data-access/routes/route.model";
 import { Service } from "app/routing/data-access/services/service.model";

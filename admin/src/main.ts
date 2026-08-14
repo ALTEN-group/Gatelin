@@ -22,11 +22,11 @@ import { authInterceptor } from "@core/auth/auth.interceptor";
 import { errorInterceptor } from "@core/interceptors/error.interceptor";
 import { locationInterceptor } from "@core/interceptors/location.interceptor";
 import { preferencesInterceptor } from "@core/interceptors/preferences.interceptor";
-import Aura from "@primeng/themes/aura";
+import Aura from "@openng/optimus-ui-themes/aura";
+import { ConfirmationService, MessageService } from "@openng/optimus-ui/api";
+import { provideOptimus } from "@openng/optimus-ui/config";
+import { DialogService } from "@openng/optimus-ui/dynamicdialog";
 import { ROUTES } from "app/app.routes";
-import { ConfirmationService, MessageService } from "primeng/api";
-import { providePrimeNG } from "primeng/config";
-import { DialogService } from "primeng/dynamicdialog";
 import { AppComponent } from "./app/app.component";
 import { environment } from "./environments/environment";
 
@@ -43,7 +43,7 @@ bootstrapApplication(AppComponent, {
     provideZonelessChangeDetection(),
     provideAnimations(),
     provideAnimationsAsync(),
-    providePrimeNG({
+    provideOptimus({
       theme: {
         preset: Aura,
         options: {

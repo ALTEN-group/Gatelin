@@ -1,17 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  output,
-  ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    output,
+    ViewEncapsulation,
 } from "@angular/core";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
-import { MenuItem, SharedModule } from "primeng/api";
-import { BadgeModule } from "primeng/badge";
-import { ButtonModule } from "primeng/button";
-import { MenuModule } from "primeng/menu";
+import { MenuItem, SharedModule } from "@openng/optimus-ui/api";
+import { BadgeModule } from "@openng/optimus-ui/badge";
+import { ButtonModule } from "@openng/optimus-ui/button";
+import { MenuModule } from "@openng/optimus-ui/menu";
 
 @Component({
   selector: "adm-navbar",
