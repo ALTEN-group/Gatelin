@@ -87,13 +87,36 @@ npm run test:coverage     # CI / coverage
 
 ### Admin end-to-end tests (Playwright)
 
-Requires the docker-compose stack to be running (`./scripts/start-dev.sh`).
+The e2e suite (`admin/e2e/`) drives the admin UI end-to-end through Traefik, logs in with a mock persona from `swagger/src/gatelin.openapi.json`, and exercises the same routing path a real browser hits (Traefik → admin → gateway → mocks).
+
+Both flows below require:
+
+- `./scripts/start-dev.sh` running.
+- `./scripts/setup-mocks.sh` executed at least once (so `swagger/src/gatelin.openapi.json` has mock passwords the tests read via `admin/e2e/helpers/credentials.ts`).
+
+#### In Docker (recommended, no local install)
+
+```sh
+./scripts/e2e.sh                          # full suite
+./scripts/e2e.sh --grep "login"           # forward flags to `playwright test`
+./scripts/e2e.sh --reporter=html          # writes admin/playwright-report/
+./scripts/e2e.sh -- playwright show-report  # arbitrary command after `--`
+```
+
+Runs the tests in a dedicated `admin-e2e` container (`mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble`, built from `admin/e2e-dockerfile`). The container lives behind the `e2e` Compose profile, so `docker compose up` and `start-dev.sh` deliberately skip it — it spins up on demand, runs to completion, and is removed (`--rm`). It hits Traefik over the internal Docker network at `http://traefik/gatelin/` (configurable via `ADMIN_E2E_BASE_URL` in `docker/conf/.env.dev`). Test artifacts land back on the host at `admin/test-results/` and `admin/playwright-report/`.
+
+Pin `PLAYWRIGHT_VERSION` in `.env.dev` to whatever `admin/package.json`'s `@playwright/test` resolves to.
+
+#### On the host (fast iteration, UI mode)
 
 ```sh
 cd admin
-npm run e2e:install       # once per machine
-npm run e2e
+npm run e2e:install       # once per machine — downloads Chromium
+npm run e2e               # runs against Traefik on localhost:8100
+npm run e2e:ui            # Playwright's interactive UI mode
 ```
+
+Prefer this when iterating on a specific test — the UI mode and Playwright inspector need a display, which the containerized flow doesn't provide.
 
 ## API Fuzzing (RESTler)
 

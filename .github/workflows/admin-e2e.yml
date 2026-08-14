@@ -9,6 +9,7 @@ on:
       - "docker/**"
       - "mocks/**"
       - "scripts/**"
+      - "swagger/**"
       - ".github/workflows/admin-e2e.yml"
 
 concurrency:
@@ -20,21 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    timeout-minutes: 45
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Node is only needed on the runner for scripts/setup-mocks.sh, which
+      # `npm install`s @dwtechs/passken + @dwtechs/hashitaka into mocks/ms_pwd
+      # to hash the mock passwords. Everything else runs in Docker.
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            admin/package-lock.json
-            mocks/ms_pwd/package-lock.json
+          cache-dependency-path: mocks/ms_pwd/package-lock.json
 
       - name: Configure env and mocks
         run: |
@@ -44,31 +45,13 @@ jobs:
       - name: Start docker stack
         run: ./scripts/start-dev.sh
 
-      - name: Wait for admin
-        run: |
-          for i in $(seq 1 60); do
-            if curl -fsS "http://localhost:8100/gatelin/login" >/dev/null; then
-              echo "Admin is up"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "Admin did not become ready in time"
-          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
-          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=200
-          exit 1
-
-      - name: Install admin dependencies
-        working-directory: admin
-        run: npm ci
-
-      - name: Install Playwright Chromium
-        working-directory: admin
-        run: npx playwright install --with-deps chromium
-
-      - name: Run Playwright tests
-        working-directory: admin
-        run: npm run e2e
+      # scripts/e2e.sh builds (if needed) and runs the `admin-e2e` container:
+      # a Playwright image (mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble)
+      # that mounts admin/e2e + swagger/src, polls the admin URL through
+      # Traefik until it answers 200, then runs the suite. Same command devs
+      # run locally — no divergence between CI and local.
+      - name: Run e2e tests
+        run: ./scripts/e2e.sh --reporter=list
 
       - name: Upload Playwright report
         if: failure()
@@ -79,6 +62,12 @@ jobs:
             admin/playwright-report/
             admin/test-results/
           retention-days: 7
+
+      - name: Dump docker logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=300
 
       - name: Stop docker stack
         if: always()

@@ -1,0 +1,35 @@
+ARG PLAYWRIGHT_VERSION
+FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble
+
+LABEL org.opencontainers.image.description="Gatelin admin e2e (Playwright) — headless Chromium against the running dev stack via Traefik"
+
+ARG TZ
+ENV TZ=${TZ}
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# The e2e specs only import from @playwright/test and node built-ins — none of the
+# Angular app's runtime deps. Install only @playwright/test (pinned to admin's
+# version) into /e2e/node_modules and expose it via NODE_PATH so any WORKDIR
+# resolves it. This skips ~800MB of admin/node_modules we don't need.
+ARG PLAYWRIGHT_VERSION
+WORKDIR /e2e
+RUN echo '{"name":"admin-e2e","private":true}' > package.json \
+ && npm install --no-audit --no-fund --loglevel=error "@playwright/test@${PLAYWRIGHT_VERSION}"
+# NODE_PATH lets spec files resolve `@playwright/test` regardless of WORKDIR.
+# PATH puts /e2e/node_modules/.bin ahead so we can invoke `playwright` directly —
+# avoiding `npx`, which would install a second Playwright copy at runtime and
+# trigger a "two different versions of @playwright/test" error.
+ENV NODE_PATH=/e2e/node_modules \
+    PATH=/e2e/node_modules/.bin:${PATH}
+
+# Entrypoint polls the admin URL through Traefik before invoking Playwright, so
+# `docker compose --profile e2e run` doesn't race the Vite rebuild on cold starts.
+COPY --chmod=755 scripts/e2e-entrypoint.sh /usr/local/bin/e2e-entrypoint.sh
+
+# Source layout mirrors the host repo (/repo/admin, /repo/swagger, …) so
+# credentials.ts's `resolve(__dirname, "../../../swagger/src/gatelin.openapi.json")`
+# resolves identically inside and outside the container.
+WORKDIR /repo/admin
+
+ENTRYPOINT ["/usr/local/bin/e2e-entrypoint.sh"]
+CMD ["playwright", "test"]

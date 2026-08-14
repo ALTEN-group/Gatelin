@@ -222,6 +222,43 @@ services:
       - "traefik.http.routers.admin.service=admin"
       - "traefik.http.services.admin.loadbalancer.server.port=${ADMIN_PORT}"
 
+  # Playwright end-to-end tests. Behind the `e2e` profile so `docker compose up`
+  # skips it; run explicitly with `scripts/e2e.sh` (or `docker compose --profile
+  # e2e run --rm admin-e2e`). Drives the admin UI through Traefik, exercising
+  # the same routing path a real browser hits.
+  admin-e2e:
+    profiles: ["e2e"]
+    build:
+      context: ${PWD}/admin
+      dockerfile: e2e-dockerfile
+      args:
+        PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION}
+        TZ: ${TZ}
+    container_name: ${ADMIN_E2E_HOST}
+    hostname: ${ADMIN_E2E_HOST}
+    environment:
+      # Overrides playwright.config.ts's `http://localhost:8100/gatelin/` default
+      # since localhost inside this container is the container itself.
+      E2E_BASE_URL: ${ADMIN_E2E_BASE_URL}
+      CI: "1"
+      TZ: ${TZ}
+    networks:
+      - internal
+    depends_on:
+      - admin
+      - gatelin
+      - traefik
+    volumes:
+      # Mount source at /repo/admin so credentials.ts's `../../../swagger/src/…`
+      # path resolves the same way it does on the host.
+      - ${PWD}/admin/e2e:/repo/admin/e2e:ro
+      - ${PWD}/admin/playwright.config.ts:/repo/admin/playwright.config.ts:ro
+      - ${PWD}/swagger/src:/repo/swagger/src:ro
+      # Test artifacts land back on the host next to admin/e2e/ where the .gitignore
+      # already covers them.
+      - ${PWD}/admin/test-results:/repo/admin/test-results
+      - ${PWD}/admin/playwright-report:/repo/admin/playwright-report
+
   adminer:
     image: ${ADMINER_VERSION}
     container_name: ${ADMINER_HOST}

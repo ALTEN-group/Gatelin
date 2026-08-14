@@ -109,7 +109,10 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "admin:build:serve"
+            "buildTarget": "admin:build:serve",
+            "allowedHosts": [
+              "traefik"
+            ]
           },
           "configurations": {
             "production": {
