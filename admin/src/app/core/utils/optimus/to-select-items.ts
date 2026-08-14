@@ -1,4 +1,4 @@
-import { SelectItem } from "primeng/api";
+import { SelectItem } from "@openng/optimus-ui/api";
 
 /**
  * Get a list of SelectItems from a list of item

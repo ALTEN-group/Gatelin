@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
-import { MenuItem } from "primeng/api";
+import { MenuItem } from "@openng/optimus-ui/api";
 import { fromEvent, MonoTypeOperatorFunction, tap } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 

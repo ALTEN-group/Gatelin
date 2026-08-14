@@ -46,7 +46,7 @@ Client Response
              │                     │
    ┌─────────▼─────────┐  ┌────────▼──────────┐
    │   Admin Panel     │  │   API Gateway     │
-   │  /admin/*         │  │   /api/*          │
+   │  ADMIN_BASE_PATH/*│  │   /api/*          │
    │  (Angular SPA)    │  │   (Node.js)       │
    └─────────┬─────────┘  └────────┬──────────┘
              │                     │

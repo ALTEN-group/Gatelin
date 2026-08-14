@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { ButtonModule } from "primeng/button";
-import { DialogModule } from "primeng/dialog";
-import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { ButtonModule } from "@openng/optimus-ui/button";
+import { DialogModule } from "@openng/optimus-ui/dialog";
+import { DynamicDialogConfig, DynamicDialogRef } from "@openng/optimus-ui/dynamicdialog";
 
 @Component({
   selector: "shared-confirmation-dialog",

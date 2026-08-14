@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { MenuItem } from "primeng/api";
-import { BreadcrumbModule } from "primeng/breadcrumb";
+import { MenuItem } from "@openng/optimus-ui/api";
+import { BreadcrumbModule } from "@openng/optimus-ui/breadcrumb";
 import { distinctUntilChanged, filter, map } from "rxjs/operators";
 
 @Component({

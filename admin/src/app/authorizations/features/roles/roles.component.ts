@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { TABLES } from "@core/app-config/app.tables";
 import {
-  ConfigHelper,
-  provideCrudLabels,
-  TableComponent,
+    ConfigHelper,
+    provideCrudLabels,
+    TableComponent,
 } from "@dwtechs/ngx-crud-builder";
+import { ButtonModule } from "@openng/optimus-ui/button";
+import { AppPaths } from "app/app.routes";
 import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
 import { GatewayRolesService } from "app/authorizations/data-access/roles/roles.service";
-import { AppPaths } from "app/app.routes";
-import { ButtonModule } from "primeng/button";
 
 @Component({
   selector: "adm-roles",

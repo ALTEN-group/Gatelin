@@ -3,9 +3,9 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls, CrudRepository, RowsAndCount } from "@dwtechs/ngx-crud-builder";
+import { TableLazyLoadEvent } from "@openng/optimus-ui/table";
 import { PERMISSION_COLUMNS } from "app/authorizations/data-access/permissions/permission.conf";
 import { Permission } from "app/authorizations/data-access/permissions/permission.model";
-import { TableLazyLoadEvent } from "primeng/table";
 import { Observable } from "rxjs";
 
 const permissionsEndpoint: AdminEntity = "permissions";

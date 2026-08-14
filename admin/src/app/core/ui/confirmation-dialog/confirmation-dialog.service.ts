@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { DialogService, DynamicDialogRef } from "@openng/optimus-ui/dynamicdialog";
 import { Observable } from "rxjs";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
 

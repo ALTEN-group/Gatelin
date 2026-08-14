@@ -3,10 +3,12 @@ FROM node:${NODE_VERSION}
 
 LABEL org.opencontainers.image.description="Gatelin admin UI (Angular dev server, served under ADMIN_BASE_PATH)"
 
+# install tzdata from default Alpine repos before replacing them
+RUN apk add --no-cache tzdata
+
 # change apk repos
 RUN rm /etc/apk/repositories
-RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true apk update \
-    && apk add tzdata 
+RUN --mount=type=secret,id=apk_repository,target=/etc/apk/repositories,required=true apk update
 
 ARG TZ
 ENV TZ=${TZ}

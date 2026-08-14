@@ -5,15 +5,15 @@ import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
-import { toSelectItems } from "@core/utils/primeng/to-select-items";
+import { toSelectItems } from "@core/utils/optimus/to-select-items";
 import {
-  CONTROL_TYPES,
-  ID_CONFIG,
-  INPUT_TYPES,
-  maxlength,
-  minlength,
-  required,
-  StrictCrudItemOptions,
+    CONTROL_TYPES,
+    ID_CONFIG,
+    INPUT_TYPES,
+    maxlength,
+    minlength,
+    required,
+    StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
 import { Resource } from "app/routing/data-access/resources/resource.model";
 import { Service } from "app/routing/data-access/services/service.model";

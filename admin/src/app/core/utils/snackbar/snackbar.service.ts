@@ -1,6 +1,6 @@
 import { TitleCasePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
-import { MessageService, ToastMessageOptions } from "primeng/api";
+import { MessageService, ToastMessageOptions } from "@openng/optimus-ui/api";
 
 @Injectable({ providedIn: "root" })
 export class SnackbarService {

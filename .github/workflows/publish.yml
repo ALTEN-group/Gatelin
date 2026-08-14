@@ -55,7 +55,7 @@ jobs:
           provenance: true
           sbom: true
           build-args: |
-            NODE_VERSION=24.11.0-alpine3.22
+            NODE_VERSION=24.15.0-alpine3.22
             NODE_ENV=production
             TZ=Europe/Paris
             UID=1000

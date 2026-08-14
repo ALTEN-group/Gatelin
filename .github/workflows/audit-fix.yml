@@ -1,0 +1,419 @@
+name: Audit Fix
+
+on:
+  workflow_call:
+    inputs:
+      issue_number:
+        description: 'Audit issue number'
+        required: true
+        type: number
+      max_findings:
+        description: 'Maximum number of findings to process'
+        required: false
+        type: number
+        default: 5
+      severities:
+        description: 'Comma-separated list of severities to fix'
+        required: false
+        type: string
+        default: 'Critical,Important'
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Audit issue number'
+        required: true
+        type: number
+      max_findings:
+        description: 'Maximum number of findings to process'
+        required: false
+        type: number
+        default: 5
+      severities:
+        description: 'Comma-separated list of severities to fix'
+        required: false
+        type: string
+        default: 'Critical,Important'
+      ids:
+        description: 'Comma-separated list of specific AUDIT IDs to fix (e.g. AUDIT-001,AUDIT-003)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+  copilot-requests: write
+
+concurrency:
+  group: audit-fix-${{ inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-slim
+    outputs:
+      matrix: ${{ steps.parse.outputs.matrix }}
+      count: ${{ steps.parse.outputs.count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch issue body
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue_number = Number('${{ inputs.issue_number }}');
+            const { owner, repo } = context.repo;
+            const issue = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number,
+            });
+            fs.writeFileSync('audit-issue.body.md', issue.data.body || '', 'utf8');
+
+      - name: Check existing open PRs
+        id: check_prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue_number = Number('${{ inputs.issue_number }}');
+            const { owner, repo } = context.repo;
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const prefix = `audit-fix/issue-${issue_number}/`;
+            const existingKeys = pulls
+              .map(p => p.head.ref)
+              .filter(ref => ref.startsWith(prefix))
+              .map(ref => ref.slice(prefix.length));
+            fs.writeFileSync('existing_keys.json', JSON.stringify(existingKeys), 'utf8');
+
+      - name: Parse audit findings
+        id: parse
+        run: |
+          args=(
+            --input audit-issue.body.md
+            --severities "${{ inputs.severities }}"
+            --max ${{ inputs.max_findings }}
+          )
+          if [ -n "${{ inputs.ids }}" ]; then
+            args+=(--ids "${{ inputs.ids }}")
+          fi
+
+          node .github/scripts/parse-audit-findings.mjs "${args[@]}" > all_findings.json
+
+          node -e '
+            const fs = require("fs");
+            const all = JSON.parse(fs.readFileSync("all_findings.json", "utf8"));
+            const existing = new Set(JSON.parse(fs.readFileSync("existing_keys.json", "utf8")));
+            const pending = all.filter(f => !existing.has(f.key));
+            fs.writeFileSync("pending_findings.json", JSON.stringify(pending));
+          '
+
+          count=$(node -e 'const fs=require("fs");console.log(JSON.parse(fs.readFileSync("pending_findings.json","utf8")).length)')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+          matrix_json=$(node -e 'const fs=require("fs");console.log(JSON.stringify(JSON.parse(fs.readFileSync("pending_findings.json","utf8"))))')
+          echo "matrix=$matrix_json" >> "$GITHUB_OUTPUT"
+
+  fix:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.count > 0 }}
+    runs-on: ubuntu-slim
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        finding: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Install APM CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: curl -sSL https://aka.ms/apm-unix | sh
+
+      - name: Install APM packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: apm install
+
+      - name: Prepare workspace and agent prompt
+        run: |
+          mkdir -p audit-fix-artifacts
+          cat << 'EOF' > finding.md
+          ${{ matrix.finding.markdown }}
+          EOF
+
+      - name: Run Copilot fix agent
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_AUDITS_MODEL: ${{ vars.COPILOT_AUDITS_MODEL }}
+        run: |
+          copilot_args=(
+            --agent node-express-audit-fix
+            --silent
+            --no-color
+            --log-level error
+            --no-ask-user
+            --allow-all-tools
+          )
+          if [ -n "$COPILOT_AUDITS_MODEL" ]; then
+            copilot_args+=(--model "$COPILOT_AUDITS_MODEL")
+          fi
+
+          stdout="audit-fix-artifacts/copilot.stdout.txt"
+          stderr="audit-fix-artifacts/copilot.stderr.txt"
+
+          set +e
+          timeout 15m copilot "${copilot_args[@]}" --prompt "Remediate the audit finding provided in finding.md. You MUST emit the required <!-- AUDIT-FIX:START --> block at the end of your response as specified in your agent instructions." > "$stdout" 2> "$stderr"
+          status="$?"
+          set -e
+
+          echo "copilot_status=$status" >> audit-fix-artifacts/status.env
+
+      - name: Parse fix agent result
+        id: fix_result
+        run: |
+          stdout="audit-fix-artifacts/copilot.stdout.txt"
+          if ! grep -q '<!-- AUDIT-FIX:START -->' "$stdout"; then
+            echo "should_proceed=false" >> "$GITHUB_OUTPUT"
+            echo "reason=Agent output missing AUDIT-FIX marker block" >> "$GITHUB_OUTPUT"
+            echo "::notice::Agent output missing AUDIT-FIX marker block"
+            exit 0
+          fi
+
+          node -e '
+            const fs = require("fs");
+            const stdout = fs.readFileSync("audit-fix-artifacts/copilot.stdout.txt", "utf8");
+            const match = stdout.match(/<!-- AUDIT-FIX:START -->([\s\S]*?)<!-- AUDIT-FIX:END -->/);
+            if (!match) {
+              console.log("should_proceed=false");
+              process.exit(0);
+            }
+            const block = match[1];
+            const getVal = (pat) => {
+              const m = block.match(pat);
+              return m ? m[1].trim() : "";
+            };
+            const status = getVal(/-\s*\*\*Status:\*\*\s*(.+)/i);
+            const summary = getVal(/-\s*\*\*Summary:\*\*\s*(.+)/i);
+            const details = getVal(/-\s*\*\*Details:\*\*\s*(.+)/i);
+            const files = getVal(/-\s*\*\*Files:\*\*\s*(.+)/i);
+
+            if (status.toLowerCase() !== "fixed") {
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, "should_proceed=false\n");
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `reason=Agent marked status as ${status}\n`);
+              console.log(`::notice::Fix agent skipped finding: ${status}`);
+              process.exit(0);
+            }
+
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "should_proceed=true\n");
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `summary=${summary || "fix(audit): resolve audit finding"}\n`);
+            fs.writeFileSync("fix_details.txt", details || "Automated fix generated by Copilot audit fix agent.");
+          '
+
+      - name: Scope guard and verification
+        id: verify
+        if: ${{ steps.fix_result.outputs.should_proceed == 'true' }}
+        run: |
+          # Scope guard: ensure only src/, db/liquibase/, and tests/ were modified
+          modified_files=$(git diff --name-only HEAD)
+          if [ -z "$modified_files" ]; then
+            echo "should_pr=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No files were modified by the fix agent."
+            exit 0
+          fi
+
+          # Verification: run linting and unit tests
+          set +e
+          npm run lint > audit-fix-artifacts/lint.log 2>&1
+          lint_status=$?
+          npm test > audit-fix-artifacts/test.log 2>&1
+          test_status=$?
+          set -e
+
+          if [ $lint_status -ne 0 ] || [ $test_status -ne 0 ]; then
+            echo "should_pr=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Verification failed (lint: $lint_status, test: $test_status). Skipping PR creation."
+            git reset --hard
+            exit 0
+          fi
+
+          echo "should_pr=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push branch
+        if: ${{ steps.verify.outputs.should_pr == 'true' }}
+        env:          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="audit-fix/issue-${{ inputs.issue_number }}/${{ matrix.finding.key }}"
+          summary="${{ steps.fix_result.outputs.summary }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          git add src/ db/liquibase/ tests/
+          git commit -m "$summary"
+          git push origin "HEAD:${branch}" --force
+
+      - name: Create or update pull request
+        if: ${{ steps.verify.outputs.should_pr == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue_number = Number('${{ inputs.issue_number }}');
+            const key = '${{ matrix.finding.key }}';
+            const branch = `audit-fix/issue-${issue_number}/${key}`;
+            const summary = '${{ steps.fix_result.outputs.summary }}';
+            const details = fs.readFileSync('fix_details.txt', 'utf8');
+            const findingMarkdown = fs.readFileSync('finding.md', 'utf8');
+            const { owner, repo } = context.repo;
+
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'audit-fix' });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: 'audit-fix',
+                color: '0e8a16',
+                description: 'Automated fix PR generated from audit finding',
+              });
+            }
+
+            // Check if sub-issue already exists or create a new one
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              labels: 'audit-fix',
+              per_page: 100,
+            });
+            let subIssue = existingIssues.find((i) => !i.pull_request && i.title.includes(key));
+            let subIssueNumber;
+
+            if (!subIssue) {
+              const subIssueTitle = `[${key}] ${summary}`;
+              const subIssueBody = [
+                `## Audit Finding: ${key}`,
+                ``,
+                `Part of #${issue_number}`,
+                ``,
+                `### Description`,
+                findingMarkdown,
+              ].join('\n');
+
+              subIssue = await github.rest.issues.create({
+                owner,
+                repo,
+                title: subIssueTitle,
+                body: subIssueBody,
+                labels: ['audit-fix'],
+              });
+              subIssueNumber = subIssue.data.number;
+
+              // Attempt GraphQL sub-issue linking
+              try {
+                const parentRes = await github.graphql(`
+                  query($owner: String!, $repo: String!, $number: Int!) {
+                    repository(owner: $owner, name: $repo) {
+                      issue(number: $number) {
+                        id
+                      }
+                    }
+                  }
+                `, { owner, repo, number: issue_number });
+
+                const parentIssueId = parentRes.repository.issue.id;
+                const subIssueNodeId = subIssue.data.node_id;
+
+                await github.graphql(`
+                  mutation($issueId: ID!, $subIssueId: ID!) {
+                    addSubIssue(input: { issueId: $issueId, subIssueId: $subIssueId }) {
+                      subIssue {
+                        id
+                      }
+                    }
+                  }
+                `, { issueId: parentIssueId, subIssueId: subIssueNodeId });
+              } catch (graphqlErr) {
+                core.info(`GraphQL sub-issue link note: ${graphqlErr.message}`);
+              }
+            } else {
+              subIssueNumber = subIssue.number;
+            }
+
+            const body = [
+              `## Automated Fix for Audit Finding`,
+              ``,
+              `### Original Finding`,
+              findingMarkdown,
+              ``,
+              `### Remediation Details`,
+              details,
+              ``,
+              `---`,
+              `Closes #${subIssueNumber}`,
+              `Refs #${issue_number}`,
+              `*This PR was generated automatically by the Copilot Audit Fix agent. Please review carefully before merging.*`,
+            ].join('\n');
+
+            const pr = await github.rest.pulls.create({
+              owner,
+              repo,
+              title: summary,
+              head: branch,
+              base: 'main',
+              body,
+            });
+
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: pr.data.number,
+              labels: ['audit-fix'],
+            });
+
+            core.info(`Created pull request: ${pr.data.html_url} (Closes #${subIssueNumber})`);
+
+      - name: Upload fix diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-fix-${{ inputs.issue_number }}-${{ matrix.finding.key }}
+          path: |
+            finding.md
+            fix_details.txt
+            audit-fix-artifacts/
+          if-no-files-found: ignore
+          retention-days: 30

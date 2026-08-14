@@ -4,16 +4,24 @@ on:
   workflow_dispatch:
   schedule:
     # Every Monday at 06:17 UTC (offset from :00 to avoid GitHub's peak scheduling congestion)
-    - cron: '17 6 * * 1'
+    - cron: '18 6 * * 5'
 
 permissions:
-  contents: read
+  contents: write
   issues: write
+  pull-requests: write
   copilot-requests: write
+
+concurrency:
+  group: weekly-audit-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   audit:
     runs-on: ubuntu-slim
+    timeout-minutes: 45
+    outputs:
+      issue_number: ${{ steps.create_issue.outputs.issue_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +32,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
@@ -39,8 +47,179 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: apm install
 
-      - name: Run weekly audit
+      - name: Run static checks
+        run: |
+          mkdir -p audit-artifacts
+          set +e
+          NO_COLOR=1 npm audit > audit-artifacts/npm-audit.txt 2>&1
+          NO_COLOR=1 npx biome check . > audit-artifacts/biome.txt 2>&1
+          NO_COLOR=1 npm outdated > audit-artifacts/outdated.txt 2>&1
+          git grep -n 'TODO\|FIXME' -- src/ > audit-artifacts/todos.txt 2>&1
+          set -e
+
+          append_check() {
+            title="$1"
+            file="$2"
+            size="$(wc -c < "$file")"
+            {
+              echo "## $title"
+              echo '````text'
+              if [ "$size" -eq 0 ]; then
+                echo '(no output)'
+              else
+                head -c 5000 "$file"
+                echo
+                if [ "$size" -gt 5000 ]; then
+                  echo "[truncated; full output is available in the workflow artifact]"
+                fi
+              fi
+              echo '````'
+              echo
+            } >> report.md
+          }
+
+          {
+            echo "# Weekly Audit — $(date -u +%F)"
+            echo
+          } > report.md
+
+          append_check "npm audit" audit-artifacts/npm-audit.txt
+          append_check "Lint (Biome)" audit-artifacts/biome.txt
+          append_check "Outdated dependencies" audit-artifacts/outdated.txt
+          append_check "TODOs / FIXMEs" audit-artifacts/todos.txt
+
+      # Runs the "Node.js Express.js Back-end Code Audit" agent installed via APM
+      # from ALTEN-group/coding-pal (see apm.yml/apm.lock.yaml). Its profile
+      # scopes the audit to src/ and db/liquibase/, bans re-running the checks
+      # above, and uses the audit-reporting skill plus the installed domain
+      # instructions. File writes and shell commands stay denied because this is
+      # a reporting-only audit.
+      - name: Run Copilot audit agent
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
-        run: npm run audit:report
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_AUDITS_MODEL: ${{ vars.COPILOT_AUDITS_MODEL }}
+        run: |
+          copilot_args=(
+            --agent node-express-back-end-code-audit
+            --silent
+            --no-color
+            --log-level error
+            --no-ask-user
+            --allow-all-tools
+          )
+          if [ -n "$COPILOT_AUDITS_MODEL" ]; then
+            copilot_args+=(--model "$COPILOT_AUDITS_MODEL")
+          fi
+
+          stdout="audit-artifacts/copilot.stdout.txt"
+          stderr="audit-artifacts/copilot.stderr.txt"
+
+          set +e
+          timeout 15m copilot "${copilot_args[@]}" --prompt "Run the audit." > "$stdout" 2> "$stderr"
+          status="$?"
+          set -e
+
+          audit_ok=false
+          if [ "$status" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
+            [ "$(wc -c < "$stdout")" -le 30000 ]; then
+            audit_ok=true
+          fi
+
+          {
+            echo
+            echo "---"
+            echo
+            echo "# AI Audit"
+            echo
+            if [ "$audit_ok" = true ]; then
+              cat "$stdout"
+            else
+              echo "_AI audit unavailable. Static checks remain available above._"
+              echo "::warning::Copilot audit failed or returned invalid output. See the audit diagnostics artifact."
+            fi
+          } >> report.md
+
+      - name: Upload audit diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            report.md
+            audit-artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create or update audit issue
+        id: create_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('report.md', 'utf8');
+            if (Buffer.byteLength(body, 'utf8') > 60000) {
+              core.setFailed('Audit issue body exceeds the 60,000-byte publication limit.');
+              return;
+            }
+
+            const date = new Date().toISOString().slice(0, 10);
+            const title = `Weekly Audit — ${date}`;
+            const { owner, repo } = context.repo;
+
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'audit' });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: 'audit',
+                color: '5319e7',
+                description: 'Automated code and dependency audit',
+              });
+            }
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              labels: 'audit',
+              per_page: 100,
+            });
+            const existing = issues.find((issue) => !issue.pull_request && issue.title === title);
+
+            let issueNumber;
+            if (existing) {
+              const issue = await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                title,
+                body,
+                labels: ['audit'],
+              });
+              issueNumber = issue.data.number;
+              core.info(`Audit issue updated: ${issue.data.html_url}`);
+            } else {
+              const issue = await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body,
+                labels: ['audit'],
+              });
+              issueNumber = issue.data.number;
+              core.info(`Audit issue created: ${issue.data.html_url}`);
+            }
+            core.setOutput('issue_number', issueNumber);
+
+  fix:
+    needs: audit
+    if: ${{ needs.audit.outputs.issue_number != '' }}
+    uses: ./.github/workflows/audit-fix.yml
+    secrets: inherit
+    with:
+      issue_number: ${{ needs.audit.outputs.issue_number }}
+      max_findings: 5
+      severities: 'Critical,Important'
