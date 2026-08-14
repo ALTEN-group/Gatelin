@@ -22,7 +22,7 @@ describe("loginGuard", () => {
 
   function runGuard() {
     return TestBed.runInInjectionContext(() =>
-      loginGuard()({} as never, {} as never),
+      loginGuard()(),
     );
   }
 
