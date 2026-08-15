@@ -298,16 +298,30 @@ describe("checkAcl middleware", () => {
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should store perm.fields on res.locals.aclFields", () => {
-    const fields = ["name"];
+  it("should expose the allowed field set on res.locals.aclFields for send() to project responses", () => {
+    const fieldsSet = new Set(["name"]);
     roleService.getOne.mockReturnValue({
       name: "editor",
-      permissions: new Map([[10, { route: 10, operations: [2], fields }]]),
+      permissions: new Map([
+        [10, { route: 10, operations: [2], _fieldsSet: fieldsSet }],
+      ]),
     });
 
     checkAcl(req, res, next);
 
-    expect(res.locals.aclFields).toBe(fields);
+    expect(res.locals.aclFields).toBe(fieldsSet);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("should leave res.locals.aclFields undefined when the role has no field restriction", () => {
+    roleService.getOne.mockReturnValue({
+      name: "admin",
+      permissions: new Map([[10, { route: 10, operations: [2] }]]),
+    });
+
+    checkAcl(req, res, next);
+
+    expect(res.locals.aclFields).toBeUndefined();
     expect(next).toHaveBeenCalledWith();
   });
 });

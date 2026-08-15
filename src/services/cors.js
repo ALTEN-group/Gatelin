@@ -83,15 +83,17 @@ function addToCache(corsOrigin) {
  *
  * @param {number} id - The ID of the CORS origin to update
  * @param {string} name - The new origin name
+ * @param {boolean} [credentials] - The new credentials flag; kept as-is when omitted
  * @return {boolean} True if updated, false if not found
  */
-function updateCache(id, name) {
+function updateCache(id, name, credentials) {
   const numId = +id;
   if (!corsOrigins.has(numId)) return false;
   const old = corsOrigins.get(numId);
-  corsOrigins.set(numId, { name, credentials: old.credentials });
+  const creds = credentials === undefined ? old.credentials : credentials;
+  corsOrigins.set(numId, { name, credentials: creds });
   corsOriginNames.delete(old.name);
-  corsOriginNames.set(name, old.credentials);
+  corsOriginNames.set(name, creds);
   return true;
 }
 

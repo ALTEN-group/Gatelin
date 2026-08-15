@@ -41,6 +41,10 @@ describe("corsMiddleware", () => {
       "Access-Control-Allow-Methods",
       expect.any(String),
     );
+    expect(res.setHeader).toHaveBeenCalledWith(
+      "Access-Control-Allow-Headers",
+      expect.stringContaining("X-CSRF-Token"),
+    );
     expect(next).toHaveBeenCalledWith();
   });
 

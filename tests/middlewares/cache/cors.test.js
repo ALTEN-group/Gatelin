@@ -73,12 +73,16 @@ describe("cors cache middleware", () => {
   });
 
   describe("updateCache", () => {
-    it("should call corsSvc.updateCache with id and name for each row", () => {
-      req = { body: { rows: [{ id: 1, name: "updated" }] } };
+    it("should call corsSvc.updateCache with id, name and credentials for each row", () => {
+      req = {
+        body: { rows: [{ id: 1, name: "updated", credentials: true }] },
+      };
 
       updateCache(req, res, next);
 
-      expect(corsSvc.updateCache).toHaveBeenCalledWith(1, "updated");
+      // credentials must be forwarded: dropping it left the cache serving the
+      // pre-update flag until the process restarted.
+      expect(corsSvc.updateCache).toHaveBeenCalledWith(1, "updated", true);
       expect(next).toHaveBeenCalledWith();
     });
 

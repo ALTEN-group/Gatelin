@@ -55,7 +55,11 @@ describe("startDeleteArchivedEntitiesJob", () => {
   it("should register the job to run daily at 2 AM UTC", () => {
     startDeleteArchivedEntitiesJob();
 
-    expect(scheduleDailyAt).toHaveBeenCalledWith(2, expect.any(Function));
+    expect(scheduleDailyAt).toHaveBeenCalledWith(
+      2,
+      expect.any(Function),
+      "delete-archived-entities",
+    );
     expect(log.info).toHaveBeenCalledWith(
       expect.stringContaining("initialized"),
     );

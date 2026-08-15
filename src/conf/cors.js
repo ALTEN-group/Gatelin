@@ -2,7 +2,7 @@
 import corsSvc from "../services/cors.js";
 
 const METHODS = "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH";
-const HEADERS = "Content-Type, Authorization";
+const HEADERS = "Content-Type, Authorization, X-CSRF-Token";
 
 /**
  * CORS middleware for the gateway.
@@ -11,6 +11,10 @@ const HEADERS = "Content-Type, Authorization";
  */
 export function corsMiddleware(req, res, next) {
   const origin = req.headers.origin;
+
+  // Allow-Origin is computed per request, so caches must key on Origin or they
+  // will replay one origin's headers to another.
+  res.setHeader("Vary", "Origin");
 
   if (origin) {
     if (!corsSvc.has(origin))

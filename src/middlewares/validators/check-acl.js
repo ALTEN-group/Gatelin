@@ -1,4 +1,4 @@
-import { isArray, isProperty } from "@dwtechs/checkard";
+import { isArray, isObject, isProperty } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
 import roleService from "../../services/role.js";
 import scopeService from "../../services/scope.js";
@@ -29,7 +29,8 @@ import scopeService from "../../services/scope.js";
  * // User with roles ['user', 'admin'] would pass
  * // User with roles ['user'] would get 403 Forbidden
  */
-function filterFields(item, allowed) {
+export function filterFields(item, allowed) {
+  if (!isObject(item)) return item;
   return Object.fromEntries(
     // "id" is always kept: it identifies the row to update/delete and is not
     // a writable field governed by the per-role field ACL.
@@ -113,8 +114,9 @@ export default function checkAcl(req, res, next) {
       req.body = filterFields(req.body, allowed);
   }
 
-  // Store field allowlist for request body filtering
-  res.locals.aclFields = perm.fields;
+  // Response rows are filtered by send() — without this a role restricted to a
+  // few fields still reads every column back from the search endpoints.
+  res.locals.aclFields = allowed;
 
   next();
 }

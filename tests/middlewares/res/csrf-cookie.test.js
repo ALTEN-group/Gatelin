@@ -55,11 +55,27 @@ describe("csrf-cookie middlewares", () => {
   });
 
   describe("clearCsrfCookie", () => {
-    it("should clear the cookie with the default name and path, then call next()", () => {
+    it("should clear the cookie with the same attributes it was set with, then call next()", () => {
       clearCsrfCookie({}, res, next);
 
-      expect(res.clearCookie).toHaveBeenCalledWith("csrfToken", { path: "/" });
+      // Browsers only delete a cookie when path, secure and sameSite match the
+      // ones used to set it — omitting them left the token alive after logout.
+      expect(res.clearCookie).toHaveBeenCalledWith("csrfToken", {
+        httpOnly: false,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
       expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should clear with exactly the options setCsrfCookie used", () => {
+      setCsrfCookie({}, res, next);
+      clearCsrfCookie({}, res, next);
+
+      expect(res.clearCookie.mock.calls[0][1]).toEqual(
+        res.cookie.mock.calls[0][2],
+      );
     });
   });
 });

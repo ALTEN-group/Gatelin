@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@dwtechs/errandler-express": "0.1.1",
-    "@dwtechs/healix-express": "0.1.0",
+    "@dwtechs/healix-express": "0.2.0",
     "@dwtechs/servpico-express": "0.3.1",
     "@dwtechs/winstan": "0.7.1",
     "express": "5.1.0",

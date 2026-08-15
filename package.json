@@ -9,10 +9,10 @@
 		"dev": "node --watch src/server.js",
 		"test": "NODE_OPTIONS='--experimental-vm-modules' jest",
 		"test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
-    "lint": "biome check src/",
-    "lint:fix": "biome check --write src/",
-    "format": "biome format src/",
-    "format:fix": "biome format --write src/"
+		"lint": "biome check src/",
+		"lint:fix": "biome check --write src/",
+		"format": "biome format src/",
+		"format:fix": "biome format --write src/"
 	},
 	"author": "Ludovic Cluber",
 	"license": "MIT",
@@ -20,7 +20,7 @@
 		"@dwtechs/antity-pgsql": "0.22.0",
 		"@dwtechs/checkard": "3.6.1",
 		"@dwtechs/errandler-express": "0.1.1",
-		"@dwtechs/healix-express": "0.1.1",
+		"@dwtechs/healix-express": "0.2.0",
 		"@dwtechs/servpico-express": "0.3.1",
 		"@dwtechs/sparray": "0.2.1",
 		"@dwtechs/toker-express": "0.8.0",

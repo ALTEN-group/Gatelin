@@ -131,14 +131,35 @@ describe("http.query", () => {
   it("should default the status to 503 when fetch rejects with no status", async () => {
     fetchMock.mockRejectedValue(new Error("network down"));
 
-    // Network-error path (ECONNREFUSED / DNS / TLS etc.). The catch handler
-    // re-wraps the native fetch error into the same `HTTP(<code>): <ctx>`
-    // shape so downstream consumers see a single message convention regardless
-    // of whether the failure was HTTP-level or transport-level.
+    // Network-error path (ECONNREFUSED / DNS / TLS etc.). `err.message` is the
+    // only field errandler-express relays to the client, so the native cause
+    // ("network down") must stay in the server log and never reach the wire.
     await expect(query("get", "http://svc/users")).rejects.toMatchObject({
       statusCode: 503,
-      message: "HTTP(503): network down",
+      message: "HTTP(503): Service Unavailable",
     });
+  });
+
+  it("should map an upstream timeout to 504", async () => {
+    // AbortSignal.timeout() rejects with a TimeoutError. A hung upstream is a
+    // gateway timeout, not an unreachable service, and must be distinguishable
+    // in metrics from the ECONNREFUSED path above.
+    const err = new Error("The operation was aborted due to timeout");
+    err.name = "TimeoutError";
+    fetchMock.mockRejectedValue(err);
+
+    await expect(query("get", "http://svc/users")).rejects.toMatchObject({
+      statusCode: 504,
+      message: "HTTP(504): Upstream timeout",
+    });
+  });
+
+  it("should pass an abort signal so requests cannot hang forever", async () => {
+    fetchMock.mockResolvedValue(jsonResponse(200, { id: 1 }));
+
+    await query("get", "http://svc/users");
+
+    expect(fetchMock.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);
   });
 
   it("should preserve an existing statusCode on a rejected error", async () => {
@@ -176,6 +197,23 @@ describe("http.query", () => {
     expect(debug.mock.calls[1][0]()).toEqual(
       expect.stringContaining("status: 200"),
     );
+  });
+
+  it("should redact credentials from the debug log", async () => {
+    fetchMock.mockResolvedValue(jsonResponse(200, { accessToken: "jwt-abc" }));
+
+    await query("post", "http://svc/login", undefined, {
+      userId: 7,
+      pwd: "hunter2",
+    });
+
+    const start = debug.mock.calls[0][0]();
+    expect(start).not.toContain("hunter2");
+    expect(start).toContain("[REDACTED]");
+    expect(start).toContain('"userId":7');
+
+    const end = debug.mock.calls[1][0]();
+    expect(end).not.toContain("jwt-abc");
   });
 
   it("should log null params/data and headers when none are given", async () => {

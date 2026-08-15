@@ -52,10 +52,50 @@ describe("GET /gateway/health", () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
+      status: "ok",
       uptime: expect.any(Number),
-      message: "OK",
       timestamp: expect.any(Number),
     });
+    expect(routeSvc.getOne).not.toHaveBeenCalled();
+  });
+
+  it("stays 200 with no database, so an outage cannot trigger a restart loop", async () => {
+    // Liveness must not depend on Postgres — killing every instance would not
+    // bring the database back.
+    const res = await supertest(app).get("/gateway/health");
+
+    expect(res.status).toBe(200);
+  });
+});
+
+describe("GET /gateway/health/ready", () => {
+  let app;
+  let routeSvc;
+
+  beforeAll(async () => {
+    const routeModule = await import("../../src/services/route.js");
+    routeSvc = routeModule.default;
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset();
+  });
+
+  it("reports the database unavailable when it cannot be reached", async () => {
+    // No Postgres in the test environment, which is exactly the condition the
+    // probe exists to detect.
+    const res = await supertest(app).get("/gateway/health/ready");
+
+    expect(res.status).toBe(503);
+    expect(res.body.status).toBe("unavailable");
+    expect(res.body.checks.db.status).toBe("error");
+    expect(typeof res.body.checks.db.error).toBe("string");
+  });
+
+  it("is mounted before checkRoute", async () => {
+    await supertest(app).get("/gateway/health/ready");
+
     expect(routeSvc.getOne).not.toHaveBeenCalled();
   });
 });

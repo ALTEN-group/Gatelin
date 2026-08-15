@@ -1,7 +1,9 @@
 name: ${APP_NAME}
 
 x-service-healthcheck: &healthcheck
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health"]
+  # /gateway/health/ready also proves the database is reachable; /gateway/health
+  # only reports uptime and would keep a DB-less gateway in the load-balancer pool.
+  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health/ready"]
   interval: 10s
   timeout: 5s
   retries: 5
@@ -45,8 +47,12 @@ services:
       - --providers.docker.network=${APP_NAME}-internal-${ENV_NAME}
       - --providers.docker.constraints=Label(`stack.name`,`${APP_NAME}-${ENV_NAME}`)
       - --entryPoints.web.address=${TRAEFIK_ENTRYPOINTS_WEB_ADDRESS}
-      - --entrypoints.web.forwardedHeaders=true
-      - --entryPoints.web.forwardedHeaders.insecure=true
+      # forwardedHeaders.insecure is deliberately NOT set: Traefik is the edge
+      # here, so a client-supplied X-Forwarded-For would be trusted verbatim and
+      # let an attacker rotate the key express-rate-limit uses. Traefik now sets
+      # the header itself from the real peer address. If a CDN or load balancer
+      # is ever placed in front, add its ranges with
+      # --entryPoints.web.forwardedHeaders.trustedIPs=<cidr,cidr> instead.
       - --providers.docker.exposedByDefault=${TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT}
       - --api.insecure=${TRAEFIK_API_INSECURE}
       - --log.level=${TRAEFIK_LOG_LEVEL}
@@ -158,6 +164,8 @@ services:
       REFRESH_TOKEN_DURATION: ${GATELIN_REFRESH_TOKEN_DURATION}
       REFRESH_TOKEN_COOKIE: ${GATELIN_REFRESH_TOKEN_COOKIE}
       SESSION_RATE_LIMIT_MAX: ${GATELIN_SESSION_RATE_LIMIT_MAX}
+      ADMIN_RATE_LIMIT_MAX: ${GATELIN_ADMIN_RATE_LIMIT_MAX}
+      UPSTREAM_TIMEOUT_MS: ${GATELIN_UPSTREAM_TIMEOUT_MS}
       PWD_MIN_LENGTH_POLICY: ${GATELIN_PWD_MIN_LENGTH_LEGACY}
       PWD_MAX_LENGTH_POLICY: ${GATELIN_PWD_MAX_LENGTH_LEGACY}
       PWD_NUMBERS_POLICY: ${GATELIN_PWD_NUMBERS_LEGACY}

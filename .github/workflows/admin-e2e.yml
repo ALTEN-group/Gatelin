@@ -40,6 +40,13 @@ jobs:
       - name: Configure env and mocks
         run: |
           ./scripts/setup-env.sh
+          # Services run as ${UID}:${GID} (1000 in .env.dev.example) and bind-mount the
+          # checkout, which on a Linux runner belongs to `runner` (uid 1001). Without
+          # this alignment the admin entrypoint cannot rewrite angular.json, exits, and
+          # Traefik never registers a router — every request to /gatelin/ 404s.
+          # Docker Desktop masks this locally by ignoring host ownership on bind mounts.
+          sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
+          sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
           ./scripts/setup-mocks.sh
 
       - name: Start docker stack
@@ -50,20 +57,30 @@ jobs:
       # race up-front with clear output instead of inside the e2e container.
       - name: Wait for admin via Traefik
         run: |
+          compose() {
+            docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev "$@"
+          }
           for i in $(seq 1 90); do
             code=$(curl -o /dev/null -s -w '%{http_code}' --max-time 3 http://localhost:8100/gatelin/ || echo 000)
             if [[ "$code" =~ ^2 ]]; then echo "admin ready after $((i * 2))s (HTTP $code)"; exit 0; fi
+            # admin has no restart policy, so once it exits it never comes back and
+            # Traefik drops its router (404 rather than 502). Bail out instead of
+            # burning the full 180s window.
+            if [[ -z "$(compose ps --status running -q admin)" ]]; then
+              echo "::error::admin container stopped running"
+              break
+            fi
             printf 'attempt %d/90: HTTP %s\n' "$i" "$code"
             sleep 2
           done
-          echo "::error::admin did not become ready in 180s"
-          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
+          echo "::error::admin did not become ready"
+          compose ps
           echo "--- Traefik routers ---"
           curl -sS http://localhost:8083/api/http/routers | python3 -m json.tool || true
           echo "--- admin logs (last 200) ---"
-          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=200 admin
+          compose logs --tail=200 admin
           echo "--- traefik logs (last 100) ---"
-          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=100 traefik
+          compose logs --tail=100 traefik
           exit 1
 
       # scripts/e2e.sh builds (if needed) and runs the `admin-e2e` container:

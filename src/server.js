@@ -1,8 +1,9 @@
 // @ts-check
 import { failFast, listen } from "@dwtechs/servpico-express";
+import { log } from "@dwtechs/winstan";
 import { startAdminServer } from "./admin-server.js";
 import app from "./app.js";
-import { corsMiddleware } from "./conf/cors.js";
+import { validateEnv } from "./conf/env.js";
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
 import { startDeleteOldHistoryJob } from "./jobs/delete-old-history.js";
@@ -12,20 +13,42 @@ import roleSvc from "./services/role.js";
 import routeSvc from "./services/route.js";
 import scopeSvc from "./services/scope.js";
 
-// Init cached reference data
-Promise.all([
-  routeSvc.init(),
-  consumerSvc.init(),
-  corsSvc.init(),
-  roleSvc.init(),
-  scopeSvc.init(),
-])
+// Anything that escapes Express's error pipeline would otherwise die with no
+// structured log and no orderly shutdown.
+process.on("unhandledRejection", (reason) => {
+  failFast(reason instanceof Error ? reason : new Error(String(reason)));
+});
+process.on("uncaughtException", (err) => {
+  failFast(err);
+});
+
+// Init cached reference data before listen — corsMiddleware reads the
+// whitelist at request time, so init must finish before accepting traffic.
+Promise.resolve()
+  .then(validateEnv)
+  .then(() =>
+    Promise.all([
+      routeSvc.init(),
+      consumerSvc.init(),
+      corsSvc.init(),
+      roleSvc.init(),
+      scopeSvc.init(),
+    ]),
+  )
   .then(() => {
-    app.use(corsMiddleware);
     // Start cron jobs
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();
-    startAdminServer();
+    const adminServer = startAdminServer();
+    // servpico's listen() only closes the gateway server, so in-flight admin UI
+    // requests would be cut off when it calls process.exit.
+    if (adminServer) {
+      for (const signal of ["SIGTERM", "SIGINT", "SIGHUP"]) {
+        process.once(signal, () =>
+          adminServer.close(() => log.info("Admin UI server closed")),
+        );
+      }
+    }
     listen(app);
   })
   .catch(failFast);

@@ -11,15 +11,15 @@ const HISTORY_RETENTION_MONTHS = 6;
  * Runs every day at 3:00 AM UTC.
  */
 export function startDeleteOldHistoryJob() {
-  scheduleDailyAt(3, async () => {
-    try {
+  scheduleDailyAt(
+    3,
+    async () => {
       log.info("Starting scheduled deletion of old history records...");
       const deletedCount = await deleteOldHistory();
       log.info(`Successfully deleted ${deletedCount} old history record(s)`);
-    } catch (err) {
-      log.error(`Failed to delete old history records: ${err.message}`);
-    }
-  });
+    },
+    "delete-old-history",
+  );
 
   log.info(
     "Delete old history records job initialized (runs daily at 3:00 AM UTC)",

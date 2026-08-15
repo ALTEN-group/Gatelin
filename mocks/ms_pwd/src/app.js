@@ -1,6 +1,6 @@
 import express from "express";
 import helmet from "helmet";
-import healixRouter from "@dwtechs/healix-express";
+import { healix } from "@dwtechs/healix-express";
 import { listen } from "@dwtechs/servpico-express";
 import { log } from "@dwtechs/winstan";
 import { isStringOfLength, isValidInteger } from "@dwtechs/checkard";
@@ -12,7 +12,8 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use("/auth/health", healixRouter);
+// In-memory mock — no dependencies to probe; readiness still exposes /ready.
+app.use("/auth/health", healix());
 
 function validateBody(req, _res, next) {
   log.debug(
