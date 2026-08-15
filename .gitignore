@@ -10,6 +10,8 @@ docker/conf/.env.prod
 website/docs/.vitepress/cache
 .github/instructions/
 .github/agents/
+.agents/
+.cursor/
 mocks/ms_pwd/src/data/credentials.js
 swagger/src/gatelin.openapi.json
 apm_modules/
