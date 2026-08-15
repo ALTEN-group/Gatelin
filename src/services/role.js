@@ -37,7 +37,7 @@ function init() {
               p.route,
               {
                 ...p,
-                _fieldsSet: p.fields?.length ? new Set(p.fields) : null,
+                _fieldsSet: p.fields == null ? null : new Set(p.fields),
               },
             ]),
           ),
