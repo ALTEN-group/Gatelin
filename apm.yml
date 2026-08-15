@@ -18,4 +18,8 @@ dependencies:
         - instructions/angular-admin.instructions.md
       skills:
         - audit-reporting
+        - node-express-examples
+        - postgres-liquibase-examples
+        - docker-examples
+        - angular-admin-examples
   mcp: {}
