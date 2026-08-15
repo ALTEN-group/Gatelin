@@ -84,6 +84,20 @@ describe("role service", () => {
       expect(roleSvc.getOne(1).permissions.get(10)._fieldsSet).toBeNull();
     });
 
+    it("should build an empty fields Set (not null) when a permission's fields array is empty", async () => {
+      await initWithRows([
+        {
+          id: 1,
+          name: "admin",
+          permissions: [{ route: 10, operation: 1, fields: [] }],
+        },
+      ]);
+
+      const fieldsSet = roleSvc.getOne(1).permissions.get(10)._fieldsSet;
+      expect(fieldsSet).toEqual(new Set());
+      expect(fieldsSet).not.toBeNull();
+    });
+
     it("should default to an empty permissions map when a role has none", async () => {
       await initWithRows([{ id: 2, name: "guest" }]);
 
