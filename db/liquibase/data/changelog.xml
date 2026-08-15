@@ -18,12 +18,16 @@
     <sqlFile path="01-insert-example-bugged-cors.sql"/>
   </changeSet>
   <changeSet id="data-05" author="lcluber">
-    <comment>eBoutique test applications</comment>
+    <comment>E2E test applications</comment>
     <sqlFile path="05-insert-example-wrong-data.sql"/>
   </changeSet>
   <changeSet id="data-06" author="lcluber">
-    <comment>eBoutique test roles</comment>
+    <comment>E2E test roles</comment>
     <sqlFile path="06-insert-example-fixed-data.sql"/>
+  </changeSet>
+  <changeSet id="data-07" author="lcluber">
+    <comment>Dev/e2e CORS Origins for Traefik-published admin (localhost:8100, traefik)</comment>
+    <sqlFile path="07-insert-dev-e2e-cors-origins.sql"/>
   </changeSet>
 
 </databaseChangeLog>

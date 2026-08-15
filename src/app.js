@@ -16,7 +16,6 @@ app.use(security);
 app.disable("x-powered-by");
 
 // middlewares
-import { trackPerf } from "./middlewares/res/perf.js";
 import { send } from "./middlewares/res/send.js";
 import { checkRequest as cr } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
 import checkRoute from "./middlewares/validators/check-route.js";
@@ -80,9 +79,8 @@ app.use(
     checks: { db: () => execute("SELECT 1", [], null) },
   }),
 );
-// performance measurement starts for any call to the following routes
+
 app.use(startTimer);
-app.use(trackPerf);
 // Validate route
 app.use(checkRoute);
 // Routes

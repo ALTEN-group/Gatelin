@@ -17,7 +17,7 @@
 	"author": "Ludovic Cluber",
 	"license": "MIT",
 	"dependencies": {
-		"@dwtechs/antity-pgsql": "0.22.0",
+		"@dwtechs/antity-pgsql": "0.23.0",
 		"@dwtechs/checkard": "3.6.1",
 		"@dwtechs/errandler-express": "0.1.1",
 		"@dwtechs/healix-express": "0.2.0",
@@ -25,7 +25,7 @@
 		"@dwtechs/sparray": "0.2.1",
 		"@dwtechs/toker-express": "0.8.0",
 		"@dwtechs/winstan": "0.7.1",
-		"@dwtechs/winstan-plugin-express-perf": "0.2.1",
+		"@dwtechs/winstan-plugin-express-perf": "0.3.0",
 		"cookie-parser": "1.4.7",
 		"express": "5.2.1",
 		"express-rate-limit": "8.6.2",

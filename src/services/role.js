@@ -1,7 +1,6 @@
 // @ts-check
-import { execute } from "@dwtechs/antity-pgsql";
 import rEnt from "../entities/role.js";
-import rpEnt from "../entities/role-cache.js";
+import rcEnt from "../entities/role-cache.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
 /**
@@ -26,16 +25,9 @@ let roles = new Map();
  * console.log('Role cache initialized');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = rpEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
+  return rcEnt.getCache().then((rows) => {
     roles = new Map(
-      r.rows.map((role) => [
+      rows.map((role) => [
         role.id,
         {
           ...role,

@@ -12,11 +12,11 @@ const routeEntPath = path.join(__dirname, "../../src/entities/route.js");
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
-const select = jest.fn();
+const getCache = jest.fn();
 const deleteArchive = jest.fn();
 jest.unstable_mockModule(routeEntPath, () => ({
   __esModule: true,
-  default: { query: { select, deleteArchive } },
+  default: { getCache, query: { deleteArchive } },
 }));
 
 describe("route service", () => {
@@ -30,7 +30,7 @@ describe("route service", () => {
 
   beforeEach(() => {
     execute.mockReset();
-    select.mockReset();
+    getCache.mockReset();
     deleteArchive.mockReset();
     process.env.APP_NAME = "gatelin";
     process.env.ENV_NAME = "dev";
@@ -43,19 +43,15 @@ describe("route service", () => {
   });
 
   async function initWithRows(rows) {
-    select.mockReturnValue({ query: "SELECT", args: [] });
-    execute.mockResolvedValue({ rows });
+    getCache.mockResolvedValue(rows);
     await routeSvc.init();
   }
 
   describe("init", () => {
-    it("should query only non-archived routes", async () => {
+    it("should load routes via getCache", async () => {
       await initWithRows([]);
 
-      expect(select).toHaveBeenCalledWith(0, 0, "id", "ASC", {
-        archived: { value: false, matchMode: "IS" },
-      });
-      expect(execute).toHaveBeenCalledWith("SELECT", [], null);
+      expect(getCache).toHaveBeenCalledWith();
     });
 
     it("should build a base URL per unique service name from env vars", async () => {

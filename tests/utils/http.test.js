@@ -205,15 +205,32 @@ describe("http.query", () => {
     await query("post", "http://svc/login", undefined, {
       userId: 7,
       pwd: "hunter2",
+      Password: "s3cret",
     });
 
     const start = debug.mock.calls[0][0]();
     expect(start).not.toContain("hunter2");
+    expect(start).not.toContain("s3cret");
     expect(start).toContain("[REDACTED]");
     expect(start).toContain('"userId":7');
 
     const end = debug.mock.calls[1][0]();
     expect(end).not.toContain("jwt-abc");
+  });
+
+  it("should redact nested credentials in response data", async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse(200, {
+        rows: [{ id: 1, refreshToken: "rt-1" }, { id: 2, accessToken: "at-2" }],
+      }),
+    );
+
+    await query("get", "http://svc/users");
+
+    const end = debug.mock.calls[1][0]();
+    expect(end).not.toContain("rt-1");
+    expect(end).not.toContain("at-2");
+    expect(end).toContain('"id":1');
   });
 
   it("should log null params/data and headers when none are given", async () => {

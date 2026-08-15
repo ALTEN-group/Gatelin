@@ -1,6 +1,5 @@
 // @ts-check
 
-import { execute } from "@dwtechs/antity-pgsql";
 import cEnt from "../entities/cors.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
@@ -14,7 +13,6 @@ const corsOriginNames = new Map();
  * Initializes the CORS cache by loading all allowed origins from the database.
  * This function should be called once when the application starts to populate the
  * in-memory cache with CORS origins for request validation.
- * Uses the @dwtechs/antity-pgsql library to build and execute the SQL query.
  *
  * @return {Promise<void>} A promise that resolves when all CORS origins have been loaded into cache
  * @throws {Error} Database connection or query execution errors
@@ -24,17 +22,10 @@ const corsOriginNames = new Map();
  * console.log('CORS cache initialized with', corsOrigins.size, 'origins');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
+  return cEnt.getCache().then((rows) => {
     corsOrigins.clear();
     corsOriginNames.clear();
-    for (const row of r.rows) {
+    for (const row of rows) {
       corsOrigins.set(row.id, { name: row.name, credentials: row.credentials });
       corsOriginNames.set(row.name, row.credentials);
     }

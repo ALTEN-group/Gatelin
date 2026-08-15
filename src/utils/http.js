@@ -1,9 +1,50 @@
 import { log } from "@dwtechs/winstan";
-import { redact } from "./redact.js";
 
 const VerbsWithBody = new Set(["post", "put", "patch"]);
 const LOG_PREFIX = "HTTP ";
 const UPSTREAM_TIMEOUT_MS = Number(process.env.UPSTREAM_TIMEOUT_MS) || 30000;
+
+/** Keys whose values must never reach a log sink, matched case-insensitively. */
+const SENSITIVE_KEYS = new Set([
+  "accesstoken",
+  "authorization",
+  "cookie",
+  "csrftoken",
+  "idtoken",
+  "newpwd",
+  "oldpwd",
+  "password",
+  "pwd",
+  "refreshtoken",
+  "secret",
+  "set-cookie",
+  "token",
+  "x-csrf-token",
+]);
+
+const MASK = "[REDACTED]";
+
+/**
+ * Serializes a value for logging with sensitive fields masked.
+ *
+ * Log aggregators retain debug output far longer than a request lives, so
+ * credentials that transit the gateway must never be written verbatim.
+ *
+ * @param {unknown} value
+ * @return {string|null}
+ */
+function redact(value) {
+  if (value === undefined || value === null) return null;
+  const seen = new WeakSet();
+  return JSON.stringify(value, function replacer(key, val) {
+    if (SENSITIVE_KEYS.has(key.toLowerCase())) return MASK;
+    if (typeof val === "object" && val !== null) {
+      if (seen.has(val)) return "[Circular]";
+      seen.add(val);
+    }
+    return val;
+  });
+}
 
 /**
  * Sends a request to the specified URL using the specified HTTP verb.
