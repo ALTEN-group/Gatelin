@@ -11,8 +11,14 @@ const { ADMIN_PORT, ADMIN_BASE_PATH, PORT } = process.env;
 const ADMIN_DIST = join(import.meta.dirname, "..", "admin-dist");
 const BASE_PATH = (ADMIN_BASE_PATH || "/admin").replace(/\/+$/, "");
 
+/**
+ * Starts the static Angular admin server on its own port.
+ *
+ * @return {import('node:http').Server|undefined} The listening server, so the
+ * caller can close it on shutdown, or undefined when ADMIN_PORT is unset.
+ */
 export function startAdminServer() {
-  if (!ADMIN_PORT) return;
+  if (!ADMIN_PORT) return undefined;
 
   // Angular is compiled once with a fixed placeholder baseHref (see
   // admin/angular.json) — the real prefix is injected into <base href> here at
@@ -55,7 +61,7 @@ export function startAdminServer() {
     res.type("html").send(indexHtml);
   });
 
-  app.listen(Number(ADMIN_PORT), () =>
+  return app.listen(Number(ADMIN_PORT), () =>
     log.info(`Admin UI listening on port ${ADMIN_PORT}`),
   );
 }

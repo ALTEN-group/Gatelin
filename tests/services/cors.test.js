@@ -12,11 +12,11 @@ const corsEntPath = path.join(__dirname, "../../src/entities/cors.js");
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
-const select = jest.fn();
+const getCache = jest.fn();
 const deleteArchive = jest.fn();
 jest.unstable_mockModule(corsEntPath, () => ({
   __esModule: true,
-  default: { query: { select, deleteArchive } },
+  default: { getCache, query: { deleteArchive } },
 }));
 
 describe("cors service", () => {
@@ -29,35 +29,30 @@ describe("cors service", () => {
 
   beforeEach(() => {
     execute.mockReset();
-    select.mockReset();
+    getCache.mockReset();
     deleteArchive.mockReset();
   });
 
   describe("init", () => {
     it("should load non-archived origins into the cache", async () => {
-      select.mockReturnValue({ query: "SELECT", args: ["a"] });
-      execute.mockResolvedValue({
-        rows: [{ id: 1, name: "http://a.example.com", credentials: true }],
-      });
+      getCache.mockResolvedValue([
+        { id: 1, name: "http://a.example.com", credentials: true },
+      ]);
 
       await corsSvc.init();
 
-      expect(select).toHaveBeenCalledWith(0, 0, "id", "ASC", {
-        archived: { value: false, matchMode: "IS" },
-      });
-      expect(execute).toHaveBeenCalledWith("SELECT", ["a"], null);
+      expect(getCache).toHaveBeenCalledWith();
       expect(corsSvc.has("http://a.example.com")).toBe(true);
       expect(corsSvc.getCredentials("http://a.example.com")).toBe(true);
     });
 
     it("should clear any previously cached origins that are no longer returned", async () => {
-      select.mockReturnValue({ query: "SELECT", args: [] });
-      execute.mockResolvedValue({
-        rows: [{ id: 1, name: "http://a.example.com", credentials: false }],
-      });
+      getCache.mockResolvedValue([
+        { id: 1, name: "http://a.example.com", credentials: false },
+      ]);
       await corsSvc.init();
 
-      execute.mockResolvedValue({ rows: [] });
+      getCache.mockResolvedValue([]);
       await corsSvc.init();
 
       expect(corsSvc.has("http://a.example.com")).toBe(false);
@@ -66,10 +61,9 @@ describe("cors service", () => {
 
   describe("has / getCredentials", () => {
     beforeEach(async () => {
-      select.mockReturnValue({ query: "SELECT", args: [] });
-      execute.mockResolvedValue({
-        rows: [{ id: 1, name: "http://a.example.com", credentials: false }],
-      });
+      getCache.mockResolvedValue([
+        { id: 1, name: "http://a.example.com", credentials: false },
+      ]);
       await corsSvc.init();
     });
 
@@ -84,8 +78,7 @@ describe("cors service", () => {
 
   describe("addToCache / updateCache / deleteFromCache", () => {
     beforeEach(async () => {
-      select.mockReturnValue({ query: "SELECT", args: [] });
-      execute.mockResolvedValue({ rows: [] });
+      getCache.mockResolvedValue([]);
       await corsSvc.init();
     });
 

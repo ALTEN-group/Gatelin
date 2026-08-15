@@ -3,17 +3,26 @@ version: 1.0.0
 author: LCluber
 targets:
   - copilot
+  - cursor
 dependencies:
   apm:
+    # Agents (virtual paths — single-file primitives)
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
     - ALTEN-group/coding-pal/agents/node-express-back-end-code-audit.agent.md
     - ALTEN-group/coding-pal/agents/node-express-audit-fix.agent.md
+    # Instructions (virtual paths — single-file primitives)
     - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
     - ALTEN-group/coding-pal/instructions/node-express.instructions.md
+    - ALTEN-group/coding-pal/instructions/node-unit-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/postgres-liquibase.instructions.md
     - ALTEN-group/coding-pal/instructions/docker.instructions.md
     - ALTEN-group/coding-pal/instructions/angular-admin.instructions.md
+    # Skills (folder bundles — SKILL.md + references/ + scripts/)
     - git: ALTEN-group/coding-pal
       skills:
         - audit-reporting
-  mcp:
+        - node-express-examples
+        - postgres-liquibase-examples
+        - docker-examples
+        - angular-admin-examples
+  mcp: {}

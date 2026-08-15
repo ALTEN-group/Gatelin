@@ -2,6 +2,49 @@ import { log } from "@dwtechs/winstan";
 
 const VerbsWithBody = new Set(["post", "put", "patch"]);
 const LOG_PREFIX = "HTTP ";
+const UPSTREAM_TIMEOUT_MS = Number(process.env.UPSTREAM_TIMEOUT_MS) || 30000;
+
+/** Keys whose values must never reach a log sink, matched case-insensitively. */
+const SENSITIVE_KEYS = new Set([
+  "accesstoken",
+  "authorization",
+  "cookie",
+  "csrftoken",
+  "idtoken",
+  "newpwd",
+  "oldpwd",
+  "password",
+  "pwd",
+  "refreshtoken",
+  "secret",
+  "set-cookie",
+  "token",
+  "x-csrf-token",
+]);
+
+const MASK = "[REDACTED]";
+
+/**
+ * Serializes a value for logging with sensitive fields masked.
+ *
+ * Log aggregators retain debug output far longer than a request lives, so
+ * credentials that transit the gateway must never be written verbatim.
+ *
+ * @param {unknown} value
+ * @return {string|null}
+ */
+function redact(value) {
+  if (value === undefined || value === null) return null;
+  const seen = new WeakSet();
+  return JSON.stringify(value, function replacer(key, val) {
+    if (SENSITIVE_KEYS.has(key.toLowerCase())) return MASK;
+    if (typeof val === "object" && val !== null) {
+      if (seen.has(val)) return "[Circular]";
+      seen.add(val);
+    }
+    return val;
+  });
+}
 
 /**
  * Sends a request to the specified URL using the specified HTTP verb.
@@ -22,6 +65,9 @@ function query(verb, url, params, data, headers) {
   const init = {
     method,
     headers: { "Content-Type": "application/json", ...headers },
+    // Without this an unresponsive upstream holds the socket and its event-loop
+    // work until the client gives up, which exhausts the gateway under load.
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   };
 
   if (VerbsWithBody.has(method) && data) init.body = JSON.stringify(data);
@@ -52,8 +98,19 @@ function query(verb, url, params, data, headers) {
       // 503 (Service Unavailable) is the RFC-correct signal for "upstream
       // unreachable" and is what forward.js's default falls back to.
       if (!err.statusCode) {
-        err.statusCode = 503;
-        err.message = `HTTP(503): ${err.message}`;
+        // AbortSignal.timeout() rejects with TimeoutError; AbortError covers
+        // an explicit abort. Both mean the upstream never answered in time.
+        const timedOut =
+          err.name === "TimeoutError" || err.name === "AbortError";
+        // err.message is the only field that reaches the client, so the raw
+        // cause is kept in the server log and replaced with a generic string.
+        log.error(
+          `${LOG_PREFIX}${method} ${url} failed: ${err.name}: ${err.message}`,
+        );
+        err.statusCode = timedOut ? 504 : 503;
+        err.message = timedOut
+          ? "HTTP(504): Upstream timeout"
+          : "HTTP(503): Service Unavailable";
       }
       throw err;
     });
@@ -64,8 +121,8 @@ function query(verb, url, params, data, headers) {
  */
 function logStart(method, url, params, data, headers) {
   log.debug(() => {
-    const p = JSON.stringify(params) || null;
-    const d = JSON.stringify(data) || null;
+    const p = redact(params);
+    const d = redact(data);
     const headerKeys = headers ? Object.keys(headers).join(", ") : null;
     return `${LOG_PREFIX} query : { method: '${method}', Url: '${url}', params: '${p}', data: '${d}', headers: [${headerKeys}]}`;
   });
@@ -78,7 +135,7 @@ function logStart(method, url, params, data, headers) {
 function logEnd(res, time) {
   log.debug(() => {
     const delta = Date.now() - time;
-    const data = JSON.stringify(res.data);
+    const data = redact(res.data);
     return `${LOG_PREFIX} response in ${delta}ms. status: ${res.status}, data: ${data}`;
   });
 }

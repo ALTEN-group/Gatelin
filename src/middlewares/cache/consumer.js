@@ -32,7 +32,7 @@ import csmerSvc from "../../services/consumer.js";
  */
 function addToCache(_req, res, next) {
   const c = res.locals.rows[0]; // Newly created consumer from database
-  log.debug(() => `Adding consumer to cache : ${JSON.stringify(c)}`);
+  log.debug(() => `Adding consumer ${c.id} (user ${c.userId}) to cache`);
   // Add consumer to cache
   csmerSvc.addToCache(c);
   next();

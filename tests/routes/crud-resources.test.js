@@ -15,6 +15,8 @@ import supertest from "supertest";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
 const consumerSvcPath = path.join(__dirname, "../../src/services/consumer.js");
+const roleSvcPath = path.join(__dirname, "../../src/services/role.js");
+const scopeSvcPath = path.join(__dirname, "../../src/services/scope.js");
 const historyPath = path.join(__dirname, "../../src/middlewares/history.js");
 
 // { mount segment used in app.js, entity file name under src/entities/ }
@@ -71,6 +73,20 @@ jest.unstable_mockModule(routeSvcPath, () => ({
 jest.unstable_mockModule(consumerSvcPath, () => ({
   __esModule: true,
   default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
+}));
+// Mutating routes reload these caches so admin edits take effect without a
+// restart; without the mocks each write would try to reach Postgres.
+jest.unstable_mockModule(roleSvcPath, () => ({
+  __esModule: true,
+  default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
+}));
+jest.unstable_mockModule(scopeSvcPath, () => ({
+  __esModule: true,
+  default: {
+    getValues: jest.fn(() => []),
+    init: jest.fn(),
+    deleteArchived: jest.fn(),
+  },
 }));
 
 // One spy set per entity, tagging rows/schema with the entity name so cross-resource wiring bugs surface.

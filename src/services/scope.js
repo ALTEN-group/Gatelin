@@ -1,5 +1,4 @@
 // @ts-check
-import { execute } from "@dwtechs/antity-pgsql";
 import sEnt from "../entities/scope.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
@@ -18,15 +17,8 @@ let scopes = new Map();
  * @return {Promise<void>}
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = sEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
-    scopes = new Map(r.rows.map((s) => [s.id, s.name]));
+  return sEnt.getCache().then((rows) => {
+    scopes = new Map(rows.map((s) => [s.id, s.name]));
   });
 }
 

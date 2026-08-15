@@ -53,3 +53,60 @@ jobs:
             echo "| Functions  | ${FUNCS}% |"
             echo "| Lines      | ${LINES}% |"
           } >> $GITHUB_STEP_SUMMARY
+
+  admin:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: admin
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Generate and publish coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUMMARY: admin/coverage/admin/coverage-summary.json
+          BADGE_NAME: admin-coverage.svg
+          BADGE_LABEL: admin
+        run: bash .github/scripts/badge.sh
+
+      - name: Post coverage summary
+        if: always()
+        run: |
+          SUMMARY=coverage/admin/coverage-summary.json
+          if [ ! -f "$SUMMARY" ]; then
+            echo "No coverage-summary.json found — skipping summary." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+          STMTS=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.statements.pct))")
+          BRANCH=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.branches.pct))")
+          FUNCS=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.functions.pct))")
+          LINES=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.lines.pct))")
+          {
+            echo "## Admin coverage"
+            echo "| Metric     | Coverage |"
+            echo "|------------|----------|"
+            echo "| Statements | ${STMTS}% |"
+            echo "| Branches   | ${BRANCH}% |"
+            echo "| Functions  | ${FUNCS}% |"
+            echo "| Lines      | ${LINES}% |"
+          } >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,115 @@
+name: Admin E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "admin/**"
+      - "docker/**"
+      - "mocks/**"
+      - "scripts/**"
+      - "swagger/**"
+      - ".github/workflows/admin-e2e.yml"
+
+concurrency:
+  group: admin-e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Node is only needed on the runner for scripts/setup-mocks.sh, which
+      # `npm install`s @dwtechs/passken + @dwtechs/hashitaka into mocks/ms_pwd
+      # to hash the mock passwords. Everything else runs in Docker.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mocks/ms_pwd/package-lock.json
+
+      - name: Configure env and mocks
+        run: |
+          ./scripts/setup-env.sh
+          # Services run as ${UID}:${GID} (1000 in .env.dev.example) and bind-mount the
+          # checkout, which on a Linux runner belongs to `runner` (uid 1001). Without
+          # this alignment the admin entrypoint cannot rewrite angular.json, exits, and
+          # Traefik never registers a router — every request to /gatelin/ 404s.
+          # Docker Desktop masks this locally by ignoring host ownership on bind mounts.
+          sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
+          sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
+          ./scripts/setup-mocks.sh
+
+      - name: Start docker stack
+        run: ./scripts/start-dev.sh
+
+      # Wait for admin to be reachable through Traefik on the host port *before*
+      # invoking Playwright. Catches the "Traefik hasn't discovered admin yet"
+      # race up-front with clear output instead of inside the e2e container.
+      - name: Wait for admin via Traefik
+        run: |
+          compose() {
+            docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev "$@"
+          }
+          for i in $(seq 1 90); do
+            code=$(curl -o /dev/null -s -w '%{http_code}' --max-time 3 http://localhost:8100/gatelin/ || echo 000)
+            if [[ "$code" =~ ^2 ]]; then echo "admin ready after $((i * 2))s (HTTP $code)"; exit 0; fi
+            # admin has no restart policy, so once it exits it never comes back and
+            # Traefik drops its router (404 rather than 502). Bail out instead of
+            # burning the full 180s window.
+            if [[ -z "$(compose ps --status running -q admin)" ]]; then
+              echo "::error::admin container stopped running"
+              break
+            fi
+            printf 'attempt %d/90: HTTP %s\n' "$i" "$code"
+            sleep 2
+          done
+          echo "::error::admin did not become ready"
+          compose ps
+          echo "--- Traefik routers ---"
+          curl -sS http://localhost:8083/api/http/routers | python3 -m json.tool || true
+          echo "--- admin logs (last 200) ---"
+          compose logs --tail=200 admin
+          echo "--- traefik logs (last 100) ---"
+          compose logs --tail=100 traefik
+          exit 1
+
+      # scripts/e2e.sh builds (if needed) and runs the `admin-e2e` container:
+      # a Playwright image (mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble)
+      # that mounts admin/e2e + swagger/src, polls the admin URL through
+      # Traefik until it answers 200, then runs the suite. Same command devs
+      # run locally — no divergence between CI and local.
+      #
+      # `--no-deps` inside e2e.sh prevents `docker compose run` from recreating
+      # the already-warmed admin/gatelin/traefik services on this second call.
+      - name: Run e2e tests
+        run: ./scripts/e2e.sh --reporter=list
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            admin/playwright-report/
+            admin/test-results/
+          retention-days: 7
+
+      - name: Dump docker logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=300
+
+      - name: Stop docker stack
+        if: always()
+        run: ./scripts/stop-dev.sh || true

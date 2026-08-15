@@ -3,9 +3,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/spec",
-    "types": ["@angular/localize"],
+    "outDir": "./out-tsc/spec",
+    "types": ["vitest/globals", "@angular/localize"],
+    "paths": {
+      "app/*": ["./src/app/*"],
+      "@messages/*": ["./src/app/messages/*"],
+      "@core/*": ["./src/app/core/*"],
+      "file-saver": ["./src/testing/file-saver.stub.ts"]
+    }
   },
-  "include": ["src/**/*.spec.ts"],
-  "exclude": ["cypress/**/*.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
 }

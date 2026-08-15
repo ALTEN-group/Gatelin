@@ -29,7 +29,11 @@ export function addToCache(req, _res, next) {
 export function updateCache(req, _res, next) {
   if (req.body.rows && Array.isArray(req.body.rows)) {
     req.body.rows.forEach((corsOrigin) => {
-      corsSvc.updateCache(corsOrigin.id, corsOrigin.name);
+      corsSvc.updateCache(
+        corsOrigin.id,
+        corsOrigin.name,
+        corsOrigin.credentials,
+      );
     });
   }
   next();

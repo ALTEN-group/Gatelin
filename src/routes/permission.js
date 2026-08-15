@@ -4,6 +4,7 @@ import express from "express";
 const router = express.Router();
 
 import pEnt from "../entities/permission.js";
+import { reloadRoles } from "../middlewares/cache/reload.js";
 import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 
@@ -15,11 +16,11 @@ router.get(
   history.getByField(["permission", "permission_condition"], "routeId"),
 );
 // Add permissions
-router.post("/", pEnt.addArraySubstack);
+router.post("/", pEnt.addArraySubstack, reloadRoles);
 // Update permissions
-router.put("/", pEnt.updateArraySubstack);
+router.put("/", pEnt.updateArraySubstack, reloadRoles);
 // Delete permissions (uncheck route)
-router.delete("/", pEnt.delete);
+router.delete("/", pEnt.delete, reloadRoles);
 // Get entity schema
 router.get("/schema", schema.get(pEnt));
 

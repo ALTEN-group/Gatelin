@@ -36,7 +36,11 @@ describe("startDeleteOldHistoryJob", () => {
   it("should register the job to run daily at 3 AM UTC", () => {
     startDeleteOldHistoryJob();
 
-    expect(scheduleDailyAt).toHaveBeenCalledWith(3, expect.any(Function));
+    expect(scheduleDailyAt).toHaveBeenCalledWith(
+      3,
+      expect.any(Function),
+      "delete-old-history",
+    );
     expect(log.info).toHaveBeenCalledWith(
       expect.stringContaining("initialized"),
     );
@@ -67,12 +71,13 @@ describe("startDeleteOldHistoryJob", () => {
     expect(log.info).toHaveBeenCalledWith(expect.stringContaining("0 old"));
   });
 
-  it("should log an error instead of throwing when the deletion query fails", async () => {
+  it("should propagate a query failure to the scheduler, which logs it", async () => {
+    // The scheduler owns the try/catch so that a failed run also clears its
+    // in-progress flag; duplicating it here would swallow the rejection first.
     execute.mockRejectedValue(new Error("db down"));
     startDeleteOldHistoryJob();
     const callback = scheduleDailyAt.mock.calls[0][1];
 
-    await expect(callback()).resolves.toBeUndefined();
-    expect(log.error).toHaveBeenCalledWith(expect.stringContaining("db down"));
+    await expect(callback()).rejects.toThrow("db down");
   });
 });

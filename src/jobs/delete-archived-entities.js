@@ -28,8 +28,9 @@ const ARCHIVE_RETENTION_MONTHS = 2;
  * startDeleteArchivedEntitiesJob();
  */
 export function startDeleteArchivedEntitiesJob() {
-  scheduleDailyAt(2, async () => {
-    try {
+  scheduleDailyAt(
+    2,
+    async () => {
       const cutoff = new Date();
       cutoff.setMonth(cutoff.getMonth() - ARCHIVE_RETENTION_MONTHS);
 
@@ -78,12 +79,9 @@ export function startDeleteArchivedEntitiesJob() {
       log.info(
         `Completed deletion of archived entities. Total deleted: ${totalDeleted}`,
       );
-    } catch (err) {
-      log.error(
-        `Failed to complete archived entities deletion job: ${err.message}`,
-      );
-    }
-  });
+    },
+    "delete-archived-entities",
+  );
 
   log.info(
     `Delete archived entities job initialized (runs daily at 2:00 AM UTC, deletes entities archived > ${ARCHIVE_RETENTION_MONTHS} months)`,

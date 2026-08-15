@@ -22,10 +22,10 @@ jest.unstable_mockModule(roleEntPath, () => ({
   default: { query: { deleteArchive } },
 }));
 
-const select = jest.fn();
+const getCache = jest.fn();
 jest.unstable_mockModule(roleCacheEntPath, () => ({
   __esModule: true,
-  default: { query: { select } },
+  default: { getCache },
 }));
 
 describe("role service", () => {
@@ -38,24 +38,20 @@ describe("role service", () => {
 
   beforeEach(() => {
     execute.mockReset();
-    select.mockReset();
+    getCache.mockReset();
     deleteArchive.mockReset();
   });
 
   async function initWithRows(rows) {
-    select.mockReturnValue({ query: "SELECT", args: [] });
-    execute.mockResolvedValue({ rows });
+    getCache.mockResolvedValue(rows);
     await roleSvc.init();
   }
 
   describe("init", () => {
-    it("should query the role_cache view for non-archived roles", async () => {
+    it("should load roles via getCache from the role_cache view", async () => {
       await initWithRows([{ id: 1, name: "admin", permissions: [] }]);
 
-      expect(select).toHaveBeenCalledWith(0, 0, "id", "ASC", {
-        archived: { value: false, matchMode: "IS" },
-      });
-      expect(execute).toHaveBeenCalledWith("SELECT", [], null);
+      expect(getCache).toHaveBeenCalledWith();
       expect(roleSvc.getOne(1)).toMatchObject({ id: 1, name: "admin" });
     });
 

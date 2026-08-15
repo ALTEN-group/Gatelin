@@ -12,11 +12,11 @@ const scopeEntPath = path.join(__dirname, "../../src/entities/scope.js");
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
-const select = jest.fn();
+const getCache = jest.fn();
 const deleteArchive = jest.fn();
 jest.unstable_mockModule(scopeEntPath, () => ({
   __esModule: true,
-  default: { query: { select, deleteArchive } },
+  default: { getCache, query: { deleteArchive } },
 }));
 
 describe("scope service", () => {
@@ -29,24 +29,20 @@ describe("scope service", () => {
 
   beforeEach(() => {
     execute.mockReset();
-    select.mockReset();
+    getCache.mockReset();
     deleteArchive.mockReset();
   });
 
   async function initWithRows(rows) {
-    select.mockReturnValue({ query: "SELECT", args: [] });
-    execute.mockResolvedValue({ rows });
+    getCache.mockResolvedValue(rows);
     await scopeSvc.init();
   }
 
   describe("init", () => {
-    it("should query only non-archived scopes", async () => {
+    it("should load scopes via getCache", async () => {
       await initWithRows([{ id: 1, name: "own" }]);
 
-      expect(select).toHaveBeenCalledWith(0, 0, "id", "ASC", {
-        archived: { value: false, matchMode: "IS" },
-      });
-      expect(execute).toHaveBeenCalledWith("SELECT", [], null);
+      expect(getCache).toHaveBeenCalledWith();
     });
   });
 

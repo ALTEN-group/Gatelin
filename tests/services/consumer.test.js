@@ -12,11 +12,11 @@ const consumerEntPath = path.join(__dirname, "../../src/entities/consumer.js");
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
-const select = jest.fn();
+const getCache = jest.fn();
 const deleteArchive = jest.fn();
 jest.unstable_mockModule(consumerEntPath, () => ({
   __esModule: true,
-  default: { query: { select, deleteArchive } },
+  default: { getCache, query: { deleteArchive } },
 }));
 
 describe("consumer service", () => {
@@ -29,13 +29,12 @@ describe("consumer service", () => {
 
   beforeEach(() => {
     execute.mockReset();
-    select.mockReset();
+    getCache.mockReset();
     deleteArchive.mockReset();
   });
 
   async function initWithRows(rows) {
-    select.mockReturnValue({ query: "SELECT", args: [] });
-    execute.mockResolvedValue({ rows });
+    getCache.mockResolvedValue(rows);
     await consumerSvc.init();
   }
 
@@ -45,9 +44,7 @@ describe("consumer service", () => {
         { id: 1, accessToken: "tok1", refreshToken: "ref1", roles: [1] },
       ]);
 
-      expect(select).toHaveBeenCalledWith(0, 0, "id", "ASC", {
-        archived: { value: false, matchMode: "IS" },
-      });
+      expect(getCache).toHaveBeenCalledWith();
       expect(consumerSvc.getOne("tok1")).toMatchObject({ id: 1 });
     });
   });

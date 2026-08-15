@@ -1,6 +1,5 @@
 // @ts-check
 
-import { execute } from "@dwtechs/antity-pgsql";
 import rEnt from "../entities/route.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 import { stripTrailingSlash } from "../utils/url.js";
@@ -22,7 +21,6 @@ let serviceBaseUrls = new Map();
  * This function should be called once when the application starts to populate the
  * in-memory cache with route data for fast pattern matching during request processing.
  * Routes are used to determine which requests are valid and whether they require authentication.
- * Uses the @dwtechs/antity-pgsql library to build and execute the SQL query.
  *
  * @return {Promise<void>} A promise that resolves when all routes have been loaded into cache
  * @throws {Error} Database connection or query execution errors
@@ -32,25 +30,18 @@ let serviceBaseUrls = new Map();
  * console.log('Route cache initialized with', routes.length, 'routes');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = rEnt.query.select(0, 0, "id", "ASC", filters);
   const { APP_NAME, ENV_NAME } = process.env;
   const scheme = process.env.SERVER_SCHEME ?? "http://";
   const port = process.env.PORT ?? "3000";
   const san = `${scheme}${APP_NAME}-`;
   const ep = `-${ENV_NAME}:${port}`;
-  return execute(query, args, null).then((r) => {
+  return rEnt.getCache().then((rows) => {
     // Collect unique service names to build base URLs later
     const serviceNames = new Set();
     // Reset the method index: each key is an HTTP method (GET, POST…),
     // each value is the subset of routes that accept that method
     routesByMethod = new Map();
-    for (const row of r.rows) {
+    for (const row of rows) {
       serviceNames.add(row.serviceName);
       // Anchor the pattern so a shorter prefix cannot match a more-privileged path
       const rawPattern = row.url;

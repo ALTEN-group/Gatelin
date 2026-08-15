@@ -32,6 +32,17 @@ jest.unstable_mockModule(routeSvcPath, () => ({
   __esModule: true,
   default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
 }));
+// Readiness must not depend on whether a real Postgres happens to be reachable
+// in the developer's environment — drive the probe through a mocked pool.
+const poolQuery = jest.fn();
+jest.unstable_mockModule("pg-pool", () => ({
+  __esModule: true,
+  default: class Pool {
+    query(...args) {
+      return poolQuery(...args);
+    }
+  },
+}));
 
 describe("GET /gateway/health", () => {
   let app;
@@ -45,6 +56,7 @@ describe("GET /gateway/health", () => {
 
   beforeEach(() => {
     routeSvc.getOne.mockReset();
+    poolQuery.mockReset();
   });
 
   it("responds without hitting checkRoute (mounted before it)", async () => {
@@ -52,10 +64,69 @@ describe("GET /gateway/health", () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
+      status: "ok",
       uptime: expect.any(Number),
-      message: "OK",
       timestamp: expect.any(Number),
     });
+    expect(routeSvc.getOne).not.toHaveBeenCalled();
+    expect(poolQuery).not.toHaveBeenCalled();
+  });
+
+  it("stays 200 with no database, so an outage cannot trigger a restart loop", async () => {
+    // Liveness must not depend on Postgres — killing every instance would not
+    // bring the database back.
+    poolQuery.mockRejectedValue(new Error("connection refused"));
+
+    const res = await supertest(app).get("/gateway/health");
+
+    expect(res.status).toBe(200);
+    expect(poolQuery).not.toHaveBeenCalled();
+  });
+});
+
+describe("GET /gateway/health/ready", () => {
+  let app;
+  let routeSvc;
+
+  beforeAll(async () => {
+    const routeModule = await import("../../src/services/route.js");
+    routeSvc = routeModule.default;
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset();
+    poolQuery.mockReset();
+  });
+
+  it("reports the database unavailable when it cannot be reached", async () => {
+    poolQuery.mockRejectedValue(new Error("connection refused"));
+
+    const res = await supertest(app).get("/gateway/health/ready");
+
+    expect(res.status).toBe(503);
+    expect(res.body.status).toBe("unavailable");
+    expect(res.body.checks.db.status).toBe("error");
+    expect(typeof res.body.checks.db.error).toBe("string");
+    expect(res.body.checks.db.error).toContain("connection refused");
+  });
+
+  it("reports ready when the database probe succeeds", async () => {
+    poolQuery.mockResolvedValue({ rows: [{ "?column?": 1 }] });
+
+    const res = await supertest(app).get("/gateway/health/ready");
+
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe("ready");
+    expect(res.body.checks.db.status).toBe("ok");
+    expect(poolQuery).toHaveBeenCalledWith("SELECT 1", []);
+  });
+
+  it("is mounted before checkRoute", async () => {
+    poolQuery.mockResolvedValue({ rows: [] });
+
+    await supertest(app).get("/gateway/health/ready");
+
     expect(routeSvc.getOne).not.toHaveBeenCalled();
   });
 });

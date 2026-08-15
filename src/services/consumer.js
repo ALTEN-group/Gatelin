@@ -1,5 +1,4 @@
 // @ts-check
-import { execute } from "@dwtechs/antity-pgsql";
 import cEnt from "../entities/consumer.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
@@ -23,7 +22,6 @@ let consumerIdIndex = new Map();
  * Initializes the consumer cache by loading all consumer records from the database.
  * This function should be called once when the application starts to populate the
  * in-memory cache with consumer data for fast lookups during request processing.
- * Uses the @dwtechs/antity-pgsql library to build and execute the SQL query.
  *
  * @return {Promise<void>} A promise that resolves when all consumers have been loaded into cache
  * @throws {Error} Database connection or query execution errors
@@ -33,16 +31,9 @@ let consumerIdIndex = new Map();
  * console.log('Consumer cache initialized');
  */
 function init() {
-  const filters = {
-    archived: {
-      value: false,
-      matchMode: "IS",
-    },
-  };
-  const { query, args } = cEnt.query.select(0, 0, "id", "ASC", filters);
-  return execute(query, args, null).then((r) => {
-    consumers = new Map(r.rows.map((c) => [c.accessToken, c]));
-    consumerIdIndex = new Map(r.rows.map((c) => [c.id, c.accessToken]));
+  return cEnt.getCache().then((rows) => {
+    consumers = new Map(rows.map((c) => [c.accessToken, c]));
+    consumerIdIndex = new Map(rows.map((c) => [c.id, c.accessToken]));
   });
 }
 

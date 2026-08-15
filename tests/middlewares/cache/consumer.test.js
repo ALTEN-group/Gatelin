@@ -149,9 +149,9 @@ describe("addToCache middleware", () => {
     addToCache(req, res, next);
 
     expect(csmerSvc.addToCache).toHaveBeenCalledWith(res.locals.rows[0]);
-    expect(debugMessages()).toContain(
-      `Adding consumer to cache : ${JSON.stringify(res.locals.rows[0])}`,
-    );
+    // Identifiers only: the consumer row carries access and refresh tokens,
+    // which must not be serialized into the debug log.
+    expect(debugMessages()).toContain("Adding consumer 16 (user 123) to cache");
     expect(next).toHaveBeenCalledWith();
   });
 });

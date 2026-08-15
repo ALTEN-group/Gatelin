@@ -61,12 +61,19 @@ describe("security middleware", () => {
       "same-origin",
     );
     expect(res.setHeader).toHaveBeenCalledWith(
-      "Cross-Origin-Embedder-Policy",
-      "require-corp",
-    );
-    expect(res.setHeader).toHaveBeenCalledWith(
       "Permissions-Policy",
       expect.stringContaining("camera=()"),
+    );
+  });
+
+  it("should not send COEP, which only applies to SharedArrayBuffer documents", () => {
+    security(req, res, next);
+
+    // require-corp on JSON responses breaks legitimate cross-origin clients
+    // without protecting anything the gateway serves.
+    expect(res.setHeader).not.toHaveBeenCalledWith(
+      "Cross-Origin-Embedder-Policy",
+      expect.anything(),
     );
   });
 

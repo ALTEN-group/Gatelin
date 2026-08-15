@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router } from "@angular/router";
 import { AclService } from "@core/acl/acl.service";
 import { AdminEntity } from "@core/app-config/app.entities";
 import { AuthenticationService } from "@core/auth/auth.service";
-import { AppPaths } from "app/app.routes";
 import { map } from "rxjs";
 
 export function aclGuard(): CanActivateFn {
@@ -13,7 +12,7 @@ export function aclGuard(): CanActivateFn {
     const authService = inject(AuthenticationService);
 
     if (!authService.isAuthenticated()) {
-      router.navigate([`/${AppPaths.LOGIN}`]);
+      router.navigate(["/login"]);
       return false;
     }
 
@@ -30,5 +29,5 @@ export function aclGuard(): CanActivateFn {
 }
 
 function redirectsToUnauthorized(router: Router): void {
-  router.navigate([`/${AppPaths.UNAUTHORIZED}`]);
+  router.navigate(["/unauthorized"]);
 }

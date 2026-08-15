@@ -4,6 +4,7 @@ import express from "express";
 const router = express.Router();
 
 import rEnt from "../entities/route.js";
+import { reloadRoutes } from "../middlewares/cache/reload.js";
 import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 import { checkRoutePattern } from "../middlewares/validators/check-route-pattern.js";
@@ -16,11 +17,11 @@ router.get(
   history.get(["route", "route_operation", "route_method"]),
 );
 // add a route.
-router.post("/", checkRoutePattern, rEnt.addArraySubstack);
+router.post("/", checkRoutePattern, rEnt.addArraySubstack, reloadRoutes);
 // Update a route.
-router.put("/", checkRoutePattern, rEnt.updateArraySubstack);
+router.put("/", checkRoutePattern, rEnt.updateArraySubstack, reloadRoutes);
 // Bulk archive
-router.post("/archive", rEnt.archive);
+router.post("/archive", rEnt.archive, reloadRoutes);
 // Get entity schema
 router.get("/schema", schema.get(rEnt));
 
