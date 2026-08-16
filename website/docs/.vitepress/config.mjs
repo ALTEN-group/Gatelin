@@ -34,6 +34,7 @@ export default withMermaid(defineConfig({
           { text: 'Sessions', link: '/guide/api-sessions' },
           { text: 'Proxy', link: '/guide/api-proxy' },
           { text: 'Consumers', link: '/guide/api-consumers' },
+          { text: 'Preferences', link: '/guide/api-preferences' },
           {
             text: 'Routing',
             collapsed: false,

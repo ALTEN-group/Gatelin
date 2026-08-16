@@ -2,10 +2,10 @@
 
 Gatelin is distributed as Docker images on Docker Hub:
 
-- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/gatelin`)
+- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
 - **`dwtechs/gatelin-migration`** — the Liquibase migration container
 
-See the [Integration](./integration) page for a full `docker-compose.yml` template.
+See the [Integration](./integration) page for seed-data setup, and [Environment Variables](./configuration) for the full variable reference.
 
 ## Architecture
 
@@ -15,64 +15,13 @@ Browser / Client
       v
   Traefik  (:80)
       |
-      +-- /gateway/* --> Gatelin  (auth, routing, ACL)
-      |                    |
-      +-- /your-api/* -->   Your microservice
+      +-- /api/*       --> Gatelin API  (auth, routing, ACL)
+      |                      (strip /api prefix → /gateway/* …)
+      |
+      +-- ADMIN_BASE_PATH/* --> Gatelin Admin UI
+      |
+      +-- /your-api/*  -->   Your microservice
 ```
-
-
-## Environment Variables
-
-These variables must be set on the `gatelin` container:
-
-
-### Gatelin service
-
-| Variable | Required | Description |
-|---|---|---|
-| `PORT` | ⬜ | Port Gatelin listens on (default: `3000`) |
-| `TZ` | ⬜ | Timezone (default: `Europe/Paris`) |
-| `USER_SEARCH_URL` | ✅ | URL of your user microservice endpoint that searches users by email during login phase |
-| `PWD_CHECK_URL` | ✅ | URL of your pwd microservice endpoint that verifies passwords during login phase |
-| `DB_HOST` | ✅ | Hostname of the PostgreSQL container |
-| `DB_NAME` | ✅ | Database name (default: `gatelin`) |
-| `DB_USER` | ✅ | Database user for Gatelin |
-| `DB_PWD` | ✅ | Database password for Gatelin |
-| `TOKEN_SECRET` | ✅ | Secret used to verify JWT access tokens, at least 32 characters (must match your auth service) |
-| `APP_NAME` | ✅ | Application name, used to name the Docker network and containers |
-| `ENV_NAME` | ✅ | Environment name, e.g. `local`, `staging`, `prod` |
-| `SERVER_SCHEME` | ⬜ | Scheme used in internal URLs (default: `http://`) |
-| `SERVICE_NAME` | ✅ | Container hostname of the Gatelin service. Used for logs |
-| `ACCESS_TOKEN_DURATION` | ✅ | Access token lifetime in seconds (default: `600`) |
-| `REFRESH_TOKEN_DURATION` | ✅ | Refresh token lifetime in seconds (default: `86400`) |
-
-### Database migration service
-
-| Variable | Required | Description |
-|---|---|---|
-| `TZ` | ⬜ | Timezone (default: `Europe/Paris`) |
-| `LIQUIBASE_COMMAND_USERNAME` | ✅ | PostgreSQL superuser used by Liquibase to run migrations |
-| `LIQUIBASE_COMMAND_PASSWORD` | ✅ | Password for the Liquibase superuser |
-| `DB_HOST` | ✅ | Hostname of the PostgreSQL container |
-| `DB_PORT` | ✅ | Port of the PostgreSQL container (default: `5432`) |
-| `DB_NAME` | ✅ | Database name to create and migrate (default: `gatelin`) |
-| `DB_USER` | ✅ | Application database user to create and grant privileges to |
-| `DB_PWD` | ✅ | Password for the application database user |
-| `UPDATE` | ✅ | Set to `1` to run the full migration (create DB, apply changelog, create app user) |
-| `ROLLBACK` | ⬜ | Number of changesets to roll back (used instead of `UPDATE`) |
-| `SNAPSHOT` | ⬜ | Path to the reference snapshot file used by the `diff` and `rollback` commands |
-| `LIQUIBASE_LOG_LEVEL` | ⬜ | Liquibase log verbosity, e.g. `INFO`, `DEBUG` |
-| `LIQUIBASE_COMMAND_CONTEXTS` | ⬜ | Liquibase contexts to apply during migration |
-
-### Admin
-
-The admin is an Angular app built into the `gatelin` image and served by the gateway itself under `ADMIN_BASE_PATH`. Its API URLs (`apiGateway`, `apiUsers`) are baked into the build via the `environment.ts` / `environment.prod.ts` files and are not configurable at runtime through environment variables.
-
-| Variable | Required | Description |
-|---|---|---|
-| `ADMIN_PORT` | ⬜ | Port the admin UI is served on. Unset to disable the admin UI entirely. |
-| `ADMIN_BASE_PATH` | ⬜ | Path prefix the admin UI is served under, e.g. `/gatelin` (default). Only needs to match your reverse proxy's routing rule — no rebuild required. |
-
 
 ## docker-compose.yml template
 
@@ -159,8 +108,8 @@ services:
         condition: service_completed_successfully
     environment:
       TZ: Europe/Paris
-      PWD_CHECK_URL: http://my-auth-service:3000/auth/credentials
-      USER_SEARCH_URL: http://my-user-service:3000/users/users/search
+      PWD_CHECK_URL: http://my-project-mspwd-local:3000/pwd/compare
+      USER_SEARCH_URL: http://my-project-msuser-local:3000/users/search
       DB_HOST: my-project-postgres-local
       DB_NAME: gatelin
       DB_USER: gatelin
@@ -171,9 +120,11 @@ services:
       SERVICE_NAME: my-project-gatelin-local
       ACCESS_TOKEN_DURATION: 600
       REFRESH_TOKEN_DURATION: 86400
+      REFRESH_TOKEN_COOKIE: "true"
+      REFRESH_TOKEN_COOKIE_HTTPS_ONLY: "false"
       # Unset to disable the admin UI; set to enable it on a dedicated internal port
       ADMIN_PORT: 4200
-      # Path prefix the admin UI is served under (must match the Traefik rule below)
+      # Override the code default (/admin) to match the Traefik rule below
       ADMIN_BASE_PATH: /gatelin
     networks:
       - internal
@@ -226,10 +177,6 @@ volumes:
   postgres_data:
     driver: local
 ```
-
-
-
-
 
 ## Health Check
 

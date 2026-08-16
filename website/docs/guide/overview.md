@@ -38,4 +38,6 @@ A **role** is a named group of permissions, scoped to an application. Consumers 
 
 ### Permissions
 
-A **permission** is the explicit grant that links a **role** to a **route** and an **operation** (e.g. `GET /users`). On every incoming request, the gateway checks whether the consumer's roles include a permission that covers the matched route and HTTP method. If no matching permission exists, the request is rejected with a 403 error.
+A **permission** is the explicit grant that links a **role** to a **route** and an **operation** (e.g. `GET /users`). It may also restrict **fields** (writable/readable columns), **scopes** (URL sub-segments), and **conditions** (row-level filters). On every incoming request, the gateway checks whether the consumer's roles include a permission that covers the matched route and HTTP method. If no matching permission exists, the request is rejected with a 403 error.
+
+When a consumer has multiple roles, their permissions are merged.

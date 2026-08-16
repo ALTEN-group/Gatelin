@@ -18,6 +18,13 @@ Authorization: Bearer <access_token>
 }
 ```
 
+## Get Method History
+
+```
+GET /gateway/methods/:id/history
+Authorization: Bearer <access_token>
+```
+
 ## Update Method
 
 ```
