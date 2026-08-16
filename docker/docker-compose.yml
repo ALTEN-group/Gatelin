@@ -179,6 +179,12 @@ services:
       - ${PWD}/jest.config.js:/usr/src/app/jest.config.js
       - ${PWD}/babel.config.json:/usr/src/app/babel.config.json
       - ${PWD}/package.json:/usr/src/app/package.json
+      # Without biome.json Biome silently falls back to its defaults (tab indent)
+      # and rewrites the mounted src/ on the host. .gitignore is required too
+      # because biome.json enables the VCS integration's useIgnoreFile.
+      - ${PWD}/biome.json:/usr/src/app/biome.json
+      - ${PWD}/.editorconfig:/usr/src/app/.editorconfig
+      - ${PWD}/.gitignore:/usr/src/app/.gitignore
       - gateway_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"

@@ -26,6 +26,8 @@ const SERVICE_FILES = [
   "role",
   "application",
   "scope",
+  "condition",
+  "field",
 ];
 const deleteArchivedMocks = {};
 for (const name of SERVICE_FILES) {
@@ -80,6 +82,23 @@ describe("startDeleteArchivedEntitiesJob", () => {
       expect(daysAgo).toBeGreaterThan(55);
       expect(daysAgo).toBeLessThan(65);
     }
+  });
+
+  it("should purge conditions before fields (fieldId ON DELETE RESTRICT)", async () => {
+    const order = [];
+    for (const [name, mock] of Object.entries(deleteArchivedMocks)) {
+      mock.mockImplementation(async () => {
+        order.push(name);
+        return 0;
+      });
+    }
+    startDeleteArchivedEntitiesJob();
+    const callback = scheduleDailyAt.mock.calls[0][1];
+
+    await callback();
+
+    expect(order.indexOf("condition")).toBeLessThan(order.indexOf("field"));
+    expect(order.indexOf("condition")).toBeLessThan(order.indexOf("resource"));
   });
 
   it("should sum counts across entities and log the total", async () => {

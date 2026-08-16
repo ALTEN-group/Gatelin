@@ -1,8 +1,10 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
 import applicationSvc from "../services/application.js";
+import conditionSvc from "../services/condition.js";
 import consumerSvc from "../services/consumer.js";
 import corsSvc from "../services/cors.js";
+import fieldSvc from "../services/field.js";
 import operationSvc from "../services/operation.js";
 import resourceSvc from "../services/resource.js";
 import roleSvc from "../services/role.js";
@@ -18,7 +20,10 @@ const ARCHIVE_RETENTION_MONTHS = 2;
  * All entities must be archived for at least ARCHIVE_RETENTION_MONTHS before deletion.
  * Runs once daily at 2:00 AM.
  *
- * Deletes archived records from: consumers, services, CORS origins, operations, resources, routes, roles, applications, and scopes.
+ * Deletes archived records from: consumers, services, CORS origins, operations,
+ * resources, routes, roles, applications, scopes, conditions, and fields.
+ * Conditions are purged first because condition.fieldId is ON DELETE RESTRICT
+ * (also required before resource→field CASCADE can succeed).
  *
  * Cron schedule format: "second minute hour day month weekday"
  * Current schedule: "0 0 2 * * *" means every day at 2:00 AM
@@ -38,8 +43,15 @@ export function startDeleteArchivedEntitiesJob() {
         `Starting scheduled deletion of archived entities (archived > ${ARCHIVE_RETENTION_MONTHS} months)...`,
       );
 
-      // Define all entities to process
-      const entities = [
+      /** @param {{ name: string, service: { deleteArchived: (date: Date) => Promise<number> } }} entity */
+      const purge = (entity) =>
+        entity.service
+          .deleteArchived(cutoff)
+          .then((count) => ({ entity, count }));
+
+      // Conditions first: fieldId is ON DELETE RESTRICT; also unblocks resource→field CASCADE
+      const conditionEntity = { name: "conditions", service: conditionSvc };
+      const remaining = [
         { name: "consumers", service: consumerSvc },
         { name: "services", service: serviceSvc },
         { name: "CORS origins", service: corsSvc },
@@ -49,18 +61,15 @@ export function startDeleteArchivedEntitiesJob() {
         { name: "roles", service: roleSvc },
         { name: "applications", service: applicationSvc },
         { name: "scopes", service: scopeSvc },
+        { name: "fields", service: fieldSvc },
       ];
 
       let totalDeleted = 0;
 
-      // Process all entities concurrently
-      const results = await Promise.allSettled(
-        entities.map((entity) =>
-          entity.service
-            .deleteArchived(cutoff)
-            .then((count) => ({ entity, count })),
-        ),
-      );
+      const results = [
+        ...(await Promise.allSettled([purge(conditionEntity)])),
+        ...(await Promise.allSettled(remaining.map(purge))),
+      ];
 
       for (const result of results) {
         if (result.status === "fulfilled") {
