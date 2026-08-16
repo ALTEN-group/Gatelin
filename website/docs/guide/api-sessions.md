@@ -19,16 +19,19 @@ Content-Type: application/json
 **Response (200 OK):**
 ```json
 {
+  "nickname": "jane",
   "accessToken": "eyJhbGc...",
   "refreshToken": "eyJhbGc...",
+  "roles": [1, 2],
   "permissions": [
-    { "route": "routeName", "operations": [1, 2], "fields": null }
+    { "route": "routeName", "operations": [1, 2], "fields": null, "scopes": null }
   ]
 }
 ```
 
+A CSRF cookie (`csrfToken` by default) is also set. When `REFRESH_TOKEN_COOKIE` is enabled, the refresh token is stored as an httpOnly cookie as well.
 
-### Sequence diagram 
+### Sequence diagram
 
 ```mermaid
 ---
@@ -55,7 +58,7 @@ sequenceDiagram
   u->>f: Enter email and pwd
   deactivate u
   activate f
-  f->>msg: post(/consumers) { email, pwd }
+  f->>msg: POST /gateway/sessions { email, pwd }
   deactivate f
 
   rect rgb(220, 220, 220, 0.1)
@@ -74,7 +77,7 @@ sequenceDiagram
   end
   rect rgb(220, 220, 220, 0.1)
     note over msg,udb: User Lookup Block
-    msg->>msu: post(/users/search) { filters: { email } }
+    msg->>msu: POST USER_SEARCH_URL { filters }
     deactivate msg
     activate msu
     rect rgb(100, 200, 100, 0.2)
@@ -82,7 +85,7 @@ sequenceDiagram
     end
     deactivate msu
     activate udb
-    rect rgb(150, 50, 50, 0.5) 
+    rect rgb(150, 50, 50, 0.5)
       break when email is not found
         udb->>msu: User not found
         deactivate udb
@@ -95,7 +98,7 @@ sequenceDiagram
         deactivate msg
         activate f
         f->>u: display error message
-        deactivate f   
+        deactivate f
         activate udb
       end
     end
@@ -109,7 +112,7 @@ sequenceDiagram
 
   rect rgb(220, 220, 220, 0.1)
     note over msg,pdb: Password Validation Block
-    msg->>msp: post(/pwd/compare) { userId, pwd }
+    msg->>msp: POST PWD_CHECK_URL { userId, pwd }
     deactivate msg
     activate msp
     rect rgb(100, 200, 100, 0.2)
@@ -117,8 +120,8 @@ sequenceDiagram
     end
     deactivate msp
     activate pdb
-    rect rgb(150, 50, 50, 0.5) 
-      break when pwd  is not found
+    rect rgb(150, 50, 50, 0.5)
+      break when pwd is not found
         pdb->>msp: Pwd not found
         deactivate pdb
         activate msp
@@ -130,7 +133,7 @@ sequenceDiagram
         deactivate msg
         activate f
         f->>u: display error message
-        deactivate f   
+        deactivate f
         activate pdb
       end
     end
@@ -163,6 +166,7 @@ sequenceDiagram
     rect rgb(100, 200, 100, 0.2)
       msg--)msg: Create accessToken with payload : { id, nickname, roles }
       msg--)msg: Create refreshToken
+      msg--)msg: Set CSRF cookie
     end
     msg->>gdb: Insert session in consumer table
     deactivate msg
@@ -179,35 +183,46 @@ sequenceDiagram
   end
 ```
 
-
 ## Refresh Tokens
 
 ```
 PUT /gateway/sessions
 Content-Type: application/json
-Authorization: Bearer <refresh_token>
+Authorization: Bearer <access_token>
+X-CSRF-Token: <csrf_cookie_value>
+Cookie: csrfToken=<csrf_cookie_value>; refreshToken=<optional>
 
 {
   "refreshToken": "eyJhbGc..."
 }
 ```
 
+The access token may already be expired — refresh ignores expiration after CSRF and refresh-token checks pass. The refresh token may be supplied in the JSON body and/or the refresh-token cookie.
+
 **Response (200 OK):**
 ```json
 {
+  "nickname": "jane",
   "accessToken": "new_access_token",
   "refreshToken": "new_refresh_token",
+  "roles": [1, 2],
   "permissions": [
-    { "route": "routeName", "operations": [1, 2], "fields": null }
+    { "route": "routeName", "operations": [1, 2], "fields": null, "scopes": null }
   ]
 }
 ```
+
+A fresh CSRF cookie is issued with the new tokens.
 
 ## Logout
 
 ```
 DELETE /gateway/sessions
 Authorization: Bearer <access_token>
+X-CSRF-Token: <csrf_cookie_value>
+Cookie: csrfToken=<csrf_cookie_value>
 ```
 
 **Response (204 No Content)**
+
+The consumer session is archived, removed from the cache, and refresh/CSRF cookies are cleared.

@@ -1,6 +1,8 @@
 # CORS
 
-CORS origins are stored in the database and dynamically applied without requiring a service restart.
+CORS origins are stored in the database and dynamically applied without requiring a service restart. The middleware runs before route matching so preflight `OPTIONS` requests short-circuit with `204`.
+
+Allowed request headers include `Content-Type`, `Authorization`, and `X-CSRF-Token`. When an origin has `credentials: true`, responses include `Access-Control-Allow-Credentials: true`.
 
 ## Search CORS Origins
 
@@ -40,7 +42,8 @@ Authorization: Bearer <access_token>
 {
   "rows": [
     {
-      "name": "https://app.example.com"
+      "name": "https://app.example.com",
+      "credentials": true
     }
   ]
 }

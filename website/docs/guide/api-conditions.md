@@ -4,7 +4,12 @@ Conditions are predefined filter rules that can be attached to permissions. They
 
 ## How It Works
 
-A condition combines a field, a comparison operator, and a value into a reusable named filter rule (e.g. `archived = false`). When a permission has a condition attached, the gateway forwards it to the target service to restrict the data returned. Conditions are optional — a permission without a condition applies no data filtering.
+A condition combines a field, a comparison operator, and a value into a reusable named filter rule (e.g. `archived = false`). When a permission has a condition attached, the gateway:
+
+- injects matching filters into `req.body.filters` for admin search requests, and
+- forwards them to proxied services via the `x-acl-conditions` header.
+
+Conditions are optional — a permission without a condition applies no row-level filtering.
 
 Create conditions after creating fields, and before assigning them to permissions.
 
@@ -106,3 +111,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+Archived conditions older than 2 months are permanently deleted by the daily retention job (before fields, because `condition.fieldId` is `ON DELETE RESTRICT`).

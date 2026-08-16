@@ -4,9 +4,15 @@ Permissions define which operations a role is allowed to perform on a given rout
 
 ## How It Works
 
-Each permission links a role to a route and optionally attaches a condition. When a request arrives, the gateway looks up whether the consumer's role has a permission entry for the matched route. If a condition is attached, it is forwarded to the target service as a query filter to restrict the data returned.
+Each permission links a role to a route and an operation. Optionally it may also attach:
 
-Permissions are loaded from the database into memory at startup and updated in memory when changes occur.
+- **`fields`** — column allow-list (`null` = unrestricted, `[]` = no writable fields)
+- **`scopes`** — allowed URL sub-segments for scoped routes
+- **`conditionId`** — condition IDs whose filters are injected into `req.body.filters` and forwarded as `x-acl-conditions` on proxied requests
+
+When a request arrives, the gateway looks up whether any of the consumer's roles has a matching permission for the route and operation. Permissions are loaded into memory at startup and updated when changes occur.
+
+Permissions are hard-deleted (not archived) and are not purged by the archived-entities retention job.
 
 
 
@@ -54,6 +60,8 @@ Authorization: Bearer <access_token>
       "roleId": 2,
       "routeId": 5,
       "operationId": 1,
+      "fields": ["name", "email"],
+      "scopes": ["own"],
       "conditionId": [1]
     }
   ]

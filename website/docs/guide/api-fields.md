@@ -4,7 +4,9 @@ Fields represent database columns or entity properties used to build conditions 
 
 ## How It Works
 
-A field name follows the format `table.column` (e.g. `consumers.archived`). Fields are the building blocks of conditions — when creating a condition, you reference a field to specify which property to filter on. Create fields before creating conditions.
+A field name follows the format `table.column` (e.g. `users.active`) and is limited to **50 characters**. Fields are the building blocks of conditions — when creating a condition, you reference a field to specify which property to filter on. Create fields before creating conditions.
+
+Field names are also used in permission `fields` arrays to restrict which columns a role may read or write on a route.
 
 ## Search Fields
 
@@ -46,7 +48,7 @@ Authorization: Bearer <access_token>
   "rows": [
     {
       "resourceId": 3,
-      "name": "consumers.archived"
+      "name": "users.active"
     }
   ]
 }
@@ -65,7 +67,7 @@ Authorization: Bearer <access_token>
   "rows": [
     {
       "id": 1,
-      "name": "consumers.active"
+      "name": "users.email"
     }
   ]
 }
@@ -90,3 +92,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+Archived fields older than 2 months are permanently deleted by the daily retention job (after conditions that reference them).

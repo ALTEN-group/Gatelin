@@ -55,11 +55,11 @@ gatelin_migration:
 
 See the [Deployment](./deployment) page for the full `docker-compose.yml` template.
 
-## 2. Register Your Service in Gatelin
+## 3. Register Your Service in Gatelin
 
 Once your service is running, use the Gatelin admin API (or admin UI) to declare its routes.
 
-### 1. Create an Application
+### Create an Application
 
 ```http
 POST /gateway/applications
@@ -70,7 +70,7 @@ Authorization: Bearer <access_token>
 }
 ```
 
-### 2. Create a Service
+### Create a Service
 
 The `pattern` is the URL prefix Traefik already routes to your container.
 
@@ -79,11 +79,11 @@ POST /gateway/services
 Authorization: Bearer <access_token>
 
 {
-  "rows": [{ "appId": <id>, "name": "my-service", "pattern": "my-api", "core": false }]
+  "rows": [{ "name": "my-service", "pattern": "my-api" }]
 }
 ```
 
-### 3. Create a Resource and Route
+### Create a Resource and Route
 
 ```http
 POST /gateway/resources
@@ -112,7 +112,7 @@ Authorization: Bearer <access_token>
 
 This registers `GET /my-api/users/123`, which Gatelin will authenticate and forward to `http://my-project-my-service-local:3000/my-api/users/123`.
 
-## 3. Headers Injected by Gatelin
+## 4. Headers Injected by Gatelin
 
 For protected routes, Gatelin decodes the JWT and injects the following headers before forwarding. Your service can read them directly, no token validation needed.
 
