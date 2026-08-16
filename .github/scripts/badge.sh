@@ -12,11 +12,18 @@ if awk "BEGIN { exit !($PCT >= 50) }"; then COLOR="4c1"
 else COLOR="e05d44"
 fi
 
-# Keep the badge width readable for short labels like "coverage" / "admin".
-LABEL_WIDTH=63
-TOTAL_WIDTH=130
-VALUE_X=96
-LABEL_X=32
+# Size the badge from the text so longer labels (e.g. "Gateway coverage")
+# don't clip. ~6.5px/char approximates DejaVu Sans at 11px; PAD is the
+# breathing room on each side of a text segment.
+CHAR_W=6.5
+PAD=10
+VALUE_TEXT="${PCT}%"
+
+LABEL_WIDTH=$(awk -v s="$BADGE_LABEL" -v cw="$CHAR_W" -v pad="$PAD" 'BEGIN { printf "%d", (length(s) * cw) + pad }')
+VALUE_WIDTH=$(awk -v s="$VALUE_TEXT" -v cw="$CHAR_W" -v pad="$PAD" 'BEGIN { printf "%d", (length(s) * cw) + pad }')
+TOTAL_WIDTH=$((LABEL_WIDTH + VALUE_WIDTH))
+LABEL_X=$((LABEL_WIDTH / 2))
+VALUE_X=$((LABEL_WIDTH + VALUE_WIDTH / 2))
 
 SVG_FILE=$(mktemp)
 cat > "$SVG_FILE" <<SVGEOF
