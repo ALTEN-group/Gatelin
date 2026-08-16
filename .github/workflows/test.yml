@@ -30,6 +30,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BADGE_LABEL: Gateway coverage
         run: bash .github/scripts/badge.sh
 
       - name: Post coverage summary
@@ -86,7 +87,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUMMARY: admin/coverage/admin/coverage-summary.json
           BADGE_NAME: admin-coverage.svg
-          BADGE_LABEL: admin
+          BADGE_LABEL: Admin coverage
         run: bash .github/scripts/badge.sh
 
       - name: Post coverage summary
