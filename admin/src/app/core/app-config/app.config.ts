@@ -22,6 +22,7 @@ import {
 } from "@dwtechs/ngx-crud-builder";
 import { filter, tap } from "rxjs";
 import { environment } from "../../../environments/environment";
+import { readAdminRuntimeConfig } from "./runtime-config";
 
 /**
  * Main Config
@@ -33,6 +34,13 @@ const AppStorageKey = {
   THEME: `${APP_KEY}_theme`,
   TOKEN: `${APP_KEY}_token`,
 } as const;
+
+const runtime = readAdminRuntimeConfig();
+const passwordRecoveryUrl =
+  runtime.passwordRecoveryUrl?.trim() ||
+  environment.passwordRecoveryUrl?.trim() ||
+  undefined;
+
 export const CONFIG: AppConfig = {
   title: TITLE,
   appKey: APP_KEY,
@@ -40,6 +48,7 @@ export const CONFIG: AppConfig = {
   sidenavItems: SIDENAV,
   apiGateway: environment.apiGateway,
   apiUsers: environment.apiUsers,
+  passwordRecoveryUrl,
   env: environment,
 };
 

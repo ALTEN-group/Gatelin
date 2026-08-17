@@ -74,8 +74,17 @@ function query(verb, url, params, data, headers) {
 
   return fetch(fullUrl, init)
     .then(async (res) => {
+      // Server-rendered workflow pages (password recovery, 2FA…) answer with
+      // HTML, so parsing every upstream body as JSON would drop them. An
+      // unknown content type keeps the original JSON-first behaviour.
+      const contentType = res.headers?.get?.("content-type") ?? "";
+      const isJson = !contentType || contentType.includes("json");
       const responseData =
-        res.status !== 204 ? await res.json().catch(() => null) : null;
+        res.status === 204
+          ? null
+          : isJson
+            ? await res.json().catch(() => null)
+            : await res.text().catch(() => null);
       if (!res.ok) {
         // Rich context (`HTTP(<code>): <statusText>`) goes into `err.message`,
         // not a parallel `err.msg` field. `@dwtechs/errandler-express`'s
@@ -88,6 +97,7 @@ function query(verb, url, params, data, headers) {
         throw err;
       }
       const result = { status: res.status, data: responseData };
+      if (contentType) result.contentType = contentType;
       logEnd(result, time);
       return result;
     })

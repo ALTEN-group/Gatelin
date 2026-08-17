@@ -59,6 +59,8 @@ export class LoginComponent implements AfterViewInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   public readonly userServerUrl = inject(APP_CONFIG).apiGateway;
+  /** Optional Foxnox (or other) recovery workflow URL. */
+  public readonly passwordRecoveryUrl = inject(APP_CONFIG).passwordRecoveryUrl;
 
   public isPasswordHidden = true;
   public isLoading = false;

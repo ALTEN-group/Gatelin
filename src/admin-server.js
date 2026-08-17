@@ -6,10 +6,20 @@ import { join } from "node:path";
 import { log } from "@dwtechs/winstan";
 import express from "express";
 
-const { ADMIN_PORT, ADMIN_BASE_PATH, PORT } = process.env;
+const { ADMIN_PORT, ADMIN_BASE_PATH, ADMIN_PASSWORD_RECOVERY_URL, PORT } =
+  process.env;
 // Path relative to src/ where the Angular dist is copied in the Docker image
 const ADMIN_DIST = join(import.meta.dirname, "..", "admin-dist");
 const BASE_PATH = (ADMIN_BASE_PATH || "/admin").replace(/\/+$/, "");
+
+/**
+ * @returns {string}
+ */
+function runtimeConfigScript() {
+  const url = (ADMIN_PASSWORD_RECOVERY_URL || "").trim();
+  const payload = url ? { passwordRecoveryUrl: url } : {};
+  return `<script id="gatelin-admin-runtime">window.__GATELIN_ADMIN__=${JSON.stringify(payload)};</script>`;
+}
 
 /**
  * Starts the static Angular admin server on its own port.
@@ -23,11 +33,13 @@ export function startAdminServer() {
   // Angular is compiled once with a fixed placeholder baseHref (see
   // admin/angular.json) — the real prefix is injected into <base href> here at
   // runtime, so changing ADMIN_BASE_PATH only needs a container restart, never
-  // an Angular rebuild.
-  const indexHtml = readFileSync(
-    join(ADMIN_DIST, "index.html"),
-    "utf8",
-  ).replace(/<base href="[^"]*">/, () => `<base href="${BASE_PATH}/">`);
+  // an Angular rebuild. Same for ADMIN_PASSWORD_RECOVERY_URL → window.__GATELIN_ADMIN__.
+  const indexHtml = readFileSync(join(ADMIN_DIST, "index.html"), "utf8")
+    .replace(/<base href="[^"]*">/, () => `<base href="${BASE_PATH}/">`)
+    .replace(
+      /<script id="gatelin-admin-runtime">[\s\S]*?<\/script>/,
+      () => runtimeConfigScript(),
+    );
 
   const app = express();
   app.disable("x-powered-by");

@@ -218,6 +218,9 @@ services:
       # ${ADMIN_PORT} → 502 Bad Gateway.
       PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
+      # Optional. When set, login shows "Mot de passe oublié ?" linking here
+      # (e.g. /api/pwd/web/recover when Foxnox workflows are deployed).
+      ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
     networks:
       - internal
     volumes:
@@ -402,6 +405,16 @@ services:
     volumes:
       - ${PWD}/mocks/ms_pwd/src:/usr/src/app/src
       - ms_pwd_mock_node_modules:/usr/src/app/node_modules
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      # More specific than gateway PathPrefix(`/api`) so /api/pwd/* hits the mock.
+      - "traefik.http.routers.mspwd.rule=PathPrefix(`/api/pwd`)"
+      - "traefik.http.routers.mspwd.priority=100"
+      - "traefik.http.routers.mspwd.entrypoints=web"
+      - "traefik.http.routers.mspwd.service=mspwd"
+      - "traefik.http.routers.mspwd.middlewares=strip-prefix"
+      - "traefik.http.services.mspwd.loadbalancer.server.port=${DEFAULT_PORT}"
 
 networks:
   internal:

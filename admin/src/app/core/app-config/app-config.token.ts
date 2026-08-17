@@ -9,6 +9,8 @@ export interface AppConfig {
   sidenavItems: MenuItem[];
   apiGateway: string;
   apiUsers: string;
+  /** Shown on login when set (from env / Docker). */
+  passwordRecoveryUrl?: string;
   env: Partial<Environment>;
 }
 
@@ -19,6 +21,7 @@ const defaultValue: AppConfig = {
   sidenavItems: [],
   apiGateway: "/api/",
   apiUsers: "/api/users/",
+  passwordRecoveryUrl: undefined,
   env: {},
 };
 

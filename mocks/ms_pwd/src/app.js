@@ -7,11 +7,18 @@ import { isStringOfLength, isValidInteger } from "@dwtechs/checkard";
 import { compare } from "@dwtechs/passken-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import { mockCredentials } from "./data/credentials.js";
+import { mountRecoverPages } from "./recover.js";
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    // Mock HTML recovery page uses a small inline stylesheet.
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 // In-memory mock — no dependencies to probe; readiness still exposes /ready.
 app.use("/auth/health", healix());
 
@@ -55,6 +62,9 @@ function sendSuccess(_req, res) {
 
 // POST /pwd/compare - Validate user credentials (used by Gatelin check-pwd middleware)
 app.post("/pwd/compare", validateBody, findCredential, compare, sendSuccess);
+
+// Stand-in for Foxnox password-recovery workflow (admin login link tests)
+mountRecoverPages(app);
 
 errorHandler(app);
 

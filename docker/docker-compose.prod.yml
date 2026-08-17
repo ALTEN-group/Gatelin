@@ -175,6 +175,7 @@ services:
       # Unset to disable the admin UI; set to enable it on a dedicated internal port
       ADMIN_PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
+      ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
     depends_on:
       postgres:
         condition: service_healthy

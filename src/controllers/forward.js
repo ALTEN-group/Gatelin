@@ -42,7 +42,10 @@ export function forwardToService(req, res, next) {
   // control — e.g. a synchronous crash before the fetch call).
   http
     .query(method, url, undefined, body, req.additionalHeaders)
-    .then((r) => res.status(r.status).send(r.data))
+    .then((r) => {
+      if (r.contentType) res.type(r.contentType);
+      return res.status(r.status).send(r.data);
+    })
     .catch((e) =>
       next({ statusCode: e.statusCode || e.status || 502, message: e.message }),
     );
