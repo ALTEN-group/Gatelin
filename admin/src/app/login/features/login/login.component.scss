@@ -77,10 +77,26 @@
         font-size: 0.875rem;
         color: var(--p-primary-color, var(--primary-color, #1f6feb));
         text-decoration: none;
+        transition:
+          font-weight 120ms ease,
+          text-decoration-color 120ms ease,
+          background-color 120ms ease;
       }
 
       .forgot-password-link:hover {
         text-decoration: underline;
+      }
+
+      .forgot-password-link--emphasized {
+        font-weight: 700;
+        text-decoration: underline;
+        padding: 0.35rem 0.65rem;
+        border-radius: 6px;
+        background-color: color-mix(
+          in srgb,
+          var(--p-primary-color, var(--primary-color, #1f6feb)) 12%,
+          transparent
+        );
       }
     }
   }
