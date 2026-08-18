@@ -7,7 +7,6 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   -- session (1)
   (1,  '',                                         'refreshToken',          'Refresh a token or Sign in with a refresh token',    true,  true, ARRAY[4],    ARRAY[3],  -1, 'system'),
   (1,  '',                                         'signIn',                'Sign in a user with email & password',               false, true, ARRAY[6],    ARRAY[2],  -1, 'system'),
-  (1,  '/resume',                                  'resumeSignIn',          'Finish login after a mid-login challenge ticket',   false, true, ARRAY[6],    ARRAY[2],  -1, 'system'),
   (1,  '',                                         'signOut',               'Sign out a user',                                    true,  true, ARRAY[8],    ARRAY[5],  -1, 'system'),
   -- consumers (2)
   (2,  '/search',                                  'getConsumers',          'Search consumers',                                   true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
@@ -101,7 +100,9 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (13, '/schema',                                  'getApplicationSchema', 'Get application entity schema',                      true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (14, '/schema',                                  'getConditionSchema',   'Get condition entity schema',                        true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   -- users (16)
-  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system')
+  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system'),
+  -- Appended after the original seed so existing permission/scope routeIds stay stable.
+  (1,  '/resume',                                  'resumeSignIn',          'Finish login after a mid-login challenge ticket',   false, true, ARRAY[6],    ARRAY[2],  -1, 'system')
 ON CONFLICT DO NOTHING;
 
 ANALYZE;

@@ -1,7 +1,7 @@
 ﻿--
 -- Default permission data — derived from ms_role mock
 --
--- Route IDs (from 02-route.sql insertion order):
+-- Route IDs (from 06-route.sql insertion order):
 --   1=refreshToken      2=signIn            3=signOut
 --   4=getConsumers      5=archiveConsumers
 --   6=searchRoutes      7=getRouteHistory   8=updateRoutes      9=addRoutes         10=archiveRoutes
@@ -22,6 +22,7 @@
 --   75=getRoleSchema       76=getPermissionSchema  77=getMethodSchema      78=getApplicationSchema
 --   79=getConditionSchema
 --   80=getBasicUserInfo
+--   81=resumeSignIn (public; no permission row — appended after the original seed)
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
