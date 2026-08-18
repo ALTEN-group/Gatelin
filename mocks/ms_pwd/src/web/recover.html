@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Password recovery (mock)</title>
+  <title>{{heading}} (mock)</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -70,7 +70,9 @@
       font-size: 0.85rem;
       margin-bottom: 0.35rem;
     }
-    input[type="email"] {
+    input[type="email"],
+    input[type="text"],
+    input[type="password"] {
       width: 100%;
       padding: 0.65rem 0.75rem;
       border-radius: 8px;
@@ -94,12 +96,30 @@
       padding-left: 0.75rem;
       margin: 0;
     }
+    .err {
+      border-left: 3px solid #f85149;
+      padding-left: 0.75rem;
+      margin: 0 0 1rem;
+      color: #f85149;
+    }
+    .row {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .row button {
+      flex: 1;
+    }
+    button.ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
   <main>
     <span class="badge">ms_pwd mock</span>
-    <h1>Password recovery</h1>
+    <h1>{{heading}}</h1>
     {{body}}
   </main>
 </body>

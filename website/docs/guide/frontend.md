@@ -1,6 +1,6 @@
 # Frontend Integration
 
-How a frontend app should interact with Gatelin tokens.
+How a frontend app should interact with Gatelin tokens — including mid-login challenges when the password service requires 2FA or password rotation.
 
 ## 1. Login
 
@@ -11,13 +11,54 @@ const response = await fetch('/gateway/sessions', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ email, pwd })
 });
+
+if (response.status === 202) {
+  // Password OK, but a mid-login challenge is required (2FA / expired password).
+  const { url } = await response.json();
+  window.location.assign(url);
+  return;
+}
+
+if (!response.ok) {
+  // 401 wrong credentials, 403 locked, 404 unknown user, …
+  throw new Error('Login failed');
+}
+
 const { accessToken, refreshToken } = await response.json();
 
 localStorage.setItem('accessToken', accessToken);
 // Prefer the httpOnly refresh cookie when REFRESH_TOKEN_COOKIE is enabled;
 // keep a body copy only if your stack still needs it for PUT refresh.
-localStorage.setItem('refreshToken', refreshToken);
+if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
 ```
+
+### Resume after a challenge
+
+When the password-service workflow finishes, it redirects the browser back to your login page with `?ticket=…`. Redeem it before showing the login form:
+
+```typescript
+const ticket = new URLSearchParams(window.location.search).get('ticket');
+if (ticket) {
+  const response = await fetch('/gateway/sessions/resume', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticket })
+  });
+
+  if (!response.ok) throw new Error('Resume failed');
+
+  const { accessToken, refreshToken } = await response.json();
+  localStorage.setItem('accessToken', accessToken);
+  if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+
+  // Drop ?ticket= from the URL and enter the app
+  history.replaceState({}, '', window.location.pathname);
+  return;
+}
+```
+
+The Gatelin admin UI already implements both paths (`AuthenticationService.login` / `resumeLogin`).
 
 ## 2. Making Authenticated Requests
 
@@ -63,7 +104,7 @@ if (response.status === 401) {
   const { accessToken: newAccess, refreshToken: newRefresh } = await refreshResponse.json();
 
   localStorage.setItem('accessToken', newAccess);
-  localStorage.setItem('refreshToken', newRefresh);
+  if (newRefresh) localStorage.setItem('refreshToken', newRefresh);
 
   // Retry original request
   return fetch('/api/protected-resource', {
@@ -99,6 +140,7 @@ localStorage.removeItem('refreshToken');
 | `localStorage` | Simple for the access token, but vulnerable to XSS |
 | `httpOnly cookies` | Preferred for the refresh token when `REFRESH_TOKEN_COOKIE` is enabled |
 | CSRF cookie | Not httpOnly — the client must read it and send `X-CSRF-Token` |
+| Trusted-device cookie (`trusted_device`) | Optional. If your password service issues it from its challenge pages (`Path=/`), Gatelin forwards its value on the next login to skip 2FA. Omit it and every 2FA login is challenged |
 | `sessionStorage` | Cleared when the tab closes |
 
-> Always send `credentials: 'include'` on session calls so CSRF and refresh cookies are included. Never send the refresh token except to `PUT /gateway/sessions`.
+> Always send `credentials: 'include'` on session calls so CSRF, refresh, and trusted-device cookies are included. Never send the refresh token except to `PUT /gateway/sessions`.

@@ -22,6 +22,20 @@ Configure the mock pwd service and swagger login examples:
 
 This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users.
 
+The mock also stands in for the Foxnox mid-login challenges (`POST /pwd/challenges`,
+`/pwd/trusted-devices/verify`, `/pwd/login-tickets/redeem` plus the matching SSR pages),
+so each mock user covers one login path:
+
+| User | Login outcome |
+| --- | --- |
+| `admin@example.com` | straight to a session (used by the e2e suite) |
+| `standard@example.com` | straight to a session |
+| `coco@example.com` | 2FA challenge (any 6-digit code), then the trusted-device prompt |
+| `guest@example.com` | expired-password rotation |
+| `ebuser@example.com` | rejected, account locked |
+
+Challenge state lives in memory, so restarting the mock container resets it.
+
 ## Development
 
 ### Start

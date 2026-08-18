@@ -111,6 +111,67 @@ describe("AuthenticationService", () => {
     expect(router.navigate).toHaveBeenCalledWith(["/"]);
   });
 
+  it("sends the browser to the challenge page on a 202 login", () => {
+    const assign = vi.fn();
+    vi.spyOn(window, "location", "get").mockReturnValue({
+      ...window.location,
+      assign,
+    } as unknown as Location);
+
+    let result: boolean | undefined;
+    service.login("a@b.c", "secret").subscribe((value) => {
+      result = value;
+    });
+
+    http.expectOne("/api/sessions").flush(
+      {
+        challengeRequired: true,
+        kind: "2fa",
+        url: "http://localhost/api/pwd/web/2fa/verify?challenge=abc",
+      },
+      { status: 202, statusText: "Accepted" },
+    );
+
+    expect(result).toBe(true);
+    expect(assign).toHaveBeenCalledWith(
+      "http://localhost/api/pwd/web/2fa/verify?challenge=abc",
+    );
+    expect(tokenService.saveAccessToken).not.toHaveBeenCalled();
+    expect(service.isAuthenticated()).toBe(false);
+  });
+
+  it("resumes a challenged login with a ticket", () => {
+    let result: boolean | undefined;
+    service.resumeLogin("tick").subscribe((value) => {
+      result = value;
+    });
+
+    const resume = http.expectOne("/api/sessions/resume");
+    expect(resume.request.method).toBe("POST");
+    expect(resume.request.body).toEqual({ ticket: "tick" });
+    resume.flush({
+      accessToken: "tok",
+      permissions: [{ route: 4, operations: [], fields: [] }],
+    });
+
+    http
+      .expectOne("/api/users/users/me")
+      .flush({ firstName: "Ada", lastName: "Lovelace", nickname: "ada" });
+
+    expect(result).toBe(true);
+    expect(tokenService.saveAccessToken).toHaveBeenCalledWith("tok");
+    expect(service.isAuthenticated()).toBe(true);
+    expect(router.navigate).toHaveBeenCalledWith(["/"]);
+  });
+
+  it("rejects an empty resume ticket without calling the API", () => {
+    let result: boolean | undefined;
+    service.resumeLogin("").subscribe((value) => {
+      result = value;
+    });
+    expect(result).toBe(false);
+  });
+
   it("returns false when login fails", () => {
     let result: boolean | undefined;
     service.login("a@b.c", "secret").subscribe((value) => {

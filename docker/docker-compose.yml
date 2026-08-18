@@ -400,6 +400,9 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       PWD_SECRET: ${MSPWD_SECRET}
+      # Browser-facing URLs used by the mock mid-login challenge pages.
+      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}pwd/web}
+      WEB_LOGIN_RESUME_URL: ${MSPWD_WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
     networks:
       - internal
     volumes:

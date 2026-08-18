@@ -8,7 +8,7 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 |---|---|
 | `APP_NAME` | Application name used to build downstream service URLs (`{APP_NAME}-{serviceName}-{ENV_NAME}`) |
 | `ENV_NAME` | Environment name, e.g. `local`, `staging`, `prod` |
-| `PWD_CHECK_URL` | URL of the password microservice (ms_pwd) credential-check endpoint |
+| `PWD_CHECK_URL` | Credential-check endpoint of your password service, ending in `/pwd/compare`. For mid-login challenges Gatelin also derives `{base}/pwd/challenges`, `{base}/pwd/trusted-devices/verify`, and `{base}/pwd/login-tickets/redeem` from the same base. See the [Sessions contract](./api-sessions#password-service-contract) |
 | `USER_SEARCH_URL` | URL of the user microservice search endpoint (login looks up users by email) |
 | `DB_HOST` | Hostname of the PostgreSQL container |
 | `DB_NAME` | Database name (default: `gatelin`) |
@@ -43,7 +43,7 @@ The Angular admin is built into the `gatelin` image and served only when `ADMIN_
 |---|---|---|
 | `ADMIN_PORT` | unset (disabled) | Port the admin UI listens on. Unset to disable the admin UI. |
 | `ADMIN_BASE_PATH` | `/admin` | Path prefix for the admin UI. Rewritten into `<base href>` at runtime — no Angular rebuild required. Must match your reverse-proxy rule. |
-| `ADMIN_PASSWORD_RECOVERY_URL` | unset | When set (e.g. `/api/pwd/web/recover`), the login page shows a “Forgotten password ?” link. Injected at runtime into `window.__GATELIN_ADMIN__` (dev entrypoint + prod `admin-server`). Leave empty to hide it. In the local Compose stack, Traefik routes `/api/pwd` to the `ms_pwd` mock, which serves a stand-in recovery page at `/pwd/web/recover`. |
+| `ADMIN_PASSWORD_RECOVERY_URL` | unset | When set (e.g. `/api/pwd/web/recover`), the login page shows a “Forgotten password ?” link. Injected at runtime into `window.__GATELIN_ADMIN__` (dev entrypoint + prod `admin-server`). Leave empty to hide it. In the local Compose stack, Traefik routes `/api/pwd` to the `ms_pwd` mock, which serves stand-in recovery and mid-login challenge pages under `/pwd/web/*`. |
 
 > Docker Compose examples often set `ADMIN_BASE_PATH=/gatelin`. That is an explicit override; the code default when the variable is unset remains `/admin`.
 
@@ -70,15 +70,18 @@ These apply to the `gatelin-migration` container (`dwtechs/gatelin-migration`):
 ## JWT & Cookie Flow
 
 1. User logs in via `POST /gateway/sessions` with `{ email, pwd }`.
-2. Gateway looks up the user via `USER_SEARCH_URL`, then verifies the password via `PWD_CHECK_URL` (ms_pwd).
-3. Gateway issues a JWT access token (short-lived) and refresh token (long-lived), sets a CSRF cookie, and returns the session payload.
-4. Client sends the access token in `Authorization: Bearer <token>` on subsequent requests.
-5. When the access token expires, client calls `PUT /gateway/sessions` with:
+2. Gateway looks up the user via `USER_SEARCH_URL`, then verifies the password via `PWD_CHECK_URL` (any password service implementing the [Sessions contract](./api-sessions#password-service-contract); [Foxnox](https://github.com/dwtechs/Foxnox) is one example).
+3. If the password service reports lockout, expiry, or 2FA without a trusted device, the gateway returns **202** with `{ challengeRequired, kind, url }` instead of a session. The browser completes the challenge on the password service, comes back with `?ticket=…`, and the client calls `POST /gateway/sessions/resume`. Services that only check passwords never trigger this step.
+4. Otherwise (or after a successful resume), the gateway issues a JWT access token (short-lived) and refresh token (long-lived), sets a CSRF cookie, and returns the session payload.
+5. Client sends the access token in `Authorization: Bearer <token>` on subsequent requests.
+6. When the access token expires, client calls `PUT /gateway/sessions` with:
    - `Authorization: Bearer <access_token>` (expired tokens are accepted for refresh),
    - refresh token in the JSON body and/or cookie,
    - `X-CSRF-Token` header matching the CSRF cookie,
    - `credentials: 'include'` so cookies are sent.
-6. Logout (`DELETE /gateway/sessions`) requires the access token and CSRF header; it archives the consumer and clears cookies.
+7. Logout (`DELETE /gateway/sessions`) requires the access token and CSRF header; it archives the consumer and clears cookies.
+
+See [Sessions](./api-sessions) for the pwd-service contract and [Frontend Integration](./frontend) for the client-side challenge/resume handling.
 
 ## Maintenance Jobs
 

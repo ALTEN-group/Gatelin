@@ -175,9 +175,37 @@ sequenceDiagram
         activate msp
       end
     end
-    msp->>msg: return 204 No content ok
+    msp->>msg: return 200 ok : { rows: [{ userId, pwdExpiry, lockedUntil, twoFactorEnabled }] }
     deactivate msp
     activate msg
+  end
+  rect rgb(220, 220, 220, 0.1)
+    note over msg,msp: Mid-login Challenge Block<br/>gate-login-challenges reads the pwd row returned above
+    rect rgb(150, 50, 50, 0.5)
+      break when the account is locked (lockedUntil in the future)
+        msg->>f: return 403 account locked
+        activate f
+        f->>u: display error message
+        deactivate f
+      end
+    end
+    rect rgb(150, 50, 50, 0.5)
+      break when the password expired or 2FA is on without a trusted-device cookie
+        msg->>msp: post(/pwd/trusted-devices/verify) { userId, deviceToken }<br/>(2FA only, skipped when no trusted_device cookie)
+        activate msp
+        msp->>msg: return 200 ok : { trusted }
+        deactivate msp
+        msg->>msp: post(/pwd/challenges) { userId, kind }
+        activate msp
+        msp->>msg: return 201 created : { kind, challenge, url }
+        deactivate msp
+        msg->>f: return 202 accepted : { challengeRequired, kind, url }
+        activate f
+        f->>u: redirect the browser to the workflow page
+        note over u,msp: The user completes the challenge on ms_pwd, which redirects back to<br/>the admin login with ?ticket=… → POST /sessions/resume redeems it via<br/>post(/pwd/login-tickets/redeem) and continues with the block below.
+        deactivate f
+      end
+    end
   end
   rect rgb(220, 220, 220, 0.1)
     note over msg,gdb: Token Creation & Session Insertion Block

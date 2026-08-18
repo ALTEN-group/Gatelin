@@ -1,21 +1,8 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { log } from "@dwtechs/winstan";
+import { readTemplate, renderPage } from "./render.js";
 
-const webDir = join(dirname(fileURLToPath(import.meta.url)), "web");
-
-/**
- * @param {string} name
- * @returns {string}
- */
-function readTemplate(name) {
-  return readFileSync(join(webDir, name), "utf8");
-}
-
-const layout = readTemplate("recover.html");
-const formPage = layout.replace("{{body}}", readTemplate("recover-form.html"));
-const sentPage = layout.replace("{{body}}", readTemplate("recover-sent.html"));
+const formPage = renderPage("Password recovery", readTemplate("recover-form.html"));
+const sentPage = renderPage("Password recovery", readTemplate("recover-sent.html"));
 
 /**
  * Fake password-recovery pages for local admin-login link tests.

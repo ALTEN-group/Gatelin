@@ -121,3 +121,14 @@ For protected routes, Gatelin decodes the JWT and injects the following headers 
 | `x-consumer-user-id` | ID of the authenticated user |
 | `x-consumer-name` | Nickname of the authenticated user |
 | `x-acl-conditions` | JSON array of ACL condition values, if any apply |
+
+## 5. Password service
+
+Gatelin never stores password hashes or renders 2FA / password-rotation pages — it delegates credential checks to whatever service `PWD_CHECK_URL` points at. You have two levels of integration:
+
+**Minimal (password check only).** Answer `POST …/pwd/compare` with 200 on a correct password and a non-2xx on a wrong one. Return a body **without** a user row (e.g. `{ "success": true }`) and Gatelin logs the user straight in — no other endpoints required. This is all you need for a plain email + password gateway.
+
+**Full (mid-login challenges).** To enforce lockout, password expiry, or 2FA, make `POST …/pwd/compare` return a user row (`pwdExpiry`, `lockedUntil`, `twoFactorEnabled`) and additionally expose `POST …/pwd/challenges`, `POST …/pwd/trusted-devices/verify`, and `POST …/pwd/login-tickets/redeem` on the same host, plus the browser workflow pages that redirect back to your admin login with `?ticket=…`.
+
+Full field-by-field shapes are in the [Sessions contract](./api-sessions#password-service-contract); client handling is in [Frontend Integration](./frontend). [Foxnox](https://github.com/dwtechs/Foxnox) is a drop-in implementation of the full contract, and the local Compose stack ships an `ms_pwd` mock that emulates it.
+

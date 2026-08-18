@@ -22,7 +22,7 @@ features:
     details: JWT-based sessions with automatic access token refresh.
   - icon: 🔐
     title: Authentication
-    details: JWT token validation and consumer session management on every request.
+    details: JWT sessions with mid-login challenges (2FA / expired password) delegated to a password service.
   - icon: 🛡️
     title: Authorization
     details: Role-based access control (RBAC/ACL) validation per route, per property, per condition.

@@ -7,6 +7,7 @@ import { isStringOfLength, isValidInteger } from "@dwtechs/checkard";
 import { compare } from "@dwtechs/passken-express";
 import { errorHandler } from "@dwtechs/errandler-express";
 import { mockCredentials } from "./data/credentials.js";
+import { mountChallenges } from "./challenges.js";
 import { mountRecoverPages } from "./recover.js";
 
 const app = express();
@@ -48,16 +49,29 @@ function findCredential(req, res, next) {
   if (!credential)
     return next({ statusCode: 401, message: "Invalid credentials" });
 
-  res.locals.rows = [{ pwdHash: credential.pwdHash }];
+  res.locals.rows = [credential];
   next();
 }
 
+/**
+ * Same envelope as Foxnox `sendPwd`: the pwd row minus its private columns.
+ * Gatelin's gate-login-challenges reads `pwdExpiry`, `lockedUntil` and
+ * `twoFactorEnabled` from it to decide whether a mid-login challenge is needed.
+ */
 function sendSuccess(_req, res) {
-  log.debug("POST /pwd/compare - success");
-  res.status(200).json({
-    success: true,
-    message: "Authentication successful",
-  });
+  const credential = res.locals.rows[0];
+  // Defaults keep older generated credentials.js files (no auth-state columns) working.
+  const row = {
+    id: credential.id,
+    userId: credential.userId,
+    pwdExpiry: credential.pwdExpiry ?? null,
+    failedAttempts: credential.failedAttempts ?? 0,
+    lockedUntil: credential.lockedUntil ?? null,
+    twoFactorEnabled: credential.twoFactorEnabled ?? false,
+    archived: credential.archived ?? false,
+  };
+  log.debug(`POST /pwd/compare - success: ${JSON.stringify(row)}`);
+  res.status(200).json({ rows: [row], total: 1 });
 }
 
 // POST /pwd/compare - Validate user credentials (used by Gatelin check-pwd middleware)
@@ -65,6 +79,9 @@ app.post("/pwd/compare", validateBody, findCredential, compare, sendSuccess);
 
 // Stand-in for Foxnox password-recovery workflow (admin login link tests)
 mountRecoverPages(app);
+
+// Stand-in for Foxnox mid-login challenges + login-resume tickets
+mountChallenges(app);
 
 errorHandler(app);
 

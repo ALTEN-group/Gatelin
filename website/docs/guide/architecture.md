@@ -18,7 +18,12 @@ Client Request
 [checkRoute] - Match request against registered DB routes
     ↓
     ├── Public login: POST /gateway/sessions
-    │     getUserByEmail → checkPwd → createTokens → session cache
+    │     getUserByEmail → checkPwd → gateLoginChallenges
+    │       ├── 202 { challengeRequired, kind, url }  (2FA / expired password)
+    │       └── createTokens → session cache → 200
+    │
+    ├── Public resume: POST /gateway/sessions/resume
+    │     redeemLoginTicket → createTokens → session cache → 200
     │
     ├── Session refresh / logout: PUT|DELETE /gateway/sessions
     │     JWT (+ CSRF / refresh checks) → update or archive session
@@ -36,7 +41,9 @@ Client Request
 parseBearer → decodeAccess → checkConsumer → checkAcl → applyAclConditions
 ```
 
-Login (`POST /gateway/sessions`) skips `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router.
+Login and resume (`POST /gateway/sessions`, `POST /gateway/sessions/resume`) skip `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router.
+
+`gateLoginChallenges` reads the pwd row returned by `PWD_CHECK_URL`, enforces lockout, and may mint a challenge against the password service instead of creating a session. See [Sessions](./api-sessions#login).
 
 ## Key Middlewares
 
@@ -44,6 +51,9 @@ Login (`POST /gateway/sessions`) skips `checkRequest`. Every other matched reque
 |---|---|
 | `corsMiddleware` | Enforces the DB-backed origin whitelist; allows `Authorization` and `X-CSRF-Token` |
 | `checkRoute` | Validates the request matches a configured route (required for login too) |
+| `checkPwd` | Calls `PWD_CHECK_URL` and stores the public pwd row on `res.locals.pwdRow` |
+| `gateLoginChallenges` | After password OK: lockout / expiry / 2FA gating; may respond `202` with a challenge URL |
+| `redeemLoginTicket` | Redeems a one-shot login-resume ticket and loads the user for session creation |
 | `parseBearer` / `decodeAccess` | Extract and verify the JWT access token |
 | `checkConsumer` | Ensures the consumer session exists in the in-memory cache |
 | `checkAcl` | Validates roles/permissions; filters writable fields on protected writes |
