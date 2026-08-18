@@ -164,6 +164,23 @@ describe("AuthenticationService", () => {
     expect(router.navigate).toHaveBeenCalledWith(["/"]);
   });
 
+  it("keeps a pending challenge ticket when redirecting to login", () => {
+    const location = vi.spyOn(window, "location", "get").mockReturnValue({
+      ...window.location,
+      search: "?ticket=tick",
+    } as unknown as Location);
+
+    try {
+      service.redirectToLogin();
+
+      expect(router.navigate).toHaveBeenCalledWith(["/login"], {
+        queryParams: { ticket: "tick" },
+      });
+    } finally {
+      location.mockRestore();
+    }
+  });
+
   it("rejects an empty resume ticket without calling the API", () => {
     let result: boolean | undefined;
     service.resumeLogin("").subscribe((value) => {
