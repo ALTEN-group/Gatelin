@@ -2,6 +2,23 @@
 
 import routeSvc from "../services/route.js";
 import http from "../utils/http.js";
+
+/**
+ * @param {import('express').Request} req
+ * @returns {Record<string, string>}
+ */
+function upstreamHeaders(req) {
+  /** @type {Record<string, string>} */
+  const headers = { ...(req.additionalHeaders ?? {}) };
+  // Preserve the client Content-Type so HTML forms stay urlencoded upstream
+  // instead of being rewritten as JSON.
+  const contentType = req.headers["content-type"];
+  if (typeof contentType === "string" && contentType.length > 0)
+    headers["Content-Type"] = contentType;
+
+  return headers;
+}
+
 /**
  * Forwards incoming HTTP requests to appropriate microservices within the application cluster.
  * This controller handles the complete request forwarding lifecycle including URL construction,
@@ -41,7 +58,7 @@ export function forwardToService(req, res, next) {
   // fail-safe if it ever throws a raw exception from a code path we don't
   // control — e.g. a synchronous crash before the fetch call).
   http
-    .query(method, url, undefined, body, req.additionalHeaders)
+    .query(method, url, undefined, body, upstreamHeaders(req))
     .then((r) => {
       if (r.contentType) res.type(r.contentType);
       return res.status(r.status).send(r.data);

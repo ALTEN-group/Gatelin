@@ -31,7 +31,9 @@ describe("http.query", () => {
       status,
       ok,
       statusText: "Status",
+      headers: { get: () => "application/json" },
       json: jest.fn().mockResolvedValue(data),
+      text: jest.fn(),
     };
   }
 
@@ -44,7 +46,11 @@ describe("http.query", () => {
       "http://svc/users?id=1",
       expect.objectContaining({ method: "get" }),
     );
-    expect(result).toEqual({ status: 200, data: { id: 1 } });
+    expect(result).toEqual({
+      status: 200,
+      data: { id: 1 },
+      contentType: "application/json",
+    });
   });
 
   it("should not append a query string when params are omitted", async () => {
@@ -67,6 +73,44 @@ describe("http.query", () => {
     expect(init.method).toBe("post");
     expect(init.body).toBe(JSON.stringify({ name: "a" }));
     expect(init.headers["Content-Type"]).toBe("application/json");
+  });
+
+  it("should urlencode HTML form bodies when Content-Type says so", async () => {
+    fetchMock.mockResolvedValue(jsonResponse(200, { ok: true }));
+
+    await query(
+      "post",
+      "http://svc/pwd/web/recover",
+      undefined,
+      { email: "a@b.c", rendered_at: "123", website: "" },
+      { "Content-Type": "application/x-www-form-urlencoded" },
+    );
+
+    const init = fetchMock.mock.calls[0][1];
+    expect(init.headers["Content-Type"]).toBe(
+      "application/x-www-form-urlencoded",
+    );
+    expect(init.body).toBe("email=a%40b.c&rendered_at=123&website=");
+  });
+
+  it("should return HTML responses as text with contentType", async () => {
+    const html = "<html><body>ok</body></html>";
+    fetchMock.mockResolvedValue({
+      status: 200,
+      ok: true,
+      statusText: "OK",
+      headers: { get: () => "text/html; charset=utf-8" },
+      json: jest.fn(),
+      text: jest.fn().mockResolvedValue(html),
+    });
+
+    const result = await query("get", "http://svc/pwd/web/recover");
+
+    expect(result).toEqual({
+      status: 200,
+      data: html,
+      contentType: "text/html; charset=utf-8",
+    });
   });
 
   it("should not attach a body for verbs that don't support one", async () => {
@@ -97,7 +141,11 @@ describe("http.query", () => {
     const result = await query("delete", "http://svc/users/1");
 
     expect(res.json).not.toHaveBeenCalled();
-    expect(result).toEqual({ status: 204, data: null });
+    expect(result).toEqual({
+      status: 204,
+      data: null,
+      contentType: "application/json",
+    });
   });
 
   it("should resolve to null data when the response body isn't valid JSON", async () => {
@@ -105,7 +153,9 @@ describe("http.query", () => {
       status: 200,
       ok: true,
       statusText: "OK",
+      headers: { get: () => null },
       json: jest.fn().mockRejectedValue(new Error("bad json")),
+      text: jest.fn(),
     };
     fetchMock.mockResolvedValue(res);
 

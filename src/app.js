@@ -69,6 +69,9 @@ const proxyLimiter = rateLimit({
 });
 
 app.use(express.json({ limit: "100kb" }));
+// HTML workflow forms (Foxnox /pwd/web/…) POST as urlencoded; without this
+// parser req.body stays empty and the proxy rewrites them as `{}` JSON.
+app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 app.use(cookieParser());
 // OPTIONS preflight short-circuits here — must run before checkRoute
 app.use(corsMiddleware);

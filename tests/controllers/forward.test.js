@@ -45,11 +45,13 @@ describe("forwardToService", () => {
       method: "GET",
       url: "/users/1",
       body: undefined,
+      headers: {},
       additionalHeaders: { "x-consumer-user-id": "1" },
     };
     res = {
       locals: { route: { serviceName: "user" } },
       status: jest.fn().mockReturnThis(),
+      type: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
     next = jest.fn();
@@ -88,6 +90,35 @@ describe("forwardToService", () => {
       { name: "a" },
       { "x-consumer-user-id": "1" },
     );
+  });
+
+  it("should preserve urlencoded Content-Type for HTML form posts", async () => {
+    req.method = "POST";
+    req.url = "/pwd/web/recover";
+    req.body = { email: "a@b.c", rendered_at: "1" };
+    req.headers = {
+      "content-type": "application/x-www-form-urlencoded",
+    };
+    req.additionalHeaders = {};
+    getServiceBaseUrl.mockReturnValue("http://foxnox-test:3000");
+    query.mockResolvedValue({
+      status: 200,
+      data: "<html>ok</html>",
+      contentType: "text/html; charset=utf-8",
+    });
+
+    forwardToService(req, res, next);
+    await flushPromises();
+
+    expect(query).toHaveBeenCalledWith(
+      "POST",
+      "http://foxnox-test:3000/pwd/web/recover",
+      undefined,
+      { email: "a@b.c", rendered_at: "1" },
+      { "Content-Type": "application/x-www-form-urlencoded" },
+    );
+    expect(res.type).toHaveBeenCalledWith("text/html; charset=utf-8");
+    expect(res.send).toHaveBeenCalledWith("<html>ok</html>");
   });
 
   it("should preserve the query string while normalizing the path", async () => {
