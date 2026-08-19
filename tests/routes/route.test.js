@@ -146,6 +146,8 @@ describe("POST /gateway/routes/search", () => {
   });
 
   it("rejects a request whose access token has no matching consumer session", async () => {
+    // checkConsumer only hits the consumer cache for protected routes.
+    routeSvc.getOne.mockReturnValue({ ...mockRoute, protected: true });
     consumerSvc.getOne.mockReturnValue(undefined);
 
     const res = await supertest(app)
@@ -153,8 +155,7 @@ describe("POST /gateway/routes/search", () => {
       .set("Authorization", "Bearer unknown-token")
       .send({});
 
-    // checkConsumer errors with `status` (not `statusCode`); assert rejection without pinning errandler-express's exact mapping.
-    expect(res.status).not.toBe(200);
+    expect(res.status).toBe(401);
     expect(consumerSvc.getOne).toHaveBeenCalledWith("unknown-token");
   });
 

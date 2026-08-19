@@ -108,7 +108,7 @@ describe("catch-all proxy route", () => {
       "http://ms-downstream:3000/downstream/ping",
       undefined,
       undefined,
-      undefined,
+      {},
     );
   });
 
@@ -122,12 +122,14 @@ describe("catch-all proxy route", () => {
       .send({ hello: "world" });
 
     expect(res.status).toBe(201);
+    // forwardToService mirrors the client Content-Type upstream so HTML form
+    // posts stay urlencoded instead of being rewritten as JSON.
     expect(query).toHaveBeenCalledWith(
       "POST",
       "http://ms-downstream:3000/downstream/ping?foo=bar",
       undefined,
       { hello: "world" },
-      undefined,
+      { "Content-Type": "application/json" },
     );
   });
 
