@@ -74,10 +74,9 @@ function toUrlEncoded(data) {
 /**
  * @param {unknown} data
  * @param {string} contentType
- * @returns {string|undefined}
+ * @returns {string}
  */
 function serializeBody(data, contentType) {
-  if (data === undefined || data === null) return undefined;
   if (mediaType(contentType) === FORM_CONTENT_TYPE) {
     if (typeof data !== "object" || Array.isArray(data)) return String(data);
     return toUrlEncoded(/** @type {Record<string, unknown>} */ (data));
