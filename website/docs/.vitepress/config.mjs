@@ -7,6 +7,12 @@ export default withMermaid(defineConfig({
   title: 'Gatelin',
   description: 'Backend for Frontend (BFF): an application API layer behind a reverse proxy, with JWT sessions, RBAC, and authenticated forwarding to internal microservices',
   base,
+  vite: {
+    // mermaid >= 11.16 pulls CJS-only fastdom, which vitepress-plugin-mermaid does not pre-bundle
+    optimizeDeps: {
+      include: ['fastdom', 'fastdom/extensions/fastdom-promised.js'],
+    },
+  },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],
   ],
