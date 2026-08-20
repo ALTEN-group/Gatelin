@@ -19,7 +19,7 @@ describe("SchemaService", () => {
         SchemaService,
         {
           provide: APP_CONFIG,
-          useValue: { apiGateway: "/api/" },
+          useValue: { gatelinApi: "/api/" },
         },
       ],
     });

@@ -15,7 +15,7 @@ export class SchemaService {
   private readonly appConfig = inject(APP_CONFIG);
 
   public get(entityId: AdminEntity): Observable<SchemaRow[]> {
-    const endpoint = `${this.appConfig.apiGateway}${entityId}/schema`;
+    const endpoint = `${this.appConfig.gatelinApi}${entityId}/schema`;
     return this.http
       .get<{ rows?: SchemaRow[] }>(endpoint)
       .pipe(map((res) => res.rows ?? []));

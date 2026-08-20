@@ -4,6 +4,7 @@ import { log } from "@dwtechs/winstan";
 import { startAdminServer } from "./admin-server.js";
 import app from "./app.js";
 import { validateEnv } from "./conf/env.js";
+import { attachWebSocketProxy } from "./controllers/websocket.js";
 // Cron jobs
 import { startDeleteArchivedEntitiesJob } from "./jobs/delete-archived-entities.js";
 import { startDeleteOldHistoryJob } from "./jobs/delete-old-history.js";
@@ -40,7 +41,7 @@ Promise.resolve()
     startDeleteArchivedEntitiesJob();
     startDeleteOldHistoryJob();
     const adminServer = startAdminServer();
-    // servpico's listen() only closes the gateway server, so in-flight admin UI
+    // servpico's listen() only closes the Gatelin server, so in-flight admin UI
     // requests would be cut off when it calls process.exit.
     if (adminServer) {
       for (const signal of ["SIGTERM", "SIGINT", "SIGHUP"]) {
@@ -49,6 +50,14 @@ Promise.resolve()
         );
       }
     }
+    // WebSocket upgrades never enter Express. Hook the HTTP server that
+    // servpico creates via app.listen() so GET+Upgrade is authorized and piped.
+    const originalListen = app.listen.bind(app);
+    app.listen = (...args) => {
+      const server = originalListen(...args);
+      attachWebSocketProxy(server);
+      return server;
+    };
     listen(app);
   })
   .catch(failFast);

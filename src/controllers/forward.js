@@ -1,69 +1,96 @@
 // @ts-check
 
-import routeSvc from "../services/route.js";
-import http from "../utils/http.js";
+import nodeHttp from "node:http";
+import nodeHttps from "node:https";
+import { pipeline } from "node:stream";
+import {
+  copyHeaders,
+  isEventStream,
+  PRIVATE_REQUEST_HEADERS,
+  resolveUpstreamUrl,
+  upstreamTimeoutMs,
+} from "../utils/proxy-headers.js";
+import { agentFor } from "../utils/upstream-agent.js";
 
 /**
- * @param {import('express').Request} req
- * @returns {Record<string, string>}
- */
-function upstreamHeaders(req) {
-  /** @type {Record<string, string>} */
-  const headers = { ...(req.additionalHeaders ?? {}) };
-  // Preserve the client Content-Type so HTML forms stay urlencoded upstream
-  // instead of being rewritten as JSON.
-  const contentType = req.headers["content-type"];
-  if (typeof contentType === "string" && contentType.length > 0)
-    headers["Content-Type"] = contentType;
-
-  return headers;
-}
-
-/**
- * Forwards incoming HTTP requests to appropriate microservices within the application cluster.
- * This controller handles the complete request forwarding lifecycle including URL construction,
- * header management, and response handling.
+ * Streams an incoming HTTP request to its configured microservice and streams
+ * the upstream response back without parsing or re-serializing either body.
  *
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} next - Express next function
- * @return {void} Sends response or passes error to next middleware
- * @throws {Error} Network errors or service unavailability
- * @example
- * // Use as Express route handler
- * import forwardToService from './controllers/proxy.js';
- * app.use('/', forwardToService);
  */
 export function forwardToService(req, res, next) {
-  const method = req.method; // GET, POST, etc.
-  const serviceName = res.locals.route.serviceName;
-  const body = req.body;
+  let target;
+  try {
+    // URL resolves dot segments before forwarding, preventing traversal from
+    // escaping the route path while retaining the original query string.
+    target = resolveUpstreamUrl(res.locals.route.serviceName, req.url);
+  } catch {
+    return next({ statusCode: 502, message: "Invalid upstream URL" });
+  }
 
-  // Normalize the URL to resolve any path traversal sequences before forwarding
-  const parsed = new URL(req.url, "http://placeholder");
-  const safeRoute = `${parsed.pathname}${parsed.search}`;
+  const headers = copyHeaders(req.headers, {
+    extraBlocked: PRIVATE_REQUEST_HEADERS,
+  });
+  headers.host = target.host;
+  Object.assign(headers, req.additionalHeaders ?? {});
 
-  // Look up pre-built base URL for this service
-  const url = `${routeSvc.getServiceBaseUrl(serviceName)}${safeRoute}`;
+  const transport = target.protocol === "https:" ? nodeHttps : nodeHttp;
+  let responseStarted = false;
+  let failed = false;
 
-  // Forward request to target microservice.
-  //
-  // Error status propagation: http.js populates `err.statusCode` on both the
-  // upstream-non-2xx path (real HTTP code, e.g. 401 for a bad token, 404 for
-  // a missing resource) and the network-error path (503 default for
-  // ECONNREFUSED / DNS / TLS failures). Preserve that upstream status so the
-  // client sees the true cause, not a blanket "Bad Gateway" for everything.
-  // 502 remains the last-resort default when the error object carries no
-  // recognizable status (should be unreachable given http.js's contract, but
-  // fail-safe if it ever throws a raw exception from a code path we don't
-  // control — e.g. a synchronous crash before the fetch call).
-  http
-    .query(method, url, undefined, body, upstreamHeaders(req))
-    .then((r) => {
-      if (r.contentType) res.type(r.contentType);
-      return res.status(r.status).send(r.data);
-    })
-    .catch((e) =>
-      next({ statusCode: e.statusCode || e.status || 502, message: e.message }),
-    );
+  /**
+   * @param {NodeJS.ErrnoException} err
+   */
+  const fail = (err) => {
+    if (failed) return;
+    failed = true;
+    if (responseStarted || res.headersSent) {
+      res.destroy(err);
+      return;
+    }
+    const timedOut = err.code === "ETIMEDOUT";
+    next({
+      statusCode: timedOut ? 504 : 503,
+      message: timedOut
+        ? "HTTP(504): Upstream timeout"
+        : "HTTP(503): Service Unavailable",
+    });
+  };
+
+  const abortOnIdle = () => {
+    const err = new Error("Upstream timeout");
+    // @ts-expect-error Error.code is supplied for status mapping.
+    err.code = "ETIMEDOUT";
+    upstreamReq.destroy(err);
+  };
+
+  const upstreamReq = transport.request(
+    target,
+    { method: req.method, headers, agent: agentFor(target) },
+    (upstreamRes) => {
+      responseStarted = true;
+      // Long-lived event streams must not inherit the generic idle timeout.
+      if (isEventStream(req, upstreamRes)) upstreamReq.setTimeout(0);
+      res.statusCode = upstreamRes.statusCode ?? 502;
+      if (upstreamRes.statusMessage)
+        res.statusMessage = upstreamRes.statusMessage;
+      for (const [name, value] of Object.entries(
+        copyHeaders(upstreamRes.headers),
+      )) {
+        if (value !== undefined) res.setHeader(name, value);
+      }
+      pipeline(upstreamRes, res, (err) => {
+        if (err) fail(/** @type {NodeJS.ErrnoException} */ (err));
+      });
+    },
+  );
+
+  if (!isEventStream(req))
+    upstreamReq.setTimeout(upstreamTimeoutMs(), abortOnIdle);
+  upstreamReq.on("error", fail);
+  pipeline(req, upstreamReq, (err) => {
+    if (err) fail(/** @type {NodeJS.ErrnoException} */ (err));
+  });
 }

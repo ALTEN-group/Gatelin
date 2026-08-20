@@ -7,7 +7,7 @@ Session endpoints manage authentication — login, mid-login challenge resume, t
 ### API
 
 ```
-POST /gateway/sessions
+POST /gatelin/sessions
 Content-Type: application/json
 
 {
@@ -59,7 +59,7 @@ The client must send the browser to `url`. That URL is served entirely by **your
 
 ### Password-service contract
 
-Gatelin is a gateway: it never stores password hashes, 2FA secrets, or renders challenge pages. It delegates all of that to a **password service** you point `PWD_CHECK_URL` at. Any service that speaks the small HTTP contract below works — the reference implementation is [Foxnox](https://github.com/dwtechs/Foxnox), but nothing here is Foxnox-specific.
+Gatelin never stores password hashes or 2FA secrets, and never renders challenge pages. It delegates all of that to a **password service** you point `PWD_CHECK_URL` at. Any service that speaks the small HTTP contract below works — the reference implementation is [Foxnox](https://github.com/dwtechs/Foxnox), but nothing here is Foxnox-specific.
 
 #### Credential check (required)
 
@@ -87,7 +87,7 @@ Gatelin reads only these fields from `rows[0]`; any others are ignored:
 | `pwdExpiry` | ISO date string or `null` | If in the past, login returns **202** `expired-password` |
 | `twoFactorEnabled` | boolean | If `true` (and no trusted-device cookie), login returns **202** `2fa` |
 
-> **Don't need challenges?** If your service only checks passwords, return a body **without a `rows` entry** (for example `{ "success": true }`, or `{ "rows": [], "total": 0 }`). Gatelin then treats the login as fully authenticated, skips all gating, and logs a debug/warn note. This is the correct setup for a plain username+password gateway with no 2FA or password-expiry policy.
+> **Don't need challenges?** If your service only checks passwords, return a body **without a `rows` entry** (for example `{ "success": true }`, or `{ "rows": [], "total": 0 }`). Gatelin then treats the login as fully authenticated, skips all gating, and logs a debug/warn note. This is the correct setup for a plain username+password login with no 2FA or password-expiry policy.
 
 #### Challenge endpoints (only if you emit 202)
 
@@ -103,7 +103,7 @@ If your credential check can return `pwdExpiry`, `lockedUntil`, or `twoFactorEna
 
 #### Trusted-device cookie
 
-To let a returning browser skip 2FA, your challenge pages may set a trusted-device cookie named **`trusted_device`** (scoped `Path=/` so it reaches `/gateway/sessions`). On the next login Gatelin forwards its value to `POST {base}/pwd/trusted-devices/verify`; a `{ trusted: true }` response suppresses the 2FA challenge. If you don't implement trusted devices, simply never set the cookie — every 2FA login then challenges.
+To let a returning browser skip 2FA, your challenge pages may set a trusted-device cookie named **`trusted_device`** (scoped `Path=/` so it reaches `/gatelin/sessions`). On the next login Gatelin forwards its value to `POST {base}/pwd/trusted-devices/verify`; a `{ trusted: true }` response suppresses the 2FA challenge. If you don't implement trusted devices, simply never set the cookie — every 2FA login then challenges.
 
 ### Sequence diagram
 
@@ -116,8 +116,8 @@ sequenceDiagram
   autonumber
   actor u as User
   participant f as front
-  participant msg as ms_gateway
-  participant gdb as gateway_db
+  participant msg as gatelin
+  participant gdb as gatelin_db
   participant msu as ms_user
   participant udb as user_db
   participant msp as ms_pwd
@@ -132,7 +132,7 @@ sequenceDiagram
   u->>f: Enter email and pwd
   deactivate u
   activate f
-  f->>msg: POST /gateway/sessions { email, pwd }
+  f->>msg: POST /gatelin/sessions { email, pwd }
   deactivate f
 
   rect rgb(220, 220, 220, 0.1)
@@ -259,7 +259,7 @@ sequenceDiagram
         msg->>f: return 202 { challengeRequired, kind, url }
         activate f
         f->>u: redirect browser to the workflow page
-        note over u,msp: User completes the challenge on ms_pwd, which redirects back with ?ticket=… then POST /gateway/sessions/resume
+        note over u,msp: User completes the challenge on ms_pwd, which redirects back with ?ticket=… then POST /gatelin/sessions/resume
         deactivate f
       end
     end
@@ -292,7 +292,7 @@ sequenceDiagram
 Finishes a login that was interrupted by a mid-login challenge. Public — no JWT required.
 
 ```
-POST /gateway/sessions/resume
+POST /gatelin/sessions/resume
 Content-Type: application/json
 
 {
@@ -314,7 +314,7 @@ Tickets are one-shot and short-lived. The admin UI reads `?ticket=` on the login
 ## Refresh Tokens
 
 ```
-PUT /gateway/sessions
+PUT /gatelin/sessions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 X-CSRF-Token: <csrf_cookie_value>
@@ -345,7 +345,7 @@ A fresh CSRF cookie is issued with the new tokens.
 ## Logout
 
 ```
-DELETE /gateway/sessions
+DELETE /gatelin/sessions
 Authorization: Bearer <access_token>
 X-CSRF-Token: <csrf_cookie_value>
 Cookie: csrfToken=<csrf_cookie_value>

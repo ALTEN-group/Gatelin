@@ -6,7 +6,7 @@
 # it through Traefik.
 #
 # RESTler's own fuzzing mutates data (it sends bulk-update/archive requests
-# with garbage values to every endpoint, including PUT /gateway/services).
+# with garbage values to every endpoint, including PUT /gatelin/services).
 # Because the postgres container uses a persistent named volume, a prior
 # run's fuzzing can corrupt the seeded "core" config rows that gatelin's own
 # self-routing (checkRoute -> services/route.js) depends on -- e.g. the

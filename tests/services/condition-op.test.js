@@ -7,7 +7,7 @@ import conditionOpSvc from "../../src/services/condition-op.js";
 // Snapshot of the currently-supported ops. Kept alongside the service so a
 // getAll() assertion can pin the exact shape rather than only proving each op
 // individually via isAllowed. Whenever the service constant changes to match
-// db/liquibase/gateway/versions/03-struct/14-condition.sql, update this too.
+// db/liquibase/gatelin/versions/03-struct/14-condition.sql, update this too.
 const DB_CHK_CONDITION_OP = new Set(["=", "!=", "<", ">", "<=", ">="]);
 
 describe("condition-op service", () => {

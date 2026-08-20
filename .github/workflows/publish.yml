@@ -9,7 +9,7 @@ permissions:
   packages: write
 
 jobs:
-  build-push-gateway:
+  build-push-gatelin:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,8 +50,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=gateway
-          cache-to: type=gha,scope=gateway,mode=max
+          cache-from: type=gha,scope=gatelin
+          cache-to: type=gha,scope=gatelin,mode=max
           provenance: true
           sbom: true
           build-args: |

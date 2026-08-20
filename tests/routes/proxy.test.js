@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 
+import nodeHttp from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 // proxy.js is the catch-all mounted at "/" after every named resource route in app.js.
@@ -11,7 +12,6 @@ import supertest from "supertest";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
 const consumerSvcPath = path.join(__dirname, "../../src/services/consumer.js");
-const httpUtilPath = path.join(__dirname, "../../src/utils/http.js");
 
 jest.unstable_mockModule("@dwtechs/winstan", () => ({
   log: {
@@ -40,7 +40,7 @@ jest.unstable_mockModule("@dwtechs/toker-express", () => ({
   clearRefreshCookie: jest.fn(),
 }));
 
-const getServiceBaseUrl = jest.fn(() => "http://ms-downstream:3000");
+const getServiceBaseUrl = jest.fn();
 jest.unstable_mockModule(routeSvcPath, () => ({
   __esModule: true,
   default: {
@@ -55,16 +55,14 @@ jest.unstable_mockModule(consumerSvcPath, () => ({
   default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
 }));
 
-const query = jest.fn();
-jest.unstable_mockModule(httpUtilPath, () => ({
-  __esModule: true,
-  default: { query },
-}));
-
 describe("catch-all proxy route", () => {
   let app;
   let routeSvc;
   let consumerSvc;
+  let upstream;
+  let upstreamUrl;
+  let upstreamRequest;
+  let upstreamResponse;
   const proxiedRoute = {
     id: 1,
     url: "/downstream/ping",
@@ -73,28 +71,50 @@ describe("catch-all proxy route", () => {
   };
 
   beforeAll(async () => {
+    upstream = nodeHttp.createServer((req, res) => {
+      const chunks = [];
+      req.on("data", (chunk) => chunks.push(chunk));
+      req.on("end", () => {
+        upstreamRequest = {
+          body: Buffer.concat(chunks),
+          headers: req.headers,
+          method: req.method,
+          url: req.url,
+        };
+        res.writeHead(upstreamResponse.status, {
+          "content-type": "application/json",
+        });
+        res.end(JSON.stringify(upstreamResponse.body));
+      });
+    });
+    await new Promise((resolve) => upstream.listen(0, "127.0.0.1", resolve));
+    const address = upstream.address();
+    upstreamUrl = `http://127.0.0.1:${address.port}`;
+
     ({ default: routeSvc } = await import("../../src/services/route.js"));
     ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
     ({ default: app } = await import("../../src/app.js"));
   });
 
+  afterAll(() => new Promise((resolve) => upstream.close(resolve)));
+
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue(proxiedRoute);
-    getServiceBaseUrl.mockClear();
+    getServiceBaseUrl.mockReset().mockReturnValue(upstreamUrl);
     consumerSvc.getOne.mockReset();
-    query.mockReset();
+    upstreamRequest = null;
+    upstreamResponse = { status: 200, body: { pong: true } };
   });
 
   it("rejects an unauthenticated request before forwarding", async () => {
     const res = await supertest(app).get("/downstream/ping");
 
     expect(res.status).toBe(401);
-    expect(query).not.toHaveBeenCalled();
+    expect(getServiceBaseUrl).not.toHaveBeenCalled();
   });
 
   it("forwards an authenticated request to the resolved service base URL", async () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
-    query.mockResolvedValue({ status: 200, data: { pong: true } });
 
     const res = await supertest(app)
       .get("/downstream/ping")
@@ -103,18 +123,15 @@ describe("catch-all proxy route", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ pong: true });
     expect(getServiceBaseUrl).toHaveBeenCalledWith("downstream");
-    expect(query).toHaveBeenCalledWith(
-      "GET",
-      "http://ms-downstream:3000/downstream/ping",
-      undefined,
-      undefined,
-      {},
-    );
+    expect(upstreamRequest.method).toBe("GET");
+    expect(upstreamRequest.url).toBe("/downstream/ping");
+    // The gateway bearer token authenticates to Gatelin and must not leak.
+    expect(upstreamRequest.headers.authorization).toBeUndefined();
   });
 
   it("forwards a POST body and preserves the query string in the target URL", async () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
-    query.mockResolvedValue({ status: 201, data: { id: 1 } });
+    upstreamResponse = { status: 201, body: { id: 1 } };
 
     const res = await supertest(app)
       .post("/downstream/ping?foo=bar")
@@ -122,20 +139,18 @@ describe("catch-all proxy route", () => {
       .send({ hello: "world" });
 
     expect(res.status).toBe(201);
-    // forwardToService mirrors the client Content-Type upstream so HTML form
-    // posts stay urlencoded instead of being rewritten as JSON.
-    expect(query).toHaveBeenCalledWith(
-      "POST",
-      "http://ms-downstream:3000/downstream/ping?foo=bar",
-      undefined,
-      { hello: "world" },
-      { "Content-Type": "application/json" },
+    expect(upstreamRequest.url).toBe("/downstream/ping?foo=bar");
+    expect(upstreamRequest.headers["content-type"]).toMatch(
+      /^application\/json/,
     );
+    expect(JSON.parse(upstreamRequest.body.toString())).toEqual({
+      hello: "world",
+    });
   });
 
   it("forwards the downstream response status as-is", async () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
-    query.mockResolvedValue({ status: 404, data: { message: "not found" } });
+    upstreamResponse = { status: 404, body: { message: "not found" } };
 
     const res = await supertest(app)
       .get("/downstream/ping")
@@ -147,7 +162,7 @@ describe("catch-all proxy route", () => {
 
   it("passes downstream failures to the error handler instead of hanging", async () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
-    query.mockRejectedValue(new Error("connect ECONNREFUSED"));
+    getServiceBaseUrl.mockReturnValue("http://127.0.0.1:1");
 
     const res = await supertest(app)
       .get("/downstream/ping")

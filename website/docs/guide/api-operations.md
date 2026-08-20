@@ -9,7 +9,7 @@ Operations define the type of action a permission grants on a resource. They are
 ## Search Operations
 
 ```
-POST /gateway/operations/search
+POST /gatelin/operations/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -31,14 +31,14 @@ Authorization: Bearer <access_token>
 ## Get Operation History
 
 ```
-GET /gateway/operations/:id/history
+GET /gatelin/operations/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Operation
 
 ```
-POST /gateway/operations
+POST /gatelin/operations
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -58,7 +58,7 @@ Authorization: Bearer <access_token>
 ## Update Operation
 
 ```
-PUT /gateway/operations
+PUT /gatelin/operations
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -79,7 +79,7 @@ Authorization: Bearer <access_token>
 ## Archive Operations
 
 ```
-POST /gateway/operations/archive
+POST /gatelin/operations/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

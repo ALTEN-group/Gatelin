@@ -7,7 +7,7 @@ export interface AppConfig {
   appKey: string;
   storageKeys: { [key: string]: string };
   sidenavItems: MenuItem[];
-  apiGateway: string;
+  gatelinApi: string;
   apiUsers: string;
   /** Shown on login when set (from env / Docker). */
   passwordRecoveryUrl?: string;
@@ -19,7 +19,7 @@ const defaultValue: AppConfig = {
   appKey: "",
   storageKeys: {},
   sidenavItems: [],
-  apiGateway: "/api/",
+  gatelinApi: "/api/",
   apiUsers: "/api/users/",
   passwordRecoveryUrl: undefined,
   env: {},

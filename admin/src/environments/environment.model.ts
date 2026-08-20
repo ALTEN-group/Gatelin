@@ -1,6 +1,6 @@
 export interface Environment {
   production: boolean;
-  apiGateway: string;
+  gatelinApi: string;
   apiUsers: string;
   assets: string;
   msNotifEnabled: boolean;

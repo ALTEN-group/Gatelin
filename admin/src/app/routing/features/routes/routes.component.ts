@@ -9,7 +9,7 @@ import { ConfigHelper, TableComponent } from "@dwtechs/ngx-crud-builder";
 import { RoutesService } from "app/routing/data-access/routes/routes.service";
 
 /**
- * Component to display and manage gateway routes
+ * Component to display and manage Gatelin routes
  */
 @Component({
   selector: "adm-routes",

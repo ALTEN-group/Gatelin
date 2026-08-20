@@ -2,167 +2,206 @@
  * @jest-environment node
  */
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import nodeHttp from "node:http";
 import { jest } from "@jest/globals";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const httpUtilPath = path.join(__dirname, "../../src/utils/http.js");
-const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
-
-const query = jest.fn();
-jest.unstable_mockModule(httpUtilPath, () => ({
-  __esModule: true,
-  default: { query },
-}));
+import express from "express";
+import request from "supertest";
 
 const getServiceBaseUrl = jest.fn();
-jest.unstable_mockModule(routeSvcPath, () => ({
+jest.unstable_mockModule("../../src/services/route.js", () => ({
   __esModule: true,
   default: { getServiceBaseUrl },
 }));
 
-// forwardToService doesn't return its internal http.query() promise chain,
-// so tests must flush the macrotask queue instead of awaiting its return value.
-function flushPromises() {
-  return new Promise((resolve) => setImmediate(resolve));
-}
-
 describe("forwardToService", () => {
   let forwardToService;
-  let req, res, next;
+  let upstream;
+  let upstreamUrl;
+  let proxyApp;
 
   beforeAll(async () => {
     const module = await import("../../src/controllers/forward.js");
     forwardToService = module.forwardToService;
+
+    upstream = nodeHttp.createServer((req, res) => {
+      if (req.url === "/sse") {
+        res.writeHead(200, {
+          "content-type": "text/event-stream",
+          "cache-control": "no-cache",
+        });
+        const delay = (Number(process.env.UPSTREAM_TIMEOUT_MS) || 30) + 40;
+        setTimeout(() => {
+          res.write("data: hello\n\n");
+          res.end();
+        }, delay);
+        return;
+      }
+
+      const chunks = [];
+      req.on("data", (chunk) => chunks.push(chunk));
+      req.on("end", () => {
+        const body = Buffer.concat(chunks);
+
+        if (req.url === "/binary") {
+          res.writeHead(206, {
+            "content-type": "application/octet-stream",
+            "set-cookie": ["workflow=abc; HttpOnly", "theme=dark"],
+            "x-upstream": "binary-service",
+          });
+          res.end(Buffer.from([0, 1, 2, 255]));
+          return;
+        }
+
+        res.writeHead(201, { "content-type": "application/json" });
+        res.end(
+          JSON.stringify({
+            body: body.toString("base64"),
+            headers: req.headers,
+            method: req.method,
+            url: req.url,
+          }),
+        );
+      });
+    });
+    await new Promise((resolve) => upstream.listen(0, "127.0.0.1", resolve));
+    const address = upstream.address();
+    upstreamUrl = `http://127.0.0.1:${address.port}`;
+
+    proxyApp = express();
+    proxyApp.use((req, res, next) => {
+      res.locals.route = { serviceName: "user" };
+      req.additionalHeaders = {
+        "x-consumer-name": "alice",
+        "x-consumer-user-id": "1",
+      };
+      forwardToService(req, res, next);
+    });
+    proxyApp.use((err, _req, res, _next) =>
+      res.status(err.statusCode ?? 500).json({ message: err.message }),
+    );
   });
+
+  afterAll(() => new Promise((resolve) => upstream.close(resolve)));
 
   beforeEach(() => {
-    query.mockReset();
     getServiceBaseUrl.mockReset();
-    getServiceBaseUrl.mockReturnValue("http://ms_user-test:3000");
-    req = {
-      method: "GET",
-      url: "/users/1",
-      body: undefined,
-      headers: {},
-      additionalHeaders: { "x-consumer-user-id": "1" },
-    };
-    res = {
-      locals: { route: { serviceName: "user" } },
-      status: jest.fn().mockReturnThis(),
-      type: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-    };
-    next = jest.fn();
+    getServiceBaseUrl.mockReturnValue(upstreamUrl);
   });
 
-  it("should forward the request to the resolved service base URL and relay the response", async () => {
-    query.mockResolvedValue({ status: 200, data: { id: 1 } });
-
-    forwardToService(req, res, next);
-    await flushPromises();
+  it("streams the request body and forwards safe client headers", async () => {
+    const body = Buffer.from([0, 10, 127, 128, 255]);
+    const response = await request(proxyApp)
+      .post("/echo?foo=bar")
+      .set("content-type", "application/octet-stream")
+      .set("x-client-header", "kept")
+      .set("authorization", "Bearer gateway-token")
+      .set("cookie", "refreshToken=secret")
+      .set("x-csrf-token", "secret")
+      .send(body)
+      .expect(201);
 
     expect(getServiceBaseUrl).toHaveBeenCalledWith("user");
-    expect(query).toHaveBeenCalledWith(
-      "GET",
-      "http://ms_user-test:3000/users/1",
-      undefined,
-      undefined,
-      { "x-consumer-user-id": "1" },
+    expect(response.body.body).toBe(body.toString("base64"));
+    expect(response.body.method).toBe("POST");
+    expect(response.body.url).toBe("/echo?foo=bar");
+    expect(response.body.headers["content-type"]).toBe(
+      "application/octet-stream",
     );
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.send).toHaveBeenCalledWith({ id: 1 });
+    expect(response.body.headers["x-client-header"]).toBe("kept");
+    expect(response.body.headers["x-consumer-user-id"]).toBe("1");
+    expect(response.body.headers["x-consumer-name"]).toBe("alice");
+    expect(response.body.headers.authorization).toBeUndefined();
+    expect(response.body.headers.cookie).toBeUndefined();
+    expect(response.body.headers["x-csrf-token"]).toBeUndefined();
+    expect(response.body.headers.connection).toBe("keep-alive");
   });
 
-  it("should forward the parsed request body for verbs like POST", async () => {
-    req.method = "POST";
-    req.body = { name: "a" };
-    query.mockResolvedValue({ status: 201, data: { id: 2 } });
-
-    forwardToService(req, res, next);
-    await flushPromises();
-
-    expect(query).toHaveBeenCalledWith(
-      "POST",
-      "http://ms_user-test:3000/users/1",
-      undefined,
-      { name: "a" },
-      { "x-consumer-user-id": "1" },
+  it("passes multipart bodies through byte-for-byte", async () => {
+    const boundary = "gatelin-boundary";
+    const multipart = Buffer.from(
+      `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="a.bin"\r\nContent-Type: application/octet-stream\r\n\r\n\u0000\u0001binary\r\n--${boundary}--\r\n`,
     );
+    const response = await request(proxyApp)
+      .post("/upload")
+      .set("content-type", `multipart/form-data; boundary=${boundary}`)
+      .send(multipart)
+      .expect(201);
+
+    expect(response.body.body).toBe(multipart.toString("base64"));
   });
 
-  it("should preserve urlencoded Content-Type for HTML form posts", async () => {
-    req.method = "POST";
-    req.url = "/pwd/web/recover";
-    req.body = { email: "a@b.c", rendered_at: "1" };
-    req.headers = {
-      "content-type": "application/x-www-form-urlencoded",
-    };
-    req.additionalHeaders = {};
-    getServiceBaseUrl.mockReturnValue("http://foxnox-test:3000");
-    query.mockResolvedValue({
-      status: 200,
-      data: "<html>ok</html>",
-      contentType: "text/html; charset=utf-8",
+  it("relays status, binary bodies, and response headers unchanged", async () => {
+    const response = await request(proxyApp)
+      .get("/binary")
+      .buffer(true)
+      .parse((res, callback) => {
+        const chunks = [];
+        res.on("data", (chunk) => chunks.push(chunk));
+        res.on("end", () => callback(null, Buffer.concat(chunks)));
+      })
+      .expect(206);
+
+    expect(response.body).toEqual(Buffer.from([0, 1, 2, 255]));
+    expect(response.headers["content-type"]).toBe("application/octet-stream");
+    expect(response.headers["x-upstream"]).toBe("binary-service");
+    expect(response.headers["set-cookie"]).toEqual([
+      "workflow=abc; HttpOnly",
+      "theme=dark",
+    ]);
+  });
+
+  it("normalizes dot segments before forwarding", async () => {
+    const response = await request(proxyApp)
+      .get("/users/../admin/1?foo=bar")
+      .expect(201);
+
+    expect(response.body.url).toBe("/admin/1?foo=bar");
+  });
+
+  it("maps an unavailable upstream to 503", async () => {
+    getServiceBaseUrl.mockReturnValue("http://127.0.0.1:1");
+
+    const response = await request(proxyApp).get("/users/1").expect(503);
+
+    expect(response.body).toEqual({
+      message: "HTTP(503): Service Unavailable",
     });
-
-    forwardToService(req, res, next);
-    await flushPromises();
-
-    expect(query).toHaveBeenCalledWith(
-      "POST",
-      "http://foxnox-test:3000/pwd/web/recover",
-      undefined,
-      { email: "a@b.c", rendered_at: "1" },
-      { "Content-Type": "application/x-www-form-urlencoded" },
-    );
-    expect(res.type).toHaveBeenCalledWith("text/html; charset=utf-8");
-    expect(res.send).toHaveBeenCalledWith("<html>ok</html>");
   });
 
-  it("should preserve the query string while normalizing the path", async () => {
-    req.url = "/users/1?foo=bar";
-    query.mockResolvedValue({ status: 200, data: {} });
+  it("rejects an invalid upstream URL as 502", async () => {
+    getServiceBaseUrl.mockReturnValue("not a URL");
 
-    forwardToService(req, res, next);
-    await flushPromises();
+    const response = await request(proxyApp).get("/users/1").expect(502);
 
-    expect(query).toHaveBeenCalledWith(
-      "GET",
-      "http://ms_user-test:3000/users/1?foo=bar",
-      undefined,
-      undefined,
-      expect.anything(),
-    );
-  });
-
-  it("should resolve path traversal sequences before forwarding", async () => {
-    req.url = "/users/../admin/1";
-    query.mockResolvedValue({ status: 200, data: {} });
-
-    forwardToService(req, res, next);
-    await flushPromises();
-
-    expect(query).toHaveBeenCalledWith(
-      "GET",
-      "http://ms_user-test:3000/admin/1",
-      undefined,
-      undefined,
-      expect.anything(),
-    );
-  });
-
-  it("should pass downstream failures to the error handler as a 502", async () => {
-    query.mockRejectedValue(new Error("ECONNREFUSED"));
-
-    forwardToService(req, res, next);
-    await flushPromises();
-
-    expect(next).toHaveBeenCalledWith({
-      statusCode: 502,
-      message: "ECONNREFUSED",
+    expect(response.body).toEqual({
+      message: "Invalid upstream URL",
     });
-    expect(res.status).not.toHaveBeenCalled();
+  });
+
+  it("does not forward connection-nominated hop-by-hop headers", async () => {
+    const response = await request(proxyApp)
+      .get("/headers")
+      .set("connection", "x-remove-me")
+      .set("x-remove-me", "secret")
+      .expect(201);
+
+    expect(response.body.headers["x-remove-me"]).toBeUndefined();
+    expect(response.body.headers.connection).not.toContain("x-remove-me");
+  });
+
+  it("keeps SSE connections open past the generic idle timeout", async () => {
+    const previous = process.env.UPSTREAM_TIMEOUT_MS;
+    process.env.UPSTREAM_TIMEOUT_MS = "40";
+    try {
+      const response = await request(proxyApp)
+        .get("/sse")
+        .set("Accept", "text/event-stream")
+        .expect(200);
+
+      expect(response.headers["content-type"]).toBe("text/event-stream");
+      expect(response.text).toContain("data: hello");
+    } finally {
+      process.env.UPSTREAM_TIMEOUT_MS = previous;
+    }
   });
 });

@@ -59,7 +59,7 @@ describe("AuthenticationService", () => {
         {
           provide: APP_CONFIG,
           useValue: {
-            apiGateway: "/api/",
+            gatelinApi: "/api/",
             apiUsers: "/api/users/",
             storageKeys: {},
             sidenavItems: [],

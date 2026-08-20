@@ -1,6 +1,6 @@
-# Gateway Service Tests
+# Gatelin Tests
 
-This document explains how to run tests for the gateway microservice.
+This document explains how to run tests for the Gatelin BFF.
 
 ## Setup
 
@@ -105,7 +105,7 @@ The following environment variables are mocked in tests:
 ```powershell
 PS> npm test
 
-> wapster-ms-gateway@2.0.0 test
+> gatelin@0.1.0-alpha.4 test
 > jest
 
  PASS  tests/middlewares/login.test.js

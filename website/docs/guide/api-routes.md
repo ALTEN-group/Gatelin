@@ -5,7 +5,7 @@ Routes define how incoming requests are matched and forwarded to services.
 ## Search Routes
 
 ```
-POST /gateway/routes/search
+POST /gatelin/routes/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -27,14 +27,14 @@ Authorization: Bearer <access_token>
 ## Get Route History
 
 ```
-GET /gateway/routes/:id/history
+GET /gatelin/routes/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Route
 
 ```
-POST /gateway/routes
+POST /gatelin/routes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -70,7 +70,7 @@ Authorization: Bearer <access_token>
 ## Update Route
 
 ```
-PUT /gateway/routes
+PUT /gatelin/routes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -95,7 +95,7 @@ Authorization: Bearer <access_token>
 ## Archive Routes
 
 ```
-POST /gateway/routes/archive
+POST /gatelin/routes/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

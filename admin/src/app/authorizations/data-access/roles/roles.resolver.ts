@@ -1,13 +1,13 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
-import { GatewayRolesService } from "app/authorizations/data-access/roles/roles.service";
+import { GatelinRole } from "app/authorizations/data-access/roles/role.model";
+import { GatelinRolesService } from "app/authorizations/data-access/roles/roles.service";
 import { Observable } from "rxjs";
 
-export const gatewayRolesResolver: ResolveFn<GatewayRole[]> = (
+export const gatelinRolesResolver: ResolveFn<GatelinRole[]> = (
   _route,
   _state,
-): Observable<GatewayRole[]> => {
-  const service = inject(GatewayRolesService);
+): Observable<GatelinRole[]> => {
+  const service = inject(GatelinRolesService);
   return service.getAndCacheAll();
 };

@@ -9,30 +9,35 @@ Client Request
     ↓
 [corsMiddleware] - Origin whitelist from DB; OPTIONS → 204
     ↓
-[express.json / cookieParser]
+[cookieParser + /gatelin-only JSON and urlencoded parsers]
     ↓
 [corsMiddleware] - Re-applied so preflight runs before route matching
     ↓
-[/gateway/health] - Liveness + DB readiness (bypasses checkRoute)
+[/gatelin/health] - Liveness + DB readiness (bypasses checkRoute)
     ↓
 [checkRoute] - Match request against registered DB routes
     ↓
-    ├── Public login: POST /gateway/sessions
-    │     getUserByEmail → checkPwd → gateLoginChallenges
+    ├── Public login: POST /gatelin/sessions
+    │     sessionLimiter (IP) → getUserByEmail → checkPwd → gateLoginChallenges
     │       ├── 202 { challengeRequired, kind, url }  (2FA / expired password)
     │       └── createTokens → session cache → 200
     │
-    ├── Public resume: POST /gateway/sessions/resume
+    ├── Public resume: POST /gatelin/sessions/resume
     │     redeemLoginTicket → createTokens → session cache → 200
     │
-    ├── Session refresh / logout: PUT|DELETE /gateway/sessions
+    ├── Session refresh / logout: PUT|DELETE /gatelin/sessions
     │     JWT (+ CSRF / refresh checks) → update or archive session
     │
-    ├── Admin APIs: /gateway/*
-    │     checkRequest → entity handlers
+    ├── Admin APIs: /gatelin/*
+    │     checkRequest → adminLimiter (consumer, else IP) → entity handlers
     │
     └── Proxy (catch-all)
-          checkRequest → additionalHeaders → forwardToService
+          checkRequest → proxyLimiter (consumer, else IP) → additionalHeaders → forwardToService
+          (SSE: no idle timeout; GraphQL HTTP: opaque POST/GET)
+
+WebSocket Upgrade (HTTP server, not Express)
+    ↓
+corsMiddleware → checkRequest → proxyLimiter → additionalHeaders → socket pipe
 ```
 
 `checkRequest` expands to:
@@ -41,7 +46,7 @@ Client Request
 parseBearer → decodeAccess → checkConsumer → checkAcl → applyAclConditions
 ```
 
-Login and resume (`POST /gateway/sessions`, `POST /gateway/sessions/resume`) skip `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router.
+Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) skip `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router. Proxy request and response bodies remain streams; only `/gatelin/*` control-plane requests are parsed into `req.body`. WebSocket upgrades are authorized on the HTTP `upgrade` event and then piped; they never enter Express.
 
 `gateLoginChallenges` reads the pwd row returned by `PWD_CHECK_URL`, enforces lockout, and may mint a challenge against the password service instead of creating a session. See [Sessions](./api-sessions#login).
 
@@ -56,22 +61,37 @@ Login and resume (`POST /gateway/sessions`, `POST /gateway/sessions/resume`) ski
 | `redeemLoginTicket` | Redeems a one-shot login-resume ticket and loads the user for session creation |
 | `parseBearer` / `decodeAccess` | Extract and verify the JWT access token |
 | `checkConsumer` | Ensures the consumer session exists in the in-memory cache |
-| `checkAcl` | Validates roles/permissions; filters writable fields on protected writes |
-| `applyAclConditions` | Injects ACL condition filters into `req.body.filters` (and proxy headers) |
-| `additionalHeaders` | Adds `x-consumer-user-id` / `x-consumer-name` / `x-acl-conditions` before forwarding |
+| `checkAcl` | Validates route/operation/scope permissions; filters writable fields only when a body was parsed (`/gatelin/*`), and resolves field/condition metadata for proxies |
+| `applyAclConditions` | Injects conditions into parsed `/gatelin/*` search bodies; preserves condition metadata for proxy headers |
+| `additionalHeaders` | Adds `x-consumer-user-id` / `x-consumer-name` / `x-acl-conditions` / `x-acl-fields` before forwarding |
 | `checkCsrf` | Double-submit CSRF check on session refresh and logout |
+| `sessionLimiter` | Caps login/refresh by IP (`SESSION_RATE_LIMIT_MAX` / 15 min) |
+| `adminLimiter` / `proxyLimiter` | Caps control-plane and proxy/WS handshakes by consumer id after auth, else IP |
+
+## Proxy ACL boundary
+
+The data proxy is intentionally body-agnostic. Gatelin enforces route, method, scope, JWT, and permission checks before forwarding, but does not parse proxied JSON to enforce row or field rules. Protected upstream services enforce `x-acl-fields` and `x-acl-conditions`.
+
+This split keeps HTTP forwarding transparent while retaining granular authorization:
+
+- HTTP, GraphQL-over-HTTP, and SSE receive ACL headers on each request.
+- WebSocket receives ACL headers on the upgrade handshake; frames are opaque.
+- `/gatelin/*` remains fully enforced inside Gatelin because its bodies are parsed.
+- Native gRPC is routed separately by Traefik/Envoy and is not handled by Gatelin.
 
 ## Production Stack
 
+The public hostname belongs to the **edge reverse proxy**. Gatelin is the BFF behind it: `/api/*` is stripped to Gatelin’s routes (`/gatelin/*` control plane and proxied app paths). Run a **single** Gatelin process; session and ACL caches are in-memory and are not shared across replicas ([Deployment](./deployment#scaling)).
+
 ```
 ┌─────────────────────────────────────────────────┐
-│                  Reverse Proxy                   │
-│                    (Traefik)                     │
+│              Edge reverse proxy                  │
+│            (Traefik / nginx / Envoy)             │
 │              http://your-domain.com              │
 └────────────┬─────────────────────┬───────────────┘
              │                     │
    ┌─────────▼─────────┐  ┌────────▼──────────┐
-   │   Admin Panel     │  │   API Gateway     │
+   │   Admin Panel     │  │   Gatelin (BFF)   │
    │  ADMIN_BASE_PATH/*│  │   /api/*          │
    │  (default /admin) │  │   (Node.js)       │
    └─────────┬─────────┘  └────────┬──────────┘
@@ -80,7 +100,7 @@ Login and resume (`POST /gateway/sessions`, `POST /gateway/sessions/resume`) ski
                         │
              ┌──────────▼──────────┐
              │   PostgreSQL DB     │
-             │   (Gateway data)    │
+             │   (Gatelin data)    │
              └─────────────────────┘
              ┌─────────────────────┐
              │  Liquibase          │

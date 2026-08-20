@@ -5,7 +5,7 @@ const base = process.env.VITEPRESS_BASE || (process.env.NODE_ENV === 'production
 
 export default withMermaid(defineConfig({
   title: 'Gatelin',
-  description: 'API Gateway service for routing and forwarding HTTP requests to internal microservices',
+  description: 'Backend for Frontend (BFF): an application API layer behind a reverse proxy, with JWT sessions, RBAC, and authenticated forwarding to internal microservices',
   base,
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],

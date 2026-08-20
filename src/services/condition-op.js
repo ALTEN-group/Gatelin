@@ -6,7 +6,7 @@
  * ============================================================================
  *  MUST BE KEPT IN SYNC WITH THE DB CHECK CONSTRAINT
  * ============================================================================
- *  db/liquibase/gateway/versions/03-struct/14-condition.sql, line 6:
+ *  db/liquibase/gatelin/versions/03-struct/14-condition.sql, line 6:
  *
  *    CONSTRAINT chk_condition_op CHECK (op IN ('=', '!=', '<', '>', '<=', '>='))
  *

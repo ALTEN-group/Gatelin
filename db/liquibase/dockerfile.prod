@@ -13,8 +13,8 @@ USER liquibase
 # liquibase user (running at container start) can read/execute but not modify it.
 COPY --chown=root:root --chmod=755 ./entrypoint.sh /docker-entrypoint.sh
 
-# Bake the gateway schema changelog into the image
-COPY --chown=liquibase:liquibase ./gateway /liquibase/changelog
+# Bake the Gatelin schema changelog into the image
+COPY --chown=liquibase:liquibase ./gatelin /liquibase/changelog
 
 # Optional user data volume (mount a data/changelog.xml at runtime)
 VOLUME ["/liquibase/data"]

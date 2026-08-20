@@ -4,19 +4,23 @@ Conditions are predefined filter rules that can be attached to permissions. They
 
 ## How It Works
 
-A condition combines a field, a comparison operator, and a value into a reusable named filter rule (e.g. `archived = false`). When a permission has a condition attached, the gateway:
+A condition combines a field, a comparison operator, and a value into a reusable named filter rule (e.g. `archived = false`). When a permission has a condition attached, Gatelin:
 
 - injects matching filters into `req.body.filters` for admin search requests, and
-- forwards them to proxied services via the `x-acl-conditions` header.
+- forwards them to proxied services via the `x-acl-conditions` header as `{ field, op, value }`.
 
 Conditions are optional — a permission without a condition applies no row-level filtering.
+
+Because proxied bodies are streamed unchanged, the upstream service enforces forwarded conditions. It must combine them with caller search filters using `AND`, constrain inserts to the permitted partition, and verify target rows before updates, archives, and history reads. Invalid conditions must fail closed rather than being dropped.
+
+WebSocket conditions apply to the upgrade handshake only. Gatelin does not inspect frames after the connection is established.
 
 Create conditions after creating fields, and before assigning them to permissions.
 
 ## Search Conditions
 
 ```
-POST /gateway/conditions/search
+POST /gatelin/conditions/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -38,14 +42,14 @@ Authorization: Bearer <access_token>
 ## Get Condition History
 
 ```
-GET /gateway/conditions/:id/history
+GET /gatelin/conditions/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Condition
 
 ```
-POST /gateway/conditions
+POST /gatelin/conditions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -75,7 +79,7 @@ Authorization: Bearer <access_token>
 ## Update Condition
 
 ```
-PUT /gateway/conditions
+PUT /gatelin/conditions
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -97,7 +101,7 @@ Authorization: Bearer <access_token>
 ## Archive Conditions
 
 ```
-POST /gateway/conditions/archive
+POST /gatelin/conditions/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

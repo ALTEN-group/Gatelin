@@ -7,12 +7,12 @@ sequenceDiagram
   autonumber
   actor u as User
   participant f as front
-  participant msg as ms_gateway
+  participant msg as gatelin
   participant msu as ms_user
   participant msp as ms_pwd
   participant udb as user_db
   participant pdb as pwd_db
-  participant gdb as gateway_db
+  participant gdb as gatelin_db
   participant msm as ms_mail
   u->>f: Open URL
   activate f

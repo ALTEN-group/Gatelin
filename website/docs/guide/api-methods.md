@@ -1,11 +1,11 @@
 # Methods
 
-Methods represent HTTP methods (GET, POST, PUT, DELETE, etc.) available in the gateway. They are read-only reference data — only updates are supported.
+Methods represent HTTP methods (GET, POST, PUT, DELETE, etc.) available on Gatelin. They are read-only reference data — only updates are supported.
 
 ## Search Methods
 
 ```
-POST /gateway/methods/search
+POST /gatelin/methods/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -21,14 +21,14 @@ Authorization: Bearer <access_token>
 ## Get Method History
 
 ```
-GET /gateway/methods/:id/history
+GET /gatelin/methods/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Update Method
 
 ```
-PUT /gateway/methods
+PUT /gatelin/methods
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

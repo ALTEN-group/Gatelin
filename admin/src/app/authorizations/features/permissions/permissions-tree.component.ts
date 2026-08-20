@@ -30,7 +30,7 @@ import {
     permissionFactory,
 } from "app/authorizations/data-access/permissions/permission.model";
 import { PermissionsService } from "app/authorizations/data-access/permissions/permissions.service";
-import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
+import { GatelinRole } from "app/authorizations/data-access/roles/role.model";
 import { Scope } from "app/authorizations/data-access/scopes/scope.model";
 import { Operation } from "app/routing/data-access/operations/operation.model";
 import { Route } from "app/routing/data-access/routes/route.model";
@@ -98,7 +98,7 @@ export class PermissionsTreeComponent {
     .map((c) => ({ id: c.id as number, name: c.name, color: c.color }));
 
   // ── public data (template-facing) ─────────────────────────────────────────
-  public readonly roles: GatewayRole[] =
+  public readonly roles: GatelinRole[] =
     this.route.snapshot.data["roles"] ?? [];
   public readonly conditionById: Map<
     number,
@@ -123,7 +123,7 @@ export class PermissionsTreeComponent {
   });
 
   // ── public state ──────────────────────────────────────────────────────────
-  public readonly selectedRole = signal<GatewayRole | null>(
+  public readonly selectedRole = signal<GatelinRole | null>(
     (() => {
       const qp = this.route.snapshot.queryParamMap.get("roleId");
       const routeRoleId = qp
@@ -167,7 +167,7 @@ export class PermissionsTreeComponent {
   };
 
   // ── public methods ────────────────────────────────────────────────────────
-  public onRoleSelect(role: GatewayRole | null): void {
+  public onRoleSelect(role: GatelinRole | null): void {
     this.selectedRole.set(role);
   }
 

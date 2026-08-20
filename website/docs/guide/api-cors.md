@@ -7,7 +7,7 @@ Allowed request headers include `Content-Type`, `Authorization`, and `X-CSRF-Tok
 ## Search CORS Origins
 
 ```
-POST /gateway/cors/search
+POST /gatelin/cors/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -28,14 +28,14 @@ Authorization: Bearer <access_token>
 ## Get CORS History
 
 ```
-GET /gateway/cors/:id/history
+GET /gatelin/cors/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Add CORS Origin
 
 ```
-POST /gateway/cors
+POST /gatelin/cors
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -54,7 +54,7 @@ Authorization: Bearer <access_token>
 ## Update CORS Origin
 
 ```
-PUT /gateway/cors
+PUT /gatelin/cors
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -73,7 +73,7 @@ Authorization: Bearer <access_token>
 ## Archive CORS Origins
 
 ```
-POST /gateway/cors/archive
+POST /gatelin/cors/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

@@ -3,7 +3,7 @@ import { isString } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
 
 /**
- * Environment variables the gateway cannot work without.
+ * Environment variables Gatelin cannot work without.
  *
  * Each is read at module load in the file listed, so a missing value produces
  * `undefined` deep inside a request instead of a startup failure. Checking them

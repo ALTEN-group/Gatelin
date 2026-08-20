@@ -1,18 +1,18 @@
 ﻿# Gatelin
 
-[![Gateway coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
+[![Coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
 [![admin coverage](https://raw.githubusercontent.com/ALTEN-group/Gatelin/badges/badges/admin-coverage.svg)](https://github.com/ALTEN-group/Gatelin/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Version](https://img.shields.io/github/v/release/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
 [![Last release](https://img.shields.io/github/release-date/ALTEN-group/Gatelin)](https://github.com/ALTEN-group/Gatelin/releases/latest)
 
-API Gateway for routing and forwarding HTTP requests to internal microservices, with JWT-based authentication, role-based access control, and a built-in admin interface.
+Backend for Frontend (BFF) for your application: JWT sessions, role-based access control, and authenticated forwarding to internal microservices. Put Gatelin behind an edge reverse proxy (Traefik, nginx, Envoy) — that proxy is the public gateway; Gatelin is the app’s API layer.
 
 ## Images
 
 | Image | Registry |
 |---|---|
-| Gateway (includes Admin UI under `/admin`) | `ghcr.io/alten-group/gatelin` |
+| BFF (includes Admin UI under `/admin`) | `ghcr.io/alten-group/gatelin` |
 | Migration | `ghcr.io/alten-group/gatelin-migration` |
 
 ## Features
@@ -24,7 +24,7 @@ API Gateway for routing and forwarding HTTP requests to internal microservices, 
 - **Role management** — Define, scope, and assign permissions to application roles
 - **Permission management** — Granular operation access (GET, POST, etc.) per API, route, with optional condition and field restrictions
 - **CORS management** — Control allowed origins
-- **Admin UI** — Angular-based front-end to manage the entire gateway
+- **Admin UI** — Angular-based front-end to manage sessions, routes, roles, and ACL
 
 ## Documentation
 

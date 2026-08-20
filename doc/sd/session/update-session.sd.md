@@ -7,8 +7,8 @@ sequenceDiagram
   autonumber
   actor u as User
   participant f as front
-  participant msg as ms_gateway
-  participant db as gateway_db
+  participant msg as gatelin
+  participant db as gatelin_db
   u->>f: Open URL
   activate f
   f--)f: Load application

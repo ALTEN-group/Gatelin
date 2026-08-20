@@ -30,7 +30,7 @@ export class AuthenticationService {
   private readonly tokenService = inject(TokenService);
   private readonly aclService = inject(AclService);
 
-  private readonly apiPrefix = inject(APP_CONFIG).apiGateway;
+  private readonly apiPrefix = inject(APP_CONFIG).gatelinApi;
   private readonly apiUsers = inject(APP_CONFIG).apiUsers;
 
   private readonly sessionApi: string = `${this.apiPrefix}sessions`;

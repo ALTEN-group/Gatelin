@@ -1,6 +1,7 @@
 {
   "name": "gatelin-docs",
   "version": "0.1.0-alpha.4",
+  "description": "Documentation for Gatelin, a Backend for Frontend (BFF) that sits behind a reverse proxy.",
   "private": true,
   "scripts": {
     "dev": "vitepress dev docs --host",

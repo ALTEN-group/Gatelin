@@ -1,11 +1,11 @@
 # Frontend Integration
 
-How a frontend app should interact with Gatelin tokens — including mid-login challenges when the password service requires 2FA or password rotation.
+The browser talks to **Gatelin** (usually via Traefik at `/api/…`). Gatelin is the BFF: it issues JWTs, refreshes sessions, and forwards authorized calls to your microservices. This page covers tokens and mid-login challenges when the password service requires 2FA or password rotation.
 
 ## 1. Login
 
 ```typescript
-const response = await fetch('/gateway/sessions', {
+const response = await fetch('/gatelin/sessions', {
   method: 'POST',
   credentials: 'include',
   headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ When the password-service workflow finishes, it redirects the browser back to yo
 ```typescript
 const ticket = new URLSearchParams(window.location.search).get('ticket');
 if (ticket) {
-  const response = await fetch('/gateway/sessions/resume', {
+  const response = await fetch('/gatelin/sessions/resume', {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -90,7 +90,7 @@ if (response.status === 401) {
   const refreshToken = localStorage.getItem('refreshToken');
   const csrfToken = getCookie('csrfToken');
 
-  const refreshResponse = await fetch('/gateway/sessions', {
+  const refreshResponse = await fetch('/gatelin/sessions', {
     method: 'PUT',
     credentials: 'include',
     headers: {
@@ -120,7 +120,7 @@ if (response.status === 401) {
 const accessToken = localStorage.getItem('accessToken');
 const csrfToken = getCookie('csrfToken');
 
-await fetch('/gateway/sessions', {
+await fetch('/gatelin/sessions', {
   method: 'DELETE',
   credentials: 'include',
   headers: {
@@ -143,4 +143,4 @@ localStorage.removeItem('refreshToken');
 | Trusted-device cookie (`trusted_device`) | Optional. If your password service issues it from its challenge pages (`Path=/`), Gatelin forwards its value on the next login to skip 2FA. Omit it and every 2FA login is challenged |
 | `sessionStorage` | Cleared when the tab closes |
 
-> Always send `credentials: 'include'` on session calls so CSRF, refresh, and trusted-device cookies are included. Never send the refresh token except to `PUT /gateway/sessions`.
+> Always send `credentials: 'include'` on session calls so CSRF, refresh, and trusted-device cookies are included. Never send the refresh token except to `PUT /gatelin/sessions`.
