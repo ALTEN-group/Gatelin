@@ -354,8 +354,12 @@ services:
     container_name: ${WEBSITE_HOST}
     hostname: ${WEBSITE_HOST}
     volumes:
+      - ${PWD}/website/package.json:/usr/src/app/package.json:ro
+      - ${PWD}/website/package-lock.json:/usr/src/app/package-lock.json
       - ${PWD}/website/docs:/usr/src/app/docs
       - website_node_modules:/usr/src/app/node_modules
+    # reinstall on start so package.json edits reach the node_modules volume
+    command: sh -c "npm i --loglevel=error --ignore-scripts --no-fund && node --run dev"
     networks:
       - internal
     labels:
