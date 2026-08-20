@@ -10,9 +10,9 @@ import conditionOpSvc from "../../services/condition-op.js";
  * The `op` value on each ACL condition is validated against the static
  * allowlist exposed by the `condition-op` service, which is a code-level
  * mirror of the DB `chk_condition_op` CHECK constraint declared in
- * db/liquibase/gateway/versions/03-struct/14-condition.sql (see that service
- * for the sync policy). Any op not in that set is dropped and logged — never
- * silently forwarded — which prevents the class of bug flagged by the audit
+ * db/liquibase/gatelin/versions/03-struct/14-condition.sql (see that service
+ * for the sync policy). Any op not in that set rejects the request, which
+ * prevents the class of bug flagged by the audit
  * where an unrecognized op reaches `@dwtechs/antity-pgsql`'s
  * `mapComparator()`, returns `null`, and the ACL WHERE fragment vanishes
  * entirely.
@@ -37,12 +37,25 @@ export default function applyAclConditions(req, _res, next) {
       if (!conditionOpSvc.isAllowed(op)) {
         log.warn(
           () =>
-            `applyAclConditions: dropping ACL condition with unsupported op "${op}" on field "${field}"`,
+            `applyAclConditions: rejecting unsupported op "${op}" on field "${field}"`,
         );
-        continue;
+        return next({
+          statusCode: 403,
+          message: "Unsupported ACL condition",
+        });
       }
-      req.body.filters[field] = [{ value, matchMode: op }];
+      const existing = req.body.filters[field];
+      const callerFilters = (
+        Array.isArray(existing) ? existing : existing ? [existing] : []
+      ).map((filter) => ({ ...filter, operator: "AND" }));
+      req.body.filters[field] = [
+        ...callerFilters,
+        { value, matchMode: op, operator: "AND" },
+      ];
     }
+    // The entity query builder honors this top-level operator. Never let a
+    // caller OR an unrelated filter with a mandatory ACL predicate.
+    req.body.operator = "AND";
   }
   next();
 }

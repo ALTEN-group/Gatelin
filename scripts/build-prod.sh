@@ -2,9 +2,9 @@
 
 # Build Production Docker Images Script
 # Builds all production-ready images using dockerfile.prod files and docker/conf/.env.prod
-# Usage: ./scripts/build-prod.sh [gateway] [migration] [website]
+# Usage: ./scripts/build-prod.sh [gatelin] [migration] [website]
 #   With no arguments, all images are built.
-#   Note: the admin UI is built as part of the gateway image (see dockerfile.prod), not a separate target.
+#   Note: the admin UI is built as part of the Gatelin image (see dockerfile.prod), not a separate target.
 
 set -e
 
@@ -38,31 +38,31 @@ HOME_PATH=$(get_env HOME_PATH)
 VERSION=$(node -p "require('./package.json').version")
 
 # Determine which targets to build (default: all)
-BUILD_GATEWAY=false
+BUILD_GATELIN=false
 BUILD_MIGRATION=false
 BUILD_WEBSITE=false
 
 if [[ $# -eq 0 ]]; then
-  BUILD_GATEWAY=true
+  BUILD_GATELIN=true
   BUILD_MIGRATION=true
   BUILD_WEBSITE=true
 else
   for arg in "$@"; do
     case "$arg" in
-      gateway)   BUILD_GATEWAY=true ;;
+      gatelin)   BUILD_GATELIN=true ;;
       migration) BUILD_MIGRATION=true ;;
       website)   BUILD_WEBSITE=true ;;
-      *) echo -e "${RED}❌ Unknown target: $arg (valid: gateway, migration, website)${NC}"; exit 1 ;;
+      *) echo -e "${RED}❌ Unknown target: $arg (valid: gatelin, migration, website)${NC}"; exit 1 ;;
     esac
   done
 fi
 
 echo -e "${BLUE}🔖 Version: ${VERSION}${NC}"
 
-# ─── Gateway ────────────────────────────────────────────────────────────────
-if [[ "$BUILD_GATEWAY" == true ]]; then
+# ─── Gatelin ────────────────────────────────────────────────────────────────
+if [[ "$BUILD_GATELIN" == true ]]; then
   IMAGE="ghcr.io/alten-group/gatelin:${VERSION}"
-  echo -e "${YELLOW}🏗️  Building gateway image ${IMAGE}...${NC}"
+  echo -e "${YELLOW}🏗️  Building Gatelin image ${IMAGE}...${NC}"
   docker build \
     --file dockerfile.prod \
     --build-arg NODE_VERSION="${NODE_VERSION}" \
@@ -73,7 +73,7 @@ if [[ "$BUILD_GATEWAY" == true ]]; then
     --tag "${IMAGE}" \
     --tag "ghcr.io/alten-group/gatelin:latest" \
     .
-  echo -e "${GREEN}✅ Gateway image built: ${IMAGE}${NC}"
+  echo -e "${GREEN}✅ Gatelin image built: ${IMAGE}${NC}"
 fi
 
 # ─── Migration ──────────────────────────────────────────────────────────────

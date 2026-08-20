@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <!-- history -->
+  <changeSet id="01-hist-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/01-hist/01-struct.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="01-hist-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/01-hist/02-log.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="01-hist-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/01-hist/03-del.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="01-hist-04" author="lcluber">
+    <comment>Functional index on log.history record id for fast entity history lookups</comment>
+    <sqlFile path="versions/01-hist/04-index.sql" splitStatements="false"/>
+  </changeSet>
+
+  <!-- functions -->
+  <changeSet id="02-func-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/01-delete.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/02-set-archived.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-03" author="lcluber">
+    <comment>Before update archived trigger function</comment>
+    <sqlFile path="versions/02-func/03-before-update-archived.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/04-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/05-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/06-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-07" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/02-func/07-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-08" author="lcluber">
+    <comment>Preference limit trigger function</comment>
+    <sqlFile path="versions/02-func/08-preference.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-09" author="lcluber">
+    <comment>Consumer iud trigger function</comment>
+    <sqlFile path="versions/02-func/09-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-10" author="lcluber">
+    <comment>Permission iud trigger function</comment>
+    <sqlFile path="versions/02-func/10-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-11" author="lcluber">
+    <comment>Method before update trigger function: restricts updates to color only</comment>
+    <sqlFile path="versions/02-func/11-method.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-12" author="lcluber">
+    <comment>Condition iud trigger function</comment>
+    <sqlFile path="versions/02-func/12-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-13" author="lcluber">
+    <comment>Role iud trigger function</comment>
+    <sqlFile path="versions/02-func/13-role.sql" splitStatements="false"/>
+  </changeSet>
+
+  <!-- structures -->
+  <changeSet id="03-struct-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/01-cors.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/02-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-03" author="lcluber">
+    <comment>Application table</comment>
+    <sqlFile path="versions/03-struct/03-application.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/04-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/05-service.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/06-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-07" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/07-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-08" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/08-preference.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-09" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/09-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-10" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/03-struct/10-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-11" author="lcluber">
+    <comment>Role table with FK to application</comment>
+    <sqlFile path="versions/03-struct/11-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-12" author="lcluber">
+    <comment>Permission table with FKs to role and route</comment>
+    <sqlFile path="versions/03-struct/12-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-13" author="lcluber">
+    <comment>Method lookup table</comment>
+    <sqlFile path="versions/03-struct/13-method.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-14" author="lcluber">
+    <comment>Condition table with FK to field</comment>
+    <sqlFile path="versions/03-struct/14-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-15" author="lcluber">
+    <comment>route_operation junction table</comment>
+    <sqlFile path="versions/03-struct/15-route-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="03-struct-16" author="lcluber">
+    <comment>permission_condition junction table</comment>
+    <sqlFile path="versions/03-struct/16-permission-condition.sql" splitStatements="false"/>
+  </changeSet>
+
+  <!-- views -->
+  <changeSet id="04-view-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/04-view/01-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/04-view/02-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/04-view/03-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/04-view/04-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-05" author="lcluber">
+    <comment>Consumers view</comment>
+    <sqlFile path="versions/04-view/05-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-06" author="lcluber">
+    <comment>Permissions views</comment>
+    <sqlFile path="versions/04-view/06-permissions.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-07" author="lcluber">
+    <comment>Roles view with application name</comment>
+    <sqlFile path="versions/04-view/07-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-08" author="lcluber">
+    <comment>Conditions view with field name</comment>
+    <sqlFile path="versions/04-view/08-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-09" author="lcluber">
+    <comment>Preferences view with resource name</comment>
+    <sqlFile path="versions/04-view/09-preference.sql" splitStatements="false"/>
+  </changeSet>
+
+  <!-- triggers -->
+  <changeSet id="05-trig-01" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/01-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/02-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/03-service.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/04-cors.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-05" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/05-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/06-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-07" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/07-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-08" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/08-preference.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-09" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/09-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-10" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/10-consumer.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-11" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/05-trig/11-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-12" author="lcluber">
+    <comment>Method triggers: restrict updates to color only and history logging</comment>
+    <sqlFile path="versions/05-trig/12-method.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-13" author="lcluber">
+    <comment>Condition triggers: iud on view and history logging</comment>
+    <sqlFile path="versions/05-trig/13-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="05-trig-14" author="lcluber">
+    <comment>Application triggers: iud on view and history logging</comment>
+    <sqlFile path="versions/05-trig/14-application.sql" splitStatements="false"/>
+  </changeSet>
+
+  <!-- data -->
+  <changeSet id="06-data-01" author="lcluber">
+    <comment>Default application data</comment>
+    <sqlFile path="versions/06-data/01-application.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-02" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/02-service.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-03" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/03-operation.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-04" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/04-resource.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-05" author="lcluber">
+    <comment>Default method color data</comment>
+    <sqlFile path="versions/06-data/05-method.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-06" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/06-route.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-07" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/07-preference.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-08" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/08-field.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-09" author="lcluber">
+    <comment></comment>
+    <sqlFile path="versions/06-data/09-scope.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-10" author="lcluber">
+    <comment>Insert default condition data</comment>
+    <sqlFile path="versions/06-data/10-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-11" author="lcluber">
+    <comment>Role seed data</comment>
+    <sqlFile path="versions/06-data/11-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-12" author="lcluber">
+    <comment>Permission seed data</comment>
+    <sqlFile path="versions/06-data/12-permission.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="06-data-13" author="lcluber">
+    <comment>Rename Gatelin control-plane prefix</comment>
+    <sqlFile path="versions/06-data/13-gatelin-pattern.sql" splitStatements="false"/>
+  </changeSet>
+
+</databaseChangeLog>

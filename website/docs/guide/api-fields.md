@@ -11,7 +11,7 @@ Field names are also used in permission `fields` arrays to restrict which column
 ## Search Fields
 
 ```
-POST /gateway/fields/search
+POST /gatelin/fields/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -33,14 +33,14 @@ Authorization: Bearer <access_token>
 ## Get Field History
 
 ```
-GET /gateway/fields/:id/history
+GET /gatelin/fields/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Field
 
 ```
-POST /gateway/fields
+POST /gatelin/fields
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -59,7 +59,7 @@ Authorization: Bearer <access_token>
 ## Update Field
 
 ```
-PUT /gateway/fields
+PUT /gatelin/fields
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -78,7 +78,7 @@ Authorization: Bearer <access_token>
 ## Archive Fields
 
 ```
-POST /gateway/fields/archive
+POST /gatelin/fields/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

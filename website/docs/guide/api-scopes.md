@@ -11,7 +11,7 @@ Create scopes after routes are in place.
 ## Search Scopes
 
 ```
-POST /gateway/scopes/search
+POST /gatelin/scopes/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -33,14 +33,14 @@ Authorization: Bearer <access_token>
 ## Get Scope History
 
 ```
-GET /gateway/scopes/:id/history
+GET /gatelin/scopes/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Scope
 
 ```
-POST /gateway/scopes
+POST /gatelin/scopes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -67,7 +67,7 @@ Authorization: Bearer <access_token>
 ## Update Scope
 
 ```
-PUT /gateway/scopes
+PUT /gatelin/scopes
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -86,7 +86,7 @@ Authorization: Bearer <access_token>
 ## Archive Scopes
 
 ```
-POST /gateway/scopes/archive
+POST /gatelin/scopes/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

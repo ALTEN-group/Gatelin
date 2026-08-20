@@ -1,4 +1,4 @@
-// Test setup file for gateway service
+// Test setup file for Gatelin BFF
 import { jest } from "@jest/globals";
 
 // Mock environment variables

@@ -15,7 +15,7 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
-import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
+import { GatelinRole } from "app/authorizations/data-access/roles/role.model";
 import { Consumer } from "app/consumers/data-access/consumers/consumer.model";
 
 export const CONSUMER_COLUMNS: (
@@ -23,7 +23,7 @@ export const CONSUMER_COLUMNS: (
   acls: Acls | undefined,
   sanitizer: DomSanitizer,
 ) => StrictCrudItemOptions<Consumer>[] = ({ data }, acls, sanitizer) => {
-  const activeRoles = (data.roles as GatewayRole[]).filter(
+  const activeRoles = (data.roles as GatelinRole[]).filter(
     (role) => !role.archived,
   );
   return withAclConditions(

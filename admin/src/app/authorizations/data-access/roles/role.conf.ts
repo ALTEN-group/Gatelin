@@ -20,14 +20,14 @@ import {
     required,
     StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
-import { GatewayApplication } from "app/authorizations/data-access/applications/application.model";
-import { GatewayRole } from "app/authorizations/data-access/roles/role.model";
+import { GatelinApplication } from "app/authorizations/data-access/applications/application.model";
+import { GatelinRole } from "app/authorizations/data-access/roles/role.model";
 
 export const buildRoleColumns = (
   sanitizer: DomSanitizer,
   { data }: ActivatedRouteSnapshot,
   acls: Acls | undefined,
-): StrictCrudItemOptions<GatewayRole>[] =>
+): StrictCrudItemOptions<GatelinRole>[] =>
   withAclConditions(
     [
       ID_CONFIG,
@@ -35,10 +35,10 @@ export const buildRoleColumns = (
         key: "appId",
         label: $localize`:@@Roles_Application:Application`,
         controlType: CONTROL_TYPES.SELECT,
-        options: toSelectItems<GatewayApplication>(data.applications, "name"),
+        options: toSelectItems<GatelinApplication>(data.applications, "name"),
         controlOptions: {
           validators: [required],
-          action: buildIdNameAction<GatewayApplication>(
+          action: buildIdNameAction<GatelinApplication>(
             "appName",
             data.applications,
             "name",
@@ -94,6 +94,6 @@ export const buildRoleColumns = (
       },
       ...buildArchivedConfig(),
       ...buildAuditConfig(),
-    ] as StrictCrudItemOptions<GatewayRole>[],
+    ] as StrictCrudItemOptions<GatelinRole>[],
     acls,
   );

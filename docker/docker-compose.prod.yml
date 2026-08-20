@@ -1,9 +1,9 @@
 name: ${APP_NAME}
 
 x-service-healthcheck: &healthcheck
-  # /gateway/health/ready also proves the database is reachable; /gateway/health
-  # only reports uptime and would keep a DB-less gateway in the load-balancer pool.
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health/ready"]
+  # /gatelin/health/ready also proves the database is reachable; /gatelin/health
+  # only reports uptime and would keep a DB-less Gatelin instance in the load-balancer pool.
+  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gatelin/health/ready"]
   interval: 10s
   timeout: 5s
   retries: 5
@@ -136,6 +136,9 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       PWD_SECRET: ${MSPWD_SECRET}
+      # Browser-facing URLs used by the mock mid-login challenge pages.
+      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}pwd/web}
+      WEB_LOGIN_RESUME_URL: ${MSPWD_WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
     networks:
       - internal
     volumes:
@@ -165,6 +168,7 @@ services:
       REFRESH_TOKEN_COOKIE: ${GATELIN_REFRESH_TOKEN_COOKIE}
       SESSION_RATE_LIMIT_MAX: ${GATELIN_SESSION_RATE_LIMIT_MAX}
       ADMIN_RATE_LIMIT_MAX: ${GATELIN_ADMIN_RATE_LIMIT_MAX}
+      PROXY_RATE_LIMIT_MAX: ${GATELIN_PROXY_RATE_LIMIT_MAX}
       UPSTREAM_TIMEOUT_MS: ${GATELIN_UPSTREAM_TIMEOUT_MS}
       PWD_MIN_LENGTH_POLICY: ${GATELIN_PWD_MIN_LENGTH_LEGACY}
       PWD_MAX_LENGTH_POLICY: ${GATELIN_PWD_MAX_LENGTH_LEGACY}
@@ -175,6 +179,7 @@ services:
       # Unset to disable the admin UI; set to enable it on a dedicated internal port
       ADMIN_PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
+      ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -185,13 +190,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.gateway.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.gateway.entrypoints=web"
-      - "traefik.http.routers.gateway.service=gateway"
-      - "traefik.http.routers.gateway.middlewares=strip-prefix"
+      - "traefik.http.routers.gatelin.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.gatelin.entrypoints=web"
+      - "traefik.http.routers.gatelin.service=gatelin"
+      - "traefik.http.routers.gatelin.middlewares=strip-prefix"
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
-      - "traefik.http.services.gateway.loadBalancer.server.port=${DEFAULT_PORT}"
+      - "traefik.http.services.gatelin.loadBalancer.server.port=${DEFAULT_PORT}"
       - "traefik.http.routers.admin-ui.rule=PathPrefix(`${ADMIN_BASE_PATH}`)"
       - "traefik.http.routers.admin-ui.entrypoints=web"
       - "traefik.http.routers.admin-ui.service=admin-ui"

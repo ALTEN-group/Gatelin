@@ -12,11 +12,11 @@ import {
   required,
   StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
-import { GatewayApplication } from "app/authorizations/data-access/applications/application.model";
+import { GatelinApplication } from "app/authorizations/data-access/applications/application.model";
 
 export function buildApplicationColumns(
   acls: Acls | undefined,
-): StrictCrudItemOptions<GatewayApplication>[] {
+): StrictCrudItemOptions<GatelinApplication>[] {
   return withAclConditions(
     [
       ID_CONFIG,
@@ -41,7 +41,7 @@ export function buildApplicationColumns(
       },
       ...buildArchivedConfig(),
       ...buildAuditConfig(),
-    ] as StrictCrudItemOptions<GatewayApplication>[],
+    ] as StrictCrudItemOptions<GatelinApplication>[],
     acls,
   );
 }

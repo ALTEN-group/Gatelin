@@ -11,7 +11,7 @@ Create a resource for each distinct data entity you want to control access to, b
 ## Search Resources
 
 ```
-POST /gateway/resources/search
+POST /gatelin/resources/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -33,14 +33,14 @@ Authorization: Bearer <access_token>
 ## Get Resource History
 
 ```
-GET /gateway/resources/:id/history
+GET /gatelin/resources/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Resource
 
 ```
-POST /gateway/resources
+POST /gatelin/resources
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -60,7 +60,7 @@ Authorization: Bearer <access_token>
 ## Update Resource
 
 ```
-PUT /gateway/resources
+PUT /gatelin/resources
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -81,7 +81,7 @@ Authorization: Bearer <access_token>
 ## Archive Resources
 
 ```
-POST /gateway/resources/archive
+POST /gatelin/resources/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

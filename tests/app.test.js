@@ -65,7 +65,7 @@ describe("CORS middleware registration order (AUDIT-002)", () => {
     getCredentials.mockReturnValue(false);
 
     const res = await supertest(app)
-      .get("/gateway/health")
+      .get("/gatelin/health")
       .set("Origin", "http://ok.example.com");
 
     expect(res.headers["access-control-allow-origin"]).toBe(
@@ -79,7 +79,7 @@ describe("CORS middleware registration order (AUDIT-002)", () => {
     routeSvc.getOne.mockReturnValue(undefined);
 
     const res = await supertest(app)
-      .get("/gateway/does-not-exist")
+      .get("/gatelin/does-not-exist")
       .set("Origin", "http://ok.example.com");
 
     expect(res.headers["access-control-allow-origin"]).toBe(
@@ -91,7 +91,7 @@ describe("CORS middleware registration order (AUDIT-002)", () => {
     has.mockReturnValue(false);
 
     const res = await supertest(app)
-      .get("/gateway/does-not-exist")
+      .get("/gatelin/does-not-exist")
       .set("Origin", "http://evil.example.com");
 
     expect(res.status).toBe(403);

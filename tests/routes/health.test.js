@@ -44,7 +44,7 @@ jest.unstable_mockModule("pg-pool", () => ({
   },
 }));
 
-describe("GET /gateway/health", () => {
+describe("GET /gatelin/health", () => {
   let app;
   let routeSvc;
 
@@ -60,7 +60,7 @@ describe("GET /gateway/health", () => {
   });
 
   it("responds without hitting checkRoute (mounted before it)", async () => {
-    const res = await supertest(app).get("/gateway/health");
+    const res = await supertest(app).get("/gatelin/health");
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -77,14 +77,14 @@ describe("GET /gateway/health", () => {
     // bring the database back.
     poolQuery.mockRejectedValue(new Error("connection refused"));
 
-    const res = await supertest(app).get("/gateway/health");
+    const res = await supertest(app).get("/gatelin/health");
 
     expect(res.status).toBe(200);
     expect(poolQuery).not.toHaveBeenCalled();
   });
 });
 
-describe("GET /gateway/health/ready", () => {
+describe("GET /gatelin/health/ready", () => {
   let app;
   let routeSvc;
 
@@ -102,7 +102,7 @@ describe("GET /gateway/health/ready", () => {
   it("reports the database unavailable when it cannot be reached", async () => {
     poolQuery.mockRejectedValue(new Error("connection refused"));
 
-    const res = await supertest(app).get("/gateway/health/ready");
+    const res = await supertest(app).get("/gatelin/health/ready");
 
     expect(res.status).toBe(503);
     expect(res.body.status).toBe("unavailable");
@@ -114,7 +114,7 @@ describe("GET /gateway/health/ready", () => {
   it("reports ready when the database probe succeeds", async () => {
     poolQuery.mockResolvedValue({ rows: [{ "?column?": 1 }] });
 
-    const res = await supertest(app).get("/gateway/health/ready");
+    const res = await supertest(app).get("/gatelin/health/ready");
 
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("ready");
@@ -125,7 +125,7 @@ describe("GET /gateway/health/ready", () => {
   it("is mounted before checkRoute", async () => {
     poolQuery.mockResolvedValue({ rows: [] });
 
-    await supertest(app).get("/gateway/health/ready");
+    await supertest(app).get("/gatelin/health/ready");
 
     expect(routeSvc.getOne).not.toHaveBeenCalled();
   });
@@ -148,11 +148,11 @@ describe("unknown routes", () => {
   it("returns 404 when checkRoute finds no matching route", async () => {
     routeSvc.getOne.mockReturnValue(undefined);
 
-    const res = await supertest(app).get("/gateway/does-not-exist");
+    const res = await supertest(app).get("/gatelin/does-not-exist");
 
     expect(res.status).toBe(404);
     expect(routeSvc.getOne).toHaveBeenCalledWith(
-      "/gateway/does-not-exist",
+      "/gatelin/does-not-exist",
       "GET",
     );
   });

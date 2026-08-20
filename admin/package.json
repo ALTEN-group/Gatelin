@@ -1,6 +1,8 @@
 {
   "name": "admin",
   "version": "0.1.0-alpha.4",
+  "description": "Angular admin UI for the Gatelin BFF.",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4200 --poll=2000",
@@ -13,7 +15,6 @@
     "e2e:ui": "playwright test --ui",
     "e2e:install": "playwright install chromium"
   },
-  "private": true,
   "author": "Ludovic Cluber",
   "dependencies": {
     "@angular/animations": "22.1.1",

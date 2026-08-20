@@ -4,7 +4,7 @@ Roles define access control profiles assigned to consumers. Each role carries a 
 
 ## How It Works
 
-Consumers carry one or more role IDs. When a request arrives, the gateway merges permissions from all of those roles and checks them against the matched route. The role cache is loaded at startup and refreshed in memory when roles or permissions are updated.
+Consumers carry one or more role IDs. When a request arrives, Gatelin merges permissions from all of those roles and checks them against the matched route. The role cache is loaded at startup and refreshed in memory when roles or permissions are updated.
 
 ### Field restrictions on permissions
 
@@ -21,7 +21,7 @@ When merging multiple roles, `null` wins (least restrictive). Otherwise field se
 ## Search Roles
 
 ```
-POST /gateway/roles/search
+POST /gatelin/roles/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -43,14 +43,14 @@ Authorization: Bearer <access_token>
 ## Get Role History
 
 ```
-GET /gateway/roles/:id/history
+GET /gatelin/roles/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Role
 
 ```
-POST /gateway/roles
+POST /gatelin/roles
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -71,7 +71,7 @@ Authorization: Bearer <access_token>
 ## Update Role
 
 ```
-PUT /gateway/roles
+PUT /gatelin/roles
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -92,7 +92,7 @@ Authorization: Bearer <access_token>
 ## Archive Roles
 
 ```
-POST /gateway/roles/archive
+POST /gatelin/roles/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

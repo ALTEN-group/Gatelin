@@ -5,23 +5,22 @@ const { PWD_CHECK_URL } = process.env;
 const url = PWD_CHECK_URL;
 
 /**
- * Validates user credentials against ms_pwd service
- * Part of the POST /consumers route authentication flow
+ * Validates user credentials against the password service (Foxnox /pwd/compare).
+ * On success, stores the public pwd row on `res.locals.pwdRow` for login gating.
  *
- * @param {Object} req - Express request
- * @param {number} req.body.userId
- * @param {string} req.body.pwd
- * @param {Object} [req.additionalHeaders] - Optional additional headers
- * @param {Object} _res - Express response (unused)
- * @param {Function} next - Express next middleware
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
-export function checkPwd(req, _res, next) {
+export function checkPwd(req, res, next) {
   const { userId, pwd } = req.body;
   const headers = req.additionalHeaders || {};
   http
     .query("POST", url, undefined, { userId, pwd }, headers)
-    .then(() => {
-      next(); // Password is valid, proceed to next middleware
+    .then((result) => {
+      const row = result?.data?.rows?.[0] ?? null;
+      res.locals.pwdRow = row;
+      next();
     })
-    .catch((err) => next(err)); // Password is invalid
+    .catch((err) => next(err));
 }

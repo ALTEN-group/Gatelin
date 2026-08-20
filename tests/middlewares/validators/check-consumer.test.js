@@ -50,8 +50,23 @@ describe("checkConsumer middleware", () => {
 
   beforeEach(() => {
     req = {};
-    res = { locals: { tokens: { access: "valid-access-token" } } };
+    res = {
+      locals: {
+        route: { protected: true },
+        tokens: { access: "valid-access-token" },
+      },
+    };
     next = jest.fn();
+  });
+
+  it("should bypass the cache lookup for an unprotected route", async () => {
+    res.locals.route.protected = false;
+    res.locals.tokens = {};
+
+    await checkConsumer(req, res, next);
+
+    expect(csmerSvc.getOne).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith();
   });
 
   it("should set res.locals.consumer and call next() when consumer is found", async () => {
@@ -121,7 +136,7 @@ describe("checkConsumer middleware", () => {
   });
 
   it("should call next(401) without querying the cache when res.locals.tokens is missing entirely", async () => {
-    res.locals = {};
+    res.locals = { route: { protected: true } };
 
     await checkConsumer(req, res, next);
 

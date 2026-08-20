@@ -5,7 +5,7 @@ Services represent the backend microservices that routes can forward requests to
 ## Search Services
 
 ```
-POST /gateway/services/search
+POST /gatelin/services/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -26,14 +26,14 @@ Authorization: Bearer <access_token>
 ## Get Service History
 
 ```
-GET /gateway/services/:id/history
+GET /gatelin/services/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Service
 
 ```
-POST /gateway/services
+POST /gatelin/services
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -50,7 +50,7 @@ Authorization: Bearer <access_token>
 ## Update Service
 
 ```
-PUT /gateway/services
+PUT /gatelin/services
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -67,7 +67,7 @@ Authorization: Bearer <access_token>
 ## Archive Services
 
 ```
-POST /gateway/services/archive
+POST /gatelin/services/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

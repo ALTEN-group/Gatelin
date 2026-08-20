@@ -5,7 +5,7 @@ const METHODS = "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH";
 const HEADERS = "Content-Type, Authorization, X-CSRF-Token";
 
 /**
- * CORS middleware for the gateway.
+ * CORS middleware for Gatelin.
  * Validates incoming requests against a dynamic whitelist loaded from the database.
  * The whitelist is checked on each request to allow real-time updates through the admin.
  */

@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "version": "1.0.0",
-    "title": "Gateway service API document",
-    "description": "API Gateway service for authentication, consumer management, and request forwarding"
+    "title": "Gatelin BFF API",
+    "description": "Backend for Frontend: JWT sessions, consumer and ACL management, and authenticated forwarding to this application's microservices. Deploy behind an edge reverse proxy."
   },
   "servers": [
     {
@@ -1343,7 +1343,7 @@
     }
   },
   "paths": {
-    "/gateway/sessions": {
+    "/gatelin/sessions": {
       "post": {
         "tags": [
           "Session Management"
@@ -1517,7 +1517,7 @@
         }
       }
     },
-    "/gateway/consumers/search": {
+    "/gatelin/consumers/search": {
       "post": {
         "tags": [
           "Consumer Management"
@@ -1605,7 +1605,7 @@
         }
       }
     },
-    "/gateway/consumers/archive": {
+    "/gatelin/consumers/archive": {
       "post": {
         "tags": [
           "Consumer Management"
@@ -1671,7 +1671,7 @@
         }
       }
     },
-    "/gateway/consumers/schema": {
+    "/gatelin/consumers/schema": {
       "get": {
         "tags": [
           "Consumer Management"
@@ -1703,13 +1703,13 @@
         }
       }
     },
-    "/gateway/resources/search": {
+    "/gatelin/resources/search": {
       "post": {
         "tags": [
           "Resource Management"
         ],
         "summary": "Search resources",
-        "description": "Search and retrieve resources configured in the gateway",
+        "description": "Search and retrieve resources configured in Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -1785,13 +1785,13 @@
         }
       }
     },
-    "/gateway/resources": {
+    "/gatelin/resources": {
       "post": {
         "tags": [
           "Resource Management"
         ],
         "summary": "Add resources",
-        "description": "Add one or more resources to the gateway",
+        "description": "Add one or more resources to Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -1904,7 +1904,7 @@
         }
       }
     },
-    "/gateway/resources/archive": {
+    "/gatelin/resources/archive": {
       "post": {
         "tags": [
           "Resource Management"
@@ -1970,7 +1970,7 @@
         }
       }
     },
-    "/gateway/resources/{id}/history": {
+    "/gatelin/resources/{id}/history": {
       "get": {
         "tags": [
           "Resource Management"
@@ -2020,7 +2020,7 @@
         }
       }
     },
-    "/gateway/resources/schema": {
+    "/gatelin/resources/schema": {
       "get": {
         "tags": [
           "Resource Management"
@@ -2052,13 +2052,13 @@
         }
       }
     },
-    "/gateway/operations/search": {
+    "/gatelin/operations/search": {
       "post": {
         "tags": [
           "Operation Management"
         ],
         "summary": "Search operations",
-        "description": "Search and retrieve operations configured in the gateway",
+        "description": "Search and retrieve operations configured in Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -2134,13 +2134,13 @@
         }
       }
     },
-    "/gateway/operations": {
+    "/gatelin/operations": {
       "post": {
         "tags": [
           "Operation Management"
         ],
         "summary": "Add operations",
-        "description": "Add one or more operations to the gateway",
+        "description": "Add one or more operations to Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -2253,7 +2253,7 @@
         }
       }
     },
-    "/gateway/operations/archive": {
+    "/gatelin/operations/archive": {
       "post": {
         "tags": [
           "Operation Management"
@@ -2319,7 +2319,7 @@
         }
       }
     },
-    "/gateway/operations/{id}/history": {
+    "/gatelin/operations/{id}/history": {
       "get": {
         "tags": [
           "Operation Management"
@@ -2369,7 +2369,7 @@
         }
       }
     },
-    "/gateway/operations/schema": {
+    "/gatelin/operations/schema": {
       "get": {
         "tags": [
           "Operation Management"
@@ -2401,13 +2401,13 @@
         }
       }
     },
-    "/gateway/routes/search": {
+    "/gatelin/routes/search": {
       "post": {
         "tags": [
           "Route Management"
         ],
         "summary": "Search registered routes",
-        "description": "Search and retrieve routes configured in the gateway based on criteria. Use pagination=true to get the total count of matching routes.",
+        "description": "Search and retrieve routes configured in Gatelin based on criteria. Use pagination=true to get the total count of matching routes.",
         "security": [
           {
             "bearerAuth": []
@@ -2697,13 +2697,13 @@
         }
       }
     },
-    "/gateway/routes": {
+    "/gatelin/routes": {
       "post": {
         "tags": [
           "Route Management"
         ],
         "summary": "Add routes",
-        "description": "Add one or more route configurations to the gateway",
+        "description": "Add one or more route configurations to Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -2816,7 +2816,7 @@
         }
       }
     },
-    "/gateway/routes/archive": {
+    "/gatelin/routes/archive": {
       "post": {
         "tags": [
           "Route Management"
@@ -2882,7 +2882,7 @@
         }
       }
     },
-    "/gateway/routes/{id}/history": {
+    "/gatelin/routes/{id}/history": {
       "get": {
         "tags": [
           "Route Management"
@@ -2932,7 +2932,7 @@
         }
       }
     },
-    "/gateway/routes/schema": {
+    "/gatelin/routes/schema": {
       "get": {
         "tags": [
           "Route Management"
@@ -2964,13 +2964,13 @@
         }
       }
     },
-    "/gateway/services/search": {
+    "/gatelin/services/search": {
       "post": {
         "tags": [
           "Service Management"
         ],
         "summary": "Search registered services",
-        "description": "Retrieve all services configured in the gateway",
+        "description": "Retrieve all services configured in Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -3044,13 +3044,13 @@
         }
       }
     },
-    "/gateway/services": {
+    "/gatelin/services": {
       "post": {
         "tags": [
           "Service Management"
         ],
         "summary": "Add services",
-        "description": "Add one or more service configurations to the gateway",
+        "description": "Add one or more service configurations to Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -3163,7 +3163,7 @@
         }
       }
     },
-    "/gateway/services/archive": {
+    "/gatelin/services/archive": {
       "post": {
         "tags": [
           "Service Management"
@@ -3229,7 +3229,7 @@
         }
       }
     },
-    "/gateway/services/{id}/history": {
+    "/gatelin/services/{id}/history": {
       "get": {
         "tags": [
           "Service Management"
@@ -3279,7 +3279,7 @@
         }
       }
     },
-    "/gateway/services/schema": {
+    "/gatelin/services/schema": {
       "get": {
         "tags": [
           "Service Management"
@@ -3311,13 +3311,13 @@
         }
       }
     },
-    "/gateway/cors/search": {
+    "/gatelin/cors/search": {
       "post": {
         "tags": [
           "CORS Management"
         ],
         "summary": "Search CORS configurations",
-        "description": "Retrieve all CORS origins configured in the gateway",
+        "description": "Retrieve all CORS origins configured in Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -3391,13 +3391,13 @@
         }
       }
     },
-    "/gateway/cors": {
+    "/gatelin/cors": {
       "post": {
         "tags": [
           "CORS Management"
         ],
         "summary": "Add CORS origins",
-        "description": "Add one or more CORS origins to the gateway whitelist",
+        "description": "Add one or more CORS origins to Gatelin whitelist",
         "security": [
           {
             "bearerAuth": []
@@ -3510,7 +3510,7 @@
         }
       }
     },
-    "/gateway/cors/archive": {
+    "/gatelin/cors/archive": {
       "post": {
         "tags": [
           "CORS Management"
@@ -3576,7 +3576,7 @@
         }
       }
     },
-    "/gateway/cors/{id}/history": {
+    "/gatelin/cors/{id}/history": {
       "get": {
         "tags": [
           "CORS Management"
@@ -3626,7 +3626,7 @@
         }
       }
     },
-    "/gateway/cors/schema": {
+    "/gatelin/cors/schema": {
       "get": {
         "tags": [
           "CORS Management"
@@ -3658,13 +3658,13 @@
         }
       }
     },
-    "/gateway/roles/search": {
+    "/gatelin/roles/search": {
       "post": {
         "tags": [
           "Role Management"
         ],
         "summary": "Search roles",
-        "description": "Search and retrieve roles configured in the gateway",
+        "description": "Search and retrieve roles configured in Gatelin",
         "security": [
           {
             "bearerAuth": []
@@ -3740,7 +3740,7 @@
         }
       }
     },
-    "/gateway/roles": {
+    "/gatelin/roles": {
       "post": {
         "tags": [
           "Role Management"
@@ -3857,7 +3857,7 @@
         }
       }
     },
-    "/gateway/roles/archive": {
+    "/gatelin/roles/archive": {
       "post": {
         "tags": [
           "Role Management"
@@ -3922,7 +3922,7 @@
         }
       }
     },
-    "/gateway/roles/{id}/history": {
+    "/gatelin/roles/{id}/history": {
       "get": {
         "tags": [
           "Role Management"
@@ -3971,7 +3971,7 @@
         }
       }
     },
-    "/gateway/roles/schema": {
+    "/gatelin/roles/schema": {
       "get": {
         "tags": [
           "Role Management"
@@ -4003,7 +4003,7 @@
         }
       }
     },
-    "/gateway/permissions/search": {
+    "/gatelin/permissions/search": {
       "post": {
         "tags": [
           "Permission Management"
@@ -4098,7 +4098,7 @@
         }
       }
     },
-    "/gateway/permissions": {
+    "/gatelin/permissions": {
       "post": {
         "tags": [
           "Permission Management"
@@ -4283,7 +4283,7 @@
         }
       }
     },
-    "/gateway/permissions/history/route/{routeId}": {
+    "/gatelin/permissions/history/route/{routeId}": {
       "get": {
         "tags": [
           "Permission Management"
@@ -4333,7 +4333,7 @@
         }
       }
     },
-    "/gateway/permissions/schema": {
+    "/gatelin/permissions/schema": {
       "get": {
         "tags": [
           "Permission Management"
@@ -4365,7 +4365,7 @@
         }
       }
     },
-    "/gateway/scopes/search": {
+    "/gatelin/scopes/search": {
       "post": {
         "tags": [
           "Scope Management"
@@ -4446,7 +4446,7 @@
         }
       }
     },
-    "/gateway/scopes": {
+    "/gatelin/scopes": {
       "post": {
         "tags": [
           "Scope Management"
@@ -4563,7 +4563,7 @@
         }
       }
     },
-    "/gateway/scopes/archive": {
+    "/gatelin/scopes/archive": {
       "post": {
         "tags": [
           "Scope Management"
@@ -4628,7 +4628,7 @@
         }
       }
     },
-    "/gateway/scopes/{id}/history": {
+    "/gatelin/scopes/{id}/history": {
       "get": {
         "tags": [
           "Scope Management"
@@ -4677,7 +4677,7 @@
         }
       }
     },
-    "/gateway/scopes/schema": {
+    "/gatelin/scopes/schema": {
       "get": {
         "tags": [
           "Scope Management"
@@ -4709,7 +4709,7 @@
         }
       }
     },
-    "/gateway/fields/search": {
+    "/gatelin/fields/search": {
       "post": {
         "tags": [
           "Field Management"
@@ -4790,7 +4790,7 @@
         }
       }
     },
-    "/gateway/fields": {
+    "/gatelin/fields": {
       "post": {
         "tags": [
           "Field Management"
@@ -4907,7 +4907,7 @@
         }
       }
     },
-    "/gateway/fields/archive": {
+    "/gatelin/fields/archive": {
       "post": {
         "tags": [
           "Field Management"
@@ -4972,7 +4972,7 @@
         }
       }
     },
-    "/gateway/fields/{id}/history": {
+    "/gatelin/fields/{id}/history": {
       "get": {
         "tags": [
           "Field Management"
@@ -5021,7 +5021,7 @@
         }
       }
     },
-    "/gateway/fields/schema": {
+    "/gatelin/fields/schema": {
       "get": {
         "tags": [
           "Field Management"
@@ -5053,13 +5053,13 @@
         }
       }
     },
-    "/gateway/methods/search": {
+    "/gatelin/methods/search": {
       "post": {
         "tags": [
           "Method Management"
         ],
         "summary": "Search methods",
-        "description": "Retrieve HTTP methods available in the gateway (read-only reference data)",
+        "description": "Retrieve HTTP methods available in Gatelin (read-only reference data)",
         "security": [
           {
             "bearerAuth": []
@@ -5135,7 +5135,7 @@
         }
       }
     },
-    "/gateway/methods": {
+    "/gatelin/methods": {
       "put": {
         "tags": [
           "Method Management"
@@ -5196,7 +5196,7 @@
         }
       }
     },
-    "/gateway/methods/schema": {
+    "/gatelin/methods/schema": {
       "get": {
         "tags": [
           "Method Management"
@@ -5228,7 +5228,7 @@
         }
       }
     },
-    "/gateway/applications/search": {
+    "/gatelin/applications/search": {
       "post": {
         "tags": [
           "Application Management"
@@ -5309,7 +5309,7 @@
         }
       }
     },
-    "/gateway/applications": {
+    "/gatelin/applications": {
       "post": {
         "tags": [
           "Application Management"
@@ -5426,7 +5426,7 @@
         }
       }
     },
-    "/gateway/applications/archive": {
+    "/gatelin/applications/archive": {
       "post": {
         "tags": [
           "Application Management"
@@ -5491,7 +5491,7 @@
         }
       }
     },
-    "/gateway/applications/{id}/history": {
+    "/gatelin/applications/{id}/history": {
       "get": {
         "tags": [
           "Application Management"
@@ -5540,7 +5540,7 @@
         }
       }
     },
-    "/gateway/applications/schema": {
+    "/gatelin/applications/schema": {
       "get": {
         "tags": [
           "Application Management"
@@ -5572,7 +5572,7 @@
         }
       }
     },
-    "/gateway/conditions/search": {
+    "/gatelin/conditions/search": {
       "post": {
         "tags": [
           "Condition Management"
@@ -5653,7 +5653,7 @@
         }
       }
     },
-    "/gateway/conditions": {
+    "/gatelin/conditions": {
       "post": {
         "tags": [
           "Condition Management"
@@ -5770,7 +5770,7 @@
         }
       }
     },
-    "/gateway/conditions/archive": {
+    "/gatelin/conditions/archive": {
       "post": {
         "tags": [
           "Condition Management"
@@ -5835,7 +5835,7 @@
         }
       }
     },
-    "/gateway/conditions/{id}/history": {
+    "/gatelin/conditions/{id}/history": {
       "get": {
         "tags": [
           "Condition Management"
@@ -5884,7 +5884,7 @@
         }
       }
     },
-    "/gateway/conditions/schema": {
+    "/gatelin/conditions/schema": {
       "get": {
         "tags": [
           "Condition Management"
@@ -5916,7 +5916,7 @@
         }
       }
     },
-    "/gateway/preferences/{resource}": {
+    "/gatelin/preferences/{resource}": {
       "get": {
         "tags": [
           "Preference Management"
@@ -6054,7 +6054,7 @@
         }
       }
     },
-    "/gateway/preferences/{resource}/{id}": {
+    "/gatelin/preferences/{resource}/{id}": {
       "delete": {
         "tags": [
           "Preference Management"
@@ -6108,12 +6108,12 @@
         }
       }
     },
-    "/gateway/health": {
+    "/gatelin/health": {
       "get": {
         "tags": [
           "Health"
         ],
-        "summary": "Check the health of the gateway service",
+        "summary": "Check the health of Gatelin",
         "description": "Health check endpoint to verify service availability",
         "responses": {
           "200": {
@@ -6130,7 +6130,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Gateway service is running"
+                      "example": "Gatelin is running"
                     },
                     "timestamp": {
                       "type": "integer",
@@ -6160,7 +6160,7 @@
     },
     {
       "name": "Service Management",
-      "description": "Service registration and management for the gateway"
+      "description": "Service registration and management for Gatelin"
     },
     {
       "name": "Resource Management",
@@ -6172,7 +6172,7 @@
     },
     {
       "name": "Route Management",
-      "description": "Gateway route configuration and validation"
+      "description": "Gatelin route configuration and validation"
     },
     {
       "name": "CORS Management",

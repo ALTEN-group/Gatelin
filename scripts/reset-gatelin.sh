@@ -67,8 +67,8 @@ echo -e ""
 # =====================
 echo -e "${YELLOW}💾 Checking for Gatelin node_modules volume...${NC}"
 
-# Look for the specific gateway_node_modules volume
-GATELIN_VOLUME="${APP_NAME}_gateway_node_modules"
+# Look for the specific gatelin_node_modules volume
+GATELIN_VOLUME="${APP_NAME}_gatelin_node_modules"
 
 if docker volume inspect "$GATELIN_VOLUME" >/dev/null 2>&1; then
   docker volume rm "$GATELIN_VOLUME" 2>/dev/null && echo -e "${GREEN}✓${NC} Removed volume: $GATELIN_VOLUME" || echo -e "${RED}✗${NC} Failed to remove volume: $GATELIN_VOLUME"

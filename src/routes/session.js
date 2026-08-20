@@ -22,6 +22,8 @@ import {
 import { filterByEmailNotArchived } from "../middlewares/filters/byEmailNotArchived.js";
 import { filterByIdAndActiveNotArchived } from "../middlewares/filters/byIdAndActiveNotArchived.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
+import { gateLoginChallenges } from "../middlewares/http/gate-login-challenges.js";
+import { redeemLoginTicket } from "../middlewares/http/redeem-login-ticket.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { attachUserId } from "../middlewares/mappers/consumer/attachUserId.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
@@ -48,6 +50,16 @@ const getSession = [...checkRequest, createRow]; // get session from tokens
 const addSession = [
   attachUserId,
   checkPwd,
+  gateLoginChallenges,
+  createTokens,
+  sEnt.add,
+  addToCache,
+  resolvePermissions,
+  setCsrfCookie,
+  sendSession,
+];
+const resumeSession = [
+  redeemLoginTicket,
   createTokens,
   sEnt.add,
   addToCache,
@@ -93,6 +105,9 @@ const del = [getSession, checkCsrf, deleteSession];
 
 // add a session. e.g. Log a user
 router.post("/", add);
+
+// Finish login after Foxnox mid-login challenges (2FA / expired password / trusted device)
+router.post("/resume", resumeSession);
 
 // Update a session with new tokens
 // Used for automatic login and refresh tokens

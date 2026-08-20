@@ -1,15 +1,15 @@
 # Applications
 
-Applications represent client applications consuming the gateway. They are used for registration and access control purposes.
+Applications represent client applications that use this BFF. They are used for registration and access control purposes.
 
 ## How It Works
 
-An application represents a registered client — such as a web app, mobile app, or an admin — consuming the gateway. Applications can be associated with consumers to track and control which clients are authorized to interact with the gateway.
+An application represents a registered client — such as a web app, mobile app, or an admin. Applications can be associated with consumers to track and control which clients are authorized to use Gatelin.
 
 ## Search Applications
 
 ```
-POST /gateway/applications/search
+POST /gatelin/applications/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -31,14 +31,14 @@ Authorization: Bearer <access_token>
 ## Get Application History
 
 ```
-GET /gateway/applications/:id/history
+GET /gatelin/applications/:id/history
 Authorization: Bearer <access_token>
 ```
 
 ## Create Application
 
 ```
-POST /gateway/applications
+POST /gatelin/applications
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -57,7 +57,7 @@ Authorization: Bearer <access_token>
 ## Update Application
 
 ```
-PUT /gateway/applications
+PUT /gatelin/applications
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -77,7 +77,7 @@ Authorization: Bearer <access_token>
 ## Archive Applications
 
 ```
-POST /gateway/applications/archive
+POST /gatelin/applications/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

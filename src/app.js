@@ -6,7 +6,6 @@ import { healix } from "@dwtechs/healix-express";
 import { startTimer } from "@dwtechs/winstan-plugin-express-perf";
 import cookieParser from "cookie-parser";
 import express from "express";
-import rateLimit from "express-rate-limit";
 import { corsMiddleware } from "./conf/cors.js";
 import { security } from "./conf/sec.js";
 
@@ -16,6 +15,11 @@ app.use(security);
 app.use(corsMiddleware);
 app.disable("x-powered-by");
 
+import {
+  adminLimiter,
+  proxyLimiter,
+  sessionLimiter,
+} from "./middlewares/rate-limit.js";
 // middlewares
 import { send } from "./middlewares/res/send.js";
 import { checkRequest as cr } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
@@ -38,44 +42,24 @@ import service from "./routes/service.js";
 // Routes
 import session from "./routes/session.js";
 
-const s = "/gateway/";
+const s = "/gatelin/";
 
-const SESSION_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const PROXY_WINDOW_MS = 60 * 1000; // 1 minute
-const ADMIN_WINDOW_MS = 60 * 1000; // 1 minute
-const SESSION_RATE_LIMIT_MAX = Number(process.env.SESSION_RATE_LIMIT_MAX) || 20;
-const ADMIN_RATE_LIMIT_MAX = Number(process.env.ADMIN_RATE_LIMIT_MAX) || 300;
-
-// Rate limiters
-const sessionLimiter = rateLimit({
-  windowMs: SESSION_WINDOW_MS,
-  max: SESSION_RATE_LIMIT_MAX, // login/refresh attempts per IP per window
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-// Caps what a stolen token can do against the admin API — without it, a leaked
-// JWT enumerates or bulk-archives every entity at wire speed.
-const adminLimiter = rateLimit({
-  windowMs: ADMIN_WINDOW_MS,
-  max: ADMIN_RATE_LIMIT_MAX,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-const proxyLimiter = rateLimit({
-  windowMs: PROXY_WINDOW_MS,
-  max: 200, // max 200 proxied requests per IP per minute
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(express.json({ limit: "100kb" }));
+// Gatelin's own APIs operate on structured bodies. Keep these parsers scoped
+// to the control plane so catch-all proxy requests remain readable streams:
+// parsing them here would consume multipart, binary, and other request bodies
+// before the proxy can pipe them to the upstream service.
+app.use(
+  "/gatelin",
+  express.json({ limit: "100kb" }),
+  express.urlencoded({ extended: false, limit: "100kb" }),
+);
 app.use(cookieParser());
 // OPTIONS preflight short-circuits here — must run before checkRoute
 app.use(corsMiddleware);
 app.use(
   `${s}health`,
   healix({
-    // Liveness stays dependency-free; readiness proves the gateway can still
+    // Liveness stays dependency-free; readiness proves Gatelin can still
     // reach Postgres, so an instance that lost the database leaves rotation.
     checks: { db: () => execute("SELECT 1", [], null) },
   }),
@@ -86,21 +70,21 @@ app.use(startTimer);
 app.use(checkRoute);
 // Routes
 app.use(`${s}sessions`, sessionLimiter, session);
-app.use(`${s}consumers`, adminLimiter, ...cr, consumer);
-app.use(`${s}routes`, adminLimiter, ...cr, route, send);
-app.use(`${s}services`, adminLimiter, ...cr, service, send);
-app.use(`${s}resources`, adminLimiter, ...cr, resource, send);
-app.use(`${s}operations`, adminLimiter, ...cr, operation, send);
-app.use(`${s}cors`, adminLimiter, ...cr, cors, send);
-app.use(`${s}fields`, adminLimiter, ...cr, field, send);
-app.use(`${s}scopes`, adminLimiter, ...cr, scope, send);
-app.use(`${s}preferences/`, adminLimiter, ...cr, preference, send);
-app.use(`${s}roles`, adminLimiter, ...cr, role, send);
-app.use(`${s}permissions`, adminLimiter, ...cr, permission, send);
-app.use(`${s}methods`, adminLimiter, ...cr, method, send);
-app.use(`${s}applications`, adminLimiter, ...cr, application, send);
-app.use(`${s}conditions`, adminLimiter, ...cr, condition, send);
-app.use("/", proxyLimiter, ...cr, proxy);
+app.use(`${s}consumers`, ...cr, adminLimiter, consumer);
+app.use(`${s}routes`, ...cr, adminLimiter, route, send);
+app.use(`${s}services`, ...cr, adminLimiter, service, send);
+app.use(`${s}resources`, ...cr, adminLimiter, resource, send);
+app.use(`${s}operations`, ...cr, adminLimiter, operation, send);
+app.use(`${s}cors`, ...cr, adminLimiter, cors, send);
+app.use(`${s}fields`, ...cr, adminLimiter, field, send);
+app.use(`${s}scopes`, ...cr, adminLimiter, scope, send);
+app.use(`${s}preferences/`, ...cr, adminLimiter, preference, send);
+app.use(`${s}roles`, ...cr, adminLimiter, role, send);
+app.use(`${s}permissions`, ...cr, adminLimiter, permission, send);
+app.use(`${s}methods`, ...cr, adminLimiter, method, send);
+app.use(`${s}applications`, ...cr, adminLimiter, application, send);
+app.use(`${s}conditions`, ...cr, adminLimiter, condition, send);
+app.use("/", ...cr, proxyLimiter, proxy);
 
 // Error handling
 errorHandler(app);

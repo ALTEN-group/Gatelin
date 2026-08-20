@@ -13,7 +13,7 @@ const conditionOpSvcPath = path.join(
 );
 
 // The condition-op service exposes a static allowlist (const module-level
-// Set, kept in sync with db/liquibase/gateway/versions/03-struct/14-condition.sql
+// Set, kept in sync with db/liquibase/gatelin/versions/03-struct/14-condition.sql
 // — see the service's docblock for rationale). Here we replace it with a
 // controlled fake so we can (a) test each mapping case in isolation and
 // (b) exercise the fail-closed path with a synthetic disallowed op without
@@ -80,7 +80,7 @@ describe("applyAclConditions middleware", () => {
   });
 
   describe("op → matchMode mapping", () => {
-    // Inputs mirror what /db/liquibase/gateway/versions/03-struct/14-condition.sql
+    // Inputs mirror what /db/liquibase/gatelin/versions/03-struct/14-condition.sql
     // allows in chk_condition_op and what the role_cache view emits.
     it.each([
       ["=", "="],
@@ -97,8 +97,15 @@ describe("applyAclConditions middleware", () => {
         applyAclConditions(req, res, next);
 
         expect(req.body.filters).toEqual({
-          archived: [{ value: "false", matchMode: expectedMatchMode }],
+          archived: [
+            {
+              value: "false",
+              matchMode: expectedMatchMode,
+              operator: "AND",
+            },
+          ],
         });
+        expect(req.body.operator).toBe("AND");
         expect(next).toHaveBeenCalledWith();
       },
     );
@@ -125,19 +132,38 @@ describe("applyAclConditions middleware", () => {
 
       expect(req.body.filters).toEqual({
         name: [{ value: "cap", matchMode: "contains" }],
-        archived: [{ value: "false", matchMode: "=" }],
-        coreOnly: [{ value: "true", matchMode: "!=" }],
+        archived: [{ value: "false", matchMode: "=", operator: "AND" }],
+        coreOnly: [{ value: "true", matchMode: "!=", operator: "AND" }],
       });
+      expect(req.body.operator).toBe("AND");
       expect(next).toHaveBeenCalledWith();
+    });
+
+    it("forces caller OR filters on the same field to AND", () => {
+      req.body = {
+        operator: "OR",
+        filters: {
+          archived: { value: true, matchMode: "=", operator: "OR" },
+        },
+      };
+      req.aclConditions = [{ field: "archived", op: "=", value: false }];
+
+      applyAclConditions(req, res, next);
+
+      expect(req.body.operator).toBe("AND");
+      expect(req.body.filters.archived).toEqual([
+        { value: true, matchMode: "=", operator: "AND" },
+        { value: false, matchMode: "=", operator: "AND" },
+      ]);
     });
   });
 
   describe("fail-closed behavior", () => {
     // Any op the condition-op service rejects (either because it isn't in
     // the DB CHECK today, or because a future migration widens the CHECK
-    // without updating the service) must be dropped, not silently forwarded.
+    // without updating the service) must reject the request.
     it.each([["LIKE"], ["IS"], ["<>"], [""], [undefined], [null]])(
-      "drops conditions with unsupported op %p and logs a warning",
+      "rejects conditions with unsupported op %p and logs a warning",
       (op) => {
         req.aclConditions = [{ field: "archived", op, value: "false" }];
 
@@ -145,11 +171,14 @@ describe("applyAclConditions middleware", () => {
 
         expect(req.body.filters).toEqual({});
         expect(log.warn).toHaveBeenCalled();
-        expect(next).toHaveBeenCalledWith();
+        expect(next).toHaveBeenCalledWith({
+          statusCode: 403,
+          message: "Unsupported ACL condition",
+        });
       },
     );
 
-    it("drops only the invalid conditions in a mixed batch", () => {
+    it("rejects a mixed batch when any condition is invalid", () => {
       req.aclConditions = [
         { field: "archived", op: "=", value: "false" },
         { field: "coreOnly", op: "LIKE", value: "%bogus%" },
@@ -159,11 +188,13 @@ describe("applyAclConditions middleware", () => {
       applyAclConditions(req, res, next);
 
       expect(req.body.filters).toEqual({
-        archived: [{ value: "false", matchMode: "=" }],
-        userId: [{ value: "10", matchMode: ">=" }],
+        archived: [{ value: "false", matchMode: "=", operator: "AND" }],
       });
       expect(log.warn).toHaveBeenCalledTimes(1);
-      expect(next).toHaveBeenCalledWith();
+      expect(next).toHaveBeenCalledWith({
+        statusCode: 403,
+        message: "Unsupported ACL condition",
+      });
     });
 
     it("asks the service on every request (no local caching in the middleware)", () => {
@@ -176,14 +207,19 @@ describe("applyAclConditions middleware", () => {
       isAllowed.mockReturnValueOnce(true);
       applyAclConditions(req, res, next);
       expect(req.body.filters).toEqual({
-        archived: [{ value: "false", matchMode: "=" }],
+        archived: [{ value: "false", matchMode: "=", operator: "AND" }],
       });
 
       req = {};
       isAllowed.mockReturnValueOnce(false);
       req.aclConditions = [{ field: "archived", op: "=", value: "false" }];
-      applyAclConditions(req, res, jest.fn());
+      const invalidNext = jest.fn();
+      applyAclConditions(req, res, invalidNext);
       expect(req.body.filters).toEqual({});
+      expect(invalidNext).toHaveBeenCalledWith({
+        statusCode: 403,
+        message: "Unsupported ACL condition",
+      });
     });
   });
 
@@ -230,26 +266,17 @@ describe("applyAclConditions middleware", () => {
       expect(args).toContain("true");
     });
 
-    it("emits no WHERE clause at all when the only ACL condition has an unsupported op", () => {
-      // Fail-closed at the middleware level means the filter never reaches
-      // the query builder, so no unscoped query is emitted either. The route
-      // still runs (next is called) but the calling controller should treat
-      // a missing ACL scope as a policy violation — that's out of scope here.
+    it("rejects before querying when the only ACL condition has an unsupported op", () => {
       req.aclConditions = [
         { field: "archived", op: "LIKE", value: "%anything%" },
       ];
 
       applyAclConditions(req, res, next);
 
-      const { query } = routeEntity.query.select(
-        0,
-        25,
-        "id",
-        "ASC",
-        req.body.filters,
-      );
-
-      expect(query).not.toMatch(/WHERE/i);
+      expect(next).toHaveBeenCalledWith({
+        statusCode: 403,
+        message: "Unsupported ACL condition",
+      });
     });
   });
 });

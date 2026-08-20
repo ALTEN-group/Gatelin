@@ -57,6 +57,10 @@ import csmerSvc from "../../services/consumer.js";
  * @return {Promise<void>}
  */
 export default async function checkConsumer(_req, res, next) {
+  // `@dwtechs/toker-express` already bypasses parse/decode for public routes;
+  // this Gatelin-owned cache lookup must honour the same route contract.
+  if (!res.locals.route?.protected) return next();
+
   const at = res.locals.tokens?.access;
   if (!at) return next({ statusCode: 401, message: "Unauthorized" });
   log.debug(() => `checkConsumer(accessToken=<present>)`);

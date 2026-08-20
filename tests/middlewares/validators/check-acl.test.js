@@ -144,7 +144,7 @@ describe("checkAcl middleware", () => {
   });
 
   it("should allow when perm.scopes contains a keyword present in the URL path", () => {
-    req.originalUrl = "/gateway/preferences/routes";
+    req.originalUrl = "/gatelin/preferences/routes";
     res.locals.route.resourceName = "preferences";
     roleService.getOne.mockImplementation((id) => ({
       id,
@@ -166,8 +166,8 @@ describe("checkAcl middleware", () => {
   });
 
   it("should allow when perm.scopes keyword appears before the route name in the URL path", () => {
-    req.originalUrl = "/gateway/routes/preferences";
-    res.locals.route.resourceName = "gateway";
+    req.originalUrl = "/gatelin/routes/preferences";
+    res.locals.route.resourceName = "gatelin";
     roleService.getOne.mockImplementation((id) => ({
       id,
       name: `role-${id}`,
@@ -188,7 +188,7 @@ describe("checkAcl middleware", () => {
   });
 
   it("should deny when perm.scopes is defined but no URL segment matches", () => {
-    req.originalUrl = "/gateway/preferences/services";
+    req.originalUrl = "/gatelin/preferences/services";
     res.locals.route.resourceName = "preferences";
     roleService.getOne.mockImplementation((id) => ({
       id,
@@ -207,7 +207,7 @@ describe("checkAcl middleware", () => {
   });
 
   it("should allow when no perm.scopes restriction is set regardless of URL", () => {
-    req.originalUrl = "/gateway/scopes/search";
+    req.originalUrl = "/gatelin/scopes/search";
     roleService.getOne.mockImplementation((id) => ({
       id,
       name: `role-${id}`,
@@ -337,22 +337,22 @@ describe("getScopeSegment", () => {
   });
 
   it("should return the segment following resourceName", () => {
-    const req = { originalUrl: "/gateway/preferences/session" };
+    const req = { originalUrl: "/gatelin/preferences/session" };
     expect(getScopeSegment(req, "preferences")).toBe("session");
   });
 
   it("should strip the query string before parsing segments", () => {
-    const req = { originalUrl: "/gateway/preferences/session?foo=bar" };
+    const req = { originalUrl: "/gatelin/preferences/session?foo=bar" };
     expect(getScopeSegment(req, "preferences")).toBe("session");
   });
 
   it("should return null when resourceName is not found in the URL", () => {
-    const req = { originalUrl: "/gateway/routes/1" };
+    const req = { originalUrl: "/gatelin/routes/1" };
     expect(getScopeSegment(req, "preferences")).toBeNull();
   });
 
   it("should return null when resourceName is the last URL segment", () => {
-    const req = { originalUrl: "/gateway/preferences" };
+    const req = { originalUrl: "/gatelin/preferences" };
     expect(getScopeSegment(req, "preferences")).toBeNull();
   });
 });
@@ -377,26 +377,26 @@ describe("matchesScope", () => {
   });
 
   it("should return true when perm.scopes is not set", () => {
-    const req = { originalUrl: "/gateway/preferences/session" };
+    const req = { originalUrl: "/gatelin/preferences/session" };
     expect(matchesScope({}, req, "preferences")).toBe(true);
     expect(scopeService.getValues).not.toHaveBeenCalled();
   });
 
   it("should return true when perm.scopes resolves to an empty list", () => {
     scopeService.getValues.mockReturnValueOnce([]);
-    const req = { originalUrl: "/gateway/preferences/session" };
+    const req = { originalUrl: "/gatelin/preferences/session" };
     expect(matchesScope({ scopes: ["x"] }, req, "preferences")).toBe(true);
   });
 
   it("should return true when the URL scope segment matches perm.scopes", () => {
-    const req = { originalUrl: "/gateway/preferences/session" };
+    const req = { originalUrl: "/gatelin/preferences/session" };
     expect(
       matchesScope({ scopes: ["session", "routes"] }, req, "preferences"),
     ).toBe(true);
   });
 
   it("should return false when the URL scope segment does not match perm.scopes", () => {
-    const req = { originalUrl: "/gateway/preferences/services" };
+    const req = { originalUrl: "/gatelin/preferences/services" };
     expect(
       matchesScope({ scopes: ["session", "routes"] }, req, "preferences"),
     ).toBe(false);

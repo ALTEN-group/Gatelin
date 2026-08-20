@@ -7,7 +7,7 @@ A consumer record is created on login and archived on logout. These endpoints al
 ## Search Consumers
 
 ```
-POST /gateway/consumers/search
+POST /gatelin/consumers/search
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -51,7 +51,7 @@ Authorization: Bearer <access_token>
 Force-archives (force-logouts) one or more consumers. The records are marked as archived and removed from the in-memory session cache, immediately invalidating their tokens.
 
 ```
-POST /gateway/consumers/archive
+POST /gatelin/consumers/archive
 Content-Type: application/json
 Authorization: Bearer <access_token>
 

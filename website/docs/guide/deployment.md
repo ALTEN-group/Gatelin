@@ -1,8 +1,8 @@
 # Deployment
 
-Gatelin is distributed as Docker images on Docker Hub:
+Gatelin is a BFF you run behind Traefik (or another reverse proxy). It is distributed as Docker images on Docker Hub:
 
-- **`dwtechs/gatelin`** — the gateway itself, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
+- **`dwtechs/gatelin`** — the BFF process, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
 - **`dwtechs/gatelin-migration`** — the Liquibase migration container
 
 See the [Integration](./integration) page for seed-data setup, and [Environment Variables](./configuration) for the full variable reference.
@@ -13,15 +13,27 @@ See the [Integration](./integration) page for seed-data setup, and [Environment 
 Browser / Client
       |
       v
-  Traefik  (:80)
+  Traefik  (:80)   ← edge gateway (TLS, host, path)
       |
-      +-- /api/*       --> Gatelin API  (auth, routing, ACL)
-      |                      (strip /api prefix → /gateway/* …)
+      +-- /api/*       --> Gatelin BFF  (sessions, routing, ACL)
+      |                      (strip /api prefix → /gatelin/* …)
       |
       +-- ADMIN_BASE_PATH/* --> Gatelin Admin UI
       |
-      +-- /your-api/*  -->   Your microservice
+      +-- /api/*       -->   Gatelin --> Your microservice (internal network)
 ```
+
+Protected microservices are not published through their own Traefik router. Clients must reach them through Gatelin; otherwise they could omit the trusted `x-acl-*` headers and bypass field/condition enforcement.
+
+## Scaling
+
+Run **one Gatelin process**. Do not set Compose/Kubernetes `replicas: 2` (or a load-balanced pool of Gatelin containers) to add capacity.
+
+Consumer sessions, route/CORS/role caches, and rate-limit counters live **in memory on that process**. Login, refresh, and force-logout update only the instance that handled the write. A second replica will 401 a valid JWT it never cached, keep serving a token the first replica already revoked, and apply a stale ACL until restart.
+
+Traefik **sticky sessions are not a substitute**. Token refresh, rolling deploys, and WebSocket upgrades still send the next hop to another process.
+
+Scale the edge proxy and the upstream microservices instead. A shared session store (and shared rate-limit counters) is required before Gatelin itself can run more than one replica.
 
 ## docker-compose.yml template
 
@@ -131,19 +143,19 @@ services:
     labels:
       - "traefik.enable=true"
       - "stack.name=my-project-local"
-      - "traefik.http.routers.gateway.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.gateway.entrypoints=web"
-      - "traefik.http.routers.gateway.service=gateway"
-      - "traefik.http.routers.gateway.middlewares=strip-prefix"
+      - "traefik.http.routers.gatelin.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.gatelin.entrypoints=web"
+      - "traefik.http.routers.gatelin.service=gatelin"
+      - "traefik.http.routers.gatelin.middlewares=strip-prefix"
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
-      - "traefik.http.services.gateway.loadBalancer.server.port=3000"
+      - "traefik.http.services.gatelin.loadBalancer.server.port=3000"
       - "traefik.http.routers.admin-ui.rule=PathPrefix(`/gatelin`)"
       - "traefik.http.routers.admin-ui.entrypoints=web"
       - "traefik.http.routers.admin-ui.service=admin-ui"
       - "traefik.http.services.admin-ui.loadBalancer.server.port=4200"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gatelin/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -157,13 +169,8 @@ services:
       TZ: Europe/Paris
     networks:
       - internal
-    labels:
-      - "traefik.enable=true"
-      - "stack.name=my-project-local"
-      - "traefik.http.routers.my-service.rule=PathPrefix(`/my-api`)"
-      - "traefik.http.routers.my-service.entrypoints=web"
-      - "traefik.http.routers.my-service.service=my-service"
-      - "traefik.http.services.my-service.loadbalancer.server.port=3000"
+    # No Traefik labels and no published ports: protected traffic reaches this
+    # service only through Gatelin on the internal Docker network.
 
 networks:
   internal:
@@ -183,11 +190,11 @@ volumes:
 Gatelin exposes a health endpoint:
 
 ```
-GET /gateway/health
+GET /gatelin/health
 ```
 
 Via Traefik (default port `8100`):
 
 ```bash
-curl http://localhost:8100/api/gateway/health
+curl http://localhost:8100/api/gatelin/health
 ```

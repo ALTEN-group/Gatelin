@@ -1,7 +1,7 @@
 name: ${APP_NAME}
 
 x-service-healthcheck: &healthcheck
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gateway/health"]
+  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/gatelin/health"]
   interval: 10s
   timeout: 5s
   retries: 5
@@ -46,7 +46,7 @@ services:
       #liquibase
       LIQUIBASE_USER: ${LIQUIBASE_DB_USER}
       LIQUIBASE_PWD: ${LIQUIBASE_DB_PWD}
-      # ms_gateway
+      # Gatelin
       GATELIN_USER: ${GATELIN_DB_USER}
       GATELIN_PWD: ${GATELIN_DB_PWD}
     stdin_open: true
@@ -79,7 +79,7 @@ services:
       - --ping=true
       - --api.dashboard=true
     labels:
-      - "traefik.http.middlewares.gateway.stripprefix.prefixes=/api"     
+      - "traefik.http.middlewares.gatelin.stripprefix.prefixes=/api"
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
       - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
@@ -123,7 +123,7 @@ services:
     networks:
       - internal
     volumes:
-      - ${PWD}/db/liquibase/gateway/:/liquibase/changelog
+      - ${PWD}/db/liquibase/gatelin/:/liquibase/changelog
       - ${PWD}/db/liquibase/data/:/liquibase/data
 
   gatelin:
@@ -164,6 +164,7 @@ services:
       REFRESH_TOKEN_COOKIE_HTTPS_ONLY: "false" # dev stack is plain HTTP
       SESSION_RATE_LIMIT_MAX: ${GATELIN_SESSION_RATE_LIMIT_MAX}
       ADMIN_RATE_LIMIT_MAX: ${GATELIN_ADMIN_RATE_LIMIT_MAX}
+      PROXY_RATE_LIMIT_MAX: ${GATELIN_PROXY_RATE_LIMIT_MAX}
       UPSTREAM_TIMEOUT_MS: ${GATELIN_UPSTREAM_TIMEOUT_MS}
       # PWD_MIN_LENGTH_POLICY: ${GATELIN_PWD_MIN_LENGTH_LEGACY}
       # PWD_MAX_LENGTH_POLICY: ${GATELIN_PWD_MAX_LENGTH_LEGACY}
@@ -185,17 +186,17 @@ services:
       - ${PWD}/biome.json:/usr/src/app/biome.json
       - ${PWD}/.editorconfig:/usr/src/app/.editorconfig
       - ${PWD}/.gitignore:/usr/src/app/.gitignore
-      - gateway_node_modules:/usr/src/app/node_modules
+      - gatelin_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.gateway.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.gateway.entrypoints=web"
-      - "traefik.http.routers.gateway.service=gateway"
-      - "traefik.http.routers.gateway.middlewares=strip-prefix"
+      - "traefik.http.routers.gatelin.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.gatelin.entrypoints=web"
+      - "traefik.http.routers.gatelin.service=gatelin"
+      - "traefik.http.routers.gatelin.middlewares=strip-prefix"
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.strip-prefix.stripprefix.forceSlash=false"
-      - "traefik.http.services.gateway.loadBalancer.server.port=${DEFAULT_PORT}"
+      - "traefik.http.services.gatelin.loadBalancer.server.port=${DEFAULT_PORT}"
     healthcheck: *healthcheck
   
   admin:
@@ -218,6 +219,9 @@ services:
       # ${ADMIN_PORT} → 502 Bad Gateway.
       PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
+      # Optional. When set, login shows "Mot de passe oublié ?" linking here
+      # (e.g. /api/pwd/web/recover when Foxnox workflows are deployed).
+      ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
     networks:
       - internal
     volumes:
@@ -397,11 +401,24 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       PWD_SECRET: ${MSPWD_SECRET}
+      # Browser-facing URLs used by the mock mid-login challenge pages.
+      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}pwd/web}
+      WEB_LOGIN_RESUME_URL: ${MSPWD_WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
     networks:
       - internal
     volumes:
       - ${PWD}/mocks/ms_pwd/src:/usr/src/app/src
       - ms_pwd_mock_node_modules:/usr/src/app/node_modules
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      # More specific than Gatelin's PathPrefix(`/api`) so /api/pwd/* hits the mock.
+      - "traefik.http.routers.mspwd.rule=PathPrefix(`/api/pwd`)"
+      - "traefik.http.routers.mspwd.priority=100"
+      - "traefik.http.routers.mspwd.entrypoints=web"
+      - "traefik.http.routers.mspwd.service=mspwd"
+      - "traefik.http.routers.mspwd.middlewares=strip-prefix"
+      - "traefik.http.services.mspwd.loadbalancer.server.port=${DEFAULT_PORT}"
 
 networks:
   internal:
@@ -423,7 +440,7 @@ secrets:
 volumes:
   postgres_data:
     driver: local
-  gateway_node_modules:
+  gatelin_node_modules:
     driver: local
     driver_opts:
       type: none

@@ -6,7 +6,7 @@ caption: Sequence diagram for proxy route call
 sequenceDiagram
   autonumber
   actor c as Client
-  participant gw as ms_gateway
+  participant gw as gatelin
   participant ms as target_microservice
   
   c->>gw: HTTP Request (Method + URL + Headers + Body)

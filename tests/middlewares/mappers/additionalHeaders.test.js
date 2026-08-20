@@ -85,12 +85,30 @@ describe("updateHeaderWithConsumer middleware", () => {
       expect(next).toHaveBeenCalledWith();
     });
 
-    it("should not add x-acl-conditions header when req.aclConditions is empty", () => {
-      req.aclConditions = [];
+    it("should add x-acl-fields when res.locals.aclFields is a Set", () => {
+      res.locals.aclFields = new Set(["name", "length"]);
 
       updateHeaderWithConsumer(req, res, next);
 
-      expect(req.additionalHeaders["x-acl-conditions"]).toBeUndefined();
+      expect(req.additionalHeaders["x-acl-fields"]).toBe("name,length");
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should add an empty x-acl-fields header when the allow-list is empty", () => {
+      res.locals.aclFields = new Set();
+
+      updateHeaderWithConsumer(req, res, next);
+
+      expect(req.additionalHeaders["x-acl-fields"]).toBe("");
+      expect(next).toHaveBeenCalledWith();
+    });
+
+    it("should not add x-acl-fields when aclFields is unrestricted", () => {
+      res.locals.aclFields = null;
+
+      updateHeaderWithConsumer(req, res, next);
+
+      expect(req.additionalHeaders["x-acl-fields"]).toBeUndefined();
       expect(next).toHaveBeenCalledWith();
     });
   });

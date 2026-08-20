@@ -16,6 +16,11 @@ export default function updateHeaderWithConsumer(req, res, next) {
     req.additionalHeaders["x-acl-conditions"] = JSON.stringify(
       req.aclConditions,
     );
+  // Present iff checkAcl set a field allow-list (including empty = id only).
+  // Omitted when unrestricted (aclFields is null/undefined).
+  const aclFields = res.locals.aclFields;
+  if (aclFields instanceof Set)
+    req.additionalHeaders["x-acl-fields"] = [...aclFields].join(",");
 
   log.debug(() => `updateHeaders(${JSON.stringify(req.additionalHeaders)})`);
   next();

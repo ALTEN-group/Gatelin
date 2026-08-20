@@ -154,7 +154,7 @@ jest.unstable_mockModule(historyPath, () => ({
   default: { get: historyGet, getByField: historyGetByField },
 }));
 
-describe("/gateway/cors", () => {
+describe("/gatelin/cors", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -168,12 +168,12 @@ describe("/gateway/cors", () => {
   beforeEach(() => {
     routeSvc.getOne
       .mockReset()
-      .mockReturnValue({ id: 1, url: "/gateway/cors", protected: false });
+      .mockReturnValue({ id: 1, url: "/gatelin/cors", protected: false });
     consumerSvc.getOne.mockReset();
   });
 
   it("rejects an unauthenticated search", async () => {
-    const res = await supertest(app).post("/gateway/cors/search").send({});
+    const res = await supertest(app).post("/gatelin/cors/search").send({});
 
     expect(res.status).toBe(401);
     expect(get).not.toHaveBeenCalled();
@@ -183,7 +183,7 @@ describe("/gateway/cors", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .post("/gateway/cors/search")
+      .post("/gatelin/cors/search")
       .set("Authorization", "Bearer valid-token")
       .send({});
 
@@ -198,7 +198,7 @@ describe("/gateway/cors", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .post("/gateway/cors")
+      .post("/gatelin/cors")
       .set("Authorization", "Bearer valid-token")
       .send({ rows: [{ name: "https://example.com" }] });
 
@@ -208,7 +208,7 @@ describe("/gateway/cors", () => {
   });
 });
 
-describe("GET /gateway/cors/:id/history", () => {
+describe("GET /gatelin/cors/:id/history", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -222,7 +222,7 @@ describe("GET /gateway/cors/:id/history", () => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: "/gateway/cors/1/history",
+      url: "/gatelin/cors/1/history",
       protected: false,
     });
     consumerSvc.getOne.mockReset();
@@ -230,7 +230,7 @@ describe("GET /gateway/cors/:id/history", () => {
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get("/gateway/cors/1/history");
+    const res = await supertest(app).get("/gatelin/cors/1/history");
 
     expect(res.status).toBe(401);
     expect(historyMiddleware).not.toHaveBeenCalled();
@@ -240,7 +240,7 @@ describe("GET /gateway/cors/:id/history", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/cors/1/history")
+      .get("/gatelin/cors/1/history")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);
@@ -257,7 +257,7 @@ describe("GET /gateway/cors/:id/history", () => {
   });
 });
 
-describe("PUT /gateway/cors (update)", () => {
+describe("PUT /gatelin/cors (update)", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -271,7 +271,7 @@ describe("PUT /gateway/cors (update)", () => {
   beforeEach(() => {
     routeSvc.getOne
       .mockReset()
-      .mockReturnValue({ id: 1, url: "/gateway/cors", protected: false });
+      .mockReturnValue({ id: 1, url: "/gatelin/cors", protected: false });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
     updateArraySubstack.mockClear();
     updateCache.mockClear();
@@ -279,7 +279,7 @@ describe("PUT /gateway/cors (update)", () => {
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .put("/gateway/cors")
+      .put("/gatelin/cors")
       .send({ rows: [{ id: 1, name: "https://updated.com" }] });
 
     expect(res.status).toBe(401);
@@ -290,7 +290,7 @@ describe("PUT /gateway/cors (update)", () => {
     const rows = [{ id: 1, name: "https://updated.com" }];
 
     const res = await supertest(app)
-      .put("/gateway/cors")
+      .put("/gatelin/cors")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -301,7 +301,7 @@ describe("PUT /gateway/cors (update)", () => {
   });
 });
 
-describe("POST /gateway/cors/archive", () => {
+describe("POST /gatelin/cors/archive", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -315,7 +315,7 @@ describe("POST /gateway/cors/archive", () => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: "/gateway/cors/archive",
+      url: "/gatelin/cors/archive",
       protected: false,
     });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
@@ -325,7 +325,7 @@ describe("POST /gateway/cors/archive", () => {
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .post("/gateway/cors/archive")
+      .post("/gatelin/cors/archive")
       .send({ rows: [{ id: 1 }] });
 
     expect(res.status).toBe(401);
@@ -336,7 +336,7 @@ describe("POST /gateway/cors/archive", () => {
     const rows = [{ id: 1 }];
 
     const res = await supertest(app)
-      .post("/gateway/cors/archive")
+      .post("/gatelin/cors/archive")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -347,7 +347,7 @@ describe("POST /gateway/cors/archive", () => {
   });
 });
 
-describe("GET /gateway/cors/schema", () => {
+describe("GET /gatelin/cors/schema", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -361,14 +361,14 @@ describe("GET /gateway/cors/schema", () => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: "/gateway/cors/schema",
+      url: "/gatelin/cors/schema",
       protected: false,
     });
     consumerSvc.getOne.mockReset();
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get("/gateway/cors/schema");
+    const res = await supertest(app).get("/gatelin/cors/schema");
 
     expect(res.status).toBe(401);
   });
@@ -377,7 +377,7 @@ describe("GET /gateway/cors/schema", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/cors/schema")
+      .get("/gatelin/cors/schema")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);

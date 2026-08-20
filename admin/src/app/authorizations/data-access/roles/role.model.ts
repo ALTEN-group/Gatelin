@@ -1,6 +1,6 @@
 import { ArchiveInfo } from "@dwtechs/ngx-crud-builder";
 
-export interface GatewayRole extends ArchiveInfo {
+export interface GatelinRole extends ArchiveInfo {
   id: number | null;
   appId: number | null;
   appName: string;
@@ -9,7 +9,7 @@ export interface GatewayRole extends ArchiveInfo {
   color: string;
 }
 
-export const gatewayRoleFactory = (): GatewayRole => ({
+export const gatelinRoleFactory = (): GatelinRole => ({
   id: null,
   appId: null,
   appName: "",

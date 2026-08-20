@@ -107,6 +107,14 @@
         i18n-label="@@goToDashboard"
         [disabled]="isLoading || !formGroup.valid"
       />
+      @if (passwordRecoveryUrl) {
+        <a
+          class="forgot-password-link"
+          [class.forgot-password-link--emphasized]="formGroup.hasError('incorrect')"
+          [href]="passwordRecoveryUrl"
+          i18n="@@forgotPassword"
+        >Mot de passe oublié ?</a>
+      }
     </div>
   </form>
 </p-card>

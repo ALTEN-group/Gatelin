@@ -50,7 +50,7 @@ jest.unstable_mockModule(consumerSvcPath, () => ({
   default: { getOne: jest.fn(), init: jest.fn(), deleteArchived: jest.fn() },
 }));
 const get = jest.fn((_req, res, next) => {
-  res.locals.rows = [{ id: 1, url: "/gateway/consumers", method: "GET" }];
+  res.locals.rows = [{ id: 1, url: "/gatelin/consumers", method: "GET" }];
   res.locals.total = 1;
   next();
 });
@@ -103,7 +103,7 @@ jest.unstable_mockModule(routeEntityPath, () => ({
 
 const historyMiddleware = jest.fn((_req, res, next) => {
   res.locals.rows = [
-    { id: 1, operation: "UPDATE", record: { id: 1, url: "/gateway/things" } },
+    { id: 1, operation: "UPDATE", record: { id: 1, url: "/gatelin/things" } },
   ];
   res.locals.total = 1;
   next();
@@ -115,13 +115,13 @@ jest.unstable_mockModule(historyPath, () => ({
   default: { get: historyGet, getByField: historyGetByField },
 }));
 
-describe("POST /gateway/routes/search", () => {
+describe("POST /gatelin/routes/search", () => {
   let app;
   let routeSvc;
   let consumerSvc;
   const mockRoute = {
     id: 1,
-    url: "/gateway/routes/search",
+    url: "/gatelin/routes/search",
     protected: false,
   };
 
@@ -139,22 +139,23 @@ describe("POST /gateway/routes/search", () => {
   });
 
   it("rejects a request with no Authorization header", async () => {
-    const res = await supertest(app).post("/gateway/routes/search").send({});
+    const res = await supertest(app).post("/gatelin/routes/search").send({});
 
     expect(res.status).toBe(401);
     expect(consumerSvc.getOne).not.toHaveBeenCalled();
   });
 
   it("rejects a request whose access token has no matching consumer session", async () => {
+    // checkConsumer only hits the consumer cache for protected routes.
+    routeSvc.getOne.mockReturnValue({ ...mockRoute, protected: true });
     consumerSvc.getOne.mockReturnValue(undefined);
 
     const res = await supertest(app)
-      .post("/gateway/routes/search")
+      .post("/gatelin/routes/search")
       .set("Authorization", "Bearer unknown-token")
       .send({});
 
-    // checkConsumer errors with `status` (not `statusCode`); assert rejection without pinning errandler-express's exact mapping.
-    expect(res.status).not.toBe(200);
+    expect(res.status).toBe(401);
     expect(consumerSvc.getOne).toHaveBeenCalledWith("unknown-token");
   });
 
@@ -162,25 +163,25 @@ describe("POST /gateway/routes/search", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .post("/gateway/routes/search")
+      .post("/gatelin/routes/search")
       .set("Authorization", "Bearer valid-token")
       .send({});
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
-      rows: [{ id: 1, url: "/gateway/consumers", method: "GET" }],
+      rows: [{ id: 1, url: "/gatelin/consumers", method: "GET" }],
       total: 1,
     });
   });
 });
 
-describe("GET /gateway/routes/:id/history", () => {
+describe("GET /gatelin/routes/:id/history", () => {
   let app;
   let routeSvc;
   let consumerSvc;
   const mockRoute = {
     id: 1,
-    url: "/gateway/routes/1/history",
+    url: "/gatelin/routes/1/history",
     protected: false,
   };
 
@@ -197,7 +198,7 @@ describe("GET /gateway/routes/:id/history", () => {
   });
 
   it("rejects a request with no Authorization header", async () => {
-    const res = await supertest(app).get("/gateway/routes/1/history");
+    const res = await supertest(app).get("/gatelin/routes/1/history");
 
     expect(res.status).toBe(401);
     expect(historyMiddleware).not.toHaveBeenCalled();
@@ -207,7 +208,7 @@ describe("GET /gateway/routes/:id/history", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/routes/1/history")
+      .get("/gatelin/routes/1/history")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);
@@ -216,7 +217,7 @@ describe("GET /gateway/routes/:id/history", () => {
         {
           id: 1,
           operation: "UPDATE",
-          record: { id: 1, url: "/gateway/things" },
+          record: { id: 1, url: "/gatelin/things" },
         },
       ],
       total: 1,
@@ -224,11 +225,11 @@ describe("GET /gateway/routes/:id/history", () => {
   });
 });
 
-describe("POST /gateway/routes (create)", () => {
+describe("POST /gatelin/routes (create)", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const mockRoute = { id: 1, url: "/gateway/routes", protected: false };
+  const mockRoute = { id: 1, url: "/gatelin/routes", protected: false };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
@@ -244,8 +245,8 @@ describe("POST /gateway/routes (create)", () => {
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .post("/gateway/routes")
-      .send({ rows: [{ url: "/gateway/things", serviceId: 1 }] });
+      .post("/gatelin/routes")
+      .send({ rows: [{ url: "/gatelin/things", serviceId: 1 }] });
 
     expect(res.status).toBe(401);
     expect(addArraySubstack).not.toHaveBeenCalled();
@@ -253,19 +254,19 @@ describe("POST /gateway/routes (create)", () => {
 
   it("rejects a route pattern with catastrophic backtracking risk", async () => {
     const res = await supertest(app)
-      .post("/gateway/routes")
+      .post("/gatelin/routes")
       .set("Authorization", "Bearer valid-token")
-      .send({ rows: [{ url: "/gateway/things", pattern: "(a+)+" }] });
+      .send({ rows: [{ url: "/gatelin/things", pattern: "(a+)+" }] });
 
     expect(res.status).toBe(400);
     expect(addArraySubstack).not.toHaveBeenCalled();
   });
 
   it("adds routes and returns them via addArraySubstack", async () => {
-    const rows = [{ url: "/gateway/things", serviceId: 1 }];
+    const rows = [{ url: "/gatelin/things", serviceId: 1 }];
 
     const res = await supertest(app)
-      .post("/gateway/routes")
+      .post("/gatelin/routes")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -275,11 +276,11 @@ describe("POST /gateway/routes (create)", () => {
   });
 });
 
-describe("PUT /gateway/routes (update)", () => {
+describe("PUT /gatelin/routes (update)", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const mockRoute = { id: 1, url: "/gateway/routes", protected: false };
+  const mockRoute = { id: 1, url: "/gatelin/routes", protected: false };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
@@ -295,7 +296,7 @@ describe("PUT /gateway/routes (update)", () => {
 
   it("rejects an invalid route pattern with 400", async () => {
     const res = await supertest(app)
-      .put("/gateway/routes")
+      .put("/gatelin/routes")
       .set("Authorization", "Bearer valid-token")
       .send({ rows: [{ id: 1, pattern: "(" }] });
 
@@ -304,10 +305,10 @@ describe("PUT /gateway/routes (update)", () => {
   });
 
   it("updates routes via updateArraySubstack", async () => {
-    const rows = [{ id: 1, url: "/gateway/things-updated" }];
+    const rows = [{ id: 1, url: "/gatelin/things-updated" }];
 
     const res = await supertest(app)
-      .put("/gateway/routes")
+      .put("/gatelin/routes")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -317,11 +318,11 @@ describe("PUT /gateway/routes (update)", () => {
   });
 });
 
-describe("POST /gateway/routes/archive", () => {
+describe("POST /gatelin/routes/archive", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const mockRoute = { id: 1, url: "/gateway/routes/archive", protected: false };
+  const mockRoute = { id: 1, url: "/gatelin/routes/archive", protected: false };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
@@ -339,7 +340,7 @@ describe("POST /gateway/routes/archive", () => {
     const rows = [{ id: 1 }];
 
     const res = await supertest(app)
-      .post("/gateway/routes/archive")
+      .post("/gatelin/routes/archive")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -349,11 +350,11 @@ describe("POST /gateway/routes/archive", () => {
   });
 });
 
-describe("GET /gateway/routes/schema", () => {
+describe("GET /gatelin/routes/schema", () => {
   let app;
   let routeSvc;
   let consumerSvc;
-  const mockRoute = { id: 1, url: "/gateway/routes/schema", protected: false };
+  const mockRoute = { id: 1, url: "/gatelin/routes/schema", protected: false };
 
   beforeAll(async () => {
     ({ default: routeSvc } = await import("../../src/services/route.js"));
@@ -367,7 +368,7 @@ describe("GET /gateway/routes/schema", () => {
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get("/gateway/routes/schema");
+    const res = await supertest(app).get("/gatelin/routes/schema");
 
     expect(res.status).toBe(401);
   });
@@ -376,7 +377,7 @@ describe("GET /gateway/routes/schema", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/routes/schema")
+      .get("/gatelin/routes/schema")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);

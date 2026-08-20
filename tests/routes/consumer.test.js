@@ -172,13 +172,13 @@ jest.unstable_mockModule(cacheConsumerPath, () => ({
   deleteFromCache,
 }));
 
-describe("POST /gateway/consumers/search", () => {
+describe("POST /gatelin/consumers/search", () => {
   let app;
   let routeSvc;
   let consumerSvc;
   const authedRoute = {
     id: 1,
-    url: "/gateway/consumers/search",
+    url: "/gatelin/consumers/search",
     protected: false,
   };
 
@@ -194,7 +194,7 @@ describe("POST /gateway/consumers/search", () => {
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).post("/gateway/consumers/search").send({});
+    const res = await supertest(app).post("/gatelin/consumers/search").send({});
 
     expect(res.status).toBe(401);
     expect(get).not.toHaveBeenCalled();
@@ -204,7 +204,7 @@ describe("POST /gateway/consumers/search", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .post("/gateway/consumers/search")
+      .post("/gatelin/consumers/search")
       .set("Authorization", "Bearer valid-token")
       .send({});
 
@@ -213,13 +213,13 @@ describe("POST /gateway/consumers/search", () => {
   });
 });
 
-describe("POST /gateway/consumers/archive", () => {
+describe("POST /gatelin/consumers/archive", () => {
   let app;
   let routeSvc;
   let consumerSvc;
   const authedRoute = {
     id: 2,
-    url: "/gateway/consumers/archive",
+    url: "/gatelin/consumers/archive",
     protected: false,
   };
 
@@ -236,7 +236,7 @@ describe("POST /gateway/consumers/archive", () => {
 
   it("archives, syncs the cache, then returns 204", async () => {
     const res = await supertest(app)
-      .post("/gateway/consumers/archive")
+      .post("/gatelin/consumers/archive")
       .set("Authorization", "Bearer valid-token")
       .send({ rows: [{ id: 1 }] });
 
@@ -246,13 +246,13 @@ describe("POST /gateway/consumers/archive", () => {
   });
 });
 
-describe("GET /gateway/consumers/schema", () => {
+describe("GET /gatelin/consumers/schema", () => {
   let app;
   let routeSvc;
   let consumerSvc;
   const authedRoute = {
     id: 3,
-    url: "/gateway/consumers/schema",
+    url: "/gatelin/consumers/schema",
     protected: false,
   };
 
@@ -268,7 +268,7 @@ describe("GET /gateway/consumers/schema", () => {
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get("/gateway/consumers/schema");
+    const res = await supertest(app).get("/gatelin/consumers/schema");
 
     expect(res.status).toBe(401);
   });
@@ -277,7 +277,7 @@ describe("GET /gateway/consumers/schema", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/consumers/schema")
+      .get("/gatelin/consumers/schema")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);

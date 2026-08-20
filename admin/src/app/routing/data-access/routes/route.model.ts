@@ -2,7 +2,7 @@ import { AdminEntity } from "@core/app-config/app.entities";
 import { ArchiveInfo } from "@dwtechs/ngx-crud-builder";
 
 /**
- * Represents a gateway route
+ * Represents a Gatelin route
  */
 export interface Route extends ArchiveInfo {
   id: number | null;

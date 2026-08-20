@@ -7,7 +7,7 @@ Preferences store per-user UI configuration for a named resource (for example ta
 ## List Preferences
 
 ```
-GET /gateway/preferences/:resource
+GET /gatelin/preferences/:resource
 Authorization: Bearer <access_token>
 ```
 
@@ -16,7 +16,7 @@ Authorization: Bearer <access_token>
 ## Create Preferences
 
 ```
-POST /gateway/preferences/:resource
+POST /gatelin/preferences/:resource
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -31,12 +31,12 @@ Authorization: Bearer <access_token>
 }
 ```
 
-The gateway injects `userId` and `resourceId` from the session and the named resource. **Response (201 Created)**
+Gatelin injects `userId` and `resourceId` from the session and the named resource. **Response (201 Created)**
 
 ## Update Preferences
 
 ```
-PUT /gateway/preferences/:resource
+PUT /gatelin/preferences/:resource
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -57,7 +57,7 @@ Only rows owned by the caller, unlocked, and belonging to `:resource` can be upd
 ## Delete Preference
 
 ```
-DELETE /gateway/preferences/:resource/:id
+DELETE /gatelin/preferences/:resource/:id
 Authorization: Bearer <access_token>
 ```
 

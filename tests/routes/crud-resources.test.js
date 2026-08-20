@@ -189,7 +189,7 @@ jest.unstable_mockModule(historyPath, () => ({
   default: { get: historyGet, getByField: historyGetByField },
 }));
 
-describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
+describe.each(RESOURCES)("POST /gatelin/$name/search", ({ name, entity }) => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -203,14 +203,14 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: `/gateway/${name}/search`,
+      url: `/gatelin/${name}/search`,
       protected: false,
     });
     consumerSvc.getOne.mockReset();
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).post(`/gateway/${name}/search`).send({});
+    const res = await supertest(app).post(`/gatelin/${name}/search`).send({});
 
     expect(res.status).toBe(401);
     expect(entityGets[entity]).not.toHaveBeenCalled();
@@ -220,7 +220,7 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .post(`/gateway/${name}/search`)
+      .post(`/gatelin/${name}/search`)
       .set("Authorization", "Bearer valid-token")
       .send({});
 
@@ -231,7 +231,7 @@ describe.each(RESOURCES)("POST /gateway/$name/search", ({ name, entity }) => {
 });
 
 describe.each(STANDARD_CRUD)(
-  "GET /gateway/$name/:id/history",
+  "GET /gatelin/$name/:id/history",
   ({ name, entity }) => {
     let app;
     let routeSvc;
@@ -248,7 +248,7 @@ describe.each(STANDARD_CRUD)(
     beforeEach(() => {
       routeSvc.getOne.mockReset().mockReturnValue({
         id: 1,
-        url: `/gateway/${name}/1/history`,
+        url: `/gatelin/${name}/1/history`,
         protected: false,
       });
       consumerSvc.getOne.mockReset();
@@ -256,7 +256,7 @@ describe.each(STANDARD_CRUD)(
     });
 
     it("rejects an unauthenticated request", async () => {
-      const res = await supertest(app).get(`/gateway/${name}/1/history`);
+      const res = await supertest(app).get(`/gatelin/${name}/1/history`);
 
       expect(res.status).toBe(401);
       expect(historyMiddlewares[entity]).not.toHaveBeenCalled();
@@ -266,7 +266,7 @@ describe.each(STANDARD_CRUD)(
       consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
       const res = await supertest(app)
-        .get(`/gateway/${name}/1/history`)
+        .get(`/gatelin/${name}/1/history`)
         .set("Authorization", "Bearer valid-token");
 
       expect(res.status).toBe(200);
@@ -276,7 +276,7 @@ describe.each(STANDARD_CRUD)(
   },
 );
 
-describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
+describe.each(HAS_ADD)("POST /gatelin/$name (add)", ({ name, entity }) => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -290,14 +290,14 @@ describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
   beforeEach(() => {
     routeSvc.getOne
       .mockReset()
-      .mockReturnValue({ id: 1, url: `/gateway/${name}`, protected: false });
+      .mockReturnValue({ id: 1, url: `/gatelin/${name}`, protected: false });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
     entityAdds[entity].mockClear();
   });
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .post(`/gateway/${name}`)
+      .post(`/gatelin/${name}`)
       .send({ rows: [{ id: 1 }] });
 
     expect(res.status).toBe(401);
@@ -308,7 +308,7 @@ describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
     const rows = [{ id: 1 }];
 
     const res = await supertest(app)
-      .post(`/gateway/${name}`)
+      .post(`/gatelin/${name}`)
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -318,7 +318,7 @@ describe.each(HAS_ADD)("POST /gateway/$name (add)", ({ name, entity }) => {
   });
 });
 
-describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
+describe.each(RESOURCES)("PUT /gatelin/$name (update)", ({ name, entity }) => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -332,14 +332,14 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
   beforeEach(() => {
     routeSvc.getOne
       .mockReset()
-      .mockReturnValue({ id: 1, url: `/gateway/${name}`, protected: false });
+      .mockReturnValue({ id: 1, url: `/gatelin/${name}`, protected: false });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
     entityUpdates[entity].mockClear();
   });
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .put(`/gateway/${name}`)
+      .put(`/gatelin/${name}`)
       .send({ rows: [{ id: 1 }] });
 
     expect(res.status).toBe(401);
@@ -350,7 +350,7 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
     const rows = [{ id: 1 }];
 
     const res = await supertest(app)
-      .put(`/gateway/${name}`)
+      .put(`/gatelin/${name}`)
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 
@@ -361,7 +361,7 @@ describe.each(RESOURCES)("PUT /gateway/$name (update)", ({ name, entity }) => {
 });
 
 describe.each(STANDARD_CRUD)(
-  "POST /gateway/$name/archive",
+  "POST /gatelin/$name/archive",
   ({ name, entity }) => {
     let app;
     let routeSvc;
@@ -378,7 +378,7 @@ describe.each(STANDARD_CRUD)(
     beforeEach(() => {
       routeSvc.getOne.mockReset().mockReturnValue({
         id: 1,
-        url: `/gateway/${name}/archive`,
+        url: `/gatelin/${name}/archive`,
         protected: false,
       });
       consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
@@ -387,7 +387,7 @@ describe.each(STANDARD_CRUD)(
 
     it("rejects an unauthenticated request", async () => {
       const res = await supertest(app)
-        .post(`/gateway/${name}/archive`)
+        .post(`/gatelin/${name}/archive`)
         .send({ rows: [{ id: 1 }] });
 
       expect(res.status).toBe(401);
@@ -398,7 +398,7 @@ describe.each(STANDARD_CRUD)(
       const rows = [{ id: 1 }];
 
       const res = await supertest(app)
-        .post(`/gateway/${name}/archive`)
+        .post(`/gatelin/${name}/archive`)
         .set("Authorization", "Bearer valid-token")
         .send({ rows });
 
@@ -409,7 +409,7 @@ describe.each(STANDARD_CRUD)(
   },
 );
 
-describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
+describe.each(RESOURCES)("GET /gatelin/$name/schema", ({ name, entity }) => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -423,14 +423,14 @@ describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: `/gateway/${name}/schema`,
+      url: `/gatelin/${name}/schema`,
       protected: false,
     });
     consumerSvc.getOne.mockReset();
   });
 
   it("rejects an unauthenticated request", async () => {
-    const res = await supertest(app).get(`/gateway/${name}/schema`);
+    const res = await supertest(app).get(`/gatelin/${name}/schema`);
 
     expect(res.status).toBe(401);
   });
@@ -439,7 +439,7 @@ describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get(`/gateway/${name}/schema`)
+      .get(`/gatelin/${name}/schema`)
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);
@@ -461,7 +461,7 @@ describe.each(RESOURCES)("GET /gateway/$name/schema", ({ name, entity }) => {
 });
 
 // permission.js has its own history shape: GET /history/route/:routeId (history.getByField), not /:id/history.
-describe("GET /gateway/permissions/history/route/:routeId", () => {
+describe("GET /gatelin/permissions/history/route/:routeId", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -475,7 +475,7 @@ describe("GET /gateway/permissions/history/route/:routeId", () => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: "/gateway/permissions/history/route/1",
+      url: "/gatelin/permissions/history/route/1",
       protected: false,
     });
     consumerSvc.getOne.mockReset();
@@ -484,7 +484,7 @@ describe("GET /gateway/permissions/history/route/:routeId", () => {
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app).get(
-      "/gateway/permissions/history/route/1",
+      "/gatelin/permissions/history/route/1",
     );
 
     expect(res.status).toBe(401);
@@ -495,7 +495,7 @@ describe("GET /gateway/permissions/history/route/:routeId", () => {
     consumerSvc.getOne.mockReturnValue({ id: 1, roles: [1] });
 
     const res = await supertest(app)
-      .get("/gateway/permissions/history/route/1")
+      .get("/gatelin/permissions/history/route/1")
       .set("Authorization", "Bearer valid-token");
 
     expect(res.status).toBe(200);
@@ -505,7 +505,7 @@ describe("GET /gateway/permissions/history/route/:routeId", () => {
 });
 
 // permission.js uses DELETE / (uncheck route) instead of POST /archive.
-describe("DELETE /gateway/permissions", () => {
+describe("DELETE /gatelin/permissions", () => {
   let app;
   let routeSvc;
   let consumerSvc;
@@ -519,7 +519,7 @@ describe("DELETE /gateway/permissions", () => {
   beforeEach(() => {
     routeSvc.getOne.mockReset().mockReturnValue({
       id: 1,
-      url: "/gateway/permissions",
+      url: "/gatelin/permissions",
       protected: false,
     });
     consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
@@ -528,7 +528,7 @@ describe("DELETE /gateway/permissions", () => {
 
   it("rejects an unauthenticated request", async () => {
     const res = await supertest(app)
-      .delete("/gateway/permissions")
+      .delete("/gatelin/permissions")
       .send({ rows: [{ id: 1 }] });
 
     expect(res.status).toBe(401);
@@ -539,7 +539,7 @@ describe("DELETE /gateway/permissions", () => {
     const rows = [{ id: 1 }];
 
     const res = await supertest(app)
-      .delete("/gateway/permissions")
+      .delete("/gatelin/permissions")
       .set("Authorization", "Bearer valid-token")
       .send({ rows });
 

@@ -7,9 +7,9 @@ sequenceDiagram
   autonumber
   actor a as Admin
   participant f as front
-  participant gw as ms_gateway
+  participant gw as gatelin
   participant re as route_entity
-  participant gdb as gateway_db
+  participant gdb as gatelin_db
   
   a->>f: Create new route (POST /routes)
   activate f

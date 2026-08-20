@@ -52,7 +52,9 @@ describe("checkPwd middleware", () => {
   });
 
   it("should call next() when authentication succeeds", async () => {
-    mockQuery.mockResolvedValueOnce({ data: {} });
+    mockQuery.mockResolvedValueOnce({
+      data: { rows: [{ userId: 1, twoFactorEnabled: false }] },
+    });
 
     await checkPwd(req, res, next);
 
@@ -63,6 +65,10 @@ describe("checkPwd middleware", () => {
       { userId: 1, pwd: "testpassword" },
       { "x-consumer-user-id": "consumer123" },
     );
+    expect(res.locals.pwdRow).toEqual({
+      userId: 1,
+      twoFactorEnabled: false,
+    });
     expect(next).toHaveBeenCalledWith();
   });
 

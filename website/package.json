@@ -1,6 +1,7 @@
 {
   "name": "gatelin-docs",
   "version": "0.1.0-alpha.4",
+  "description": "Documentation for Gatelin, a Backend for Frontend (BFF) that sits behind a reverse proxy.",
   "private": true,
   "scripts": {
     "dev": "vitepress dev docs --host",
@@ -9,10 +10,10 @@
   },
   "author": "Ludovic Cluber",
   "devDependencies": {
-    "vitepress": "1.6.3"
+    "vitepress": "1.6.4"
   },
   "dependencies": {
-    "mermaid": "11.15.0",
+    "mermaid": "11.17.0",
     "vitepress-plugin-mermaid": "2.0.17"
   }
 }

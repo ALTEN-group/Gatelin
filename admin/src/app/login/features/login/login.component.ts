@@ -5,6 +5,7 @@ import {
     Component,
     DestroyRef,
     inject,
+    OnInit,
     ViewEncapsulation,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -14,6 +15,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
 import { AuthenticationService } from "@core/auth/auth.service";
 import { ThemeToggleButtonComponent } from "@core/ui/theme-toggle-button/theme-toggle-button.component";
@@ -50,15 +52,18 @@ import { LoginBackgroundComponent } from "app/login/ui/login-background/login-ba
     ThemeToggleButtonComponent,
   ],
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   private readonly authService = inject(AuthenticationService);
   private readonly loadingService = inject(LoadingService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly routingListener = inject(RoutingListener);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
 
-  public readonly userServerUrl = inject(APP_CONFIG).apiGateway;
+  public readonly userServerUrl = inject(APP_CONFIG).gatelinApi;
+  /** Optional Foxnox (or other) recovery workflow URL. */
+  public readonly passwordRecoveryUrl = inject(APP_CONFIG).passwordRecoveryUrl;
 
   public isPasswordHidden = true;
   public isLoading = false;
@@ -75,6 +80,29 @@ export class LoginComponent implements AfterViewInit {
 
   get password() {
     return this.formGroup.get("password");
+  }
+
+  ngOnInit() {
+    // Coming back from a mid-login challenge solved on the pwd service.
+    const ticket = this.route.snapshot.queryParamMap.get("ticket");
+    if (!ticket) return;
+
+    this.isLoading = true;
+    this.loadingService.start();
+    this.authService
+      .resumeLogin(ticket)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res: boolean) => {
+        if (res) {
+          const { firstName, lastName } = this.authService.user() || {};
+          this.snackbarService.displayInfo(`Bienvenue ${firstName} ${lastName}`);
+        } else {
+          this.formGroup.setErrors({ incorrect: true });
+        }
+        this.loadingService.stop();
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      });
   }
 
   ngAfterViewInit() {

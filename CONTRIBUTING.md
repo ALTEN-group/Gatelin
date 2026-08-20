@@ -22,6 +22,20 @@ Configure the mock pwd service and swagger login examples:
 
 This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users.
 
+The mock also stands in for the Foxnox mid-login challenges (`POST /pwd/challenges`,
+`/pwd/trusted-devices/verify`, `/pwd/login-tickets/redeem` plus the matching SSR pages),
+so each mock user covers one login path:
+
+| User | Login outcome |
+| --- | --- |
+| `admin@example.com` | straight to a session (used by the e2e suite) |
+| `standard@example.com` | straight to a session |
+| `coco@example.com` | 2FA challenge (any 6-digit code), then the trusted-device prompt |
+| `guest@example.com` | expired-password rotation |
+| `ebuser@example.com` | rejected, account locked |
+
+Challenge state lives in memory, so restarting the mock container resets it.
+
 ## Development
 
 ### Start
@@ -52,7 +66,7 @@ Removes the postgres and migration containers and the postgres data volume and r
 ./scripts/reset-db.sh
 ```
 
-### Reset the gateway
+### Reset Gatelin
 
 Removes the Gatelin container and image and re-run the service.
 
@@ -87,7 +101,7 @@ npm run test:coverage     # CI / coverage
 
 ### Admin end-to-end tests (Playwright)
 
-The e2e suite (`admin/e2e/`) drives the admin UI end-to-end through Traefik, logs in with a mock persona from `swagger/src/gatelin.openapi.json`, and exercises the same routing path a real browser hits (Traefik → admin → gateway → mocks).
+The e2e suite (`admin/e2e/`) drives the admin UI end-to-end through Traefik, logs in with a mock persona from `swagger/src/gatelin.openapi.json`, and exercises the same routing path a real browser hits (Traefik → admin → Gatelin → mocks).
 
 Both flows below require:
 
@@ -143,7 +157,7 @@ Gatelin ships two releasable images, published to the GitHub Container Registry 
 
 | Image | Description |
 |---|---|
-| `ghcr.io/alten-group/gatelin` | The Node.js gateway service. Also serves the Angular admin frontend (built into the image, enabled by setting `ADMIN_PORT`, path set via `ADMIN_BASE_PATH`, default `/gatelin`). Runs continuously as an API server. |
+| `ghcr.io/alten-group/gatelin` | The Node.js BFF service. Also serves the Angular admin frontend (built into the image, enabled by setting `ADMIN_PORT`, path set via `ADMIN_BASE_PATH`, default `/gatelin`). Runs continuously as an API server. |
 | `ghcr.io/alten-group/gatelin-migration` | A one-shot Liquibase container. Applies the Gatelin DB schema and core seed data, then exits. It will also apply application-specific seed data when mounted to `/liquibase/data`. |
 
 ### Build production images
@@ -154,9 +168,9 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 
 ```sh
 ./scripts/build-prod.sh                   # build all images
-./scripts/build-prod.sh gateway           # gateway only (includes the admin UI)
+./scripts/build-prod.sh gatelin           # Gatelin only (includes the admin UI)
 ./scripts/build-prod.sh migration         # migration only
-./scripts/build-prod.sh gateway migration # multiple targets
+./scripts/build-prod.sh gatelin migration # multiple targets
 ```
 
 ### Publish to GHCR
@@ -199,7 +213,7 @@ The `gatelin_migration` container is controlled by environment variables:
 
 When `UPDATE=1`, the container runs the following steps in order:
 1. Creates the database if it does not exist
-2. Applies all baked-in schema changesets (`gateway/versions/`)
+2. Applies all baked-in schema changesets (`gatelin/versions/`)
 3. Applies consumer data from `/liquibase/data/changelog.xml` if the file exists
 4. Takes a JSON snapshot of the current schema
 5. Creates the Gatelin DB user with the correct grants

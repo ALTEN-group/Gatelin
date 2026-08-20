@@ -3,13 +3,13 @@ import { aclGuard } from "@core/acl/acl.guard";
 import { ADMIN_ENTITIES, AdminEntity } from "@core/app-config/app.entities";
 import { loginGuard } from "@core/auth/login.guard";
 import { NotFoundComponent } from "@core/pages/not-found/not-found.component";
-import { gatewayApplicationsResolver } from "app/authorizations/data-access/applications/applications.resolver";
+import { gatelinApplicationsResolver } from "app/authorizations/data-access/applications/applications.resolver";
 import { conditionsResolver } from "app/authorizations/data-access/conditions/conditions.resolver";
 import { fieldsResolver } from "app/authorizations/data-access/fields/fields.resolver";
 import { methodsResolver } from "app/routing/data-access/methods/methods.resolver";
 import { operationsResolver } from "app/routing/data-access/operations/operations.resolver";
 import { resourcesResolver } from "app/routing/data-access/resources/resources.resolver";
-import { gatewayRolesResolver } from "app/authorizations/data-access/roles/roles.resolver";
+import { gatelinRolesResolver } from "app/authorizations/data-access/roles/roles.resolver";
 import { routesResolver } from "app/routing/data-access/routes/routes.resolver";
 import { scopesResolver } from "app/authorizations/data-access/scopes/scopes.resolver";
 import { serviceResolver } from "app/routing/data-access/services/service.resolver";
@@ -70,7 +70,7 @@ export const ROUTES: Routes = [
       functionality: AppPaths.CONSUMERS,
     },
     resolve: {
-      roles: gatewayRolesResolver,
+      roles: gatelinRolesResolver,
     },
   },
   {
@@ -191,7 +191,7 @@ export const ROUTES: Routes = [
       functionality: AppPaths.ROLES,
     },
     resolve: {
-      applications: gatewayApplicationsResolver,
+      applications: gatelinApplicationsResolver,
     },
   },
   {
@@ -236,7 +236,7 @@ export const ROUTES: Routes = [
       functionality: AppPaths.PERMISSIONS,
     },
     resolve: {
-      roles: gatewayRolesResolver,
+      roles: gatelinRolesResolver,
       routes: routesResolver,
       scopes: scopesResolver,
       conditions: conditionsResolver,

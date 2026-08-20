@@ -10,7 +10,10 @@ import { SIDENAV } from "@core/app-config/app.sidenav";
 import { CRUD_LABELS_CONFIG } from "@core/app-config/crud-labels";
 import { CustomTitleStrategyService } from "@core/app-config/custom-title-strategy.service";
 import { PrimeNgTranslations } from "@core/app-config/primeng-translations";
-import { AuthenticationService } from "@core/auth/auth.service";
+import {
+  AuthenticationService,
+  readLoginTicket,
+} from "@core/auth/auth.service";
 import {
   APP_FORM_CONFIG,
   APP_CONFIG as CRUD_APP_CONFIG,
@@ -20,8 +23,9 @@ import {
   provideCrudLabels,
   provideCrudRenderer,
 } from "@dwtechs/ngx-crud-builder";
-import { filter, tap } from "rxjs";
+import { filter, of, tap } from "rxjs";
 import { environment } from "../../../environments/environment";
+import { readAdminRuntimeConfig } from "./runtime-config";
 
 /**
  * Main Config
@@ -33,13 +37,21 @@ const AppStorageKey = {
   THEME: `${APP_KEY}_theme`,
   TOKEN: `${APP_KEY}_token`,
 } as const;
+
+const runtime = readAdminRuntimeConfig();
+const passwordRecoveryUrl =
+  runtime.passwordRecoveryUrl?.trim() ||
+  environment.passwordRecoveryUrl?.trim() ||
+  undefined;
+
 export const CONFIG: AppConfig = {
   title: TITLE,
   appKey: APP_KEY,
   storageKeys: AppStorageKey,
   sidenavItems: SIDENAV,
-  apiGateway: environment.apiGateway,
+  gatelinApi: environment.gatelinApi,
   apiUsers: environment.apiUsers,
+  passwordRecoveryUrl,
   env: environment,
 };
 
@@ -65,7 +77,7 @@ export function provideAppConfig() {
         title: CONFIG.title,
         appKey: CONFIG.appKey,
         storageKeys: CONFIG.storageKeys,
-        apiPrefix: environment.apiGateway,
+        apiPrefix: environment.gatelinApi,
       },
     },
     provideCrudLabels(CRUD_LABELS_CONFIG, PrimeNgTranslations),
@@ -92,6 +104,11 @@ export function provideAppConfig() {
 }
 
 function checkToken(authService: AuthenticationService) {
+  // A challenge ticket outranks any leftover session: skip the startup refresh
+  // so its 401 cannot redirect (and strip the ticket) before LoginComponent
+  // redeems it.
+  if (readLoginTicket()) return of(null);
+
   return authService.refreshToken().pipe(
     tap((success) => {
       if (!success) {

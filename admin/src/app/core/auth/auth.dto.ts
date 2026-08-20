@@ -13,3 +13,10 @@ export interface SessionResponse {
   accessToken: string;
   permissions: Permission[];
 }
+
+/** Returned by POST /sessions when mid-login challenges are required (HTTP 202). */
+export interface ChallengeRequiredResponse {
+  challengeRequired: true;
+  kind: string;
+  url: string;
+}

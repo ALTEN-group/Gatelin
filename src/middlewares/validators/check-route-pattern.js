@@ -19,7 +19,7 @@ import safeRegex from "safe-regex2";
 /**
  * Express middleware that validates route `pattern` fields in req.body.rows
  * against known ReDoS-prone structures before they are written to the database.
- * Applied to both POST (insert) and PUT (update) on the /gateway/routes endpoint.
+ * Applied to both POST (insert) and PUT (update) on the /gatelin/routes endpoint.
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} _res

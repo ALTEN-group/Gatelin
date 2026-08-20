@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TABLES } from "@core/app-config/app.tables";
 import { TableComponent } from "@dwtechs/ngx-crud-builder";
-import { GatewayApplicationsService } from "app/authorizations/data-access/applications/applications.service";
+import { GatelinApplicationsService } from "app/authorizations/data-access/applications/applications.service";
 
 @Component({
   selector: "adm-applications",
@@ -10,15 +10,15 @@ import { GatewayApplicationsService } from "app/authorizations/data-access/appli
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationsComponent {
-  private readonly gatewayApplicationsService = inject(
-    GatewayApplicationsService,
+  private readonly gatelinApplicationsService = inject(
+    GatelinApplicationsService,
   );
 
-  public readonly config = this.gatewayApplicationsService.config;
+  public readonly config = this.gatelinApplicationsService.config;
 
-  public readonly entityFactory = this.gatewayApplicationsService.entityFactory;
+  public readonly entityFactory = this.gatelinApplicationsService.entityFactory;
 
-  public readonly httpCalls = this.gatewayApplicationsService.httpCalls;
+  public readonly httpCalls = this.gatelinApplicationsService.httpCalls;
 
   public readonly tableInformation = TABLES.applications;
 }
