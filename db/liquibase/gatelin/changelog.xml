@@ -288,9 +288,5 @@
     <comment>Permission seed data</comment>
     <sqlFile path="versions/06-data/12-permission.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="06-data-13" author="lcluber">
-    <comment>Rename Gatelin control-plane prefix</comment>
-    <sqlFile path="versions/06-data/13-gatelin-pattern.sql" splitStatements="false"/>
-  </changeSet>
 
 </databaseChangeLog>
