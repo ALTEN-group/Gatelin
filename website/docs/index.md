@@ -4,7 +4,7 @@ layout: home
 hero:
   name: 
   text: Backend for Frontend
-  tagline: The application's front door. An API layer behind your reverse proxy — JWT sessions, granular ACL, and transparent forwarding to your microservices.
+  tagline: Your application's front door. An API layer behind your reverse proxy — JWT sessions, granular ACL, and transparent forwarding to your microservices.
   actions:
     - theme: brand
       text: Get Started
