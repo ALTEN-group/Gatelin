@@ -1,6 +1,6 @@
 {
   "name": "wapstr-swagger",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.6",
   "description": "Local OpenAPI UI for the Gatelin BFF.",
   "main": "src/app.js",
   "scripts": {
