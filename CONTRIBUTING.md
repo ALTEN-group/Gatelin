@@ -60,7 +60,7 @@ Stops and removes all containers and the postgres volume.
 
 ### Reset the database
 
-Removes the postgres and migration containers and the postgres data volume and re-run all migrations from scratch.
+Stops Gatelin, removes the postgres and migration containers and the postgres data volume, then restarts the stack. Migrations re-run from scratch and Gatelin starts once the new database is ready.
 
 ```sh
 ./scripts/reset-db.sh
