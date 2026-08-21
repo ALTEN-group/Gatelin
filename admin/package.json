@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.6",
   "description": "Angular admin UI for the Gatelin BFF.",
   "private": true,
   "scripts": {

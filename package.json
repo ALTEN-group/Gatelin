@@ -1,6 +1,6 @@
 {
 	"name": "gatelin",
-	"version": "0.1.0-alpha.4",
+	"version": "0.1.0-alpha.6",
 	"description": "Backend for Frontend (BFF): an application API layer behind a reverse proxy, with JWT sessions, RBAC, and authenticated forwarding to internal microservices.",
 	"keywords": [
 		"bff",
