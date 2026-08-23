@@ -33,9 +33,11 @@ import csmerSvc from "../../services/consumer.js";
  * `src/services/consumer.js` for the rationale.
  *
  * Actual wiring (src/routes/session.js):
- *   session PUT (refresh flow): ...checkRequest → checkCsrf →
- *                               checkRefreshToken → decodeAccess →
- *                               decodeRefresh → updateSession
+ *   session PUT (refresh flow): resolved via `checkConsumerByRefreshToken`
+ *                               instead (decodeRefresh → checkConsumerByRefreshToken
+ *                               → checkCsrf → checkRefreshToken → updateSession),
+ *                               no access token required — see
+ *                               check-consumer-by-refresh-token.js.
  *   session GET/DELETE:         checkRequest (which itself contains
  *                               parseBearer → decodeAccess → checkConsumer →
  *                               checkAcl → applyAclConditions)

@@ -2,7 +2,6 @@
 import {
   clearRefreshCookie,
   createTokens,
-  decodeAccess,
   decodeRefresh,
   refreshTokens,
 } from "@dwtechs/toker-express";
@@ -27,7 +26,6 @@ import { redeemLoginTicket } from "../middlewares/http/redeem-login-ticket.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { attachUserId } from "../middlewares/mappers/consumer/attachUserId.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
-import { ignoreExpiration } from "../middlewares/mappers/ignore-expiration.js";
 import { resolvePermissions } from "../middlewares/mappers/resolve-permissions.js";
 import {
   clearCsrfCookie,
@@ -35,6 +33,7 @@ import {
 } from "../middlewares/res/csrf-cookie.js";
 import { send204 } from "../middlewares/res/send-204.js";
 import { sendSession } from "../middlewares/res/send-session.js";
+import checkConsumerByRefreshToken from "../middlewares/validators/check-consumer-by-refresh-token.js";
 import { checkCsrf } from "../middlewares/validators/check-csrf.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
 import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
@@ -46,7 +45,13 @@ const checkEmail = [
   getUserByEmail,
 ];
 // const activate = [ activateUser, uEnt.update ];
-const getSession = [...checkRequest, createRow]; // get session from tokens
+const getSession = [...checkRequest, createRow]; // get session from tokens (access-token based, used by GET/DELETE)
+// get session purely from the refresh token (cookie or body) — no access token required.
+const getSessionByRefreshToken = [
+  decodeRefresh,
+  checkConsumerByRefreshToken,
+  createRow,
+];
 const addSession = [
   attachUserId,
   checkPwd,
@@ -92,12 +97,9 @@ const add = [
 ];
 
 const update = [
-  ignoreExpiration,
-  getSession,
+  getSessionByRefreshToken,
   checkCsrf,
   checkRefreshToken,
-  decodeAccess, // extract issuer
-  decodeRefresh, // check expiration
   updateSession,
 ];
 

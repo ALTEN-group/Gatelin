@@ -222,6 +222,9 @@ services:
       # Optional. When set, login shows "Mot de passe oublié ?" linking here
       # (e.g. /api/pwd/web/recover when Foxnox workflows are deployed).
       ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
+      # Optional. localStorage key for the access token. Must match Foxnox's
+      # admin if both are deployed, since they share the same slot.
+      ADMIN_SSO_TOKEN_KEY: ${ADMIN_SSO_TOKEN_KEY:-}
     networks:
       - internal
     volumes:

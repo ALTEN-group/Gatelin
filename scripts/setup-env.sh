@@ -65,3 +65,9 @@ echo "  NPM_REGISTRY_NODE          (your npm registry name)"
 echo "  NPM_REGISTRY_URL           (your npm registry full URL)"
 echo "  NPM_REGISTRY_USER          (your npm registry username / email)"
 echo "  NPM_REGISTRY_TOKEN         (your npm registry API token)"
+
+# MSPWD_SECRET above just rotated, which invalidates mocks/ms_pwd/src/data/credentials.js
+# (hashed with the previous secret) — regenerate it now so login never breaks silently.
+echo ""
+./scripts/setup-mocks.sh
+

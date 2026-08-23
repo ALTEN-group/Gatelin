@@ -47,6 +47,7 @@ The Angular admin is built into the `gatelin` image and served only when `ADMIN_
 | `ADMIN_PORT` | unset (disabled) | Port the admin UI listens on. Unset to disable the admin UI. |
 | `ADMIN_BASE_PATH` | `/admin` | Path prefix for the admin UI. Rewritten into `<base href>` at runtime — no Angular rebuild required. Must match your reverse-proxy rule. |
 | `ADMIN_PASSWORD_RECOVERY_URL` | unset | When set (e.g. `/api/pwd/web/recover`), the login page shows a “Forgotten password ?” link. Injected at runtime into `window.__GATELIN_ADMIN__` (dev entrypoint + prod `admin-server`). Leave empty to hide it. In the local Compose stack, Traefik routes `/api/pwd` to the `ms_pwd` mock, which serves stand-in recovery and mid-login challenge pages under `/pwd/web/*`. |
+| `ADMIN_SSO_TOKEN_KEY` | `sso_access_token` | localStorage key the admin UI stores the access token under. Injected at runtime like `ADMIN_PASSWORD_RECOVERY_URL`. Not app-prefixed by default because Foxnox and Gatelin admin share the same slot for cookie-based silent refresh when switching between the two apps — if you override it, set the same value on both. |
 
 > Docker Compose examples often set `ADMIN_BASE_PATH=/gatelin`. That is an explicit override; the code default when the variable is unset remains `/admin`.
 

@@ -106,25 +106,23 @@ export class AuthenticationService {
 
   public refreshToken(): Observable<boolean> {
     // The refresh token itself is carried by an httpOnly cookie the browser
-    // sends automatically; only gate on a previously stored access token to
-    // avoid firing a doomed request when no session ever existed.
-    if (this.tokenService.getAccessToken())
-      return this.http.put<SessionResponse>(this.sessionApi, {}).pipe(
-        tap((res) => {
-          const { accessToken, permissions } = res ?? {};
-          if (!accessToken) return;
-          this.saveTokens(accessToken);
-          this.authenticate();
-          this.aclService.resetAccessLevels();
-          if (permissions) this.aclService.storeAccessLevels(permissions);
-        }),
-        map((res) => !!res),
-        catchError(() => {
-          return of(false);
-        }),
-      );
-
-    return of(false);
+    // sends automatically, shared across same-origin admin apps (e.g. Gatelin
+    // <-> Foxnox), so always attempt it instead of gating on a local access
+    // token — that lets switching apps skip a redundant login.
+    return this.http.put<SessionResponse>(this.sessionApi, {}).pipe(
+      tap((res) => {
+        const { accessToken, permissions } = res ?? {};
+        if (!accessToken) return;
+        this.saveTokens(accessToken);
+        this.authenticate();
+        this.aclService.resetAccessLevels();
+        if (permissions) this.aclService.storeAccessLevels(permissions);
+      }),
+      map((res) => !!res),
+      catchError(() => {
+        return of(false);
+      }),
+    );
   }
 
   // Get user basics info
