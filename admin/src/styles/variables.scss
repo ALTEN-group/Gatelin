@@ -1,6 +1,6 @@
 :root {
-  --primary-color: #2251b1;
-  --primary-color-hover: rgba(31, 81, 177, 0.9);
+  // Brand colour is owned by the Optimus preset; this is an alias for hand-written styles
+  --primary-color: var(--p-primary-color);
   --primary-bg-color: #F5F5F5;
   --primary-bg-color-light: #FFF;
   --secondary-bg-color: #f0f0f0;
@@ -38,8 +38,6 @@
 }
 
 html.dark {
-  --primary-color: #4476db;
-  --primary-color-hover: rgba(68, 118, 219, 0.9);
   --primary-bg-color: #181d21;
   --primary-bg-color-light: #202225;
   --secondary-bg-color: #3a4149;

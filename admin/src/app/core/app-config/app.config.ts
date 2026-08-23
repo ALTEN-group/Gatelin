@@ -35,7 +35,11 @@ const APP_KEY = "gatelin";
 const AppStorageKey = {
   TABLE_CONFIG: `${APP_KEY}_tableConfig`,
   THEME: `${APP_KEY}_theme`,
-  TOKEN: `${APP_KEY}_token`,
+  // Shared (not app-prefixed): Foxnox and Gatelin admin both authenticate
+  // against the same Gatelin session backend, so both must read/write the
+  // same slot for the cookie-based silent refresh to identify the consumer
+  // when switching between the two admin apps.
+  TOKEN: "sso_access_token",
 } as const;
 
 const runtime = readAdminRuntimeConfig();

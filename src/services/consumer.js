@@ -18,6 +18,9 @@ let consumers = new Map();
 /** @type {Map<number, string>} id → accessToken */
 let consumerIdIndex = new Map();
 
+/** @type {Map<string, ConsumerCache>} refreshToken → consumer */
+let consumersByRefreshToken = new Map();
+
 /**
  * Initializes the consumer cache by loading all consumer records from the database.
  * This function should be called once when the application starts to populate the
@@ -34,6 +37,7 @@ function init() {
   return cEnt.getCache().then((rows) => {
     consumers = new Map(rows.map((c) => [c.accessToken, c]));
     consumerIdIndex = new Map(rows.map((c) => [c.id, c.accessToken]));
+    consumersByRefreshToken = new Map(rows.map((c) => [c.refreshToken, c]));
   });
 }
 
@@ -59,11 +63,12 @@ function init() {
  *      compares it against the request's refresh token via `timingSafeEqual`
  *      — constant-time to protect against timing attacks.
  *
- * The chain is wired in `src/routes/session.js`'s `update` array (getSession
- * → checkCsrf → checkRefreshToken → ...). Never use `getOne`'s return value
- * alone as an authorization decision — always chain it with
- * `checkRefreshToken` (or an equivalent crypto comparison) in the middleware
- * pipeline.
+ * The chain is wired in `src/routes/session.js`'s GET/DELETE flow (getSession
+ * → checkCsrf → checkRefreshToken → ...). The PUT (refresh) flow instead uses
+ * `getByRefreshToken`/`checkConsumerByRefreshToken` below, which needs no
+ * access token. Never use `getOne`'s return value alone as an authorization
+ * decision — always chain it with `checkRefreshToken` (or an equivalent
+ * crypto comparison) in the middleware pipeline.
  *
  * @param {string} accessToken - The consumer's access token (used directly as
  *   the Map key; must be the exact string the record was cached under).
@@ -79,6 +84,31 @@ function getOne(accessToken) {
 }
 
 /**
+ * Retrieves a cached consumer record by refresh token.
+ *
+ * Pure cache accessor — a single `Map.get` keyed by refresh token (see `init()`
+ * and `addToCache()` for how the Map is populated). No cryptographic
+ * comparison, no side effects, no security decision on its own.
+ *
+ * NOT a full authentication check, same caveat as `getOne()`: callers MUST
+ * still run a constant-time comparison (`checkRefreshToken` or equivalent)
+ * against the returned record before treating the request as authenticated.
+ * Enables refreshing a session from the refresh token alone (e.g. an httpOnly
+ * cookie), without requiring a decodable access token.
+ *
+ * @param {string} refreshToken - The consumer's refresh token (used directly
+ *   as the Map key; must be the exact string the record was cached under).
+ * @return {ConsumerCache|undefined} The cached consumer record if found,
+ *   otherwise `undefined`.
+ * @example
+ * const consumer = getByRefreshToken('refresh-token-123');
+ * if (consumer) log.debug(`Found consumer: ${consumer.nickname}`);
+ */
+function getByRefreshToken(refreshToken) {
+  return consumersByRefreshToken.get(refreshToken);
+}
+
+/**
  * Adds a consumer to the cache with the provided details.
  * Creates a copy of the consumer object to avoid reference issues.
  *
@@ -87,8 +117,10 @@ function getOne(accessToken) {
  * addToCache({ id: 1, userId: 123, nickname: 'user', accessToken: '...', refreshToken: '...', roles: [1, 2] });
  */
 function addToCache(consumer) {
-  consumers.set(consumer.accessToken, { ...consumer });
-  consumerIdIndex.set(consumer.id, consumer.accessToken);
+  const c = { ...consumer };
+  consumers.set(c.accessToken, c);
+  consumerIdIndex.set(c.id, c.accessToken);
+  consumersByRefreshToken.set(c.refreshToken, c);
 }
 
 /**
@@ -107,12 +139,15 @@ function updateCache(id, accessToken, refreshToken, roles) {
   const oldToken = consumerIdIndex.get(numId);
   if (!oldToken) return false;
   const c = consumers.get(oldToken);
+  if (!c) return false;
   consumers.delete(oldToken);
+  consumersByRefreshToken.delete(c.refreshToken);
   c.accessToken = accessToken;
   c.refreshToken = refreshToken;
   c.roles = roles;
   consumers.set(accessToken, c);
   consumerIdIndex.set(numId, accessToken);
+  consumersByRefreshToken.set(refreshToken, c);
   return true;
 }
 
@@ -125,13 +160,16 @@ function deleteFromCache(id) {
   const numId = +id;
   const token = consumerIdIndex.get(numId);
   if (!token) return;
+  const c = consumers.get(token);
   consumers.delete(token);
   consumerIdIndex.delete(numId);
+  if (c) consumersByRefreshToken.delete(c.refreshToken);
 }
 
 export default {
   init,
   getOne,
+  getByRefreshToken,
   addToCache,
   updateCache,
   deleteFromCache,

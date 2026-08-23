@@ -214,12 +214,17 @@ describe("AuthenticationService", () => {
     });
   });
 
-  it("skips refresh when no access token is stored", () => {
+  it("attempts refresh via cookie even when no access token is stored", () => {
     tokenService.getAccessToken.mockReturnValue(null);
     let result: boolean | undefined;
     service.refreshToken().subscribe((value) => {
       result = value;
     });
+
+    const req = http.expectOne("/api/sessions");
+    expect(req.request.method).toBe("PUT");
+    req.flush(null, { status: 401, statusText: "Unauthorized" });
+
     expect(result).toBe(false);
   });
 

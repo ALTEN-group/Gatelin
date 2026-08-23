@@ -57,6 +57,22 @@ describe("consumer service", () => {
     });
   });
 
+  describe("getByRefreshToken", () => {
+    it("should index consumers by refresh token at init", async () => {
+      await initWithRows([
+        { id: 1, accessToken: "tok1", refreshToken: "ref1", roles: [1] },
+      ]);
+
+      expect(consumerSvc.getByRefreshToken("ref1")).toMatchObject({ id: 1 });
+    });
+
+    it("should return undefined for an unknown refresh token", async () => {
+      await initWithRows([]);
+
+      expect(consumerSvc.getByRefreshToken("nope")).toBeUndefined();
+    });
+  });
+
   describe("addToCache", () => {
     it("should add a consumer copy indexed by both token and id", async () => {
       await initWithRows([]);
@@ -72,6 +88,7 @@ describe("consumer service", () => {
       const cached = consumerSvc.getOne("tokA");
       expect(cached).toEqual(consumer);
       expect(cached).not.toBe(consumer);
+      expect(consumerSvc.getByRefreshToken("refA")).toEqual(consumer);
     });
   });
 
@@ -95,6 +112,10 @@ describe("consumer service", () => {
         refreshToken: "newRef",
         roles: [2, 3],
       });
+      expect(consumerSvc.getByRefreshToken("oldRef")).toBeUndefined();
+      expect(consumerSvc.getByRefreshToken("newRef")).toMatchObject({
+        id: 5,
+      });
     });
 
     it("should return false when updating an id that isn't cached", async () => {
@@ -117,6 +138,7 @@ describe("consumer service", () => {
       consumerSvc.deleteFromCache(7);
 
       expect(consumerSvc.getOne("tokZ")).toBeUndefined();
+      expect(consumerSvc.getByRefreshToken("refZ")).toBeUndefined();
     });
 
     it("should be a no-op when deleting an id that isn't cached", async () => {

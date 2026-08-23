@@ -1,19 +1,19 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DestroyRef,
-    inject,
-    OnInit,
-    ViewEncapsulation,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ViewEncapsulation,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
 } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { APP_CONFIG } from "@core/app-config/app-config.token";
@@ -87,6 +87,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     const ticket = this.route.snapshot.queryParamMap.get("ticket");
     if (!ticket) return;
 
+    // Avoid flashing the login form while the resume-login request completes.
+    this.isRedirecting = true;
     this.isLoading = true;
     this.loadingService.start();
     this.authService
@@ -95,9 +97,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
       .subscribe((res: boolean) => {
         if (res) {
           const { firstName, lastName } = this.authService.user() || {};
-          this.snackbarService.displayInfo(`Bienvenue ${firstName} ${lastName}`);
+          this.snackbarService.displayInfo(
+            `Bienvenue ${firstName} ${lastName}`,
+          );
         } else {
           this.formGroup.setErrors({ incorrect: true });
+          this.isRedirecting = false;
         }
         this.loadingService.stop();
         this.isLoading = false;
