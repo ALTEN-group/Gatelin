@@ -1,10 +1,11 @@
 /**
  * Runtime admin config injected into index.html by the Docker entrypoint (dev)
- * or by src/admin-server.js (prod). Lets ops set ADMIN_PASSWORD_RECOVERY_URL
- * without rebuilding Angular.
+ * or by src/admin-server.js (prod). Lets ops set ADMIN_PASSWORD_RECOVERY_URL and
+ * ADMIN_SSO_TOKEN_KEY without rebuilding Angular.
  */
 export interface GatelinAdminRuntime {
   passwordRecoveryUrl?: string;
+  ssoTokenKey?: string;
 }
 
 declare global {

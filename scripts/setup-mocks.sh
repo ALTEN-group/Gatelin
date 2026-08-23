@@ -32,3 +32,12 @@ npm install --prefix mocks/ms_pwd --loglevel=error --no-fund
 
 node mocks/ms_pwd/scripts/generate-credentials.mjs "$CREDENTIALS_FILE" "$OPENAPI_FILE"
 
+# Restart the mock so it picks up the new credentials right away (node --watch would
+# eventually reload on its own, but that races container startup / first-run setup).
+if [[ -n "${MSPWD_HOST:-}" ]] && docker restart "$MSPWD_HOST" >/dev/null 2>&1; then
+  echo "Restarted $MSPWD_HOST with the new credentials."
+else
+  echo "ms_pwd_mock container not running yet — it will pick up these credentials on next start."
+fi
+
+

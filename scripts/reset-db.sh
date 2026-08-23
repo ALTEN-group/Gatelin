@@ -85,5 +85,10 @@ echo -e "${GREEN}✅ Database reset complete!${NC}"
 echo -e ""
 ./scripts/start-dev.sh
 
+# Re-sync mock credentials too, in case MSPWD_SECRET/GATELIN_TOKEN_SECRET were
+# rotated (e.g. by setup-env.sh) since they were last generated.
+echo -e ""
+./scripts/setup-mocks.sh
+
 echo -e ""
 echo -e "${GREEN}🎉 All done! Application ready with fresh database.${NC}"

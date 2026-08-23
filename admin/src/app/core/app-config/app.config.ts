@@ -32,21 +32,21 @@ import { readAdminRuntimeConfig } from "./runtime-config";
  */
 const TITLE = "Gatelin";
 const APP_KEY = "gatelin";
+const runtime = readAdminRuntimeConfig();
+const passwordRecoveryUrl =
+  runtime.passwordRecoveryUrl?.trim() ||
+  environment.passwordRecoveryUrl?.trim() ||
+  undefined;
 const AppStorageKey = {
   TABLE_CONFIG: `${APP_KEY}_tableConfig`,
   THEME: `${APP_KEY}_theme`,
   // Shared (not app-prefixed): Foxnox and Gatelin admin both authenticate
   // against the same Gatelin session backend, so both must read/write the
   // same slot for the cookie-based silent refresh to identify the consumer
-  // when switching between the two admin apps.
-  TOKEN: "sso_access_token",
+  // when switching between the two admin apps. Configurable via
+  // ADMIN_SSO_TOKEN_KEY so it can be changed without an Angular rebuild.
+  TOKEN: runtime.ssoTokenKey?.trim() || "sso_access_token",
 } as const;
-
-const runtime = readAdminRuntimeConfig();
-const passwordRecoveryUrl =
-  runtime.passwordRecoveryUrl?.trim() ||
-  environment.passwordRecoveryUrl?.trim() ||
-  undefined;
 
 export const CONFIG: AppConfig = {
   title: TITLE,
