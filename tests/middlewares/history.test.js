@@ -55,11 +55,11 @@ describe("history middleware", () => {
     it("should query with a custom schema when given", () => {
       execute.mockResolvedValueOnce({ rowCount: 0, rows: [] });
 
-      history.get("route", "gateway")(req, res, next);
+      history.get("route", "custom")(req, res, next);
 
       expect(execute).toHaveBeenCalledWith(
         expect.any(String),
-        ["gateway", ["route"], "7"],
+        ["custom", ["route"], "7"],
         null,
       );
     });

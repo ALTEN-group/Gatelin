@@ -1152,7 +1152,7 @@
           "dbUser": {
             "type": "string",
             "description": "Database user who performed the operation",
-            "example": "ms_gateway_user"
+            "example": "ms_gatelin_user"
           },
           "consumerId": {
             "type": "integer",

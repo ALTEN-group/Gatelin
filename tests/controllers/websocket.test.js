@@ -129,8 +129,8 @@ function openUpgrade(port, pathName, extraHeaders = {}) {
 describe("handleUpgrade", () => {
   let handleUpgrade;
   let routeSvc;
-  let gateway;
-  let gatewayPort;
+  let bff;
+  let bffPort;
   let upstream;
   let upstreamUrl;
   let upstreamHeaders;
@@ -166,18 +166,18 @@ describe("handleUpgrade", () => {
     const address = upstream.address();
     upstreamUrl = `http://127.0.0.1:${address.port}`;
 
-    gateway = nodeHttp.createServer();
-    gateway.on("upgrade", (req, socket, head) => {
+    bff = nodeHttp.createServer();
+    bff.on("upgrade", (req, socket, head) => {
       sockets.push(socket);
       handleUpgrade(req, socket, head);
     });
-    await new Promise((resolve) => gateway.listen(0, "127.0.0.1", resolve));
-    gatewayPort = gateway.address().port;
+    await new Promise((resolve) => bff.listen(0, "127.0.0.1", resolve));
+    bffPort = bff.address().port;
   });
 
   afterAll(() => {
     for (const socket of sockets) socket.destroy();
-    gateway.close();
+    bff.close();
     upstream.close();
   });
 
@@ -191,7 +191,7 @@ describe("handleUpgrade", () => {
   });
 
   it("pipes an authorized websocket handshake to the upstream service", async () => {
-    const result = await openUpgrade(gatewayPort, "/events");
+    const result = await openUpgrade(bffPort, "/events");
 
     expect(result.status).toBe(101);
     expect(result.res.headers.upgrade).toBe("websocket");
@@ -220,7 +220,7 @@ describe("handleUpgrade", () => {
     routeSvc.getOne.mockReturnValue({ ...publicRoute, protected: true });
 
     const result = await openUpgrade(
-      gatewayPort,
+      bffPort,
       "/events?access_token=secret-jwt&keep=1",
     );
 
@@ -233,7 +233,7 @@ describe("handleUpgrade", () => {
   it("rejects a handshake when the route is not registered", async () => {
     routeSvc.getOne.mockReturnValue(undefined);
 
-    const result = await openUpgrade(gatewayPort, "/events");
+    const result = await openUpgrade(bffPort, "/events");
 
     expect(result.status).toBe(404);
     expect(result.socket).toBeNull();
@@ -242,7 +242,7 @@ describe("handleUpgrade", () => {
   it("rejects a handshake that fails the CORS origin whitelist", async () => {
     corsHas.mockReturnValue(false);
 
-    const result = await openUpgrade(gatewayPort, "/events", {
+    const result = await openUpgrade(bffPort, "/events", {
       Origin: "https://evil.example",
     });
 
@@ -253,7 +253,7 @@ describe("handleUpgrade", () => {
   it("rejects a protected handshake without a bearer token", async () => {
     routeSvc.getOne.mockReturnValue({ ...publicRoute, protected: true });
 
-    const result = await openUpgrade(gatewayPort, "/events");
+    const result = await openUpgrade(bffPort, "/events");
 
     expect(result.status).toBe(401);
     expect(result.socket).toBeNull();
@@ -264,7 +264,7 @@ describe("handleUpgrade", () => {
       next({ statusCode: 429, message: "HTTP(429): Too Many Requests" });
     });
 
-    const result = await openUpgrade(gatewayPort, "/events");
+    const result = await openUpgrade(bffPort, "/events");
 
     expect(proxyLimiter).toHaveBeenCalled();
     expect(result.status).toBe(429);

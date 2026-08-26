@@ -153,7 +153,7 @@ describe("catch-all proxy route", () => {
     expect(getServiceBaseUrl).toHaveBeenCalledWith("downstream");
     expect(upstreamRequest.method).toBe("GET");
     expect(upstreamRequest.url).toBe("/downstream/ping");
-    // The gateway bearer token authenticates to Gatelin and must not leak.
+    // The Gatelin bearer token authenticates the client and must not leak.
     expect(upstreamRequest.headers.authorization).toBeUndefined();
   });
 

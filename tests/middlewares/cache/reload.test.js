@@ -74,7 +74,7 @@ describe("cache reload middleware", () => {
       });
     });
 
-    // The write already committed, so silence here would leave the gateway
+    // The write already committed, so silence here would leave Gatelin
     // enforcing the previous authorization rules with no signal.
     expect(next).toHaveBeenCalledWith({
       statusCode: 500,

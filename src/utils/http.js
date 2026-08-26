@@ -30,7 +30,7 @@ const MASK = "[REDACTED]";
  * Serializes a value for logging with sensitive fields masked.
  *
  * Log aggregators retain debug output far longer than a request lives, so
- * credentials that transit the gateway must never be written verbatim.
+ * credentials that transit Gatelin must never be written verbatim.
  *
  * @param {unknown} value
  * @return {string|null}
@@ -108,7 +108,7 @@ function query(verb, url, params, data, headers) {
     method,
     headers: { "Content-Type": contentType, ...headers },
     // Without this an unresponsive upstream holds the socket and its event-loop
-    // work until the client gives up, which exhausts the gateway under load.
+    // work until the client gives up, which exhausts Gatelin under load.
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   };
 

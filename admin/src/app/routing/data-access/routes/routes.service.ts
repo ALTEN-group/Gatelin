@@ -11,7 +11,7 @@ import { Observable } from "rxjs";
 const routesApi: AdminEntity = "routes";
 
 /**
- * Service to manage gateway routes
+ * Service to manage Gatelin routes
  */
 @Injectable({
   providedIn: "root",

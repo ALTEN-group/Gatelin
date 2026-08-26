@@ -2,7 +2,7 @@ import { AdminEntity } from "@core/app-config/app.entities";
 import { Calls } from "@dwtechs/ngx-crud-builder";
 
 /**
- * Maps each CRUD operation to a gateway route ID.
+ * Maps each CRUD operation to a Gatelin route ID.
  * @example
  * const routesMapping: RoutesMapping = {
  *   get:            12,
