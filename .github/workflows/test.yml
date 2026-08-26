@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  gateway:
     runs-on: ubuntu-slim
     permissions:
       contents: write
@@ -46,7 +46,7 @@ jobs:
           FUNCS=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.functions.pct))")
           LINES=$(node -e "const c=require('./$SUMMARY').total; process.stdout.write(String(c.lines.pct))")
           {
-            echo "## Coverage"
+            echo "## Gateway coverage"
             echo "| Metric     | Coverage |"
             echo "|------------|----------|"
             echo "| Statements | ${STMTS}% |"
