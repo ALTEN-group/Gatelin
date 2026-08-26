@@ -55,6 +55,16 @@ jobs:
             echo "| Lines      | ${LINES}% |"
           } >> $GITHUB_STEP_SUMMARY
 
+  database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run PostgreSQL contract tests
+        run: bash scripts/test-db.sh
+
   admin:
     runs-on: ubuntu-slim
     permissions:

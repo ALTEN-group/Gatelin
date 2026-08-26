@@ -1,0 +1,58 @@
+name: gatelin-db-test
+
+services:
+  postgres:
+    image: postgres:16.2-alpine3.19
+    environment:
+      POSTGRES_DB: gatelin_test
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: test-root-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d gatelin_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  migration:
+    build:
+      context: ../db/liquibase
+      dockerfile: dockerfile
+      args:
+        LIQUIBASE_VERSION: 4.28.0-alpine
+    environment:
+      LIQUIBASE_COMMAND_USERNAME: root
+      LIQUIBASE_COMMAND_PASSWORD: test-root-password
+      PGUSER: root
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: gatelin_test
+      DB_USER: gatelin_test_app
+      DB_PWD: test-app-password
+      UPDATE: 1
+      ROLLBACK: 0
+      LIQUIBASE_LOG_LEVEL: INFO
+      LIQUIBASE_COMMAND_CONTEXTS: v1,oauth
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../db/liquibase/gatelin:/liquibase/changelog:ro
+
+  db-tests:
+    image: postgres:16.2-alpine3.19
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: gatelin_test
+      PGUSER: gatelin_test_app
+      PGPASSWORD: test-app-password
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+    entrypoint: ["/bin/sh", "/usr/local/bin/run-db-tests"]
+    volumes:
+      - ../db/liquibase/gatelin:/schema:ro
+      - ../scripts/run-db-tests.sh:/usr/local/bin/run-db-tests:ro
+      - ../tests/db:/tests/db:ro
