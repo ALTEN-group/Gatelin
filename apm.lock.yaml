@@ -1,10 +1,13 @@
 lockfile_version: '1'
-generated_at: '2026-08-20T11:31:42.932619+00:00'
-apm_version: 0.20.0
+generated_at: '2026-08-26T08:54:29.371808+00:00'
+apm_version: 0.28.0
 dependencies:
-- repo_url: ALTEN-group/coding-pal
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  resolved_commit: 740c304846976bb991cf6fc50c8ab9d145c40781
+  version: 0.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/angular-admin-examples
@@ -25,135 +28,133 @@ dependencies:
   - .agents/skills/postgres-liquibase-examples/SKILL.md
   - .agents/skills/postgres-liquibase-examples/references/examples.md
   deployed_file_hashes:
-    .agents/skills/angular-admin-examples/SKILL.md: sha256:b8a192f895caa9c744008796982ed3edbd1ab403f6df6a6b50234c9b43fd7725
+    .agents/skills/angular-admin-examples/SKILL.md: sha256:dd8bb6923a9340149a0fe0bdb9cc08cc1027d0e03e10f952f12e5fc12f5061d7
     .agents/skills/angular-admin-examples/references/examples.md: sha256:6b2a46f11e5f52cfc5f38bf06eaf1734ab4cddfda941c26e8d0d6072471cc04b
     .agents/skills/audit-reporting/SKILL.md: sha256:72f340b48af1f475f18f4a19e853f6ccf38ec580301e7534b0c0836708fca508
     .agents/skills/audit-reporting/references/report-contract.md: sha256:acaca07764179dbfa0ddb91a34fa2babc5fca93d5d19df171f8f42675a39df63
     .agents/skills/audit-reporting/scripts/audit-report.mjs: sha256:e3c9655f42665a8341e53b04d0326eedba89f641ccd8f8d5b04c50d904793177
     .agents/skills/audit-reporting/scripts/audit-report.test.mjs: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
-    .agents/skills/docker-examples/SKILL.md: sha256:dfe9f23dca89781e955aa76dd50c07c776aef296acecc343f770d3191710d8bb
-    .agents/skills/docker-examples/references/examples.md: sha256:42f4cd6adaafc4175b34bfc99bec18991a45415064895fb1a77b1840408add61
-    .agents/skills/node-express-examples/SKILL.md: sha256:fef4d5e9ce1d05a9015784de0dec2864525fa5c8c8807b47bd6c6e4c087565ee
+    .agents/skills/docker-examples/SKILL.md: sha256:b2543e17256e09b10f3da7c9b7883a8422fa75cb1df5b624de5e020cc13b5542
+    .agents/skills/docker-examples/references/examples.md: sha256:7d0e856db3b76fdc9405997df35d07313b29c82ec917f7da9711e1120527c93b
+    .agents/skills/node-express-examples/SKILL.md: sha256:7c46d030586ad888cb52e1df0cfeadf1547692be3efb66713f9059d36df153a9
     .agents/skills/node-express-examples/references/examples.md: sha256:70f03fa3db3d4d5b5816fcd3b141651461e05afadaddb5ed9a3514bd99860f64
-    .agents/skills/postgres-liquibase-examples/SKILL.md: sha256:fc8335d609f65fdfbd31808628e848f410f4b8997d3ee5416e3065ea38115d0c
-    .agents/skills/postgres-liquibase-examples/references/examples.md: sha256:5ef5d68fe7349a9a5163280c57e5c99ee755c1d5b1cfce836c67f11707ac2148
-  content_hash: sha256:7ec43aeb4445b85ac104a0d62643fd3348b2232c5b6e24f19019762acc6723fb
+    .agents/skills/postgres-liquibase-examples/SKILL.md: sha256:a11497b4117984be0640eac7384207ea95b6f729d7e791a5520b6ce03e17d54b
+    .agents/skills/postgres-liquibase-examples/references/examples.md: sha256:24af8420124a3187438bfe84884016ea60de1bcefa6ddd03cebd50725ff123db
+  content_hash: sha256:018f8b8dfbdc6d32f7b2390a4b8074fe910cbf57ac15b56bb63fd9c5c122669c
   skill_subset:
   - angular-admin-examples
-  - audit-reporting
   - docker-examples
   - node-express-examples
   - postgres-liquibase-examples
-- repo_url: ALTEN-group/coding-pal
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-unit-test
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
-  virtual_path: agents/node-express-audit-fix.agent.md
-  is_virtual: true
-  package_type: apm_package
-  deployed_files:
-  - .cursor/agents/node-express-audit-fix.md
-  - .github/agents/node-express-audit-fix.agent.md
-  deployed_file_hashes:
-    .cursor/agents/node-express-audit-fix.md: sha256:fec48cab4851303dcc55556eb45f635e58af68e9481dc5947da8d377b0905701
-    .github/agents/node-express-audit-fix.agent.md: sha256:fec48cab4851303dcc55556eb45f635e58af68e9481dc5947da8d377b0905701
-  content_hash: sha256:3b1a49e4b232dce28971730d8c994ef6a2aabb340544e398f121276568d7365f
-- repo_url: ALTEN-group/coding-pal
-  host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
-  virtual_path: agents/node-express-back-end-code-audit.agent.md
-  is_virtual: true
-  package_type: apm_package
-  deployed_files:
-  - .cursor/agents/node-express-back-end-code-audit.md
-  - .github/agents/node-express-back-end-code-audit.agent.md
-  deployed_file_hashes:
-    .cursor/agents/node-express-back-end-code-audit.md: sha256:31c68ba937d6b8c7ee7c859e4a95fe2d06be7576c10245f7f008c9436d9a635b
-    .github/agents/node-express-back-end-code-audit.agent.md: sha256:31c68ba937d6b8c7ee7c859e4a95fe2d06be7576c10245f7f008c9436d9a635b
-  content_hash: sha256:b07f8edb58c21c6ea456b46f7eec9461812da79ad2ac1a87516adb13796010b7
-- repo_url: ALTEN-group/coding-pal
-  host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
   virtual_path: agents/unit-test.agent.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/agents/unit-test.md
   - .github/agents/unit-test.agent.md
   deployed_file_hashes:
-    .cursor/agents/unit-test.md: sha256:213e6c0df1211854051204deffe9dc563ad9932f95ef8e3f5ad6d6811d4b57e5
-    .github/agents/unit-test.agent.md: sha256:213e6c0df1211854051204deffe9dc563ad9932f95ef8e3f5ad6d6811d4b57e5
-  content_hash: sha256:57d68059f04a3d9d9445bbf690929c09792917d65a9519d58de730f4b208cce1
-- repo_url: ALTEN-group/coding-pal
+    .cursor/agents/unit-test.md: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+    .github/agents/unit-test.agent.md: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+  content_hash: sha256:911a8761bcff78c4847b2af9a2dbe1be275970a80234afa97b1c6da466ee5496
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-angular-admin
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
   virtual_path: instructions/angular-admin.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/rules/angular-admin.mdc
   - .github/instructions/angular-admin.instructions.md
   deployed_file_hashes:
-    .cursor/rules/angular-admin.mdc: sha256:40ddf2380dbfd4ebd2e36d61dbf5570f86969ae49a6b16bdca6d387aa60f1842
-    .github/instructions/angular-admin.instructions.md: sha256:4e3d8df58521ccfb4922acd9c34a524640e37938fe19f3d1e551603649a9de47
-  content_hash: sha256:da03857d8e39d30e439e2d7b8babab928f50c6672d92e4f24fe38f432d9c9e4d
-- repo_url: ALTEN-group/coding-pal
+    .cursor/rules/angular-admin.mdc: sha256:dd5da52df2435bfc66442ac53f92b32d286d2666b149e76ae0bb7173c621cd8a
+    .github/instructions/angular-admin.instructions.md: sha256:db452f2806cd2123ccd7918e0a962db2d512c30f7c2f5be0debb731511c3017d
+  content_hash: sha256:607220b96ddce89c1e64f52adb007419414fdedc628257d0024c561fb43141b9
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-angular-e2e-tests
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
+  virtual_path: instructions/angular-e2e-tests.instructions.md
+  is_virtual: true
+  content_hash: sha256:3348e8075a9f6452fcdf16a50b9f7a8e5cf83dbd1f205f940809abf072add816
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-angular-unit-tests
+  host: github.com
+  version: 1.0.0
+  virtual_path: instructions/angular-unit-tests.instructions.md
+  is_virtual: true
+  content_hash: sha256:8578bc1c290cfd955d55c505af26f95bedc265912a4ddc78cf55b95f54227251
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-docker
+  host: github.com
+  version: 1.0.0
   virtual_path: instructions/docker.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/rules/docker.mdc
   - .github/instructions/docker.instructions.md
   deployed_file_hashes:
-    .cursor/rules/docker.mdc: sha256:eca95b26e8fafd556e1990d183530c764ebf54ec12d1540fbe4935068efe090c
-    .github/instructions/docker.instructions.md: sha256:ec115701bfa782f0877c67109e4cde6bb8c3dc7e809c2872cd2b5f6181e5690a
-  content_hash: sha256:dc53c8f69ca8e1059ba6b42739982d2ea8572244696526acaee6e42f72eabffc
-- repo_url: ALTEN-group/coding-pal
+    .cursor/rules/docker.mdc: sha256:ea6eadbc8f48196a9026b98ac384d1c33455bac29973affbf0a7dd73ded5673c
+    .github/instructions/docker.instructions.md: sha256:e4c5e8832a37579fe4020b10e63b229aa08c120275edb3dc59e32cdcc791c2c5
+  content_hash: sha256:108152b7dcd9aa1ec4c59e6e2870a1676cedb27d38053afc30b0df192ce1c642
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-express
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/rules/node-express.mdc
   - .github/instructions/node-express.instructions.md
   deployed_file_hashes:
-    .cursor/rules/node-express.mdc: sha256:c86b7e75e3e4c090f33956cb552465acf3cf2f5c9cf1bb56c8e4a1a17cebf980
-    .github/instructions/node-express.instructions.md: sha256:31ae8b2b09aa01048d10c9d49ab972d9d1e471c2c4bf9b2f011799085d02825a
-  content_hash: sha256:0f5f6bbf43bcd770f1d7b1b24893f4266a8165c1db42f9fe348508224861e26d
-- repo_url: ALTEN-group/coding-pal
+    .cursor/rules/node-express.mdc: sha256:7cb4f45a07e4eb67a15c2ba76f7d51abebba70b3a6e5e08a658879914c53ec6d
+    .github/instructions/node-express.instructions.md: sha256:642661ffd46b63556ba02f6c871b30dc9736e612b1ece8cd1e2cd3951aa7223b
+  content_hash: sha256:6db87f3324274995dc42b3b24ff302a8a5f5112c010d315c9934ad67fd5fe30b
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-unit-tests
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
   virtual_path: instructions/node-unit-tests.instructions.md
   is_virtual: true
-  package_type: apm_package
-  deployed_files:
-  - .cursor/rules/node-unit-tests.mdc
-  - .github/instructions/node-unit-tests.instructions.md
-  deployed_file_hashes:
-    .cursor/rules/node-unit-tests.mdc: sha256:2366aaa3041b601ace35f63debc9697ca934ad780d64cede9c4690b0de5ded0c
-    .github/instructions/node-unit-tests.instructions.md: sha256:35edc0636673fed9106f8da3e9353440928cea592a4e861ac560ea384e8cf7c2
-  content_hash: sha256:7662541fb066ba1d8fb426b731021428cfe00a075ee52832e65d827bdb6bfdb8
-- repo_url: ALTEN-group/coding-pal
+  content_hash: sha256:5d111bc1e49ad8da64c4322973790bbd51dc366adf167e55891c846c98fba36f
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-postgres-liquibase-tests
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
+  virtual_path: instructions/postgres-liquibase-tests.instructions.md
+  is_virtual: true
+  content_hash: sha256:fbfbf6dd6e1012947ea0391a006b8a72fc910d8e256f5b68f3bfbbefc533b567
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-postgres-liquibase
+  host: github.com
+  version: 1.0.0
   virtual_path: instructions/postgres-liquibase.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/rules/postgres-liquibase.mdc
   - .github/instructions/postgres-liquibase.instructions.md
   deployed_file_hashes:
-    .cursor/rules/postgres-liquibase.mdc: sha256:16132c926c1e4628d257dcdc5bb21c7d59e6bd26b39215ae0d468807970b634f
-    .github/instructions/postgres-liquibase.instructions.md: sha256:578192cf9489690d204c0b4a56d4db7540409df205a223018d23b7c94724602d
-  content_hash: sha256:8a0f2c0e7c64c02aee5369e7ef64747bc08a6f3629787b14d557f97292306ae7
-- repo_url: ALTEN-group/coding-pal
+    .cursor/rules/postgres-liquibase.mdc: sha256:d2f857d7c75542d8677326c392b4d0522f558db3d1fa868444ce9f8003c510ed
+    .github/instructions/postgres-liquibase.instructions.md: sha256:b79389317459b4cebcffa4ba3aa37ad0149255b7524f2c77707f8f749fd57edb
+  content_hash: sha256:2832912b1bb61fc934cf041a1b160d46d814293374ce59ee14d22d895cf2f327
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: 22b047d7626f56306c5ba1eb567556d34214f877
+  version: 1.0.0
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .cursor/rules/sharp-agent.mdc
   - .github/instructions/sharp-agent.instructions.md
@@ -161,3 +162,481 @@ dependencies:
     .cursor/rules/sharp-agent.mdc: sha256:95cf8602076c7826995a24366bad63c15d566c54187403625d1e95f117272654
     .github/instructions/sharp-agent.instructions.md: sha256:93d883b43984a04bf5eab5b9de1272ea7ba31d3f0998ffe95c6167774f3cec13
   content_hash: sha256:48b607ac0f3e8dee51dbb60e930a76f2b3cb2a1c7445471d248e607c8a7de14b
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-angular-e2e-tests
+  host: github.com
+  version: 1.0.0
+  virtual_path: prompts/angular-e2e-tests.prompt.md
+  is_virtual: true
+  deployed_files:
+  - .cursor/commands/angular-e2e-tests.md
+  - .cursor/rules/angular-e2e-tests.mdc
+  - .github/instructions/angular-e2e-tests.instructions.md
+  - .github/prompts/angular-e2e-tests.prompt.md
+  deployed_file_hashes:
+    .cursor/commands/angular-e2e-tests.md: sha256:7a359ed8ecc23db1cacee1723dd88b82901ffedd00c4defa2db8bede46c23f3d
+    .cursor/rules/angular-e2e-tests.mdc: sha256:9ce3cc704e9c7a02c28a0843b3c70dfd615be6505bb68e5294df5f447cabb839
+    .github/instructions/angular-e2e-tests.instructions.md: sha256:f037f9bd75bd2a0532a8c2ac6ebd04357cccea2983b20a4fa5e1c7bf3c9345c0
+    .github/prompts/angular-e2e-tests.prompt.md: sha256:ce90b704c159a6b55dff03cbdc0a53a2683010b63429cc5427c1e124310754ae
+  content_hash: sha256:f9c649216fc68a38fdf53eb40aedcef03e85570f2a8ce20374b4728fd27a2c6c
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-angular-unit-tests
+  host: github.com
+  version: 1.0.0
+  virtual_path: prompts/angular-unit-tests.prompt.md
+  is_virtual: true
+  deployed_files:
+  - .cursor/commands/angular-unit-tests.md
+  - .cursor/rules/angular-unit-tests.mdc
+  - .github/instructions/angular-unit-tests.instructions.md
+  - .github/prompts/angular-unit-tests.prompt.md
+  deployed_file_hashes:
+    .cursor/commands/angular-unit-tests.md: sha256:30e3e38d84b8dd29df6ef5a31a5174b6bdf7895792106f769ddb9ff4244be40c
+    .cursor/rules/angular-unit-tests.mdc: sha256:b35a1bdd5c0ed22e374516b1e9b8ee7004ec63e79de509dd6aa6702979d6eae2
+    .github/instructions/angular-unit-tests.instructions.md: sha256:b5e326316a83eead27eb0199781c1c72b2f4cd7ccd39eec99d492070c775d360
+    .github/prompts/angular-unit-tests.prompt.md: sha256:4727596e6a8c40cbf0b7ed0a84004dd565a1aede5a860c89ad961df05f1f2785
+  content_hash: sha256:e748baf822ea8041dbf089118812de1bfd0cdfd76479d14dbafbc31bf311e582
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-unit-tests
+  host: github.com
+  version: 1.0.0
+  virtual_path: prompts/node-unit-tests.prompt.md
+  is_virtual: true
+  deployed_files:
+  - .cursor/commands/node-unit-tests.md
+  - .cursor/rules/node-unit-tests.mdc
+  - .github/instructions/node-unit-tests.instructions.md
+  - .github/prompts/node-unit-tests.prompt.md
+  deployed_file_hashes:
+    .cursor/commands/node-unit-tests.md: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
+    .cursor/rules/node-unit-tests.mdc: sha256:768c9fc97253b6bbf4fc534f5e1b086bb869734d02a596de1cc076e75ee31de0
+    .github/instructions/node-unit-tests.instructions.md: sha256:2368ac02cbcc0a09e8f8e8e85d39fb48d6b866eaac8d3576ed79503c657b30b2
+    .github/prompts/node-unit-tests.prompt.md: sha256:574a5b81510487b41c86d06b7e5b15b654399b2159274dc3e924ed0dbdc67ab6
+  content_hash: sha256:43abdd3836794c63e8862bfb846d197116755968f259b1ae3d380bb3012617a6
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-postgres-liquibase-tests
+  host: github.com
+  version: 1.0.0
+  virtual_path: prompts/postgres-liquibase-tests.prompt.md
+  is_virtual: true
+  deployed_files:
+  - .cursor/commands/postgres-liquibase-tests.md
+  - .cursor/rules/postgres-liquibase-tests.mdc
+  - .github/instructions/postgres-liquibase-tests.instructions.md
+  - .github/prompts/postgres-liquibase-tests.prompt.md
+  deployed_file_hashes:
+    .cursor/commands/postgres-liquibase-tests.md: sha256:817beb8fd595aaf5975db9cbb0952f610d9cf7098ac9b1c5378893612d321526
+    .cursor/rules/postgres-liquibase-tests.mdc: sha256:7333709f0acb404968b8aa7a627f81c6de1273ba6d3be41f102252fa4505847d
+    .github/instructions/postgres-liquibase-tests.instructions.md: sha256:97f49f45e5a211a732a9d83a5313ec8f09c4b98ebc7b5664bf3da88f0967527a
+    .github/prompts/postgres-liquibase-tests.prompt.md: sha256:c21cf30b970b00a7ebf594034aa2a5ed868ee2c0244939926b925df76e857705
+  content_hash: sha256:2a4c2bd604c1755aa0ab2b5fa87cdcaa27694b7ac8e92f40c88139670154c876
+deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/audit-reporting
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/audit-reporting/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:72f340b48af1f475f18f4a19e853f6ccf38ec580301e7534b0c0836708fca508
+- kind: project-relative
+  target: agents
+  value: .agents/skills/audit-reporting/references/report-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:acaca07764179dbfa0ddb91a34fa2babc5fca93d5d19df171f8f42675a39df63
+- kind: project-relative
+  target: agents
+  value: .agents/skills/audit-reporting/scripts/audit-report.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:e3c9655f42665a8341e53b04d0326eedba89f641ccd8f8d5b04c50d904793177
+- kind: project-relative
+  target: agents
+  value: .agents/skills/audit-reporting/scripts/audit-report.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/angular-admin-examples
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/angular-admin-examples/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:dd8bb6923a9340149a0fe0bdb9cc08cc1027d0e03e10f952f12e5fc12f5061d7
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/angular-admin-examples/references/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:6b2a46f11e5f52cfc5f38bf06eaf1734ab4cddfda941c26e8d0d6072471cc04b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/docker-examples
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/docker-examples/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:b2543e17256e09b10f3da7c9b7883a8422fa75cb1df5b624de5e020cc13b5542
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/docker-examples/references/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:7d0e856db3b76fdc9405997df35d07313b29c82ec917f7da9711e1120527c93b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/node-express-examples
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/node-express-examples/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:7c46d030586ad888cb52e1df0cfeadf1547692be3efb66713f9059d36df153a9
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/node-express-examples/references/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:70f03fa3db3d4d5b5816fcd3b141651461e05afadaddb5ed9a3514bd99860f64
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/postgres-liquibase-examples
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/postgres-liquibase-examples/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:a11497b4117984be0640eac7384207ea95b6f729d7e791a5520b6ce03e17d54b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/postgres-liquibase-examples/references/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:24af8420124a3187438bfe84884016ea60de1bcefa6ddd03cebd50725ff123db
+- kind: project-relative
+  target: copilot
+  value: .github/agents/unit-test.agent.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/agents/unit-test.agent.md
+  active_owner: alten-group/coding-pal/agents/unit-test.agent.md
+  content_hash: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/angular-admin.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/angular-admin.instructions.md
+  active_owner: alten-group/coding-pal/instructions/angular-admin.instructions.md
+  content_hash: sha256:db452f2806cd2123ccd7918e0a962db2d512c30f7c2f5be0debb731511c3017d
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/angular-e2e-tests.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  content_hash: sha256:f037f9bd75bd2a0532a8c2ac6ebd04357cccea2983b20a4fa5e1c7bf3c9345c0
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/angular-unit-tests.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  content_hash: sha256:b5e326316a83eead27eb0199781c1c72b2f4cd7ccd39eec99d492070c775d360
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/docker.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/docker.instructions.md
+  active_owner: alten-group/coding-pal/instructions/docker.instructions.md
+  content_hash: sha256:e4c5e8832a37579fe4020b10e63b229aa08c120275edb3dc59e32cdcc791c2c5
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/node-express.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/node-express.instructions.md
+  active_owner: alten-group/coding-pal/instructions/node-express.instructions.md
+  content_hash: sha256:642661ffd46b63556ba02f6c871b30dc9736e612b1ece8cd1e2cd3951aa7223b
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/node-unit-tests.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  content_hash: sha256:2368ac02cbcc0a09e8f8e8e85d39fb48d6b866eaac8d3576ed79503c657b30b2
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/postgres-liquibase-tests.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  content_hash: sha256:97f49f45e5a211a732a9d83a5313ec8f09c4b98ebc7b5664bf3da88f0967527a
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/postgres-liquibase.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/postgres-liquibase.instructions.md
+  active_owner: alten-group/coding-pal/instructions/postgres-liquibase.instructions.md
+  content_hash: sha256:b79389317459b4cebcffa4ba3aa37ad0149255b7524f2c77707f8f749fd57edb
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/sharp-agent.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/sharp-agent.instructions.md
+  active_owner: alten-group/coding-pal/instructions/sharp-agent.instructions.md
+  content_hash: sha256:93d883b43984a04bf5eab5b9de1272ea7ba31d3f0998ffe95c6167774f3cec13
+- kind: project-relative
+  target: copilot
+  value: .github/prompts/angular-e2e-tests.prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  content_hash: sha256:ce90b704c159a6b55dff03cbdc0a53a2683010b63429cc5427c1e124310754ae
+- kind: project-relative
+  target: copilot
+  value: .github/prompts/angular-unit-tests.prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  content_hash: sha256:4727596e6a8c40cbf0b7ed0a84004dd565a1aede5a860c89ad961df05f1f2785
+- kind: project-relative
+  target: copilot
+  value: .github/prompts/node-unit-tests.prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  content_hash: sha256:574a5b81510487b41c86d06b7e5b15b654399b2159274dc3e924ed0dbdc67ab6
+- kind: project-relative
+  target: copilot
+  value: .github/prompts/postgres-liquibase-tests.prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  content_hash: sha256:c21cf30b970b00a7ebf594034aa2a5ed868ee2c0244939926b925df76e857705
+- kind: project-relative
+  target: cursor
+  value: .cursor/agents/unit-test.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/agents/unit-test.agent.md
+  active_owner: alten-group/coding-pal/agents/unit-test.agent.md
+  content_hash: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/angular-e2e-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  content_hash: sha256:7a359ed8ecc23db1cacee1723dd88b82901ffedd00c4defa2db8bede46c23f3d
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/angular-unit-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  content_hash: sha256:30e3e38d84b8dd29df6ef5a31a5174b6bdf7895792106f769ddb9ff4244be40c
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/node-unit-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  content_hash: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/postgres-liquibase-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  content_hash: sha256:817beb8fd595aaf5975db9cbb0952f610d9cf7098ac9b1c5378893612d321526
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/angular-admin.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/angular-admin.instructions.md
+  active_owner: alten-group/coding-pal/instructions/angular-admin.instructions.md
+  content_hash: sha256:dd5da52df2435bfc66442ac53f92b32d286d2666b149e76ae0bb7173c621cd8a
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/angular-e2e-tests.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-e2e-tests.prompt.md
+  content_hash: sha256:9ce3cc704e9c7a02c28a0843b3c70dfd615be6505bb68e5294df5f447cabb839
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/angular-unit-tests.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/angular-unit-tests.prompt.md
+  content_hash: sha256:b35a1bdd5c0ed22e374516b1e9b8ee7004ec63e79de509dd6aa6702979d6eae2
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/docker.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/docker.instructions.md
+  active_owner: alten-group/coding-pal/instructions/docker.instructions.md
+  content_hash: sha256:ea6eadbc8f48196a9026b98ac384d1c33455bac29973affbf0a7dd73ded5673c
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/node-express.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/node-express.instructions.md
+  active_owner: alten-group/coding-pal/instructions/node-express.instructions.md
+  content_hash: sha256:7cb4f45a07e4eb67a15c2ba76f7d51abebba70b3a6e5e08a658879914c53ec6d
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/node-unit-tests.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
+  content_hash: sha256:768c9fc97253b6bbf4fc534f5e1b086bb869734d02a596de1cc076e75ee31de0
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/postgres-liquibase-tests.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
+  content_hash: sha256:7333709f0acb404968b8aa7a627f81c6de1273ba6d3be41f102252fa4505847d
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/postgres-liquibase.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/postgres-liquibase.instructions.md
+  active_owner: alten-group/coding-pal/instructions/postgres-liquibase.instructions.md
+  content_hash: sha256:d2f857d7c75542d8677326c392b4d0522f558db3d1fa868444ce9f8003c510ed
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/sharp-agent.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/sharp-agent.instructions.md
+  active_owner: alten-group/coding-pal/instructions/sharp-agent.instructions.md
+  content_hash: sha256:95cf8602076c7826995a24366bad63c15d566c54187403625d1e95f117272654
