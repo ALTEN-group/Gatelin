@@ -11,6 +11,7 @@ website/docs/.vitepress/cache
 website/docs/.vitepress/dist
 .github/instructions/
 .github/agents/
+.github/prompts/
 .agents/
 .cursor/
 mocks/ms_pwd/src/data/credentials.js

@@ -91,6 +91,17 @@ npm test                  # run all tests
 npm run test:coverage     # with coverage report
 ```
 
+### PostgreSQL contract tests
+
+```sh
+./scripts/test-db.sh
+```
+
+Starts an isolated PostgreSQL container, applies the Liquibase changelog, and
+runs every `tests/db/gatelin/*.sql` file as the application database user.
+The stack and its data are removed after the run. This is a host Docker
+workflow, not an npm/Jest test — do not run it from the Gatelin app container.
+
 ### Admin unit tests
 
 ```sh

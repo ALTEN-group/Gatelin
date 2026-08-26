@@ -12,7 +12,7 @@ import scopeSvc from "../../services/scope.js";
  * URLs, permission maps keyed by routeId) that cannot be patched incrementally
  * from a single changed row, so the whole cache is reloaded instead.
  *
- * A reload failure leaves the gateway serving stale authorization data, so it
+ * A reload failure leaves Gatelin serving stale authorization data, so it
  * is surfaced as a 500 rather than swallowed — the write itself already
  * committed, and the operator needs to know the cache diverged.
  *

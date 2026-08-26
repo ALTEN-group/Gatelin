@@ -70,7 +70,7 @@ describe("security middleware", () => {
     security(req, res, next);
 
     // require-corp on JSON responses breaks legitimate cross-origin clients
-    // without protecting anything the gateway serves.
+    // without protecting anything Gatelin serves.
     expect(res.setHeader).not.toHaveBeenCalledWith(
       "Cross-Origin-Embedder-Policy",
       expect.anything(),

@@ -12,7 +12,7 @@ if awk "BEGIN { exit !($PCT >= 50) }"; then COLOR="4c1"
 else COLOR="e05d44"
 fi
 
-# Size the badge from the text so longer labels (e.g. "Gateway coverage")
+# Size the badge from the text so longer labels (e.g. "Admin coverage")
 # don't clip. ~6.5px/char approximates DejaVu Sans at 11px; PAD is the
 # breathing room on each side of a text segment.
 CHAR_W=6.5

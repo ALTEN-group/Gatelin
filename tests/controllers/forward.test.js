@@ -94,7 +94,7 @@ describe("forwardToService", () => {
       .post("/echo?foo=bar")
       .set("content-type", "application/octet-stream")
       .set("x-client-header", "kept")
-      .set("authorization", "Bearer gateway-token")
+      .set("authorization", "Bearer gatelin-token")
       .set("cookie", "refreshToken=secret")
       .set("x-csrf-token", "secret")
       .send(body)
