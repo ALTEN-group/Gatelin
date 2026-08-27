@@ -1,17 +1,9 @@
 // @ts-check
 import { log } from "@dwtechs/winstan";
+import { challengesUrl, trustedDevicesUrl } from "../../conf/pwd.js";
 import http from "../../utils/http.js";
 
 const TRUSTED_DEVICE_COOKIE = "trusted_device";
-
-/**
- * Derive Foxnox base URL from PWD_CHECK_URL (…/pwd/compare → …).
- * @returns {string}
- */
-function pwdBaseUrl() {
-  const check = process.env.PWD_CHECK_URL || "";
-  return check.replace(/\/pwd\/compare\/?$/i, "");
-}
 
 /**
  * @param {number} userId
@@ -19,12 +11,16 @@ function pwdBaseUrl() {
  * @returns {Promise<{ url: string, kind: string, challenge?: string }>}
  */
 async function mintChallenge(userId, kind) {
-  const url = `${pwdBaseUrl()}/pwd/challenges`;
-  const result = await http.query("POST", url, undefined, { userId, kind });
+  const result = await http.query("POST", challengesUrl, undefined, {
+    userId,
+    kind,
+  });
   const data = result?.data ?? {};
-  if (!data.url) {
-    throw Object.assign(new Error("Challenge mint failed"), { statusCode: 502 });
-  }
+  if (!data.url)
+    throw Object.assign(new Error("Challenge mint failed"), {
+      statusCode: 502,
+    });
+
   return data;
 }
 
@@ -34,18 +30,15 @@ async function mintChallenge(userId, kind) {
  * @returns {Promise<boolean>}
  */
 async function isTrustedDevice(userId, deviceToken) {
-  if (!deviceToken) return false;
-  const url = `${pwdBaseUrl()}/pwd/trusted-devices/verify`;
+  if (!deviceToken || !trustedDevicesUrl) return false;
   try {
-    const result = await http.query("POST", url, undefined, {
+    const result = await http.query("POST", trustedDevicesUrl, undefined, {
       userId,
       deviceToken,
     });
     return Boolean(result?.data?.trusted);
   } catch (err) {
-    log.warn(
-      `trusted-device verify failed: ${err?.message || err}`,
-    );
+    log.warn(`trusted-device verify failed: ${err?.message || err}`);
     return false;
   }
 }
@@ -56,14 +49,12 @@ async function isTrustedDevice(userId, deviceToken) {
  *
  * @type {import('express').RequestHandler}
  */
-export async function gateLoginChallenges(req, res, next) {
+export async function challengeLogin(req, res, next) {
   try {
     const userId = Number(req.body?.userId);
     const row = res.locals.pwdRow;
 
-    if (!userId) {
-      return next({ statusCode: 401, message: "Wrong credentials" });
-    }
+    if (!userId) return next({ statusCode: 401, message: "Wrong credentials" });
 
     // The password already checked out upstream. A pwd service that answers
     // without the pwd row simply carries no lockout/expiry/2FA state, so there
@@ -75,11 +66,16 @@ export async function gateLoginChallenges(req, res, next) {
       return next();
     }
 
-    if (row.lockedUntil && new Date(row.lockedUntil) > new Date()) {
+    if (row.lockedUntil && new Date(row.lockedUntil) > new Date())
       return next({ statusCode: 403, message: "Account locked" });
-    }
 
     if (row.pwdExpiry && new Date(row.pwdExpiry) < new Date()) {
+      if (!challengesUrl) {
+        log.warn(
+          `expired-password challenge skipped for userId=${userId} — PWD_CHALLENGES_URL is empty`,
+        );
+        return next();
+      }
       const minted = await mintChallenge(userId, "expired-password");
       return res.status(202).json({
         challengeRequired: true,
@@ -94,6 +90,12 @@ export async function gateLoginChallenges(req, res, next) {
         req.cookies?.[TRUSTED_DEVICE_COOKIE.replace(/_/g, "-")];
       const trusted = await isTrustedDevice(userId, deviceToken);
       if (!trusted) {
+        if (!challengesUrl) {
+          log.warn(
+            `2fa challenge skipped for userId=${userId} — PWD_CHALLENGES_URL is empty`,
+          );
+          return next();
+        }
         const minted = await mintChallenge(userId, "2fa");
         return res.status(202).json({
           challengeRequired: true,

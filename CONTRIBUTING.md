@@ -22,8 +22,8 @@ Configure the mock pwd service and swagger login examples:
 
 This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users.
 
-The mock also stands in for the Foxnox mid-login challenges (`POST /pwd/challenges`,
-`/pwd/trusted-devices/verify`, `/pwd/login-tickets/redeem` plus the matching SSR pages),
+The mock also stands in for the Foxnox mid-login challenges (`POST /foxnox/challenges`,
+`/foxnox/trusted-devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
 so each mock user covers one login path:
 
 | User | Login outcome |
@@ -187,6 +187,12 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 ### Publish to GHCR
 
 Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
+
+### Maintainer weekly audit
+
+The public weekly workflow always runs `npm audit`, Biome, outdated, and TODO scans and opens an audit issue.
+
+Copilot CLI, APM (`apm.yml` / `apm.lock.yaml`), and `audit-fix.yml` stay in this repository so the ALTEN maintainer pipeline is versioned with the product. Those steps run only on `ALTEN-group/Gatelin` when `COPILOT_GITHUB_TOKEN` is set; forks skip them. Configure that secret (and optional `COPILOT_AUDITS_MODEL`) on the canonical repo.
 
 Each release produces two images with the following tag variants (e.g. for `v1.2.3`):
 

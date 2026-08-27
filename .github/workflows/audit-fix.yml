@@ -51,7 +51,7 @@ concurrency:
 
 jobs:
   prepare:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.parse.outputs.matrix }}
       count: ${{ steps.parse.outputs.count }}
@@ -130,7 +130,7 @@ jobs:
   fix:
     needs: prepare
     if: ${{ needs.prepare.outputs.count > 0 }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false

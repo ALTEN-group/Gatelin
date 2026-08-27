@@ -127,14 +127,14 @@ describe("AuthenticationService", () => {
       {
         challengeRequired: true,
         kind: "2fa",
-        url: "http://localhost/api/pwd/web/2fa/verify?challenge=abc",
+        url: "http://localhost/api/foxnox/web/2fa/verify?challenge=abc",
       },
       { status: 202, statusText: "Accepted" },
     );
 
     expect(result).toBe(true);
     expect(assign).toHaveBeenCalledWith(
-      "http://localhost/api/pwd/web/2fa/verify?challenge=abc",
+      "http://localhost/api/foxnox/web/2fa/verify?challenge=abc",
     );
     expect(tokenService.saveAccessToken).not.toHaveBeenCalled();
     expect(service.isAuthenticated()).toBe(false);

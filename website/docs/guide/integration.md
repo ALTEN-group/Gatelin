@@ -18,11 +18,11 @@ my-project/
             └── 01-insert-cors.sql
 ```
 
-The Gatelin schema itself (tables, functions, stored procedures, core bootstrap data) is **baked into the `dwtechs/gatelin-migration` image**. You do not need to copy or manage it.
+The Gatelin schema itself (tables, functions, stored procedures, core bootstrap data) is **baked into the `ghcr.io/alten-group/gatelin-migration` image**. You do not need to copy or manage it.
 
 ## 2. Seed data volume
 
-The `dwtechs/gatelin-migration` image mounts one optional directory:
+The `ghcr.io/alten-group/gatelin-migration` image mounts one optional directory:
 
 **`/liquibase/data`** — your application-specific seed data, applied after the schema migration. Use it to insert your initial CORS origins, services, roles, permissions, etc. The migration container skips this entirely when no `changelog.xml` is found at `/liquibase/data/changelog.xml`.
 
@@ -50,7 +50,7 @@ Then mount it in the `gatelin_migration` service:
 
 ```yaml
 gatelin_migration:
-  image: dwtechs/gatelin-migration:latest
+  image: ghcr.io/alten-group/gatelin-migration:latest
   volumes:
     - ./docker/gatelin/data:/liquibase/data
 ```
@@ -137,8 +137,6 @@ The transparent proxy does not rewrite JSON request bodies or responses. A prote
 
 `x-acl-fields` being absent is different from being empty. Absence means unrestricted; an empty value means no domain field is authorized.
 
-Foxnox implements this contract in its ACL middleware and response sender and can be used as a reference.
-
 ### Trust boundary
 
 Do not expose protected microservices directly to clients. Otherwise a caller can bypass Gatelin by omitting ACL headers. At the network layer, allow protected service traffic only from Gatelin (or from an equally trusted internal caller). Gatelin strips the client's `Authorization`, `Cookie`, and `X-CSRF-Token` — they authenticate the caller to Gatelin, not to an upstream — and replaces them with consumer/ACL context before forwarding.
@@ -149,9 +147,9 @@ For WebSocket, these headers are present only on the HTTP upgrade handshake. Fra
 
 Gatelin never stores password hashes or renders 2FA / password-rotation pages — it delegates credential checks to whatever service `PWD_CHECK_URL` points at. You have two levels of integration:
 
-**Minimal (password check only).** Answer `POST …/pwd/compare` with 200 on a correct password and a non-2xx on a wrong one. Return a body **without** a user row (e.g. `{ "success": true }`) and Gatelin logs the user straight in — no other endpoints required. This is all you need for a plain email + password login.
+**Minimal (password check only).** Point `PWD_CHECK_URL` at your credential-check endpoint and answer it with 200 on a correct password and a non-2xx on a wrong one. Return a body **without** a user row (e.g. `{ "success": true }`) and Gatelin logs the user straight in — no other endpoints required. This is all you need for a plain email + password login.
 
-**Full (mid-login challenges).** To enforce lockout, password expiry, or 2FA, make `POST …/pwd/compare` return a user row (`pwdExpiry`, `lockedUntil`, `twoFactorEnabled`) and additionally expose `POST …/pwd/challenges`, `POST …/pwd/trusted-devices/verify`, and `POST …/pwd/login-tickets/redeem` on the same host, plus the browser workflow pages that redirect back to your admin login with `?ticket=…`.
+**Full (mid-login challenges).** To enforce lockout, password expiry, or 2FA, make the credential-check endpoint return a user row (`pwdExpiry`, `lockedUntil`, `twoFactorEnabled`) and additionally expose challenge-mint, trusted-device, and login-ticket endpoints, each pointed at by its own variable (`PWD_CHALLENGES_URL`, `PWD_TRUSTED_DEVICES_URL`, `PWD_LOGIN_TICKET_URL`), plus the browser workflow pages that redirect back to your admin login with `?ticket=…`.
 
-Full field-by-field shapes are in the [Sessions contract](./api-sessions#password-service-contract); client handling is in [Frontend Integration](./frontend). [Foxnox](https://github.com/dwtechs/Foxnox) is a drop-in implementation of the full contract, and the local Compose stack ships an `ms_pwd` mock that emulates it.
+Full field-by-field shapes are in the [Sessions contract](./api-sessions#password-service-contract); client handling is in [Frontend Integration](./frontend). The local Compose stack ships an `ms_pwd` mock that implements the same contract.
 

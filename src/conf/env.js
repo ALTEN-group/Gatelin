@@ -1,6 +1,7 @@
 // @ts-check
 import { isString } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
+import { OPTIONAL_URL_VARS } from "./pwd.js";
 
 /**
  * Environment variables Gatelin cannot work without.
@@ -31,6 +32,14 @@ export function collectEnvErrors() {
     if (!isString(value, "!0")) errors.push(`${name} is missing — ${usage}`);
     else if (name.endsWith("_URL") && !URL.canParse(value))
       errors.push(`${name} is not a valid URL: "${value}"`);
+  }
+
+  // Unset means the matching mid-login step is disabled, which is a valid
+  // setup. A value that is present but malformed never is.
+  for (const [name, usage] of OPTIONAL_URL_VARS) {
+    const value = process.env[name]?.trim();
+    if (isString(value, "!0") && !URL.canParse(value))
+      errors.push(`${name} is not a valid URL: "${value}" — ${usage}`);
   }
 
   return errors;

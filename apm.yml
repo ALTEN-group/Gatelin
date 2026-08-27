@@ -8,6 +8,9 @@ dependencies:
   apm:
     # Agents
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
+    # Pipelines Agents
+    - ALTEN-group/coding-pal/agents/node-express-back-end-code-audit.agent.md
+    - ALTEN-group/coding-pal/agents/node-express-audit-fix.agent.md
     # Prompts
     - ALTEN-group/coding-pal/prompts/node-unit-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/angular-unit-tests.prompt.md
@@ -30,4 +33,5 @@ dependencies:
         - postgres-liquibase-examples
         - docker-examples
         - angular-admin-examples
+        - audit-reporting
   mcp: {}

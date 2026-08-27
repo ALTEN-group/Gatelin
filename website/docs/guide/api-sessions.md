@@ -59,7 +59,7 @@ The client must send the browser to `url`. That URL is served entirely by **your
 
 ### Password-service contract
 
-Gatelin never stores password hashes or 2FA secrets, and never renders challenge pages. It delegates all of that to a **password service** you point `PWD_CHECK_URL` at. Any service that speaks the small HTTP contract below works — the reference implementation is [Foxnox](https://github.com/dwtechs/Foxnox), but nothing here is Foxnox-specific.
+Gatelin never stores password hashes or 2FA secrets, and never renders challenge pages. It delegates all of that to a **password service** you point `PWD_CHECK_URL` at. Any service that speaks the small HTTP contract below works.
 
 #### Credential check (required)
 
@@ -91,19 +91,19 @@ Gatelin reads only these fields from `rows[0]`; any others are ignored:
 
 #### Challenge endpoints (only if you emit 202)
 
-If your credential check can return `pwdExpiry`, `lockedUntil`, or `twoFactorEnabled`, then Gatelin also needs the endpoints below. They are derived from `PWD_CHECK_URL` by replacing the trailing `/pwd/compare` segment with the paths shown, so all four live on the same host:
+If your credential check can return `pwdExpiry`, `lockedUntil`, or `twoFactorEnabled`, then Gatelin also needs the endpoints below. Each one has its own environment variable — nothing is derived from `PWD_CHECK_URL`, so you are free to name and place these routes however you like:
 
-| Endpoint (relative to `{base}`) | Request body | Expected response | Called when |
+| Variable | Request body | Expected response | Called when |
 |---|---|---|---|
-| `POST {base}/pwd/challenges` | `{ userId, kind }` | `{ url, kind }` — `url` is the browser page that runs the challenge | A challenge is required |
-| `POST {base}/pwd/trusted-devices/verify` | `{ userId, deviceToken }` | `{ trusted: boolean }` | 2FA is enabled and a trusted-device cookie is present |
-| `POST {base}/pwd/login-tickets/redeem` | `{ ticket }` | `{ userId }` | The frontend calls [Resume](#resume) |
+| `PWD_CHALLENGES_URL` | `{ userId, kind }` | `{ url, kind }` — `url` is the browser page that runs the challenge | A challenge is required |
+| `PWD_TRUSTED_DEVICES_URL` | `{ userId, deviceToken }` | `{ trusted: boolean }` | 2FA is enabled and a trusted-device cookie is present |
+| `PWD_LOGIN_TICKET_URL` | `{ ticket }` | `{ userId }` | The frontend calls [Resume](#resume) |
 
-`{base}` is everything in `PWD_CHECK_URL` before `/pwd/compare`. For example, `PWD_CHECK_URL=http://pwd:3000/pwd/compare` gives `{base}=http://pwd:3000`, so challenges are minted at `http://pwd:3000/pwd/challenges`.
+All three are POST endpoints and all three may be empty. Gatelin still boots and password login still succeeds. Empty `PWD_CHALLENGES_URL` skips 2FA and password-expiry pages (a warn is logged). Empty `PWD_TRUSTED_DEVICES_URL` ignores the trusted-device cookie. Empty `PWD_LOGIN_TICKET_URL` makes [Resume](#resume) answer **501**.
 
 #### Trusted-device cookie
 
-To let a returning browser skip 2FA, your challenge pages may set a trusted-device cookie named **`trusted_device`** (scoped `Path=/` so it reaches `/gatelin/sessions`). On the next login Gatelin forwards its value to `POST {base}/pwd/trusted-devices/verify`; a `{ trusted: true }` response suppresses the 2FA challenge. If you don't implement trusted devices, simply never set the cookie — every 2FA login then challenges.
+To let a returning browser skip 2FA, your challenge pages may set a trusted-device cookie named **`trusted_device`** (scoped `Path=/` so it reaches `/gatelin/sessions`). On the next login Gatelin forwards its value to `PWD_TRUSTED_DEVICES_URL`; a `{ trusted: true }` response suppresses the 2FA challenge. If you don't implement trusted devices, simply never set the cookie — every 2FA login then challenges.
 
 ### Sequence diagram
 
@@ -248,11 +248,11 @@ sequenceDiagram
     end
     rect rgb(150, 50, 50, 0.5)
       break when password expired or 2FA required without a trusted device
-        msg->>msp: POST /pwd/trusted-devices/verify { userId, deviceToken } (2FA only)
+        msg->>msp: POST PWD_TRUSTED_DEVICES_URL { userId, deviceToken } (2FA only)
         activate msp
         msp->>msg: 200 { trusted }
         deactivate msp
-        msg->>msp: POST /pwd/challenges { userId, kind }
+        msg->>msp: POST PWD_CHALLENGES_URL { userId, kind }
         activate msp
         msp->>msg: 201 { kind, challenge, url }
         deactivate msp
@@ -300,7 +300,7 @@ Content-Type: application/json
 }
 ```
 
-Gatelin redeems the ticket against the password service (`POST {base}/pwd/login-tickets/redeem`), looks the user up by id, then runs the same token / session / CSRF path as a successful login.
+Gatelin redeems the ticket against the password service (`POST PWD_LOGIN_TICKET_URL`), looks the user up by id, then runs the same token / session / CSRF path as a successful login.
 
 **Response (200 OK):** same session payload as [Login](#login).
 

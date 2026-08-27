@@ -58,6 +58,24 @@ describe("env validation", () => {
     ]);
   });
 
+  it("should accept empty optional password endpoints", () => {
+    process.env.PWD_CHALLENGES_URL = "";
+    process.env.PWD_TRUSTED_DEVICES_URL = "  ";
+    process.env.PWD_LOGIN_TICKET_URL = "";
+
+    expect(collectEnvErrors()).toEqual([]);
+  });
+
+  it.each([
+    "PWD_CHALLENGES_URL",
+    "PWD_TRUSTED_DEVICES_URL",
+    "PWD_LOGIN_TICKET_URL",
+  ])("should reject a malformed %s", (name) => {
+    process.env[name] = "not a url";
+
+    expect(collectEnvErrors()).toEqual([expect.stringContaining(name)]);
+  });
+
   it("should report every problem at once so one restart surfaces them all", () => {
     delete process.env.APP_NAME;
     delete process.env.ENV_NAME;

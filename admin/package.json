@@ -15,7 +15,17 @@
     "e2e:ui": "playwright test --ui",
     "e2e:install": "playwright install chromium"
   },
-  "author": "Ludovic Cluber",
+  "author": "ALTEN",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALTEN-group/Gatelin.git",
+    "directory": "admin"
+  },
+  "bugs": {
+    "url": "https://github.com/ALTEN-group/Gatelin/issues"
+  },
+  "homepage": "https://github.com/ALTEN-group/Gatelin#readme",
   "dependencies": {
     "@angular/animations": "22.1.3",
     "@angular/cdk": "22.1.3",

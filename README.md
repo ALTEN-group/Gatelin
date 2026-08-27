@@ -40,7 +40,7 @@ Integrate Gatelin into your application using published Docker images :
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/dwtechs/gatelin.git
+git clone https://github.com/ALTEN-group/Gatelin.git
 cd gatelin
 
 # 2. Generate the development environment file
@@ -54,3 +54,7 @@ bash scripts/start-dev.sh
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development workflow, testing, and production build instructions.
+
+## License
+
+MIT — see [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md). Published and maintained by ALTEN.

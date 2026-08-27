@@ -22,8 +22,16 @@
 		"format": "biome format src/",
 		"format:fix": "biome format --write src/"
 	},
-	"author": "Ludovic Cluber",
+	"author": "ALTEN",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ALTEN-group/Gatelin.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ALTEN-group/Gatelin/issues"
+	},
+	"homepage": "https://github.com/ALTEN-group/Gatelin#readme",
 	"dependencies": {
 		"@dwtechs/antity-pgsql": "0.23.0",
 		"@dwtechs/checkard": "3.6.1",
