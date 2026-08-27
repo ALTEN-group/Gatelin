@@ -33,7 +33,7 @@ docker compose run --rm -e UPDATE=0 -e ROLLBACK=1 gatelin_migration
 `POST /gatelin/sessions` answering **202** means the password was accepted but a mid-login challenge is required. Confirm:
 
 1. The browser is redirected to the `url` from the 202 body (not left on the login form).
-2. The password service is reachable at the base derived from `PWD_CHECK_URL` — Gatelin also calls `{base}/pwd/challenges`, `{base}/pwd/trusted-devices/verify`, and `{base}/pwd/login-tickets/redeem`.
+2. The password service is reachable at every configured endpoint — besides `PWD_CHECK_URL`, Gatelin calls `PWD_CHALLENGES_URL`, `PWD_TRUSTED_DEVICES_URL`, and `PWD_LOGIN_TICKET_URL`, each set on its own.
 3. After the challenge pages finish, the browser lands on the admin login with `?ticket=…` and the client calls `POST /gatelin/sessions/resume`.
 4. Tickets are one-shot and short-lived — refreshing the resume URL a second time will fail with **400**.
 

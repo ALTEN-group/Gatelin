@@ -148,6 +148,9 @@ services:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
       PWD_CHECK_URL: ${GATELIN_PWD_CHECK_URL}
+      PWD_CHALLENGES_URL: ${GATELIN_PWD_CHALLENGES_URL:-}
+      PWD_TRUSTED_DEVICES_URL: ${GATELIN_PWD_TRUSTED_DEVICES_URL:-}
+      PWD_LOGIN_TICKET_URL: ${GATELIN_PWD_LOGIN_TICKET_URL:-}
       USER_SEARCH_URL: ${GATELIN_USER_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
@@ -220,7 +223,7 @@ services:
       PORT: ${ADMIN_PORT}
       ADMIN_BASE_PATH: ${ADMIN_BASE_PATH}
       # Optional. When set, login shows "Mot de passe oublié ?" linking here
-      # (e.g. /api/pwd/web/recover when Foxnox workflows are deployed).
+      # (e.g. /api/foxnox/web/recover when Foxnox workflows are deployed).
       ADMIN_PASSWORD_RECOVERY_URL: ${ADMIN_PASSWORD_RECOVERY_URL:-}
       # Optional. localStorage key for the access token. Must match Foxnox's
       # admin if both are deployed, since they share the same slot.
@@ -409,7 +412,7 @@ services:
       PORT: ${DEFAULT_PORT}
       PWD_SECRET: ${MSPWD_SECRET}
       # Browser-facing URLs used by the mock mid-login challenge pages.
-      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}pwd/web}
+      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}foxnox/web}
       WEB_LOGIN_RESUME_URL: ${MSPWD_WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
     networks:
       - internal
@@ -419,8 +422,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "stack.name=${STACK_NAME}"
-      # More specific than Gatelin's PathPrefix(`/api`) so /api/pwd/* hits the mock.
-      - "traefik.http.routers.mspwd.rule=PathPrefix(`/api/pwd`)"
+      # More specific than Gatelin's PathPrefix(`/api`) so /api/foxnox/* hits the mock.
+      - "traefik.http.routers.mspwd.rule=PathPrefix(`/api/foxnox`)"
       - "traefik.http.routers.mspwd.priority=100"
       - "traefik.http.routers.mspwd.entrypoints=web"
       - "traefik.http.routers.mspwd.service=mspwd"

@@ -2,8 +2,8 @@
 // pwd placeholders are filled in by mocks/ms_pwd/scripts/generate-credentials.mjs -> credentials.js (gitignored)
 // pwdHash is the @dwtechs/hashitaka encrypted form of the plaintext password shown in swagger
 //
-// The auth-state columns below mirror the Foxnox `pwd` row returned by POST /pwd/compare.
-// Gatelin's gate-login-challenges middleware reads them to decide whether a mid-login
+// The auth-state columns below mirror the Foxnox `pwd` row returned by POST /foxnox/compare.
+// Gatelin's challenge-login middleware reads them to decide whether a mid-login
 // challenge (2FA / expired password) is required, so each state has a dedicated user:
 //   userId 1 (admin@example.com)  — clean login, used by the e2e suite
 //   userId 3 (coco@example.com)   — 2FA challenge then trusted-device prompt

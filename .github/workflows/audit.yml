@@ -1,3 +1,5 @@
+# Maintainer CI: static checks always run. Copilot/APM steps run only on the
+# canonical ALTEN-group repo when COPILOT_GITHUB_TOKEN is configured.
 name: Weekly Audit
 
 on:
@@ -18,10 +20,13 @@ concurrency:
 
 jobs:
   audit:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
     outputs:
       issue_number: ${{ steps.create_issue.outputs.issue_number }}
+      private_audit: ${{ steps.private.outputs.enabled }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,17 +37,29 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
+
+      - name: Detect private Copilot audit
+        id: private
+        run: |
+          if [ -n "${COPILOT_GITHUB_TOKEN}" ] && [ "${{ github.event.repository.fork }}" != "true" ] && [ "${{ github.repository_owner }}" = "ALTEN-group" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Install Copilot CLI
+        if: ${{ steps.private.outputs.enabled == 'true' }}
         run: npm install -g @github/copilot
 
       - name: Install APM CLI
+        if: ${{ steps.private.outputs.enabled == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: curl -sSL https://aka.ms/apm-unix | sh
 
       - name: Install APM packages
+        if: ${{ steps.private.outputs.enabled == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: apm install
@@ -95,6 +112,7 @@ jobs:
       # instructions. File writes and shell commands stay denied because this is
       # a reporting-only audit.
       - name: Run Copilot audit agent
+        if: ${{ steps.private.outputs.enabled == 'true' }}
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -216,7 +234,7 @@ jobs:
 
   fix:
     needs: audit
-    if: ${{ needs.audit.outputs.issue_number != '' }}
+    if: ${{ needs.audit.outputs.issue_number != '' && needs.audit.outputs.private_audit == 'true' }}
     uses: ./.github/workflows/audit-fix.yml
     secrets: inherit
     with:

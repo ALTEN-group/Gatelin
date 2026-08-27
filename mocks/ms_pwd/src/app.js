@@ -25,7 +25,7 @@ app.use("/auth/health", healix());
 
 function validateBody(req, _res, next) {
   log.debug(
-    `POST /pwd/compare - Full request body: ${JSON.stringify(req.body, null, 2)}`,
+    `POST /foxnox/compare - Full request body: ${JSON.stringify(req.body, null, 2)}`,
   );
 
   const userId = req.body.userId;
@@ -55,7 +55,7 @@ function findCredential(req, res, next) {
 
 /**
  * Same envelope as Foxnox `sendPwd`: the pwd row minus its private columns.
- * Gatelin's gate-login-challenges reads `pwdExpiry`, `lockedUntil` and
+ * Gatelin's challenge-login reads `pwdExpiry`, `lockedUntil` and
  * `twoFactorEnabled` from it to decide whether a mid-login challenge is needed.
  */
 function sendSuccess(_req, res) {
@@ -70,12 +70,12 @@ function sendSuccess(_req, res) {
     twoFactorEnabled: credential.twoFactorEnabled ?? false,
     archived: credential.archived ?? false,
   };
-  log.debug(`POST /pwd/compare - success: ${JSON.stringify(row)}`);
+  log.debug(`POST /foxnox/compare - success: ${JSON.stringify(row)}`);
   res.status(200).json({ rows: [row], total: 1 });
 }
 
-// POST /pwd/compare - Validate user credentials (used by Gatelin check-pwd middleware)
-app.post("/pwd/compare", validateBody, findCredential, compare, sendSuccess);
+// POST /foxnox/compare - Validate user credentials (used by Gatelin check-pwd middleware)
+app.post("/foxnox/compare", validateBody, findCredential, compare, sendSuccess);
 
 // Stand-in for Foxnox password-recovery workflow (admin login link tests)
 mountRecoverPages(app);

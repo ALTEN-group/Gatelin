@@ -127,7 +127,7 @@ sequenceDiagram
     note over msg,pdb: Password Validation Block
     activate msg
     msg--)msg: Attach userId from res.locals.user.id to req.body
-    msg->>msp: post(/pwd/compare) { userId, pwd }
+    msg->>msp: post(/foxnox/compare) { userId, pwd }
     deactivate msg
     activate msp
     rect rgb(100, 200, 100, 0.2)
@@ -180,7 +180,7 @@ sequenceDiagram
     activate msg
   end
   rect rgb(220, 220, 220, 0.1)
-    note over msg,msp: Mid-login Challenge Block<br/>gate-login-challenges reads the pwd row returned above
+    note over msg,msp: Mid-login Challenge Block<br/>challenge-login reads the pwd row returned above
     rect rgb(150, 50, 50, 0.5)
       break when the account is locked (lockedUntil in the future)
         msg->>f: return 403 account locked
@@ -191,18 +191,18 @@ sequenceDiagram
     end
     rect rgb(150, 50, 50, 0.5)
       break when the password expired or 2FA is on without a trusted-device cookie
-        msg->>msp: post(/pwd/trusted-devices/verify) { userId, deviceToken }<br/>(2FA only, skipped when no trusted_device cookie)
+        msg->>msp: post(/foxnox/trusted-devices/verify) { userId, deviceToken }<br/>(2FA only, skipped when no trusted_device cookie)
         activate msp
         msp->>msg: return 200 ok : { trusted }
         deactivate msp
-        msg->>msp: post(/pwd/challenges) { userId, kind }
+        msg->>msp: post(/foxnox/challenges) { userId, kind }
         activate msp
         msp->>msg: return 201 created : { kind, challenge, url }
         deactivate msp
         msg->>f: return 202 accepted : { challengeRequired, kind, url }
         activate f
         f->>u: redirect the browser to the workflow page
-        note over u,msp: The user completes the challenge on ms_pwd, which redirects back to<br/>the admin login with ?ticket=… → POST /sessions/resume redeems it via<br/>post(/pwd/login-tickets/redeem) and continues with the block below.
+        note over u,msp: The user completes the challenge on ms_pwd, which redirects back to<br/>the admin login with ?ticket=… → POST /sessions/resume redeems it via<br/>post(/foxnox/login-tickets/redeem) and continues with the block below.
         deactivate f
       end
     end

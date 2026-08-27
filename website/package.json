@@ -8,7 +8,17 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs"
   },
-  "author": "Ludovic Cluber",
+  "author": "ALTEN",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALTEN-group/Gatelin.git",
+    "directory": "website"
+  },
+  "bugs": {
+    "url": "https://github.com/ALTEN-group/Gatelin/issues"
+  },
+  "homepage": "https://github.com/ALTEN-group/Gatelin#readme",
   "devDependencies": {
     "vitepress": "1.6.4"
   },

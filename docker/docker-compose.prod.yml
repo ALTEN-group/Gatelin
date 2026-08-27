@@ -153,6 +153,9 @@ services:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
       PWD_CHECK_URL: ${MSPWD_COMPARE_URL}
+      PWD_CHALLENGES_URL: ${MSPWD_CHALLENGES_URL:-}
+      PWD_TRUSTED_DEVICES_URL: ${MSPWD_TRUSTED_DEVICES_URL:-}
+      PWD_LOGIN_TICKET_URL: ${MSPWD_LOGIN_TICKET_URL:-}
       USER_SEARCH_URL: ${MSUSER_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
@@ -203,28 +206,6 @@ services:
       - "traefik.http.routers.admin-ui.service=admin-ui"
       - "traefik.http.services.admin-ui.loadBalancer.server.port=${ADMIN_PORT}"
     healthcheck: *healthcheck
-
-  website:
-    build:
-      context: ${PWD}/website
-      dockerfile: dockerfile.prod
-      args:
-        UID: ${UID}
-        GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NGINX_VERSION: ${NGINX_VERSION}
-    container_name: ${WEBSITE_HOST}
-    hostname: ${WEBSITE_HOST}
-    networks:
-      - internal
-    labels:
-      - "traefik.enable=true"
-      - "stack.name=${STACK_NAME}"
-      - "traefik.http.routers.website.rule=PathPrefix(`/docs`)"
-      - "traefik.http.routers.website.entrypoints=web"
-      - "traefik.http.routers.website.service=website"
-      - "traefik.http.services.website.loadbalancer.server.port=80"
 
 networks:
   internal:

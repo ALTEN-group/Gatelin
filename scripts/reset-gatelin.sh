@@ -28,6 +28,7 @@ fi
 
 # Set defaults if not loaded
 APP_NAME=${APP_NAME:-gatelin}
+NODE_ENV=${NODE_ENV:-development}
 
 # Define the specific Gatelin service container name
 GATELIN_CONTAINER="${APP_NAME}"
@@ -49,16 +50,8 @@ echo -e ""
 # =====================
 echo -e "${YELLOW}🖼️  Removing Gatelin image...${NC}"
 
-# Look for gatelin image (dwtechs/gatelin:tag)
-GATELIN_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -E "(dwtechs/)?${APP_NAME}:" || true)
-
-if [[ -z "$GATELIN_IMAGES" ]]; then
-  echo -e "${YELLOW}⚠${NC}  No Gatelin images found"
-else
-  echo "$GATELIN_IMAGES" | while read -r IMAGE; do
-    docker rmi -f "$IMAGE" 2>/dev/null && echo -e "${GREEN}✓${NC} Removed image: $IMAGE" || echo -e "${RED}✗${NC} Failed to remove image: $IMAGE"
-  done
-fi
+GATELIN_IMAGE="gatelin:${NODE_ENV}"
+docker rmi -f "$GATELIN_IMAGE" 2>/dev/null && echo -e "${GREEN}✓${NC} Removed image: $GATELIN_IMAGE" || echo -e "${YELLOW}⚠${NC}  Image $GATELIN_IMAGE not found"
 
 echo -e ""
 

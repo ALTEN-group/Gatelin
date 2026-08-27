@@ -27,9 +27,7 @@ For a proxied protected route, Gatelin still rejects a missing route/operation/s
 | `fields: ["name"]` | `x-acl-fields: name` |
 | attached conditions | `x-acl-conditions: [{"field":"userId","op":"=","value":42}]` |
 
-Services must not accept direct public traffic that can bypass Gatelin, and must ignore or overwrite client-supplied `x-consumer-*` / `x-acl-*` headers at any other trusted ingress. Gatelin replaces these headers before forwarding protected requests.
-
-[Foxnox](https://github.com/dwtechs/Foxnox) implements this contract for its JSON CRUD resources: response and write projection, forced search predicates, equality-partition injection on inserts, and condition preflight for updates, archives, and history.
+Services must not accept direct public traffic that can bypass Gatelin, and must ignore or overwrite client-supplied `x-consumer-*` / `x-acl-*` headers at any other trusted ingress. Gatelin replaces these headers before forwarding protected requests. How an upstream should apply the headers is in [Integration](./integration#enforcing-acl-headers-in-a-service).
 
 ## Search Permissions
 

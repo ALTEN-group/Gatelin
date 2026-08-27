@@ -21,7 +21,7 @@ import {
 import { filterByEmailNotArchived } from "../middlewares/filters/byEmailNotArchived.js";
 import { filterByIdAndActiveNotArchived } from "../middlewares/filters/byIdAndActiveNotArchived.js";
 import { checkPwd } from "../middlewares/http/check-pwd.js";
-import { gateLoginChallenges } from "../middlewares/http/gate-login-challenges.js";
+import { challengeLogin } from "../middlewares/http/challenge-login.js";
 import { redeemLoginTicket } from "../middlewares/http/redeem-login-ticket.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
 import { attachUserId } from "../middlewares/mappers/consumer/attachUserId.js";
@@ -55,7 +55,7 @@ const getSessionByRefreshToken = [
 const addSession = [
   attachUserId,
   checkPwd,
-  gateLoginChallenges,
+  challengeLogin,
   createTokens,
   sEnt.add,
   addToCache,

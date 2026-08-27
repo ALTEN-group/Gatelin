@@ -18,7 +18,7 @@ Client Request
 [checkRoute] - Match request against registered DB routes
     ↓
     ├── Public login: POST /gatelin/sessions
-    │     sessionLimiter (IP) → getUserByEmail → checkPwd → gateLoginChallenges
+    │     sessionLimiter (IP) → getUserByEmail → checkPwd → challengeLogin
     │       ├── 202 { challengeRequired, kind, url }  (2FA / expired password)
     │       └── createTokens → session cache → 200
     │
@@ -48,7 +48,7 @@ parseBearer → decodeAccess → checkConsumer → checkAcl → applyAclConditio
 
 Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) skip `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router. Proxy request and response bodies remain streams; only `/gatelin/*` control-plane requests are parsed into `req.body`. WebSocket upgrades are authorized on the HTTP `upgrade` event and then piped; they never enter Express.
 
-`gateLoginChallenges` reads the pwd row returned by `PWD_CHECK_URL`, enforces lockout, and may mint a challenge against the password service instead of creating a session. See [Sessions](./api-sessions#login).
+`challengeLogin` reads the pwd row returned by `PWD_CHECK_URL`, enforces lockout, and may mint a challenge against the password service instead of creating a session. See [Sessions](./api-sessions#login).
 
 ## Key Middlewares
 
@@ -57,7 +57,7 @@ Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) ski
 | `corsMiddleware` | Enforces the DB-backed origin whitelist; allows `Authorization` and `X-CSRF-Token` |
 | `checkRoute` | Validates the request matches a configured route (required for login too) |
 | `checkPwd` | Calls `PWD_CHECK_URL` and stores the public pwd row on `res.locals.pwdRow` |
-| `gateLoginChallenges` | After password OK: lockout / expiry / 2FA gating; may respond `202` with a challenge URL |
+| `challengeLogin` | After password OK: lockout / expiry / 2FA gating; may respond `202` with a challenge URL |
 | `redeemLoginTicket` | Redeems a one-shot login-resume ticket and loads the user for session creation |
 | `parseBearer` / `decodeAccess` | Extract and verify the JWT access token |
 | `checkConsumer` | Ensures the consumer session exists in the in-memory cache |

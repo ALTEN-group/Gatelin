@@ -6,7 +6,7 @@ export interface Environment {
   msNotifEnabled: boolean;
   /**
    * Absolute or same-origin URL of the password-recovery workflow
-   * (e.g. `/api/pwd/web/recover`). Empty/omitted → hide the login link.
+   * (e.g. `/api/foxnox/web/recover`). Empty/omitted → hide the login link.
    */
   passwordRecoveryUrl?: string;
 }

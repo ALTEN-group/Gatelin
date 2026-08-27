@@ -2,8 +2,8 @@
 
 Gatelin is a BFF you run behind Traefik (or another reverse proxy). It is distributed as Docker images on Docker Hub:
 
-- **`dwtechs/gatelin`** — the BFF process, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
-- **`dwtechs/gatelin-migration`** — the Liquibase migration container
+- **`ghcr.io/alten-group/gatelin`** — the BFF process, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
+- **`ghcr.io/alten-group/gatelin-migration`** — the Liquibase migration container
 
 See the [Integration](./integration) page for seed-data setup, and [Environment Variables](./configuration) for the full variable reference.
 
@@ -84,7 +84,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   gatelin_migration:
-    image: dwtechs/gatelin-migration:latest
+    image: ghcr.io/alten-group/gatelin-migration:latest
     container_name: my-project-gatelin-migration-local
     hostname: my-project-gatelin-migration-local
     depends_on:
@@ -110,7 +110,7 @@ services:
       - ./docker/gatelin/data:/liquibase/data
 
   gatelin:
-    image: dwtechs/gatelin:latest
+    image: ghcr.io/alten-group/gatelin:latest
     container_name: my-project-gatelin-local
     hostname: my-project-gatelin-local
     depends_on:
@@ -121,6 +121,10 @@ services:
     environment:
       TZ: Europe/Paris
       PWD_CHECK_URL: http://my-project-mspwd-local:3000/pwd/compare
+      # Only needed when the credential check reports lockout, password expiry or 2FA
+      PWD_CHALLENGES_URL: http://my-project-mspwd-local:3000/pwd/challenges
+      PWD_TRUSTED_DEVICES_URL: http://my-project-mspwd-local:3000/pwd/trusted-devices/verify
+      PWD_LOGIN_TICKET_URL: http://my-project-mspwd-local:3000/pwd/login-tickets/redeem
       USER_SEARCH_URL: http://my-project-msuser-local:3000/users/search
       DB_HOST: my-project-postgres-local
       DB_NAME: gatelin

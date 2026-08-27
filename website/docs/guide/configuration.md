@@ -8,7 +8,7 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 |---|---|
 | `APP_NAME` | Application name used to build downstream service URLs (`{APP_NAME}-{serviceName}-{ENV_NAME}`) |
 | `ENV_NAME` | Environment name, e.g. `local`, `staging`, `prod` |
-| `PWD_CHECK_URL` | Credential-check endpoint of your password service, ending in `/pwd/compare`. For mid-login challenges Gatelin also derives `{base}/pwd/challenges`, `{base}/pwd/trusted-devices/verify`, and `{base}/pwd/login-tickets/redeem` from the same base. See the [Sessions contract](./api-sessions#password-service-contract) |
+| `PWD_CHECK_URL` | Credential-check endpoint of your password service. Its path is free — the mid-login endpoints are configured separately, see the [Sessions contract](./api-sessions#password-service-contract) |
 | `USER_SEARCH_URL` | URL of the user microservice search endpoint (login looks up users by email) |
 | `DB_HOST` | Hostname of the PostgreSQL container |
 | `DB_NAME` | Database name (default: `gatelin`) |
@@ -37,6 +37,11 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `REFRESH_TOKEN_COOKIE_SAMESITE` | `strict` | Cookie `SameSite` (`strict`, `lax`, or `none`) |
 | `REFRESH_TOKEN_COOKIE_HTTPS_ONLY` | `true` | Cookie `Secure` flag; set to `false` for plain-HTTP local stacks |
 | `CSRF_COOKIE_NAME` | `csrfToken` | Name of the CSRF double-submit cookie |
+| `PWD_CHALLENGES_URL` | unset (disabled) | Endpoint that mints a mid-login challenge. Empty: login continues without 2FA / password-expiry pages |
+| `PWD_TRUSTED_DEVICES_URL` | unset (disabled) | Endpoint that verifies a trusted-device cookie. Empty: the cookie is ignored |
+| `PWD_LOGIN_TICKET_URL` | unset (disabled) | Endpoint that redeems a login ticket. Empty: [Resume](./api-sessions#resume) answers **501** |
+
+Each password-service endpoint is configured on its own: Gatelin never derives one URL from another, so their paths do not have to share a prefix.
 
 ## Admin UI
 
@@ -46,14 +51,14 @@ The Angular admin is built into the `gatelin` image and served only when `ADMIN_
 |---|---|---|
 | `ADMIN_PORT` | unset (disabled) | Port the admin UI listens on. Unset to disable the admin UI. |
 | `ADMIN_BASE_PATH` | `/admin` | Path prefix for the admin UI. Rewritten into `<base href>` at runtime — no Angular rebuild required. Must match your reverse-proxy rule. |
-| `ADMIN_PASSWORD_RECOVERY_URL` | unset | When set (e.g. `/api/pwd/web/recover`), the login page shows a “Forgotten password ?” link. Injected at runtime into `window.__GATELIN_ADMIN__` (dev entrypoint + prod `admin-server`). Leave empty to hide it. In the local Compose stack, Traefik routes `/api/pwd` to the `ms_pwd` mock, which serves stand-in recovery and mid-login challenge pages under `/pwd/web/*`. |
-| `ADMIN_SSO_TOKEN_KEY` | `sso_access_token` | localStorage key the admin UI stores the access token under. Injected at runtime like `ADMIN_PASSWORD_RECOVERY_URL`. Not app-prefixed by default because Foxnox and Gatelin admin share the same slot for cookie-based silent refresh when switching between the two apps — if you override it, set the same value on both. |
+| `ADMIN_PASSWORD_RECOVERY_URL` | unset | When set (e.g. `/api/pwd/web/recover`), the login page shows a “Forgotten password ?” link. Injected at runtime into `window.__GATELIN_ADMIN__` (dev entrypoint + prod `admin-server`). Leave empty to hide it. The local Compose stack’s `ms_pwd` mock serves stand-in recovery and mid-login challenge pages so you can try the link. |
+| `ADMIN_SSO_TOKEN_KEY` | `sso_access_token` | localStorage key the admin UI stores the access token under. Injected at runtime like `ADMIN_PASSWORD_RECOVERY_URL`. Not app-prefixed by default so other admin UIs on the same origin can share the slot for cookie-based silent refresh — if you override it, set the same value on every app that should share that session. |
 
 > Docker Compose examples often set `ADMIN_BASE_PATH=/gatelin`. That is an explicit override; the code default when the variable is unset remains `/admin`.
 
 ## Database migration service
 
-These apply to the `gatelin-migration` container (`dwtechs/gatelin-migration`):
+These apply to the `gatelin-migration` container (`ghcr.io/alten-group/gatelin-migration`):
 
 | Variable | Required | Description |
 |---|---|---|
@@ -74,7 +79,7 @@ These apply to the `gatelin-migration` container (`dwtechs/gatelin-migration`):
 ## JWT & Cookie Flow
 
 1. User logs in via `POST /gatelin/sessions` with `{ email, pwd }`.
-2. Gatelin looks up the user via `USER_SEARCH_URL`, then verifies the password via `PWD_CHECK_URL` (any password service implementing the [Sessions contract](./api-sessions#password-service-contract); [Foxnox](https://github.com/dwtechs/Foxnox) is one example).
+2. Gatelin looks up the user via `USER_SEARCH_URL`, then verifies the password via `PWD_CHECK_URL` (any password service implementing the [Sessions contract](./api-sessions#password-service-contract)).
 3. If the password service reports lockout, expiry, or 2FA without a trusted device, Gatelin returns **202** with `{ challengeRequired, kind, url }` instead of a session. The browser completes the challenge on the password service, comes back with `?ticket=…`, and the client calls `POST /gatelin/sessions/resume`. Services that only check passwords never trigger this step.
 4. Otherwise (or after a successful resume), Gatelin issues a JWT access token (short-lived) and refresh token (long-lived), sets a CSRF cookie, and returns the session payload.
 5. Client sends the access token in `Authorization: Bearer <token>` on subsequent requests.
