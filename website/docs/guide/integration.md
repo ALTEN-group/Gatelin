@@ -151,5 +151,5 @@ Gatelin never stores password hashes or renders 2FA / password-rotation pages â€
 
 **Full (mid-login challenges).** To enforce lockout, password expiry, or 2FA, make the credential-check endpoint return a user row (`pwdExpiry`, `lockedUntil`, `twoFactorEnabled`) and additionally expose challenge-mint, trusted-device, and login-ticket endpoints, each pointed at by its own variable (`PWD_CHALLENGES_URL`, `PWD_TRUSTED_DEVICES_URL`, `PWD_LOGIN_TICKET_URL`), plus the browser workflow pages that redirect back to your admin login with `?ticket=â€¦`.
 
-Full field-by-field shapes are in the [Sessions contract](./api-sessions#password-service-contract); client handling is in [Frontend Integration](./frontend). The local Compose stack ships an `ms_pwd` mock that implements the same contract.
+Full field-by-field shapes are in the [Sessions contract](./api-sessions#password-service-contract); client handling is in [Frontend Integration](./frontend). The local Compose stack runs [Foxnox](https://github.com/ALTEN-group/Foxnox) (`ghcr.io/alten-group/foxnox`) as that password service.
 

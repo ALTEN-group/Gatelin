@@ -24,13 +24,13 @@ import { RoutingListener } from "@core/utils/routing.listener";
 import { SnackbarService } from "@core/utils/snackbar/snackbar.service";
 import { SharedModule } from "@openng/optimus-ui/api";
 import { AutoFocusModule } from "@openng/optimus-ui/autofocus";
-import { AvatarModule } from "@openng/optimus-ui/avatar";
 import { ButtonModule } from "@openng/optimus-ui/button";
 import { CardModule } from "@openng/optimus-ui/card";
 import { InputGroupModule } from "@openng/optimus-ui/inputgroup";
 import { InputGroupAddonModule } from "@openng/optimus-ui/inputgroupaddon";
 import { InputTextModule } from "@openng/optimus-ui/inputtext";
 import { LoginBackgroundComponent } from "app/login/ui/login-background/login-background.component";
+import { LoginFrogComponent } from "app/login/ui/login-frog/login-frog.component";
 
 @Component({
   selector: "app-login",
@@ -46,7 +46,7 @@ import { LoginBackgroundComponent } from "app/login/ui/login-background/login-ba
     CardModule,
     AutoFocusModule,
     LoginBackgroundComponent,
-    AvatarModule,
+    LoginFrogComponent,
     InputGroupAddonModule,
     InputGroupModule,
     ThemeToggleButtonComponent,

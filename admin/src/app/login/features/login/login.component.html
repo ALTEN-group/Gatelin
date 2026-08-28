@@ -1,13 +1,9 @@
 @if (!isRedirecting) {
 <adm-login-background class="animated-background" />
+<div class="login-panel">
 <p-card class="login-card">
   <ng-template pTemplate="header">
-    <p-avatar 
-      class="user-icon"
-      icon="pi pi-user" 
-      size="xlarge" 
-      shape="circle"
-    />
+    <adm-login-frog class="login-frog" />
     <span class="header-title" i18n="@@logInFormTitle:Connexion">Connexion</span>
     <adm-theme-toggle-button class="theme-toggle-button" />
   </ng-template>
@@ -118,5 +114,6 @@
     </div>
   </form>
 </p-card>
+</div>
 }
 

@@ -13,22 +13,16 @@ export class ShaderService {
   private vertexLight = "";
   private fragment = "";
   private fragmentLight = "";
+  private frogVertex = "";
+  private frogFragment = "";
 
   public async load(): Promise<boolean> {
     return firstValueFrom(
       forkJoin({
-        vertex: this.http.get(`${this.folder}vertex.glsl`, {
-          responseType: "text",
-        }),
-        vertexLight: this.http.get(`${this.folder}vertex-light.glsl`, {
-          responseType: "text",
-        }),
-        fragment: this.http.get(`${this.folder}fragment.glsl`, {
-          responseType: "text",
-        }),
-        fragmentLight: this.http.get(`${this.folder}fragment-light.glsl`, {
-          responseType: "text",
-        }),
+        vertex: this.get("vertex.glsl"),
+        vertexLight: this.get("vertex-light.glsl"),
+        fragment: this.get("fragment.glsl"),
+        fragmentLight: this.get("fragment-light.glsl"),
       }),
     )
       .then((response) => {
@@ -39,6 +33,26 @@ export class ShaderService {
         return true;
       })
       .catch(() => false);
+  }
+
+  /** Loaded on its own so the frog canvas and the background do not block each other. */
+  public async loadFrog(): Promise<boolean> {
+    return firstValueFrom(
+      forkJoin({
+        vertex: this.get("frog-face_vert-ready.glsl"),
+        fragment: this.get("frog-face_frag-ready.glsl"),
+      }),
+    )
+      .then((response) => {
+        this.frogVertex = response.vertex;
+        this.frogFragment = response.fragment;
+        return true;
+      })
+      .catch(() => false);
+  }
+
+  private get(file: string) {
+    return this.http.get(`${this.folder}${file}`, { responseType: "text" });
   }
 
   public get vertexShader(): string {
@@ -55,5 +69,13 @@ export class ShaderService {
 
   public get fragmentLightShader(): string {
     return this.fragmentLight;
+  }
+
+  public get frogVertexShader(): string {
+    return this.frogVertex;
+  }
+
+  public get frogFragmentShader(): string {
+    return this.frogFragment;
   }
 }

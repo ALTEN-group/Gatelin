@@ -120,7 +120,7 @@ sequenceDiagram
   participant gdb as gatelin_db
   participant msu as ms_user
   participant udb as user_db
-  participant msp as ms_pwd
+  participant msp as foxnox
   participant pdb as pwd_db
   u->>f: Open URL
   activate f
@@ -259,7 +259,7 @@ sequenceDiagram
         msg->>f: return 202 { challengeRequired, kind, url }
         activate f
         f->>u: redirect browser to the workflow page
-        note over u,msp: User completes the challenge on ms_pwd, which redirects back with ?ticket=… then POST /gatelin/sessions/resume
+        note over u,msp: User completes the challenge on Foxnox, which redirects back with ?ticket=… then POST /gatelin/sessions/resume
         deactivate f
       end
     end

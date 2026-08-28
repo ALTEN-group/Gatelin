@@ -46,10 +46,7 @@ cd gatelin
 # 2. Generate the development environment file
 bash scripts/setup-env.sh
 
-# 3. Generate the mock auth credentials and swagger examples
-bash scripts/setup-mocks.sh
-
-# 4. Start the stack
+# 3. Start the stack (seeds Foxnox mock passwords into swagger automatically)
 bash scripts/start-dev.sh
 ```
 

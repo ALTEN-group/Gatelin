@@ -27,17 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Node is only needed on the runner for scripts/setup-mocks.sh, which
-      # `npm install`s @dwtechs/passken + @dwtechs/hashitaka into mocks/ms_pwd
-      # to hash the mock passwords. Everything else runs in Docker.
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: mocks/ms_pwd/package-lock.json
-
-      - name: Configure env and mocks
+      - name: Configure env
         run: |
           ./scripts/setup-env.sh
           # Services run as ${UID}:${GID} (1000 in .env.dev.example) and bind-mount the
@@ -47,7 +37,6 @@ jobs:
           # Docker Desktop masks this locally by ignoring host ownership on bind mounts.
           sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
           sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
-          ./scripts/setup-mocks.sh
 
       - name: Start docker stack
         run: ./scripts/start-dev.sh
@@ -81,6 +70,8 @@ jobs:
           compose logs --tail=200 admin
           echo "--- traefik logs (last 100) ---"
           compose logs --tail=100 traefik
+          echo "--- foxnox logs (last 100) ---"
+          compose logs --tail=100 foxnox
           exit 1
 
       # scripts/e2e.sh builds (if needed) and runs the `admin-e2e` container:
