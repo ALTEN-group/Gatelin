@@ -68,7 +68,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "jsdom": "^30.0.1",
     "ts-node": "10.9.1",
-    "vitest": "^4.1.10",
+    "vitest": "4.1.11",
     "zone.js": "0.15.1"
   }
 }

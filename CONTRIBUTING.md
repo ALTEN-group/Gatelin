@@ -14,15 +14,15 @@ Configure the development environment file with auto-generated files:
 
 This generates a `docker/conf/.env.dev` for your instance.
 
-Configure the mock pwd service and swagger login examples:
+Start the stack:
 
 ```sh
-./scripts/setup-mocks.sh
+./scripts/start-dev.sh
 ```
 
-This generates `mocks/ms_pwd/src/data/credentials.js` and `swagger/src/gatelin.openapi.json` from their `.example` templates and fills in random passwords for the mock users.
+`start-dev.sh` pulls the Foxnox image (`ghcr.io/alten-group/foxnox:0.1.0-alpha.1`), waits until it is healthy, then seeds mock passwords via `POST /foxnox/` into `swagger/src/gatelin.openapi.json`. Re-run `./scripts/setup-mocks.sh` later if you want to rotate them.
 
-The mock also stands in for the Foxnox mid-login challenges (`POST /foxnox/challenges`,
+Foxnox also stands in for the mid-login challenges (`POST /foxnox/challenges`,
 `/foxnox/trusted-devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
 so each mock user covers one login path:
 
@@ -30,11 +30,9 @@ so each mock user covers one login path:
 | --- | --- |
 | `admin@example.com` | straight to a session (used by the e2e suite) |
 | `standard@example.com` | straight to a session |
-| `coco@example.com` | 2FA challenge (any 6-digit code), then the trusted-device prompt |
+| `coco@example.com` | 2FA challenge, then the trusted-device prompt |
 | `guest@example.com` | expired-password rotation |
 | `ebuser@example.com` | rejected, account locked |
-
-Challenge state lives in memory, so restarting the mock container resets it.
 
 ## Development
 
@@ -44,7 +42,7 @@ Challenge state lives in memory, so restarting the mock container resets it.
 ./scripts/start-dev.sh
 ```
 
-Builds and starts all services via Docker Compose.
+Builds and starts all services via Docker Compose. Mock passwords are seeded on a fresh database automatically.
 
 ### Stop
 
@@ -60,7 +58,7 @@ Stops and removes all containers and the postgres volume.
 
 ### Reset the database
 
-Stops Gatelin, removes the postgres and migration containers and the postgres data volume, then restarts the stack. Migrations re-run from scratch and Gatelin starts once the new database is ready.
+Stops Gatelin and Foxnox, removes the postgres and migration containers and the postgres data volume, then restarts the stack. Migrations re-run from scratch and both services start once the new database is ready.
 
 ```sh
 ./scripts/reset-db.sh
@@ -112,12 +110,11 @@ npm run test:coverage     # CI / coverage
 
 ### Admin end-to-end tests (Playwright)
 
-The e2e suite (`admin/e2e/`) drives the admin UI end-to-end through Traefik, logs in with a mock persona from `swagger/src/gatelin.openapi.json`, and exercises the same routing path a real browser hits (Traefik → admin → Gatelin → mocks).
+The e2e suite (`admin/e2e/`) drives the admin UI end-to-end through Traefik, logs in with a mock persona from `swagger/src/gatelin.openapi.json`, and exercises the same routing path a real browser hits (Traefik → admin → Gatelin → Foxnox / user mock).
 
 Both flows below require:
 
-- `./scripts/start-dev.sh` running.
-- `./scripts/setup-mocks.sh` executed at least once (so `swagger/src/gatelin.openapi.json` has mock passwords the tests read via `admin/e2e/helpers/credentials.ts`).
+- `./scripts/start-dev.sh` running (it seeds `swagger/src/gatelin.openapi.json` on a fresh database; the tests read those passwords via `admin/e2e/helpers/credentials.ts`).
 
 #### In Docker (recommended, no local install)
 
@@ -147,7 +144,7 @@ Prefer this when iterating on a specific test — the UI mode and Playwright ins
 
 [RESTler](https://github.com/microsoft/restler-fuzzer) compiles the Gatelin OpenAPI spec into a test grammar, logs in as one of the mock personas (see `swagger/src/gatelin.openapi.json` examples), and exercises every endpoint through Traefik.
 
-run `./scripts/setup-env.sh` and `./scripts/setup-mocks.sh` first if you haven't.
+run `./scripts/setup-env.sh` and `./scripts/start-dev.sh` first if you haven't.
 
 ```sh
 ./scripts/run-restler.sh            # test mode (smoketest, default)

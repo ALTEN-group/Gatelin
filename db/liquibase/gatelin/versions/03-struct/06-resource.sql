@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS resource (
 	id SERIAL PRIMARY KEY,
   "serviceId" INT NOT NULL,
-	name varchar(20) NOT NULL,
+	name varchar(30) NOT NULL,
   description VARCHAR(100) NULL,
   core BOOLEAN DEFAULT FALSE,
   archived BOOLEAN DEFAULT FALSE,

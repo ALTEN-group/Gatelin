@@ -23,6 +23,8 @@
     "vitepress": "1.6.4"
   },
   "dependencies": {
+    "@lcluber/frameratjs": "1.1.0",
+    "@lcluber/roostrjs": "0.6.0",
     "mermaid": "11.17.0",
     "vitepress-plugin-mermaid": "2.0.17"
   }

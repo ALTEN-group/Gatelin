@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run RESTler against the Gatelin API
-# Starts the dependency stack (postgres, traefik, migrations, gatelin, mocks),
+# Starts the dependency stack (postgres, traefik, migrations, gatelin, foxnox, mocks),
 # waits for gatelin to be healthy, then runs microsoft/restler-fuzzer against
 # it through Traefik.
 #
@@ -53,24 +53,27 @@ if [[ ! -f "$ENV_FILE" ]]; then
   echo -e "${RED}✗ $ENV_FILE not found. Run ./scripts/setup-env.sh first.${NC}"
   exit 1
 fi
-if [[ ! -f swagger/src/gatelin.openapi.json ]]; then
-  echo -e "${RED}✗ swagger/src/gatelin.openapi.json not found. Run ./scripts/setup-mocks.sh first.${NC}"
+if [[ ! -f swagger/src/gatelin.openapi.example.json ]]; then
+  echo -e "${RED}✗ swagger/src/gatelin.openapi.example.json not found.${NC}"
   exit 1
 fi
 
 mkdir -p "$RESULTS_DIR" node_modules admin/node_modules
 
 echo -e "${YELLOW}🗑️  Resetting postgres so this run starts from the seeded fixtures...${NC}"
-docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" rm -f -s postgres gatelin_migration gatelin >/dev/null 2>&1 || true
+docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" rm -f -s postgres gatelin_migration foxnox_migration foxnox gatelin >/dev/null 2>&1 || true
 set -a
 # shellcheck disable=SC1090
 source <(grep -v '^#' "$ENV_FILE" | grep -v '^UID=')
 set +a
 docker volume rm "${APP_NAME}_postgres_data" >/dev/null 2>&1 || true
 
-echo -e "${YELLOW}🚀 Starting dependency stack (postgres, traefik, migrations, gatelin, mocks)...${NC}"
+echo -e "${YELLOW}🚀 Starting dependency stack (postgres, traefik, migrations, gatelin, foxnox, mocks)...${NC}"
 docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" up --build -d \
-  postgres traefik gatelin_migration gatelin ms_pwd_mock ms_user_mock
+  postgres traefik gatelin_migration foxnox_migration mailpit foxnox gatelin ms_user_mock swagger
+
+echo -e "${YELLOW}🔐 Seeding Foxnox mock passwords into swagger/src/gatelin.openapi.json...${NC}"
+./scripts/setup-mocks.sh
 
 echo -e "${YELLOW}⏳ Waiting for gatelin to become healthy...${NC}"
 GATELIN_CID=$(docker compose -f "$MAIN_COMPOSE" --env-file "$ENV_FILE" ps -q gatelin)

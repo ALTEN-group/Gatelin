@@ -14,7 +14,6 @@ website/docs/.vitepress/dist
 .github/prompts/
 .agents/
 .cursor/
-mocks/ms_pwd/src/data/credentials.js
 swagger/src/gatelin.openapi.json
 apm_modules/
 tests/restler/results/*

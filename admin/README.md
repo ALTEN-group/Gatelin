@@ -66,7 +66,6 @@ E2E tests use [Playwright](https://playwright.dev/) against the docker-compose s
 
 ```bash
 ./scripts/setup-env.sh
-./scripts/setup-mocks.sh
 ./scripts/start-dev.sh
 ```
 

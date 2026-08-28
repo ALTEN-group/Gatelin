@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Run Playwright end-to-end tests inside a dedicated container against the running
 # dev stack. Requires: `scripts/start-dev.sh` already succeeded and (usually)
-# `scripts/setup-mocks.sh` if the tests read mock credentials from the swagger file.
+# `scripts/setup-mocks.sh` (start-dev.sh runs it automatically on a fresh database).
 #
 # Usage:
 #   scripts/e2e.sh                             # runs `playwright test`

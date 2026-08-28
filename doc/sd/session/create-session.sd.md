@@ -9,7 +9,7 @@ sequenceDiagram
   participant f as front
   participant msg as gatelin
   participant msu as ms_user
-  participant msp as ms_pwd
+  participant msp as foxnox
   participant udb as user_db
   participant pdb as pwd_db
   participant gdb as gatelin_db
@@ -202,7 +202,7 @@ sequenceDiagram
         msg->>f: return 202 accepted : { challengeRequired, kind, url }
         activate f
         f->>u: redirect the browser to the workflow page
-        note over u,msp: The user completes the challenge on ms_pwd, which redirects back to<br/>the admin login with ?ticket=… → POST /sessions/resume redeems it via<br/>post(/foxnox/login-tickets/redeem) and continues with the block below.
+        note over u,msp: The user completes the challenge on Foxnox, which redirects back to<br/>the admin login with ?ticket=… → POST /sessions/resume redeems it via<br/>post(/foxnox/login-tickets/redeem) and continues with the block below.
         deactivate f
       end
     end

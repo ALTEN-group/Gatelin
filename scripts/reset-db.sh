@@ -32,7 +32,9 @@ rm -f "$ENV_TMP"
 
 : "${POSTGRES_HOST:?POSTGRES_HOST missing from $ENV_FILE}"
 : "${GATELIN_MIGRATION_HOST:?GATELIN_MIGRATION_HOST missing from $ENV_FILE}"
+: "${FOXNOX_MIGRATION_HOST:?FOXNOX_MIGRATION_HOST missing from $ENV_FILE}"
 : "${GATELIN_HOST:?GATELIN_HOST missing from $ENV_FILE}"
+: "${FOXNOX_HOST:?FOXNOX_HOST missing from $ENV_FILE}"
 : "${APP_NAME:?APP_NAME missing from $ENV_FILE}"
 
 VOLUME_NAME="${APP_NAME}_postgres_data"
@@ -48,18 +50,20 @@ VOLUME_NAME="${APP_NAME}_postgres_data"
 # completed, which also rebuilds the in-memory route/CORS caches from the
 # re-seeded database. The container holds no state, so stopping is enough.
 echo -e "🛑 Stopping app containers..."
-if docker stop "$GATELIN_HOST" >/dev/null 2>&1; then
-  echo -e "${GREEN}✓${NC} Stopped $GATELIN_HOST"
-else
-  echo -e "${YELLOW}⚠${NC}  Container $GATELIN_HOST not running"
-fi
+for c in "$GATELIN_HOST" "$FOXNOX_HOST"; do
+  if docker stop "$c" >/dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC} Stopped $c"
+  else
+    echo -e "${YELLOW}⚠${NC}  Container $c not running"
+  fi
+done
 
 # Remove the database and migration containers. These do have to go: Postgres
 # must detach from the volume, and the one-shot migration container only
 # re-runs when recreated (compose's service_completed_successfully is
 # satisfied by a stale exit 0).
 echo -e "📦 Removing containers..."
-for c in "$GATELIN_MIGRATION_HOST" "$POSTGRES_HOST"; do
+for c in "$GATELIN_MIGRATION_HOST" "$FOXNOX_MIGRATION_HOST" "$POSTGRES_HOST"; do
   if docker rm -f "$c" 2>/dev/null; then
     echo -e "${GREEN}✓${NC} Removed $c"
   else
@@ -80,15 +84,11 @@ fi
 
 echo -e "${GREEN}✅ Database reset complete!${NC}"
 
-# Rebuild postgres, re-run migrations, then start Gatelin (Compose waits for
-# postgres healthy + migration completed before starting the stopped app).
+# Rebuild postgres, re-run migrations, then start Gatelin/Foxnox (Compose waits
+# for postgres healthy + migrations completed before starting the stopped apps).
+# start-dev.sh seeds mock passwords on the empty volume via setup-mocks.sh --if-missing.
 echo -e ""
 ./scripts/start-dev.sh
-
-# Re-sync mock credentials too, in case MSPWD_SECRET/GATELIN_TOKEN_SECRET were
-# rotated (e.g. by setup-env.sh) since they were last generated.
-echo -e ""
-./scripts/setup-mocks.sh
 
 echo -e ""
 echo -e "${GREEN}🎉 All done! Application ready with fresh database.${NC}"

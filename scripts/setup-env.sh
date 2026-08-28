@@ -19,7 +19,9 @@ POSTGRES_ROOT_PWD=$(openssl rand -base64 24)
 GATELIN_DB_USER="gatelin_$(openssl rand -hex 4)"
 GATELIN_DB_PWD=$(openssl rand -base64 24)
 GATELIN_TOKEN_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
-MSPWD_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
+FOXNOX_DB_USER="foxnox_$(openssl rand -hex 4)"
+FOXNOX_DB_PWD=$(openssl rand -base64 24)
+FOXNOX_PWD_SECRET=$(openssl rand 48 | base64 | tr -d '\n=' | tr '+/' '-_')
 
 sedi \
   -e "s|^LIQUIBASE_DB_PWD=.*|LIQUIBASE_DB_PWD=${LIQUIBASE_DB_PWD}|" \
@@ -27,7 +29,9 @@ sedi \
   -e "s|^GATELIN_DB_USER=.*|GATELIN_DB_USER=${GATELIN_DB_USER}|" \
   -e "s|^GATELIN_DB_PWD=.*|GATELIN_DB_PWD=${GATELIN_DB_PWD}|" \
   -e "s|^GATELIN_TOKEN_SECRET=.*|GATELIN_TOKEN_SECRET=${GATELIN_TOKEN_SECRET}|" \
-  -e "s|^MSPWD_SECRET=.*|MSPWD_SECRET=${MSPWD_SECRET}|" \
+  -e "s|^FOXNOX_DB_USER=.*|FOXNOX_DB_USER=${FOXNOX_DB_USER}|" \
+  -e "s|^FOXNOX_DB_PWD=.*|FOXNOX_DB_PWD=${FOXNOX_DB_PWD}|" \
+  -e "s|^FOXNOX_PWD_SECRET=.*|FOXNOX_PWD_SECRET=${FOXNOX_PWD_SECRET}|" \
   "$ENV_FILE"
 
 # Load registry vars from the generated env file
@@ -57,7 +61,9 @@ echo "  POSTGRES_ROOT_PWD    = ${POSTGRES_ROOT_PWD}"
 echo "  GATELIN_DB_USER      = ${GATELIN_DB_USER}"
 echo "  GATELIN_DB_PWD       = ${GATELIN_DB_PWD}"
 echo "  GATELIN_TOKEN_SECRET = ${GATELIN_TOKEN_SECRET}"
-echo "  MSPWD_SECRET         = ${MSPWD_SECRET}"
+echo "  FOXNOX_DB_USER       = ${FOXNOX_DB_USER}"
+echo "  FOXNOX_DB_PWD        = ${FOXNOX_DB_PWD}"
+echo "  FOXNOX_PWD_SECRET    = ${FOXNOX_PWD_SECRET}"
 echo ""
 echo "Fill in the required values before starting the stack:"
 echo "  NPM_REGISTRY_DOMAIN        (your npm registry domain)"
@@ -65,9 +71,7 @@ echo "  NPM_REGISTRY_NODE          (your npm registry name)"
 echo "  NPM_REGISTRY_URL           (your npm registry full URL)"
 echo "  NPM_REGISTRY_USER          (your npm registry username / email)"
 echo "  NPM_REGISTRY_TOKEN         (your npm registry API token)"
-
-# MSPWD_SECRET above just rotated, which invalidates mocks/ms_pwd/src/data/credentials.js
-# (hashed with the previous secret) — regenerate it now so login never breaks silently.
 echo ""
-./scripts/setup-mocks.sh
-
+echo "After starting the stack, seed mock passwords with:"
+echo "  ./scripts/setup-mocks.sh"
+echo "(start-dev.sh also does this automatically on a fresh database.)"

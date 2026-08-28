@@ -28,6 +28,8 @@ services:
       LIQUIBASE_PWD: ${LIQUIBASE_DB_PWD}
       GATELIN_USER: ${GATELIN_DB_USER}
       GATELIN_PWD: ${GATELIN_DB_PWD}
+      FOXNOX_USER: ${FOXNOX_DB_USER}
+      FOXNOX_PWD: ${FOXNOX_DB_PWD}
     networks:
       - internal
     volumes:
@@ -121,29 +123,90 @@ services:
       - ${PWD}/mocks/ms_user/src:/usr/src/app/src
       - ms_user_mock_node_modules:/usr/src/app/node_modules
 
-  ms_pwd_mock:
-    build:
-      context: ${PWD}/mocks/ms_pwd
-      dockerfile: dockerfile
-      args:
-        UID: ${UID}
-        GID: ${GID}
-        TZ: ${TZ}
-        NODE_VERSION: ${NODE_VERSION}
-        NODE_ENV: ${NODE_ENV}
-    container_name: ${MSPWD_HOST}
-    hostname: ${MSPWD_HOST}
+  foxnox_migration:
+    image: ghcr.io/alten-group/foxnox-migration:${FOXNOX_VERSION:-0.1.0-alpha.1}
+    container_name: ${FOXNOX_MIGRATION_HOST}
+    hostname: ${FOXNOX_MIGRATION_HOST}
     environment:
-      PORT: ${DEFAULT_PORT}
-      PWD_SECRET: ${MSPWD_SECRET}
-      # Browser-facing URLs used by the mock mid-login challenge pages.
-      WEB_PUBLIC_BASE_URL: ${MSPWD_WEB_PUBLIC_BASE_URL:-${TRAEFIK_PUBLIC_URL}pwd/web}
-      WEB_LOGIN_RESUME_URL: ${MSPWD_WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
+      TZ: ${TZ}
+      LIQUIBASE_COMMAND_USERNAME: ${LIQUIBASE_DB_USER}
+      LIQUIBASE_COMMAND_PASSWORD: ${LIQUIBASE_DB_PWD}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_NAME: ${FOXNOX_DB_NAME}
+      DB_USER: ${FOXNOX_DB_USER}
+      DB_PWD: ${FOXNOX_DB_PWD}
+      UPDATE: ${LIQUIBASE_UPDATE}
+      ROLLBACK: ${LIQUIBASE_ROLLBACK}
+      SNAPSHOT: snapshot/snapshot${LIQUIBASE_SNAPSHOT}
+      LIQUIBASE_LOG_LEVEL: ${LIQUIBASE_LOG_LEVEL}
+      LIQUIBASE_COMMAND_CONTEXTS: ${LIQUIBASE_COMMAND_CONTEXTS}
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - internal
-    volumes:
-      - ${PWD}/mocks/ms_pwd/src:/usr/src/app/src
-      - ms_pwd_mock_node_modules:/usr/src/app/node_modules
+
+  foxnox:
+    image: ghcr.io/alten-group/foxnox:${FOXNOX_VERSION:-0.1.0-alpha.1}
+    container_name: ${FOXNOX_HOST}
+    hostname: ${FOXNOX_HOST}
+    environment:
+      PORT: ${DEFAULT_PORT}
+      TZ: ${TZ}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_NAME: ${FOXNOX_DB_NAME}
+      DB_USER: ${FOXNOX_DB_USER}
+      DB_PWD: ${FOXNOX_DB_PWD}
+      PWD_SECRET: ${FOXNOX_PWD_SECRET}
+      APP_NAME: ${APP_NAME}
+      ENV_NAME: ${ENV_NAME}
+      SERVER_SCHEME: ${SERVER_SCHEME}
+      SERVICE_NAME: ${FOXNOX_HOST}
+      ACCESS_TOKEN_DURATION: ${FOXNOX_ACCESS_TOKEN_DURATION}
+      REFRESH_TOKEN_DURATION: ${FOXNOX_REFRESH_TOKEN_DURATION}
+      WEB_PUBLIC_BASE: ${WEB_PUBLIC_BASE:-/api/foxnox/web}
+      WEB_PUBLIC_ORIGIN: ${WEB_PUBLIC_ORIGIN:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}}
+      WEB_LOGIN_RESUME_URL: ${WEB_LOGIN_RESUME_URL:-${SERVER_SCHEME}${SERVER_URL}:${TRAEFIK_PORT}${ADMIN_BASE_PATH}/login}
+      USER_SEARCH_URL: ${MSUSER_SEARCH_URL}
+      WEB_BRAND_NAME: ${WEB_BRAND_NAME:-Foxnox}
+      WEB_BRAND_TAGLINE: ${WEB_BRAND_TAGLINE:-Account security}
+      WEB_BRAND_MARK: ${WEB_BRAND_MARK:-F}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      # Required: Foxnox validates ADMIN_PORT at boot when NODE_ENV=production.
+      ADMIN_PORT: ${FOXNOX_ADMIN_PORT}
+      ADMIN_BASE_PATH: ${FOXNOX_ADMIN_BASE_PATH:-/foxnox}
+      ADMIN_SSO_TOKEN_KEY: ${ADMIN_SSO_TOKEN_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      foxnox_migration:
+        condition: service_completed_successfully
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "stack.name=${STACK_NAME}"
+      - "traefik.http.routers.foxnox.rule=PathPrefix(`/api/foxnox`)"
+      - "traefik.http.routers.foxnox.priority=100"
+      - "traefik.http.routers.foxnox.entrypoints=web"
+      - "traefik.http.routers.foxnox.service=foxnox"
+      - "traefik.http.routers.foxnox.middlewares=strip-prefix"
+      - "traefik.http.services.foxnox.loadbalancer.server.port=${DEFAULT_PORT}"
+      - "traefik.http.routers.foxnox-admin.rule=PathPrefix(`${FOXNOX_ADMIN_BASE_PATH:-/foxnox}`)"
+      - "traefik.http.routers.foxnox-admin.entrypoints=web"
+      - "traefik.http.routers.foxnox-admin.service=foxnox-admin"
+      - "traefik.http.services.foxnox-admin.loadbalancer.server.port=${FOXNOX_ADMIN_PORT}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/foxnox/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   gatelin:
     image: ghcr.io/alten-group/gatelin:${VERSION:-latest}
@@ -152,10 +215,10 @@ services:
     environment:
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
-      PWD_CHECK_URL: ${MSPWD_COMPARE_URL}
-      PWD_CHALLENGES_URL: ${MSPWD_CHALLENGES_URL:-}
-      PWD_TRUSTED_DEVICES_URL: ${MSPWD_TRUSTED_DEVICES_URL:-}
-      PWD_LOGIN_TICKET_URL: ${MSPWD_LOGIN_TICKET_URL:-}
+      PWD_CHECK_URL: ${GATELIN_PWD_CHECK_URL}
+      PWD_CHALLENGES_URL: ${GATELIN_PWD_CHALLENGES_URL:-}
+      PWD_TRUSTED_DEVICES_URL: ${GATELIN_PWD_TRUSTED_DEVICES_URL:-}
+      PWD_LOGIN_TICKET_URL: ${GATELIN_PWD_LOGIN_TICKET_URL:-}
       USER_SEARCH_URL: ${MSUSER_SEARCH_URL}
       DB_HOST: ${POSTGRES_HOST}
       DB_NAME: ${GATELIN_DB_NAME}
@@ -189,6 +252,8 @@ services:
         condition: service_healthy
       gatelin_migration:
         condition: service_completed_successfully
+      foxnox:
+        condition: service_healthy
     networks:
       - internal
     labels:
@@ -219,4 +284,3 @@ volumes:
   postgres_data:
     driver: local
   ms_user_mock_node_modules:
-  ms_pwd_mock_node_modules:
