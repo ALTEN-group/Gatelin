@@ -51,7 +51,12 @@ float smax(float a, float b, float k) {
 // length(p) - r, so an open eye stays round.
 float sdLens(vec2 p, float r, float lid) {
   float arcR = (r * r + lid * lid) / (2.0 * lid);
-  float off = arcR - lid;
+  // A lid no taller than the eye puts the arc centres on the far side of the middle,
+  // so this offset cannot truly be negative. It can round negative on a wide open eye,
+  // where the two are equal, and that swaps the branches below: every point on the row
+  // through the eye's middle would then measure itself against the corner and read as
+  // outside, wiping the eye out along one row of pixels.
+  float off = max(arcR - lid, 0.0);
   vec2 q = abs(vec2(p.y, p.x));
   return (q.y - r) * off > q.x * r
     ? length(vec2(q.x, q.y - r))
@@ -124,7 +129,6 @@ struct Face {
   float philtrum;
   float mouthW;
   float mouthY;
-  float mouthSplit;
   float whisker;
   float stripes;
   float cheekPatch;
@@ -133,6 +137,9 @@ struct Face {
   vec3 patchCol;
   vec3 iris;
   vec3 noseCol;
+  vec3 mouthCol;
+  vec3 tongueCol;
+  vec3 lipCol;
 };
 
 Face fixedFace() {
@@ -141,29 +148,20 @@ Face fixedFace() {
   f.earSize = 0.03; f.earX = 0.34; f.earY = 0.14; f.earTilt = 0.0; f.earPoint = 0.0;
   f.eyeX = 0.28; f.eyeY = 0.21; f.eyeR = 0.135; f.eyeBulge = 1.0;
   f.irisR = 0.72; f.pupilSlit = 0.0;
-  f.muzzleW = 0.20; f.muzzleH = 0.07; f.muzzleY = -0.20;
+  f.muzzleW = 0.115; f.muzzleH = 0.042; f.muzzleY = -0.20;
   f.noseY = -0.02; f.noseR = 0.012; f.noseW = 1.7; f.philtrum = 0.0;
   f.nostrilX = 0.137; f.nostrilY = 0.038; f.nostrilR = 0.0186; f.nostrilTilt = 0.44;
-  f.mouthW = 0.32; f.mouthY = -0.11; f.mouthSplit = 0.0;
+  f.mouthW = 0.32; f.mouthY = -0.11;
   f.whisker = 0.0; f.stripes = 0.0; f.cheekPatch = 0.0;
   f.fur = vec3(0.46, 0.76, 0.33);
   f.furDark = vec3(0.22, 0.48, 0.22);
   f.patchCol = vec3(0.91, 0.95, 0.72);
   f.iris = vec3(0.96, 0.79, 0.19);
   f.noseCol = vec3(0.19, 0.36, 0.18);
+  f.mouthCol = vec3(0.58, 0.02, 0.03);
+  f.tongueCol = vec3(0.92, 0.40, 0.48);
+  f.lipCol = vec3(0.10, 0.32, 0.09);
   return f;
-}
-
-// A parabola through the muzzle, thickened into a stroke and cut off at the
-// corners. It reads only the distance of q.x from the arc's own centre, so
-// pushing that centre out from zero splits one wide grin into the cat's pair
-// without ever reopening the band. Blending a signed x against a folded one
-// instead leaves the band open and it runs off the frame.
-float mouthArc(vec2 q, float halfW, float sag, float thick) {
-  float curve = sag * (q.x * q.x) / (halfW * halfW);
-  float slope = 2.0 * sag * q.x / (halfW * halfW);
-  float d = abs(q.y - curve) / sqrt(1.0 + slope * slope) - thick;
-  return smax(d, abs(q.x) - halfW, 0.02);
 }
 
 float earShape(vec2 p, float size, float pointy) {
@@ -172,6 +170,32 @@ float earShape(vec2 p, float size, float pointy) {
   float pointed = sdRoundTri(p, w, h, size * 0.14);
   float rounded = sdCircle(p - vec2(0.0, h * 0.34), w * 1.02);
   return mix(rounded, pointed, pointy);
+}
+
+// The silhouette in one piece: skull, cheek puffs and chin fused into one mass, then
+// the ears and the eye domes welded on, so a single ink line can trace the lot.
+float bodyField(vec2 p, Face f) {
+  float head = sdEllipse(p, vec2(f.headW, f.headH));
+  float cheekL = sdEllipse(p - vec2(-f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
+  float cheekR = sdEllipse(p - vec2(f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
+  head = smin(head, min(cheekL, cheekR), 0.11 * f.cheek);
+  float chin = sdEllipse(p - vec2(0.0, -f.headH * 0.74), vec2(f.headW * 0.36, f.headH * 0.46 * f.chin));
+  head = smin(head, chin, 0.10);
+
+  // A frog's ears are nubs sunk in the skull, so they only round the silhouette where
+  // it meets the eye domes. Nothing is gained by perking or twitching them.
+  float earL = earShape(rot(p - vec2(-f.earX, f.earY), -f.earTilt), f.earSize, f.earPoint);
+  float earR = earShape(rot(p - vec2(f.earX, f.earY), f.earTilt), f.earSize, f.earPoint);
+
+  // Adding a constant to a distance field shrinks it away, which retires the eye domes
+  // from the silhouette on a species that sits flat.
+  float retire = (1.0 - f.eyeBulge) * 2.0;
+  float domes = min(
+    sdCircle(p - vec2(-f.eyeX, f.eyeY), f.eyeR * 1.3) + retire,
+    sdCircle(p - vec2(f.eyeX, f.eyeY), f.eyeR * 1.3) + retire
+  );
+
+  return smin(smin(head, min(earL, earR), 0.035), domes, 0.05);
 }
 
 // The life in the face comes out of the clock alone. Time is cut into slots and the
@@ -248,11 +272,11 @@ float smileAt(float t) {
 
 void main() {
   // The face is drawn a little over half the width of its frame, which reads as
-  // a lot of empty ground once the canvas is cropped to a circle in the login
-  // card. Shrinking the coordinates scales the whole drawing up about the
-  // centre. px is the antialiasing width in those same coordinates, so it has to
-  // shrink with them, and the background is left on the uncropped frame so its
-  // gradient and glow stay keyed to the canvas rather than zooming with the face.
+  // a lot of empty ground wherever the canvas is cropped to a circle. Shrinking
+  // the coordinates scales the whole drawing up about the centre. px is the
+  // antialiasing width in those same coordinates, so it has to shrink with
+  // them, and the background is left on the uncropped frame so its gradient and
+  // glow stay keyed to the canvas rather than zooming with the face.
   const float zoom = 1.55;
   vec2 frame = 2.0 * (gl_FragCoord.xy - 0.5 * uScreenResolution.xy) / uScreenResolution.y;
   vec2 uv = frame / zoom;
@@ -266,14 +290,14 @@ void main() {
   f.headW *= mix(0.96, 1.05, cute);
   f.headH *= mix(0.97, 1.06, cute);
   f.chin *= mix(1.10, 0.86, cute);
-  // The patch holds the size it has at mid dial rather than swelling on a plain
-  // face and shrinking on a round one, which is what the figures above are: the
-  // old scaling passed through 1.00 and 0.99 at the middle of the dial.
-  // It rides as low as the chin allows, resting on the jaw with its lower edge cut
-  // off by the silhouette, which the ink outline covers since that ink is laid
-  // outside the body. The drop still has to follow the dial, since the jaw itself
-  // sinks as the skull grows, and a patch of one size cannot reach both jaws.
-  f.muzzleY -= mix(0.028, 0.050, cute);
+  // The patch is a pale chin rather than a muzzle, since the open mouth has taken the
+  // ground it used to sit on. It is cut narrow enough to keep clear of the corners of
+  // the aperture, and hung low enough that the floor of the mouth covers its top edge
+  // while the silhouette cuts its bottom, which leaves a sliver of pale lying on the
+  // jaw instead of a halo around the tongue. It holds one size across the dial, since
+  // a patch that swelled on a plain face would flank the mouth again. The drop still
+  // has to follow the dial, since the jaw sinks as the skull grows.
+  f.muzzleY -= mix(0.055, 0.090, cute);
   f.noseY *= mix(1.06, 0.94, cute);
 
   vec2 look = gazeAt(uTime);
@@ -285,35 +309,13 @@ void main() {
 
   float blink = blinkAmount(uTime);
 
-  // Silhouette: skull, cheek puffs and chin fused into one mass, then the ears
-  // welded on so a single ink line can trace the lot.
-  float head = sdEllipse(p, vec2(f.headW, f.headH));
-  float cheekL = sdEllipse(p - vec2(-f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
-  float cheekR = sdEllipse(p - vec2(f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
-  head = smin(head, min(cheekL, cheekR), 0.11 * f.cheek);
-  float chin = sdEllipse(p - vec2(0.0, -f.headH * 0.74), vec2(f.headW * 0.36, f.headH * 0.46 * f.chin));
-  head = smin(head, chin, 0.10);
+  float body = bodyField(p, f);
 
-  // A frog's ears are nubs sunk in the skull, so they only round the silhouette
-  // where it meets the eye domes. Nothing is gained by perking or twitching them.
+  // The ear frames and eye centres again, for the lining and the eyes themselves.
   vec2 pEarL = rot(p - vec2(-f.earX, f.earY), -f.earTilt);
   vec2 pEarR = rot(p - vec2(f.earX, f.earY), f.earTilt);
-  float earL = earShape(pEarL, f.earSize, f.earPoint);
-  float earR = earShape(pEarR, f.earSize, f.earPoint);
-  float ears = min(earL, earR);
-
   vec2 eyePosL = vec2(-f.eyeX, f.eyeY);
   vec2 eyePosR = vec2(f.eyeX, f.eyeY);
-  // Adding a constant to a distance field shrinks it away, which retires the
-  // frog's eye domes from the silhouette on the species that sit flat.
-  float retire = (1.0 - f.eyeBulge) * 2.0;
-  float domes = min(
-    sdCircle(p - eyePosL, f.eyeR * 1.3) + retire,
-    sdCircle(p - eyePosR, f.eyeR * 1.3) + retire
-  );
-
-  float body = smin(head, ears, 0.035);
-  body = smin(body, domes, 0.05);
 
   vec3 ink = vec3(0.08, 0.07, 0.10);
   vec3 bg = mix(vec3(0.09, 0.12, 0.17), vec3(0.15, 0.21, 0.27), smoothstep(-1.0, 1.0, frame.y));
@@ -433,22 +435,65 @@ void main() {
   float philtrumD = sdCapsule(p, vec2(0.0, f.noseY - f.noseR * 1.3), vec2(0.0, f.mouthY), 0.011);
   color = paint(color, mix(f.patchCol, ink, 0.55), fill(philtrumD, px) * f.philtrum * bodyMask);
 
-  // The mouth is a parabola through the muzzle. Folding x around the centre
-  // splits it into the cat's two arcs; unfolded it is the frog's wide grin.
-  // A wide grin needs more rise than a small one to read as the same smile,
-  // and split arcs sit deeper for their width, so they get eased off or the
-  // muzzle grows fangs instead of a mouth.
-  float smileAmount = (0.35 + smileAt(uTime)) / 0.9;
-  float archOut = f.mouthW * 0.5 * f.mouthSplit;
-  float halfW = f.mouthW - archOut;
-  float sag = (0.037 + 0.20 * halfW) * smileAmount * mix(1.0, 0.58, f.mouthSplit);
-  float mouth = mouthArc(
-    vec2(abs(p.x) - archOut, p.y - f.mouthY),
-    halfW,
-    sag,
-    0.012 + 0.02 * halfW
-  );
-  color = paint(color, mix(ink, f.noseCol, 0.25), fill(mouth, px));
+  // The mouth is held open: an upper lip sagging through the middle and a floor
+  // dropped most of the way to the chin, both struck as the same power of the folded
+  // x, so the two meet in a point at either corner and the grin tapers away instead
+  // of being cut off square. The figures are read off the drawing against the head
+  // it sits on: corners a fifteenth of the head above the lip's middle, floor a
+  // third of the mouth's width below the corners, both edges bending as x^1.8, which
+  // is what the drawn edges measure.
+  float grin = smileAt(uTime);
+  float halfW = f.mouthW;
+  // Both ends answer the grin: the corners ride up and the floor drops, which is what
+  // makes the mouth open rather than merely curl. The floor takes the smaller share of
+  // the travel, since it has the least room to work in: the pale chin lies just under
+  // it and the ink below that, so a floor swinging as far as the corners do would run
+  // into one or lift clear of the other and leave the chin patch hanging on its own.
+  float arch = mix(0.018, 0.078, grin);
+  float gape = mix(0.150, 0.258, grin);
+  float cornerY = f.mouthY + 0.015 + arch;
+  vec2 mq = vec2(abs(p.x), p.y - cornerY);
+
+  // A stroke sweeps off each corner and curls down. Without it the aperture ends in
+  // two bare points and the grin dies there. The drawn mark leaves the corner almost
+  // level, turns down as it goes out, and carries its weight two thirds of the way
+  // along before tapering to a point, so it is struck as the ground between two radii
+  // of an arc set below and outboard of the corner. A crescent hung on a chord cannot
+  // do it: that lifts both ends alike and swells at its middle, and reads as a wedge
+  // rather than a hook. It is laid down before the mouth, since its inner end runs in
+  // under the corner and the dark of the throat is what hides that end.
+  vec2 aq = mq - vec2(halfW * 1.039, -halfW * 0.270);
+  float turn = atan(aq.x, aq.y);
+  float weight = halfW * 0.0381 * smoothstep(-0.75, 0.62, turn) * (1.0 - smoothstep(0.80, 1.05, turn));
+  float sweep = abs(length(aq) - halfW * 0.260) - weight;
+  // Cut off along the radii at -0.45 and 1.05, the two ends of the drawn mark. The
+  // taper alone leaves the field grazing zero the whole way round the arc, which
+  // trails a hairline across the cheek.
+  sweep = max(sweep, dot(aq, vec2(-0.900, -0.435)));
+  sweep = max(sweep, dot(aq, vec2(0.498, -0.867)));
+  color = paint(color, f.lipCol, fill(sweep, px) * bodyMask);
+
+  float u = max(mq.x, 1e-4) / halfW;
+  // Past the corner the floor climbs faster than the lip does, which shuts the field
+  // off outboard. Clamping the fold at the corner instead would leave both edges
+  // level out there and trail a hairline across the cheek.
+  float bend = pow(u, 1.8);
+  float lipEdge = -arch * (1.0 - bend);
+  float floorEdge = -gape * (1.0 - bend);
+  // Each edge is divided by its own slope so the field reads as a distance and the
+  // aperture takes the same soft edge everywhere, corners included.
+  float bendSlope = 1.8 * pow(u, 0.8) / halfW;
+  float dLip = (mq.y - lipEdge) / sqrt(1.0 + arch * arch * bendSlope * bendSlope);
+  float dFloor = (floorEdge - mq.y) / sqrt(1.0 + gape * gape * bendSlope * bendSlope);
+  float mouth = smax(dLip, dFloor, 0.004);
+  color = paint(color, f.mouthCol, fill(mouth, px) * bodyMask);
+
+  // The tongue is a shallow dome standing in the floor of the mouth, wider than the
+  // mouth is at that depth and cut back by it rather than fitted to it, which is what
+  // leaves the dark of the throat wrapped around its shoulders and no gap under it.
+  float tongueR = halfW * 0.86;
+  float tongue = smax(mouth, sdCircle(mq - vec2(0.0, -gape * 0.357 - tongueR), tongueR), 0.004);
+  color = paint(color, f.tongueCol, fill(tongue, px) * bodyMask);
 
   float whiskerD = 1.0;
   float whiskerR = 0.006;
