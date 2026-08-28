@@ -1,4 +1,4 @@
-// ShaderGun ready export: 2 Vars baked at 0.00s.
+// ShaderGun ready export: 2 Vars baked at 114.43s.
 #ifdef GL_ES
   precision highp float;
 #endif
@@ -8,11 +8,11 @@ uniform float uTime;
 
 // Vars: min max default step. Every one can be keyframed from Cam.
 // This shader has one fixed species, and the face lives on its own: the blinks,
-// the eyes and the smile are cut out of the clock rather than driven from here, so
-// only the build and the line are left to set.
+// the eyes, the smile, the jaw and the pupil are cut out of the clock rather than
+// driven from here, so only the build and the line are left to set.
 // Bigger eyes, rounder skull, smaller muzzle.
-const float uCuteness = 0.55; // Baked at 0.00s; Var was: 0.0 1.0 0.55 0.01
-const float uOutline = 0.016; // Baked at 0.00s; Var was: 0.0 0.04 0.016 0.001
+const float uCuteness = 0.55; // Baked at 114.43s; Var was: 0.0 1.0 0.55 0.01
+const float uOutline = 0.016; // Baked at 114.43s; Var was: 0.0 0.04 0.016 0.001
 
 // A cartoon animal is a signed-distance drawing with proportions pulled off
 // realism: one big skull, a small muzzle, huge eyes, and a hard ink line around
@@ -24,13 +24,6 @@ float sdCircle(vec2 p, float r) {
 
 float sdEllipse(vec2 p, vec2 r) {
   return (length(p / r) - 1.0) * min(r.x, r.y);
-}
-
-float sdCapsule(vec2 p, vec2 a, vec2 b, float r) {
-  vec2 pa = p - a;
-  vec2 ba = b - a;
-  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-  return length(pa - ba * h) - r;
 }
 
 float smin(float a, float b, float k) {
@@ -79,13 +72,6 @@ float sdCrescent(vec2 p, float c, float s, float t, float skew) {
   );
 }
 
-// Base centred on the origin, apex at (0, h). Rounding r keeps the corners
-// soft, which is most of what separates a cartoon ear from a warning sign.
-float sdRoundTri(vec2 p, float w, float h, float r) {
-  float side = (h * abs(p.x) + w * p.y - w * h) / sqrt(h * h + w * w);
-  return smax(side, -p.y, r * 1.5) - r;
-}
-
 float fill(float d, float px) {
   return 1.0 - smoothstep(-px, px, d);
 }
@@ -94,49 +80,30 @@ vec3 paint(vec3 dst, vec3 src, float a) {
   return mix(dst, src, clamp(a, 0.0, 1.0));
 }
 
-vec2 rot(vec2 p, float a) {
-  float c = cos(a);
-  float s = sin(a);
-  return vec2(c * p.x - s * p.y, s * p.x + c * p.y);
-}
-
 struct Face {
   float headW;
   float headH;
-  float cheek;
   float chin;
   float earSize;
   float earX;
   float earY;
-  float earTilt;
-  float earPoint;
   float eyeX;
   float eyeY;
   float eyeR;
-  float eyeBulge;
   float irisR;
-  float pupilSlit;
   float muzzleW;
   float muzzleH;
   float muzzleY;
-  float noseY;
-  float noseR;
-  float noseW;
   float nostrilX;
   float nostrilY;
   float nostrilR;
   float nostrilTilt;
-  float philtrum;
   float mouthW;
   float mouthY;
-  float whisker;
-  float stripes;
-  float cheekPatch;
   vec3 fur;
   vec3 furDark;
   vec3 patchCol;
   vec3 iris;
-  vec3 noseCol;
   vec3 mouthCol;
   vec3 tongueCol;
   vec3 lipCol;
@@ -144,32 +111,30 @@ struct Face {
 
 Face fixedFace() {
   Face f;
-  f.headW = 0.48; f.headH = 0.29; f.cheek = 1.0; f.chin = 0.30;
-  f.earSize = 0.03; f.earX = 0.34; f.earY = 0.14; f.earTilt = 0.0; f.earPoint = 0.0;
-  f.eyeX = 0.28; f.eyeY = 0.21; f.eyeR = 0.135; f.eyeBulge = 1.0;
-  f.irisR = 0.72; f.pupilSlit = 0.0;
-  f.muzzleW = 0.115; f.muzzleH = 0.042; f.muzzleY = -0.20;
-  f.noseY = -0.02; f.noseR = 0.012; f.noseW = 1.7; f.philtrum = 0.0;
+  f.headW = 0.48; f.headH = 0.29; f.chin = 0.30;
+  f.earSize = 0.03; f.earX = 0.34; f.earY = 0.14;
+  f.eyeX = 0.28; f.eyeY = 0.21; f.eyeR = 0.135;
+  f.irisR = 0.72;
+  f.muzzleW = 0.46; f.muzzleH = 0.110; f.muzzleY = -0.20;
   f.nostrilX = 0.137; f.nostrilY = 0.038; f.nostrilR = 0.0186; f.nostrilTilt = 0.44;
   f.mouthW = 0.32; f.mouthY = -0.11;
-  f.whisker = 0.0; f.stripes = 0.0; f.cheekPatch = 0.0;
   f.fur = vec3(0.46, 0.76, 0.33);
   f.furDark = vec3(0.22, 0.48, 0.22);
   f.patchCol = vec3(0.91, 0.95, 0.72);
   f.iris = vec3(0.96, 0.79, 0.19);
-  f.noseCol = vec3(0.19, 0.36, 0.18);
   f.mouthCol = vec3(0.58, 0.02, 0.03);
   f.tongueCol = vec3(0.92, 0.40, 0.48);
   f.lipCol = vec3(0.10, 0.32, 0.09);
   return f;
 }
 
-float earShape(vec2 p, float size, float pointy) {
+// A frog's ears are nubs sunk in the skull. The mix that used to point them is
+// held at zero, so this is only the round end of that mix: a circle sitting a
+// little above the base of where a pointed ear would have stood.
+float earShape(vec2 p, float size) {
   float w = size * 0.68;
   float h = size * 1.5;
-  float pointed = sdRoundTri(p, w, h, size * 0.14);
-  float rounded = sdCircle(p - vec2(0.0, h * 0.34), w * 1.02);
-  return mix(rounded, pointed, pointy);
+  return sdCircle(p - vec2(0.0, h * 0.34), w * 1.02);
 }
 
 // The silhouette in one piece: skull, cheek puffs and chin fused into one mass, then
@@ -178,21 +143,19 @@ float bodyField(vec2 p, Face f) {
   float head = sdEllipse(p, vec2(f.headW, f.headH));
   float cheekL = sdEllipse(p - vec2(-f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
   float cheekR = sdEllipse(p - vec2(f.headW * 0.60, -0.10), vec2(f.headW * 0.44, f.headH * 0.44));
-  head = smin(head, min(cheekL, cheekR), 0.11 * f.cheek);
+  head = smin(head, min(cheekL, cheekR), 0.11);
   float chin = sdEllipse(p - vec2(0.0, -f.headH * 0.74), vec2(f.headW * 0.36, f.headH * 0.46 * f.chin));
   head = smin(head, chin, 0.10);
 
   // A frog's ears are nubs sunk in the skull, so they only round the silhouette where
-  // it meets the eye domes. Nothing is gained by perking or twitching them.
-  float earL = earShape(rot(p - vec2(-f.earX, f.earY), -f.earTilt), f.earSize, f.earPoint);
-  float earR = earShape(rot(p - vec2(f.earX, f.earY), f.earTilt), f.earSize, f.earPoint);
+  // it meets the eye domes. The tilt that used to perk them is zero, which leaves the
+  // rotation an identity, so the nubs are measured in place.
+  float earL = earShape(p - vec2(-f.earX, f.earY), f.earSize);
+  float earR = earShape(p - vec2(f.earX, f.earY), f.earSize);
 
-  // Adding a constant to a distance field shrinks it away, which retires the eye domes
-  // from the silhouette on a species that sits flat.
-  float retire = (1.0 - f.eyeBulge) * 2.0;
   float domes = min(
-    sdCircle(p - vec2(-f.eyeX, f.eyeY), f.eyeR * 1.3) + retire,
-    sdCircle(p - vec2(f.eyeX, f.eyeY), f.eyeR * 1.3) + retire
+    sdCircle(p - vec2(-f.eyeX, f.eyeY), f.eyeR * 1.3),
+    sdCircle(p - vec2(f.eyeX, f.eyeY), f.eyeR * 1.3)
   );
 
   return smin(smin(head, min(earL, earR), 0.035), domes, 0.05);
@@ -202,8 +165,9 @@ float bodyField(vec2 p, Face f) {
 // index of a slot is hashed for one number per event, which is what makes the
 // timing uneven: a wave would beat like a metronome, and reading the clock straight
 // gives every eye the same drift. Nothing here is smooth for its own sake, since
-// each of the three moves differently: a blink is a short shut, a look is a jump
-// held a long while, a smile only ever creeps.
+// each of the five moves differently: a blink is a short shut, a look is a jump held
+// a long while, a smile only ever creeps, a jaw drops and comes back on the weight of
+// itself, and a pupil swells and shrinks on a clock of its own.
 float hash1(float n) {
   return fract(sin(n * 127.1) * 43758.5453);
 }
@@ -262,12 +226,71 @@ float wander(float t) {
   return mix(hash1(i), hash1(i + 1.0), k * k * (3.0 - 2.0 * k));
 }
 
-// A mouth held by muscle drifts on more than one clock, so a slow wander is laid
-// under a quicker one. The range keeps the frog somewhere between mildly pleased
-// and grinning, since the sulking end of the old Var read as a different animal.
+// How far the corners of the mouth are curled, which is the smile and nothing else:
+// how far the mouth stands open is the jaw's business, below. A mouth held by muscle
+// drifts on more than one clock, so a slow wander is laid under a quicker one. The
+// range keeps the frog somewhere between mildly pleased and grinning, since the
+// sulking end of the old Var read as a different animal.
 float smileAt(float t) {
   float drift = 0.62 * wander(t / 2.6) + 0.38 * wander(t / 7.1 + 23.0);
   return mix(0.22, 0.95, drift);
+}
+
+// How much of the iris the black of the eye takes. A pupil is muscle, so it drifts
+// rather than stepping, on a clock of its own so it is not locked to the gaze or the
+// blink. One wander is enough: mixing two would keep it near the middle for long
+// stretches, which is exactly the size it already held. The range is a short travel
+// around the size the pupil had when it was still, so the eye keeps a yellow ring at
+// both ends rather than going from a pinprick to a black disc.
+float pupilScaleAt(float t) {
+  return mix(0.42, 0.64, wander(t / 2.2 + 14.0));
+}
+
+// One event on the jaw: a run out, a hold at the end of it, and a run back, each
+// timed on its own, since nothing a jaw does takes as long coming back as it did
+// going out. The hold is the part that reads as a pose rather than a twitch.
+float jawPulse(float dt, float fall, float hold, float rise) {
+  if (dt < 0.0) return 0.0;
+  if (dt < fall) return smoothstep(0.0, fall, dt);
+  if (dt < fall + hold) return 1.0;
+  return 1.0 - smoothstep(fall + hold, fall + hold + rise, dt);
+}
+
+// How far the mouth stands open, which is its own clock and not the smile's. A
+// drift carries the resting opening, and slots of time are hashed for the two things
+// a jaw does over the top of it. Some slots throw a shut, which takes the mouth all
+// the way down to a closed seam and holds it there a beat, since a frog spends as
+// much of its time with its mouth shut as open. Others throw a gape, the mouth widened
+// to its fullest and eased off again. One or the other to a slot at most, and a slot is
+// left empty often enough that the drift gets the face to itself now and then. The slot
+// before is asked as well, so an event thrown late is not cut off at the boundary.
+//
+// The three move at speeds that are nothing like each other, and that is the whole of
+// what tells them apart. Only shutting the mouth is quick: a jaw falls under its own
+// weight and is sprung open by muscle, and that is over in a fraction of a second. A
+// gape is worked by the same muscle in both directions with the jaw's weight against
+// it, so it swells and eases off across the better part of a second either way; struck
+// on the shut's timings it read as a flinch rather than a mouth opening wider. The
+// drift is slower again, since between events the mouth is only settling, and a resting
+// opening that shifted at anything near the pace of a jaw read as a mumble.
+float mouthOpenAt(float t) {
+  float drift = 0.60 * wander(t / 5.2) + 0.40 * wander(t / 13.0 + 11.0);
+  float rest = mix(0.34, 1.0, drift);
+  // Long enough a slot to leave the drift a stretch of open ground either side of the
+  // event in it, and the throw inside the slot is held clear of the end by the longest
+  // an event can run, so a gape is never cut in half by the slot after it.
+  float slot = 3.6;
+  float here = floor(t / slot);
+  float shut = 0.0;
+  float gape = 0.0;
+  for (int k = 0; k < 2; k++) {
+    float i = here - float(k);
+    float kind = hash1(i + 0.19);
+    float start = i * slot + hash1(i) * (slot - 2.6);
+    shut = max(shut, step(0.52, kind) * jawPulse(t - start, 0.09, mix(0.20, 1.00, hash1(i + 3.3)), 0.28));
+    gape = max(gape, step(kind, 0.28) * jawPulse(t - start, mix(0.45, 0.85, hash1(i + 5.9)), mix(0.15, 0.55, hash1(i + 7.7)), mix(0.55, 1.00, hash1(i + 9.1))));
+  }
+  return clamp(mix(rest, 1.0, gape) * (1.0 - shut), 0.0, 1.0);
 }
 
 void main() {
@@ -291,14 +314,16 @@ void main() {
   f.headH *= mix(0.97, 1.06, cute);
   f.chin *= mix(1.10, 0.86, cute);
   // The patch is a pale chin rather than a muzzle, since the open mouth has taken the
-  // ground it used to sit on. It is cut narrow enough to keep clear of the corners of
-  // the aperture, and hung low enough that the floor of the mouth covers its top edge
-  // while the silhouette cuts its bottom, which leaves a sliver of pale lying on the
-  // jaw instead of a halo around the tongue. It holds one size across the dial, since
-  // a patch that swelled on a plain face would flank the mouth again. The drop still
-  // has to follow the dial, since the jaw sinks as the skull grows.
-  f.muzzleY -= mix(0.055, 0.090, cute);
-  f.noseY *= mix(1.06, 0.94, cute);
+  // ground it used to sit on. It is cut wide and deep enough that the silhouette takes
+  // its sides and its bottom and only its top edge is its own, which is the broad pale
+  // throat a tree frog wears rather than the sliver of pale it used to leave on the
+  // jaw. That top edge is hung to run just under the floor of the mouth at rest, so the
+  // mouth sits on green and the pale starts where the mouth ends: a mouth gaping past
+  // it lays the dark of the throat over the pale, and a mouth shut well above it leaves
+  // the pale whole. It holds one size across the dial, since the pale is a marking on
+  // the animal and not a part of its build. The drop still has to follow the dial, since
+  // the jaw sinks as the skull grows.
+  f.muzzleY -= mix(0.080, 0.115, cute);
 
   vec2 look = gazeAt(uTime);
 
@@ -308,12 +333,12 @@ void main() {
   vec2 p = uv - vec2(0.0, -0.045);
 
   float blink = blinkAmount(uTime);
+  // The jaw is read here rather than down with the mouth it draws, since the pale
+  // throat is laid on the face well before the mouth and has to follow it.
+  float open = mouthOpenAt(uTime);
 
   float body = bodyField(p, f);
 
-  // The ear frames and eye centres again, for the lining and the eyes themselves.
-  vec2 pEarL = rot(p - vec2(-f.earX, f.earY), -f.earTilt);
-  vec2 pEarR = rot(p - vec2(f.earX, f.earY), f.earTilt);
   vec2 eyePosL = vec2(-f.eyeX, f.eyeY);
   vec2 eyePosR = vec2(f.eyeX, f.eyeY);
 
@@ -329,28 +354,12 @@ void main() {
   vec3 furCol = mix(f.furDark, f.fur, 0.34 + 0.66 * lift);
   color = paint(color, furCol, bodyMask);
 
-  float innerL = earShape(pEarL, f.earSize * 0.56, f.earPoint);
-  float innerR = earShape(pEarR, f.earSize * 0.56, f.earPoint);
-  vec3 innerCol = mix(f.furDark, f.noseCol, 0.55);
-  // An ear this small is a nub buried in the skull, so it never reaches the
-  // silhouette and the inner colour would only read as a speck on the face.
-  float earLining = smoothstep(0.04, 0.08, f.earSize);
-  color = paint(color, innerCol, min(fill(innerL, px), 1.0) * bodyMask * earLining);
-  color = paint(color, innerCol, min(fill(innerR, px), 1.0) * bodyMask * earLining);
-
-  float stripeD = min(
-    sdCapsule(p, vec2(0.0, f.headH * 0.52), vec2(0.0, f.headH * 0.94), 0.021),
-    min(
-      sdCapsule(p, vec2(-0.10, f.headH * 0.46), vec2(-0.14, f.headH * 0.86), 0.019),
-      sdCapsule(p, vec2(0.10, f.headH * 0.46), vec2(0.14, f.headH * 0.86), 0.019)
-    )
-  );
-  color = paint(color, f.furDark, fill(stripeD, px) * f.stripes * bodyMask);
-
-  float patchD = sdEllipse(p - vec2(0.0, f.muzzleY), vec2(f.muzzleW, f.muzzleH));
-  float cheekPatchL = sdEllipse(p - vec2(-f.headW * 0.58, -0.04), vec2(f.headW * 0.30, f.headH * 0.40));
-  float cheekPatchR = sdEllipse(p - vec2(f.headW * 0.58, -0.04), vec2(f.headW * 0.30, f.headH * 0.40));
-  patchD = smin(patchD, min(cheekPatchL, cheekPatchR) + (1.0 - f.cheekPatch) * 2.0, 0.08);
+  // The throat is skin slung under the jaw, so it goes down with the jaw and rides
+  // back up as the mouth shuts. Only its top edge is on show, the silhouette holding
+  // the rest, so the whole of the movement reads there: a little travel is enough, and
+  // more than this ate the pale away to nothing at a full gape.
+  float patchY = f.muzzleY - mix(0.0, 0.026, open);
+  float patchD = sdEllipse(p - vec2(0.0, patchY), vec2(f.muzzleW, f.muzzleH));
   color = paint(color, f.patchCol, fill(patchD, px) * bodyMask * 0.96);
 
   // Eyes. The lids come down as arcs across a round eye, so the ink outline keeps
@@ -360,8 +369,10 @@ void main() {
   float eyeRd = sdLens(p - eyePosR, f.eyeR, lid);
   color = paint(color, ink, fill(min(eyeL, eyeRd) - 0.012, px));
   vec3 sclera = vec3(0.97, 0.97, 0.99);
-  color = paint(color, sclera, fill(eyeL, px));
-  color = paint(color, sclera, fill(eyeRd, px));
+  float fillEyeL = fill(eyeL, px);
+  float fillEyeR = fill(eyeRd, px);
+  color = paint(color, sclera, fillEyeL);
+  color = paint(color, sclera, fillEyeR);
 
   vec2 gaze = look * vec2(f.eyeR * 0.32, f.eyeR * 0.26);
   float irisRad = f.eyeR * f.irisR;
@@ -370,11 +381,9 @@ void main() {
   color = paint(color, f.iris, fill(irisL, px));
   color = paint(color, f.iris, fill(irisRd, px));
 
-  vec2 slitR = vec2(irisRad * 0.20, irisRad * 0.78);
-  vec2 roundR = vec2(irisRad * 0.52, irisRad * 0.52);
-  vec2 pupilR = mix(roundR, slitR, f.pupilSlit);
-  float pupilL = smax(sdEllipse(p - eyePosL - gaze, pupilR), eyeL, 0.004);
-  float pupilRd = smax(sdEllipse(p - eyePosR - gaze, pupilR), eyeRd, 0.004);
+  float pupilRad = irisRad * pupilScaleAt(uTime);
+  float pupilL = smax(sdCircle(p - eyePosL - gaze, pupilRad), eyeL, 0.004);
+  float pupilRd = smax(sdCircle(p - eyePosR - gaze, pupilRad), eyeRd, 0.004);
   color = paint(color, vec3(0.05, 0.04, 0.06), fill(pupilL, px));
   color = paint(color, vec3(0.05, 0.04, 0.06), fill(pupilRd, px));
 
@@ -388,7 +397,7 @@ void main() {
     min(sdCircle(p - eyePosL - gaze - sparkB, sparkSmall),
         sdCircle(p - eyePosR - gaze - sparkB, sparkSmall))
   );
-  float eyeMask = max(fill(eyeL, px), fill(eyeRd, px));
+  float eyeMask = max(fillEyeL, fillEyeR);
   color = paint(color, vec3(1.0), fill(glint, px) * eyeMask * (1.0 - blink));
 
   // A frog has no muzzle to hang a nose off. Its snout carries two slits set wide
@@ -432,25 +441,26 @@ void main() {
   float fold = sdCrescent(tq - vec2(-nr * 0.386, nr * 1.524), nr * 1.15, nr * 0.79, nr * 0.27, nr * 0.35);
   color = paint(color, ink, fill(fold, px) * bodyMask);
 
-  float philtrumD = sdCapsule(p, vec2(0.0, f.noseY - f.noseR * 1.3), vec2(0.0, f.mouthY), 0.011);
-  color = paint(color, mix(f.patchCol, ink, 0.55), fill(philtrumD, px) * f.philtrum * bodyMask);
-
-  // The mouth is held open: an upper lip sagging through the middle and a floor
-  // dropped most of the way to the chin, both struck as the same power of the folded
-  // x, so the two meet in a point at either corner and the grin tapers away instead
-  // of being cut off square. The figures are read off the drawing against the head
-  // it sits on: corners a fifteenth of the head above the lip's middle, floor a
-  // third of the mouth's width below the corners, both edges bending as x^1.8, which
-  // is what the drawn edges measure.
+  // The mouth is an upper lip sagging through the middle over a floor dropped below
+  // it, both struck as the same power of the folded x, so the two meet in a point at
+  // either corner and the mouth tapers away instead of being cut off square. The
+  // figures are read off the drawing against the head it sits on: corners a fifteenth
+  // of the head above the lip's middle, both edges bending as x^1.8, which is what the
+  // drawn edges measure.
   float grin = smileAt(uTime);
   float halfW = f.mouthW;
-  // Both ends answer the grin: the corners ride up and the floor drops, which is what
-  // makes the mouth open rather than merely curl. The floor takes the smaller share of
-  // the travel, since it has the least room to work in: the pale chin lies just under
-  // it and the ink below that, so a floor swinging as far as the corners do would run
-  // into one or lift clear of the other and leave the chin patch hanging on its own.
-  float arch = mix(0.018, 0.078, grin);
-  float gape = mix(0.150, 0.258, grin);
+  // The corners answer the smile and the floor answers the jaw, since a curl of the
+  // lip and how far the mouth stands open are two separate things. Hanging both on
+  // the smile left the mouth barely moving at all: the corners rode up as the floor
+  // dropped, so the ground between them held much the same depth throughout, and the
+  // mouth curled without ever opening or shutting. So the floor is now set a stated
+  // opening below the lip rather than at a depth of its own. The widest opening is
+  // all the room there is, since the pale chin lies just under the floor and the ink
+  // below that; the narrowest is a hair, which leaves the curve of the lip drawn as a
+  // closed seam instead of wiping the mouth off the face altogether.
+  float arch = mix(0.014, 0.082, grin);
+  float aperture = mix(0.008, 0.185, open);
+  float gape = arch + aperture;
   float cornerY = f.mouthY + 0.015 + arch;
   vec2 mq = vec2(abs(p.x), p.y - cornerY);
 
@@ -486,25 +496,23 @@ void main() {
   float dLip = (mq.y - lipEdge) / sqrt(1.0 + arch * arch * bendSlope * bendSlope);
   float dFloor = (floorEdge - mq.y) / sqrt(1.0 + gape * gape * bendSlope * bendSlope);
   float mouth = smax(dLip, dFloor, 0.004);
-  color = paint(color, f.mouthCol, fill(mouth, px) * bodyMask);
+  // The red of the throat is only worth showing once there is a throat to see. On a
+  // shut mouth the seam takes the colour of the lip instead, so it reads as one line
+  // with the strokes hooking off its corners rather than as a red thread laid on a
+  // green face.
+  vec3 throatCol = mix(mix(f.lipCol, ink, 0.35), f.mouthCol, smoothstep(0.03, 0.30, open));
+  color = paint(color, throatCol, fill(mouth, px) * bodyMask);
 
   // The tongue is a shallow dome standing in the floor of the mouth, wider than the
   // mouth is at that depth and cut back by it rather than fitted to it, which is what
   // leaves the dark of the throat wrapped around its shoulders and no gap under it.
+  // It stands a band of throat below the lip rather than a share of the opening, so a
+  // mouth closing past that band cuts the tongue away for itself and no pink is left
+  // lying across a shut mouth.
   float tongueR = halfW * 0.86;
-  float tongue = smax(mouth, sdCircle(mq - vec2(0.0, -gape * 0.357 - tongueR), tongueR), 0.004);
+  float throat = halfW * 0.038 + aperture * 0.05;
+  float tongue = smax(mouth, sdCircle(mq - vec2(0.0, -arch - throat - tongueR), tongueR), 0.004);
   color = paint(color, f.tongueCol, fill(tongue, px) * bodyMask);
-
-  float whiskerD = 1.0;
-  float whiskerR = 0.006;
-  for (int i = 0; i < 3; i++) {
-    float k = float(i);
-    float y0 = -0.04 - k * 0.045;
-    float y1 = 0.02 - k * 0.085;
-    whiskerD = min(whiskerD, sdCapsule(p, vec2(-f.headW * 0.70, y0), vec2(-f.headW * 1.75, y1), whiskerR));
-    whiskerD = min(whiskerD, sdCapsule(p, vec2(f.headW * 0.70, y0), vec2(f.headW * 1.75, y1), whiskerR));
-  }
-  color = paint(color, mix(f.patchCol, vec3(1.0), 0.5), fill(whiskerD, px) * f.whisker * 0.9);
 
   gl_FragColor = vec4(color, 1.0);
 }
