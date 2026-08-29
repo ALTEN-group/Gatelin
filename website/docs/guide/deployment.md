@@ -1,6 +1,6 @@
 # Deployment
 
-Gatelin is a BFF you run behind Traefik (or another reverse proxy). It is distributed as Docker images on Docker Hub:
+Gatelin is a BFF you run behind a reverse proxy like Traefik or any another one. It is distributed as GHCR images:
 
 - **`ghcr.io/alten-group/gatelin`** — the BFF process, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
 - **`ghcr.io/alten-group/gatelin-migration`** — the Liquibase migration container
@@ -37,7 +37,7 @@ Scale the edge proxy and the upstream microservices instead. A shared session st
 
 ## docker-compose.yml template
 
-Drop this file into your project and replace the placeholder values. No Gatelin source code required — all images are pulled from Docker Hub.
+Drop this file into your project and replace the placeholder values. No Gatelin source code required — all images are pulled from GHCR.
 
 ```yaml
 name: my-project
