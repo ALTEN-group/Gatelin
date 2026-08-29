@@ -15,7 +15,6 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `DB_USER` | Database user for Gatelin |
 | `DB_PWD` | Database password for Gatelin |
 | `TOKEN_SECRET` | Secret used to sign/verify JWT tokens, at least 32 characters |
-| `SERVICE_NAME` | Container hostname of the Gatelin service (used for logs) |
 | `ACCESS_TOKEN_DURATION` | Access token lifetime in seconds (default: `600`) |
 | `REFRESH_TOKEN_DURATION` | Refresh token lifetime in seconds (default: `86400`) |
 
