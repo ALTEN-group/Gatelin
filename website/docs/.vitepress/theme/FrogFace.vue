@@ -23,10 +23,12 @@ const CANVAS_ID = "frogFaceCanvas";
 const ready = ref(false);
 
 let animation = null;
+let observer = null;
 let disposed = false;
 
 onBeforeUnmount(() => {
   disposed = true;
+  observer?.disconnect();
   animation?.stop();
 });
 
@@ -71,6 +73,19 @@ onMounted(async () => {
     animation.capFPS(FPS_CAP);
     animation.start();
     ready.value = true;
+
+    // The hero is at the top of the page, so the frog is scrolled past within a
+    // few seconds of anyone arriving and then draws for as long as they read.
+    // requestAnimationFrame stops itself for a hidden tab but knows nothing
+    // about a canvas that has left the viewport, so that case is watched here.
+    // pause() leaves the clock where it stands, unlike stop(), which resets it
+    // and would snap the face back to the start of every cycle it is mid-way
+    // through on the way back up.
+    observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) animation.start();
+      else animation.pause();
+    });
+    observer.observe(renderer.canvas);
   } catch {
     // The frog is decoration. A machine without WebGL, or a shader that failed
     // to load, leaves the hero without it rather than without a page: `ready`
