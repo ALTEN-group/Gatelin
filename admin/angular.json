@@ -34,7 +34,6 @@
           "builder": "@angular/build:application",
           "options": {
             "allowedCommonJsDependencies": [
-              "quill",
               "leaflet",
               "leaflet.markercluster"
             ],
@@ -56,7 +55,6 @@
               "./node_modules/@openng/icons/openng-icons.css"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/chart.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
