@@ -1,6 +1,6 @@
 ---
-description: "Use when working on Node.js Express service. Covers file structure, coding conventions, library usage, flow, caching, error handling and security patterns."
-applyTo: "src/**/*.js"
+paths:
+  - "src/**/*.js"
 ---
 
 # Node.js / Express Coding Instructions

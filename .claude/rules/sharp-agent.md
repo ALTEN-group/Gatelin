@@ -1,6 +1,6 @@
 ---
-description: "Guidelines to avoid overengineering and reduce token consumption. Favor surgical changes and establish clean problem-solving strategies."
-applyTo: "**"
+paths:
+  - "**"
 ---
 
 **Tradeoff:** These guidelines bias toward caution.
