@@ -4,6 +4,7 @@ author: LCluber
 targets:
   - copilot
   - cursor
+  - claude
 dependencies:
   apm:
     # Agents
