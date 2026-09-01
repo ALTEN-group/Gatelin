@@ -8,4 +8,4 @@ EXECUTE PROCEDURE iud_resource();
 CREATE TRIGGER resource_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "resource"
 FOR EACH ROW 
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

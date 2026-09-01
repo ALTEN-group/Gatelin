@@ -93,5 +93,5 @@ export default {
   init,
   getOne,
   getServiceBaseUrl,
-  deleteArchived: makeDeleteArchived(rEnt),
+  deleteArchived: makeDeleteArchived("route"),
 };

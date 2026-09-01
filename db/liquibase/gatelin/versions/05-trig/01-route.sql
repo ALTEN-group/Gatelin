@@ -8,4 +8,4 @@ EXECUTE PROCEDURE iud_route();
 CREATE TRIGGER route_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "route"
 FOR EACH ROW 
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

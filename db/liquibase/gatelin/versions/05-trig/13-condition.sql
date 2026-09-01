@@ -8,4 +8,4 @@ EXECUTE PROCEDURE iud_condition();
 CREATE TRIGGER condition_history_trigger
 AFTER INSERT OR UPDATE OR DELETE ON "condition"
 FOR EACH ROW
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

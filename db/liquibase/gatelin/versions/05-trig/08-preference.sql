@@ -23,4 +23,4 @@ EXECUTE PROCEDURE iud_preference();
 -- CREATE TRIGGER preference_history_trigger
 -- AFTER INSERT OR UPDATE OR DELETE ON "preference"
 -- FOR EACH ROW
--- EXECUTE PROCEDURE change_trigger();
+-- EXECUTE PROCEDURE iud_history();

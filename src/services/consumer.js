@@ -173,5 +173,5 @@ export default {
   addToCache,
   updateCache,
   deleteFromCache,
-  deleteArchived: makeDeleteArchived(cEnt),
+  deleteArchived: makeDeleteArchived("consumer"),
 };

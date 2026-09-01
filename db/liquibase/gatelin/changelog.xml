@@ -12,15 +12,15 @@
   </changeSet>
   <changeSet id="01-hist-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/01-hist/02-log.sql" splitStatements="false"/>
+    <sqlFile path="versions/01-hist/02-trig.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="01-hist-03" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/01-hist/03-del.sql" splitStatements="false"/>
+    <sqlFile path="versions/01-hist/03-log.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="01-hist-04" author="lcluber">
-    <comment>Functional index on log.history record id for fast entity history lookups</comment>
-    <sqlFile path="versions/01-hist/04-index.sql" splitStatements="false"/>
+  <changeSet id="01-hist-05" author="lcluber">
+    <comment>Indexes for entity history lookups and tstamp age-out</comment>
+    <sqlFile path="versions/01-hist/05-index.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- functions -->

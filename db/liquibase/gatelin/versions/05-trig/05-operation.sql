@@ -8,4 +8,4 @@ EXECUTE PROCEDURE before_update_archived();
 CREATE TRIGGER operation_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "operation"
 FOR EACH ROW 
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

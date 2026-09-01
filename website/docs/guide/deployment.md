@@ -123,7 +123,7 @@ services:
       PWD_CHECK_URL: http://my-project-foxnox-local:3000/foxnox/compare
       # Only needed when the credential check reports lockout, password expiry or 2FA
       PWD_CHALLENGES_URL: http://my-project-foxnox-local:3000/foxnox/challenges
-      PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/trusted-devices/verify
+      PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/devices/verify
       PWD_LOGIN_TICKET_URL: http://my-project-foxnox-local:3000/foxnox/login-tickets/redeem
       USER_SEARCH_URL: http://my-project-msuser-local:3000/users/search
       DB_HOST: my-project-postgres-local

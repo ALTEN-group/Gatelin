@@ -23,7 +23,7 @@ Start the stack:
 `start-dev.sh` pulls the Foxnox image (`ghcr.io/alten-group/foxnox:0.1.0-alpha.1`), waits until it is healthy, then seeds mock passwords via `POST /foxnox/` into `swagger/src/gatelin.openapi.json`. Re-run `./scripts/setup-mocks.sh` later if you want to rotate them.
 
 Foxnox also stands in for the mid-login challenges (`POST /foxnox/challenges`,
-`/foxnox/trusted-devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
+`/foxnox/devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
 so each mock user covers one login path:
 
 | User | Login outcome |

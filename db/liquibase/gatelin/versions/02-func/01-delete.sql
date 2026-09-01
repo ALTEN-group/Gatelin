@@ -1,26 +1,24 @@
+-- Hard-delete rows whose archivedAt is before the cutoff.
+-- History is left in place; the delete-old-history job ages it out.
+-- p_schema_name is kept so callers can stay SELECT delete($1, $2, $3).
+-- Return type changed from VOID: CREATE OR REPLACE cannot alter it.
+DROP FUNCTION IF EXISTS delete(TEXT, TEXT, TIMESTAMP);
 
--- Create a reusable function for hard deleting any record
--- This function handles the common pattern of hard deletes without code duplication
--- and cleans up related history records
-
--- Function to hard delete records by archivedAt and delete history for each
-CREATE OR REPLACE FUNCTION delete(
+CREATE FUNCTION delete(
   p_schema_name TEXT,
   p_table_name TEXT,
   p_archived_at TIMESTAMP
-) RETURNS VOID AS $$
+) RETURNS INTEGER AS $$
 DECLARE
-  rec RECORD;
-  sql TEXT;
+  n INT;
 BEGIN
-  sql := format('SELECT id FROM %I WHERE "archivedAt" < $1', p_table_name);
-  FOR rec IN EXECUTE sql USING p_archived_at LOOP
-    PERFORM delete_history(p_schema_name, p_table_name, rec.id);
-    EXECUTE format('DELETE FROM %I WHERE id = $1', p_table_name) USING rec.id;
-  END LOOP;
+  EXECUTE format('DELETE FROM %I WHERE "archivedAt" < $1', p_table_name)
+    USING p_archived_at;
+  GET DIAGNOSTICS n = ROW_COUNT;
+  RETURN n;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;
 
 -- Example usage:
--- Clean up users archived more than 1 year ago
--- SELECT delete('public', 'user', NOW() - INTERVAL '1 year');
+-- SELECT delete('public', 'user', NOW() - INTERVAL '2 months');

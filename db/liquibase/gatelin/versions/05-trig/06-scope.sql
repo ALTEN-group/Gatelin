@@ -8,4 +8,4 @@ EXECUTE PROCEDURE iud_scope();
 CREATE TRIGGER scope_history_trigger 
 AFTER INSERT OR UPDATE OR DELETE ON "scope"
 FOR EACH ROW 
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { execute } from "@dwtechs/antity-pgsql";
+import { executeJob } from "./job-pool.js";
 import { log } from "@dwtechs/winstan";
 import { scheduleDailyAt } from "./scheduler.js";
 
@@ -37,5 +37,5 @@ async function deleteOldHistory() {
 
   const query = "DELETE FROM log.history WHERE tstamp < $1";
   const args = [cutoff];
-  return execute(query, args, null).then((r) => r.rowCount || 0);
+  return executeJob(query, args).then((r) => r.rowCount || 0);
 }

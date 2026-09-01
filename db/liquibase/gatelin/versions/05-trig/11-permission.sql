@@ -8,4 +8,4 @@ EXECUTE PROCEDURE iud_permission();
 CREATE TRIGGER permission_history_trigger
 AFTER INSERT OR UPDATE OR DELETE ON permission
 FOR EACH ROW
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();

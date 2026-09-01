@@ -1,8 +1,3 @@
-
--- DROP SCHEMA IF EXISTS public CASCADE;
-CREATE SCHEMA IF NOT EXISTS public;
-SET search_path TO public;
-
 -- Function to insert records into history log
 -- This centralizes the history logging logic
 -- Using JSON objects instead of record types to avoid type casting issues
@@ -16,13 +11,18 @@ DECLARE
   v_user_id INT;
   v_user_name TEXT;
 BEGIN
-  -- Extract audit identity from creator (INSERT) or updater (UPDATE/DELETE)
+  -- INSERT: creator. UPDATE: updater. DELETE: archive job only → system.
   IF p_operation = 'INSERT' THEN
     v_user_id   := (record_new->>'creatorId')::INT;
     v_user_name := record_new->>'creatorName';
-  ELSE
+  ELSIF p_operation = 'DELETE' THEN
+    v_user_id   := -1;
+    v_user_name := 'system';
+  ELSIF p_operation = 'UPDATE' THEN
     v_user_id   := (record_new->>'updaterId')::INT;
     v_user_name := record_new->>'updaterName';
+  ELSE
+    RAISE EXCEPTION 'unsupported history operation: %', p_operation;
   END IF;
 
   -- Validate that user information is provided
@@ -30,11 +30,12 @@ BEGIN
     RAISE EXCEPTION '"userId" is required for tracked operations.';
   END IF;
   
-  IF v_user_name IS NULL THEN
+  IF NULLIF(btrim(v_user_name), '') IS NULL THEN
     RAISE EXCEPTION '"userName" is required for tracked operations.';
   END IF;
 
-  INSERT INTO log.history ("tableName", "schemaName", operation, "userId", "userName", record)
-    VALUES (p_table_name, p_schema_name, p_operation, v_user_id, v_user_name, record_new);
+  INSERT INTO log.history ("tableName", "schemaName", operation, "dbUser", "userId", "userName", record)
+    VALUES (p_table_name, p_schema_name, p_operation, session_user, v_user_id, v_user_name, record_new);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;

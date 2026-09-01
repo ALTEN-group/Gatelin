@@ -12,8 +12,10 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `USER_SEARCH_URL` | URL of the user microservice search endpoint (login looks up users by email) |
 | `DB_HOST` | Hostname of the PostgreSQL container |
 | `DB_NAME` | Database name (default: `gatelin`) |
-| `DB_USER` | Database user for Gatelin |
+| `DB_USER` | Database user for Gatelin request handling |
 | `DB_PWD` | Database password for Gatelin |
+| `DB_JOB_USER` | Database user for archive/history cron jobs (may `DELETE` catalog rows) |
+| `DB_JOB_PWD` | Password for the cron database user |
 | `TOKEN_SECRET` | Secret used to sign/verify JWT tokens, at least 32 characters |
 | `ACCESS_TOKEN_DURATION` | Access token lifetime in seconds (default: `600`) |
 | `REFRESH_TOKEN_DURATION` | Refresh token lifetime in seconds (default: `86400`) |
@@ -68,6 +70,8 @@ These apply to the `gatelin-migration` container (`ghcr.io/alten-group/gatelin-m
 | `DB_NAME` | ✅ | Database name to create and migrate |
 | `DB_USER` | ✅ | Application database user to create |
 | `DB_PWD` | ✅ | Password for the application database user |
+| `DB_JOB_USER` | ✅ | Cron database user (may `DELETE` archived catalog rows) |
+| `DB_JOB_PWD` | ✅ | Password for the cron database user |
 | `UPDATE` | ✅ | Set to `1` to run the full migration |
 | `ROLLBACK` | ⬜ | Number of changesets to roll back (used instead of `UPDATE`) |
 | `SNAPSHOT` | ⬜ | Path to the reference snapshot file |

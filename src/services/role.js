@@ -1,5 +1,4 @@
 // @ts-check
-import rEnt from "../entities/role.js";
 import rcEnt from "../entities/role-cache.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
@@ -66,5 +65,5 @@ function getOne(id) {
 export default {
   init,
   getOne,
-  deleteArchived: makeDeleteArchived(rEnt),
+  deleteArchived: makeDeleteArchived("role"),
 };
