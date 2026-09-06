@@ -130,7 +130,14 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
       port: process.env.PORT || 3000,
       path: "/foxnox/",
       method: "POST",
-      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        // Tracked writes are rejected without a consumer, since that is what
+        // stamps the audit columns the history trigger requires.
+        "x-consumer-user-id": "1",
+        "x-consumer-name": "seed-script",
+      },
     }, (res) => {
       let out = "";
       res.on("data", (c) => out += c);
@@ -151,9 +158,15 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
 echo -e "${YELLOW}🧪 Applying mid-login challenge states...${NC}"
 docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   psql -U "$POSTGRES_ROOT_USER" -d "$FOXNOX_DB_NAME" -v ON_ERROR_STOP=1 -c \
-  "UPDATE pwd SET \"twoFactorEnabled\" = true WHERE \"userId\" = 3;
-   UPDATE pwd SET \"pwdExpiry\" = '2020-01-01T00:00:00Z' WHERE \"userId\" = 4;
-   UPDATE pwd SET \"failedAttempts\" = 3, \"lockedUntil\" = '2099-01-01T00:00:00Z' WHERE \"userId\" = 5;" >/dev/null
+  "UPDATE pwd SET \"twoFactorEnabled\" = true,
+     \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
+   WHERE \"userId\" = 3;
+   UPDATE pwd SET \"pwdExpiry\" = '2020-01-01T00:00:00Z',
+     \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
+   WHERE \"userId\" = 4;
+   UPDATE pwd SET \"failedAttempts\" = 3, \"lockedUntil\" = '2099-01-01T00:00:00Z',
+     \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
+   WHERE \"userId\" = 5;" >/dev/null
 
 cp "$SWAGGER_EXAMPLE" "$SWAGGER_FILE"
 

@@ -10,10 +10,15 @@ import {
   updateCache,
 } from "../middlewares/cache/cors.js";
 import history from "../middlewares/history.js";
+import { dropInheritedCredentials } from "../middlewares/mappers/cors/dropInheritedCredentials.js";
 import schema from "../middlewares/schema.js";
 
 const add = [cEnt.addArraySubstack, addToCache];
-const update = [cEnt.updateArraySubstack, updateCache];
+const update = [
+  dropInheritedCredentials,
+  cEnt.updateArraySubstack,
+  updateCache,
+];
 const del = [cEnt.archive, deleteFromCache];
 
 // Get routes

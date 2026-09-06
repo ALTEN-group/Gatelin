@@ -30,6 +30,8 @@ services:
       DB_NAME: gatelin_test
       DB_USER: gatelin_test_app
       DB_PWD: test-app-password
+      DB_JOB_USER: gatelin_test_job
+      DB_JOB_PWD: test-job-password
       UPDATE: 1
       ROLLBACK: 0
       LIQUIBASE_LOG_LEVEL: INFO
@@ -48,6 +50,8 @@ services:
       PGDATABASE: gatelin_test
       PGUSER: gatelin_test_app
       PGPASSWORD: test-app-password
+      PGUSER_JOB: gatelin_test_job
+      PGPASSWORD_JOB: test-job-password
     depends_on:
       migration:
         condition: service_completed_successfully

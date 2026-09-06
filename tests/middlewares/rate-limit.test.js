@@ -6,6 +6,7 @@ import express from "express";
 import { ipKeyGenerator } from "express-rate-limit";
 import request from "supertest";
 import {
+  clientIp,
   createIdentityLimiter,
   createSessionLimiter,
   envMax,
@@ -23,6 +24,54 @@ describe("identityKey", () => {
     const req = { ip: "10.0.0.8" };
     const res = { locals: {} };
     expect(identityKey(req, res)).toBe(ipKeyGenerator("10.0.0.8"));
+  });
+
+  it("should use X-Forwarded-For on a raw upgrade request with no req.ip", () => {
+    const req = {
+      headers: { "x-forwarded-for": "203.0.113.10" },
+      socket: { remoteAddress: "10.0.0.2" },
+    };
+    const res = { locals: {} };
+    expect(identityKey(req, res)).toBe(ipKeyGenerator("203.0.113.10"));
+  });
+});
+
+describe("clientIp", () => {
+  it("should prefer Express req.ip when it is already set", () => {
+    expect(
+      clientIp({
+        ip: "198.51.100.1",
+        headers: { "x-forwarded-for": "203.0.113.9" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("198.51.100.1");
+  });
+
+  it("should use the socket address when no forwarded header is present", () => {
+    expect(
+      clientIp({
+        headers: {},
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("10.0.0.2");
+  });
+
+  it("should take the hop before the trusted proxy from X-Forwarded-For", () => {
+    expect(
+      clientIp({
+        headers: { "x-forwarded-for": "198.51.100.7, 203.0.113.10" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("203.0.113.10");
+  });
+
+  it("should ignore a spoofed leftmost X-Forwarded-For when Traefik appended the client", () => {
+    expect(
+      clientIp({
+        headers: { "x-forwarded-for": "192.0.2.1, 203.0.113.10" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("203.0.113.10");
   });
 });
 

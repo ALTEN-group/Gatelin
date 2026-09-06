@@ -12,15 +12,15 @@
   </changeSet>
   <changeSet id="01-hist-02" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/01-hist/02-log.sql" splitStatements="false"/>
+    <sqlFile path="versions/01-hist/02-trig.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="01-hist-03" author="lcluber">
     <comment></comment>
-    <sqlFile path="versions/01-hist/03-del.sql" splitStatements="false"/>
+    <sqlFile path="versions/01-hist/03-log.sql" splitStatements="false"/>
   </changeSet>
-  <changeSet id="01-hist-04" author="lcluber">
-    <comment>Functional index on log.history record id for fast entity history lookups</comment>
-    <sqlFile path="versions/01-hist/04-index.sql" splitStatements="false"/>
+  <changeSet id="01-hist-05" author="lcluber">
+    <comment>Indexes for entity history lookups and tstamp age-out</comment>
+    <sqlFile path="versions/01-hist/05-index.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- functions -->
@@ -75,6 +75,18 @@
   <changeSet id="02-func-13" author="lcluber">
     <comment>Role iud trigger function</comment>
     <sqlFile path="versions/02-func/13-role.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-14" author="lcluber">
+    <comment>Refuse archive of the core Gatelin application</comment>
+    <sqlFile path="versions/02-func/14-application.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-15" author="lcluber">
+    <comment>Refuse archive of the core gatelin service</comment>
+    <sqlFile path="versions/02-func/15-service.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="02-func-16" author="lcluber">
+    <comment>Refuse archive of core catalog operations</comment>
+    <sqlFile path="versions/02-func/16-operation.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- structures -->
@@ -165,20 +177,24 @@
     <sqlFile path="versions/04-view/05-consumer.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-06" author="lcluber">
-    <comment>Permissions views</comment>
-    <sqlFile path="versions/04-view/06-permissions.sql" splitStatements="false"/>
+    <comment>Role cache view used by the gateway role service at startup</comment>
+    <sqlFile path="versions/04-view/06-role-cache.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-07" author="lcluber">
-    <comment>Roles view with application name</comment>
-    <sqlFile path="versions/04-view/07-role.sql" splitStatements="false"/>
+    <comment>Management view: one row per (roleId, routeId, operationId)</comment>
+    <sqlFile path="versions/04-view/07-permissions.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-08" author="lcluber">
-    <comment>Conditions view with field name</comment>
-    <sqlFile path="versions/04-view/08-condition.sql" splitStatements="false"/>
+    <comment>Roles view with application name</comment>
+    <sqlFile path="versions/04-view/08-role.sql" splitStatements="false"/>
   </changeSet>
   <changeSet id="04-view-09" author="lcluber">
+    <comment>Conditions view with field name</comment>
+    <sqlFile path="versions/04-view/09-condition.sql" splitStatements="false"/>
+  </changeSet>
+  <changeSet id="04-view-10" author="lcluber">
     <comment>Preferences view with resource name</comment>
-    <sqlFile path="versions/04-view/09-preference.sql" splitStatements="false"/>
+    <sqlFile path="versions/04-view/10-preference.sql" splitStatements="false"/>
   </changeSet>
 
   <!-- triggers -->
@@ -288,5 +304,4 @@
     <comment>Permission seed data</comment>
     <sqlFile path="versions/06-data/12-permission.sql" splitStatements="false"/>
   </changeSet>
-
 </databaseChangeLog>

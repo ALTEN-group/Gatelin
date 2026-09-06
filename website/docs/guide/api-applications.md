@@ -91,3 +91,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+The seeded **Gatelin** row is `core`. It cannot be archived: roles (including locked Super-admin) belong to that application with `ON DELETE CASCADE`, so a later retention hard-delete would wipe the system roles. Custom applications still archive and are purged after 2 months.

@@ -23,7 +23,7 @@ Start the stack:
 `start-dev.sh` pulls the Foxnox image (`ghcr.io/alten-group/foxnox:0.1.0-alpha.1`), waits until it is healthy, then seeds mock passwords via `POST /foxnox/` into `swagger/src/gatelin.openapi.json`. Re-run `./scripts/setup-mocks.sh` later if you want to rotate them.
 
 Foxnox also stands in for the mid-login challenges (`POST /foxnox/challenges`,
-`/foxnox/trusted-devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
+`/foxnox/devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
 so each mock user covers one login path:
 
 | User | Login outcome |
@@ -184,6 +184,8 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 ### Publish to GHCR
 
 Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
+
+The VitePress site (GitHub Pages) deploys on the **same event** (`.github/workflows/deploy-docs.yml`), from the tagged commit. A push to `main` does not publish docs. Use **Actions → Deploy Docs to GitHub Pages → Run workflow** for a manual rebuild.
 
 ### Maintainer weekly audit
 

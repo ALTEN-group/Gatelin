@@ -1,6 +1,7 @@
 // @ts-check
 
 import routeSvc from "../services/route.js";
+import { resolvedPathAndQuery } from "./url.js";
 
 const HOP_BY_HOP_HEADERS = new Set([
   "connection",
@@ -79,8 +80,7 @@ export function isEventStream(req, upstreamRes) {
  * @returns {URL}
  */
 export function resolveUpstreamUrl(serviceName, reqUrl) {
-  const parsed = new URL(reqUrl, "http://placeholder");
-  const safeRoute = `${parsed.pathname}${parsed.search}`;
+  const safeRoute = resolvedPathAndQuery(reqUrl);
   return new URL(`${routeSvc.getServiceBaseUrl(serviceName)}${safeRoute}`);
 }
 

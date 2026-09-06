@@ -10,7 +10,8 @@ erDiagram
   resource ||--o{ field : ""
   resource ||--o{ route : ""
   route ||--o{ scope : ""
-  route }o--|{ method : ""
+  route ||--o{ route_method : ""
+  route_method }o--|| method : ""
   route ||--o{ route_operation : ""
   route_operation }o--|| operation : ""
 
@@ -18,6 +19,11 @@ erDiagram
   permission }o--|| operation : ""
   permission ||--o{ permission_condition : ""
   permission_condition }o--|| condition : ""
+
+  route_method {
+    int routeId FK
+    int methodId FK
+  }
 
   route_operation {
     int routeId FK
@@ -36,7 +42,6 @@ erDiagram
     varchar name
     varchar description
     varchar color
-    boolean active
     boolean locked
   }
 
@@ -86,8 +91,6 @@ erDiagram
     varchar description
     boolean protected
     boolean core
-    boolean archived
-    timestamp archivedAt
   }
 
   method {
@@ -101,14 +104,13 @@ erDiagram
     varchar name UK
     text description
     varchar color
-    boolean core
   }
 
   field {
     int id PK
     int resourceId FK
     text name
-    boolean locked
+    boolean core
   }
 
   scope {
@@ -122,15 +124,13 @@ erDiagram
 
 ```mermaid
 erDiagram
-
-  role }|--o{ consumer : "(denormalized int[])"
-  consumer }o--|| user : "(external)"
-  preference }o--|| user : "(external)"
-  preference }o--|| resource : ""
-  preference ||--o{ preference_selection : ""
-  preference_selection }o--|| user : "(external)"
-  resource ||--o{ preference_selection : ""
-
+  role }o--o{ consumer : "roles int[] (denormalized)"
+  consumer }o--|| user : "(external / ms_user)"
+  preference }o--|| user : "(external / ms_user)"
+  resource ||--o{ preference : "stores template/personal config"
+  preference ||--o{ preference_selection : "current selection"
+  preference_selection }o--|| user : "(external / ms_user)"
+  resource ||--o{ preference_selection : "selected on"
 
   cors {
     int id PK
@@ -150,23 +150,21 @@ erDiagram
 
   preference {
     int id PK
-    int userId FK "ms_user, null = template (locked)"
+    int userId FK "ms_user; null = template row"
     int resourceId FK "-> resource.id"
-    varchar name UK "UK with userId, resourceId"
+    varchar name UK "resourceId + name; template rows use userId IS NULL"
     jsonb conf
   }
 
   preference_selection {
     int userId PK, FK "ms_user"
     int resourceId PK, FK "-> resource.id"
-    int preferenceId FK "-> preference.id, current selection (template or personal)"
+    int preferenceId FK "-> preference.id"
   }
 
   user {
-
   }
 
   role {
-
   }
 ```

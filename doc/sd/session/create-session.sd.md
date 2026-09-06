@@ -191,7 +191,7 @@ sequenceDiagram
     end
     rect rgb(150, 50, 50, 0.5)
       break when the password expired or 2FA is on without a trusted-device cookie
-        msg->>msp: post(/foxnox/trusted-devices/verify) { userId, deviceToken }<br/>(2FA only, skipped when no trusted_device cookie)
+        msg->>msp: post(/foxnox/devices/verify) { userId, deviceToken }<br/>(2FA only, skipped when no trusted_device cookie)
         activate msp
         msp->>msg: return 200 ok : { trusted }
         deactivate msp

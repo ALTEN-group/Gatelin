@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS condition (
     FOREIGN KEY ("fieldId") REFERENCES field (id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
+  core          BOOLEAN DEFAULT FALSE,
   archived      BOOLEAN DEFAULT FALSE,
   "archivedAt"  TIMESTAMP,
   "createdAt"   TIMESTAMP DEFAULT NOW(),

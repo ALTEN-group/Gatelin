@@ -81,3 +81,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+The seeded **gatelin** service is `core`. It cannot be archived: catalog resources belong to that service with `ON DELETE CASCADE`, so a later retention hard-delete would wipe system resources. Custom services still archive and are purged after 2 months.

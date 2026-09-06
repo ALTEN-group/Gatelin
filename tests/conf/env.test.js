@@ -8,7 +8,14 @@ jest.unstable_mockModule("@dwtechs/winstan", () => ({
   log: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
 }));
 
-const REQUIRED = ["APP_NAME", "ENV_NAME", "PWD_CHECK_URL", "USER_SEARCH_URL"];
+const REQUIRED = [
+  "APP_NAME",
+  "ENV_NAME",
+  "PWD_CHECK_URL",
+  "USER_SEARCH_URL",
+  "DB_JOB_USER",
+  "DB_JOB_PWD",
+];
 
 describe("env validation", () => {
   let collectEnvErrors;
@@ -27,6 +34,8 @@ describe("env validation", () => {
     process.env.ENV_NAME = "prod";
     process.env.PWD_CHECK_URL = "http://ms-pwd:3000/compare";
     process.env.USER_SEARCH_URL = "http://ms-user:3000/search";
+    process.env.DB_JOB_USER = "gatelin_job";
+    process.env.DB_JOB_PWD = "job-secret";
   });
 
   afterEach(() => {

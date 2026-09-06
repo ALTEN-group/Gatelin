@@ -12,8 +12,10 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `USER_SEARCH_URL` | URL of the user microservice search endpoint (login looks up users by email) |
 | `DB_HOST` | Hostname of the PostgreSQL container |
 | `DB_NAME` | Database name (default: `gatelin`) |
-| `DB_USER` | Database user for Gatelin |
+| `DB_USER` | Database user for Gatelin request handling |
 | `DB_PWD` | Database password for Gatelin |
+| `DB_JOB_USER` | Database user for archive/history cron jobs (may `DELETE` catalog rows) |
+| `DB_JOB_PWD` | Password for the cron database user |
 | `TOKEN_SECRET` | Secret used to sign/verify JWT tokens, at least 32 characters |
 | `ACCESS_TOKEN_DURATION` | Access token lifetime in seconds (default: `600`) |
 | `REFRESH_TOKEN_DURATION` | Refresh token lifetime in seconds (default: `86400`) |
@@ -25,7 +27,7 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `PORT` | `3000` | Port Gatelin listens on; also used as the port in downstream service URLs |
 | `SERVER_SCHEME` | `http://` | Scheme used in internal downstream URLs |
 | `TZ` | — | Container timezone |
-| `SESSION_RATE_LIMIT_MAX` | `20` | Max login/refresh attempts per IP per 15 minutes |
+| `SESSION_RATE_LIMIT_MAX` | `20` | Max login/refresh attempts per client IP per 15 minutes. IP is one hop of `X-Forwarded-For` (`trust proxy` 1, Traefik). Do not expose Node without that proxy. |
 | `ADMIN_RATE_LIMIT_MAX` | `300` | Max `/gatelin/*` admin API requests per consumer per minute (IP if unauthenticated) |
 | `PROXY_RATE_LIMIT_MAX` | `200` | Max proxied HTTP and WebSocket-handshake requests per consumer per minute (IP if the route is public) |
 | `UPSTREAM_TIMEOUT_MS` | `30000` | Idle timeout for outbound HTTP calls to microservices. Disabled for Server-Sent Events (`Accept` or upstream `Content-Type` of `text/event-stream`). WebSocket handshake uses this value until `101`; the piped socket has no idle timeout. |
@@ -33,9 +35,9 @@ Variables for the `gatelin` container. Required variables are validated at boot 
 | `UPSTREAM_MAX_FREE_SOCKETS` | `64` | Max idle sockets retained in each keep-alive pool. |
 | `REFRESH_TOKEN_COOKIE` | — | When truthy, refresh tokens are also set as an httpOnly cookie (via toker-express) |
 | `REFRESH_TOKEN_COOKIE_NAME` | `refreshToken` | Name of the refresh-token cookie |
-| `REFRESH_TOKEN_COOKIE_SAMESITE` | `strict` | Cookie `SameSite` (`strict`, `lax`, or `none`) |
-| `REFRESH_TOKEN_COOKIE_HTTPS_ONLY` | `true` | Cookie `Secure` flag; set to `false` for plain-HTTP local stacks |
-| `CSRF_COOKIE_NAME` | `csrfToken` | Name of the CSRF double-submit cookie |
+| `REFRESH_TOKEN_COOKIE_SAMESITE` | `strict` | `SameSite` for the refresh-token cookie **and** the CSRF cookie (`strict`, `lax`, or `none`). They must match so both are sent on refresh and logout. |
+| `REFRESH_TOKEN_COOKIE_HTTPS_ONLY` | `true` | `Secure` flag for both cookies; set to `false` only for plain-HTTP local stacks |
+| `CSRF_COOKIE_NAME` | `csrfToken` | Name of the CSRF double-submit cookie (flags come from the two refresh-token cookie variables above) |
 | `PWD_CHALLENGES_URL` | unset (disabled) | Endpoint that mints a mid-login challenge. Empty: login continues without 2FA / password-expiry pages |
 | `PWD_TRUSTED_DEVICES_URL` | unset (disabled) | Endpoint that verifies a trusted-device cookie. Empty: the cookie is ignored |
 | `PWD_LOGIN_TICKET_URL` | unset (disabled) | Endpoint that redeems a login ticket. Empty: [Resume](./api-sessions#resume) answers **501** |
@@ -68,6 +70,8 @@ These apply to the `gatelin-migration` container (`ghcr.io/alten-group/gatelin-m
 | `DB_NAME` | ✅ | Database name to create and migrate |
 | `DB_USER` | ✅ | Application database user to create |
 | `DB_PWD` | ✅ | Password for the application database user |
+| `DB_JOB_USER` | ✅ | Cron database user (may `DELETE` archived catalog rows) |
+| `DB_JOB_PWD` | ✅ | Password for the cron database user |
 | `UPDATE` | ✅ | Set to `1` to run the full migration |
 | `ROLLBACK` | ⬜ | Number of changesets to roll back (used instead of `UPDATE`) |
 | `SNAPSHOT` | ⬜ | Path to the reference snapshot file |
@@ -82,11 +86,7 @@ These apply to the `gatelin-migration` container (`ghcr.io/alten-group/gatelin-m
 3. If the password service reports lockout, expiry, or 2FA without a trusted device, Gatelin returns **202** with `{ challengeRequired, kind, url }` instead of a session. The browser completes the challenge on the password service, comes back with `?ticket=…`, and the client calls `POST /gatelin/sessions/resume`. Services that only check passwords never trigger this step.
 4. Otherwise (or after a successful resume), Gatelin issues a JWT access token (short-lived) and refresh token (long-lived), sets a CSRF cookie, and returns the session payload.
 5. Client sends the access token in `Authorization: Bearer <token>` on subsequent requests.
-6. When the access token expires, client calls `PUT /gatelin/sessions` with:
-   - `Authorization: Bearer <access_token>` (expired tokens are accepted for refresh),
-   - refresh token in the JSON body and/or cookie,
-   - `X-CSRF-Token` header matching the CSRF cookie,
-   - `credentials: 'include'` so cookies are sent.
+6. When the access token expires, the browser calls `PUT /gatelin/sessions` with an empty body, `credentials: 'include'` (httpOnly refresh cookie), and `X-CSRF-Token` matching the CSRF cookie. The access token is not required. Non-browser clients may send `refreshToken` in JSON instead of a cookie.
 7. Logout (`DELETE /gatelin/sessions`) requires the access token and CSRF header; it archives the consumer and clears cookies.
 
 See [Sessions](./api-sessions) for the pwd-service contract and [Frontend Integration](./frontend) for the client-side challenge/resume handling.

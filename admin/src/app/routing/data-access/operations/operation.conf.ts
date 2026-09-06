@@ -3,6 +3,7 @@ import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
+import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
   CONTROL_TYPES,
@@ -58,6 +59,7 @@ export function buildOperationColumns(
           customCellRenderer: buildColorCellRenderer(sanitizer),
         },
       },
+      CORE_CONFIG,
       ...buildArchivedConfig(),
       ...buildAuditConfig(),
     ],

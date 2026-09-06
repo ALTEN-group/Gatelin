@@ -5,6 +5,17 @@ import { loginTicketUrl } from "../../conf/pwd.js";
 import http from "../../utils/http.js";
 
 /**
+ * @param {unknown} active
+ * @param {import('express').NextFunction} next
+ * @return {boolean}
+ */
+function rejectIfInactive(active, next) {
+  if (active === true) return false;
+  next({ statusCode: 403, message: "Account not activated" });
+  return true;
+}
+
+/**
  * Redeem Foxnox login-resume ticket → attach user like getUserByEmail.
  * Expects `req.body.ticket`.
  *
@@ -29,6 +40,8 @@ export function redeemLoginTicket(req, res, next) {
 
       const filters = {
         id: { value: userId, matchMode: "equals" },
+        active: { value: true, matchMode: "IS" },
+        archived: { value: false, matchMode: "IS" },
       };
       return http
         .query(
@@ -45,6 +58,7 @@ export function redeemLoginTicket(req, res, next) {
             return next({ statusCode: 422, message: "Invalid user id" });
           if (!isString(nickname, "!0"))
             return next({ statusCode: 422, message: "Invalid user nickname" });
+          if (rejectIfInactive(active, next)) return;
           log.debug(
             () =>
               `login-ticket resume: id=${id}, nickname=${nickname}, email=${email}`,

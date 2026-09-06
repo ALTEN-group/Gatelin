@@ -54,8 +54,7 @@
               "src/styles.scss",
               "./node_modules/@openng/icons/openng-icons.css"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/styles"

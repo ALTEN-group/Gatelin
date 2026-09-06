@@ -8,7 +8,6 @@ export interface Consumer extends ArchiveInfo {
   id: number | null;
   userId: number;
   nickname: string;
-  accessToken: string;
   roles: number[];
 }
 
@@ -22,7 +21,6 @@ export const consumerFactory = (): Consumer => ({
   id: null,
   userId: 0,
   nickname: "",
-  accessToken: "",
   roles: [],
   ...new ArchiveInfo(),
 });

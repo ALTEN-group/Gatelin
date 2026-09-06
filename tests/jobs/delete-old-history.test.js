@@ -12,8 +12,8 @@ const schedulerPath = path.join(__dirname, "../../src/jobs/scheduler.js");
 const scheduleDailyAt = jest.fn();
 jest.unstable_mockModule(schedulerPath, () => ({ scheduleDailyAt }));
 
-const execute = jest.fn();
-jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
+const executeJob = jest.fn();
+jest.unstable_mockModule("../../src/jobs/job-pool.js", () => ({ executeJob }));
 
 const log = { info: jest.fn(), error: jest.fn() };
 jest.unstable_mockModule("@dwtechs/winstan", () => ({ log }));
@@ -28,7 +28,7 @@ describe("startDeleteOldHistoryJob", () => {
 
   beforeEach(() => {
     scheduleDailyAt.mockReset();
-    execute.mockReset();
+    executeJob.mockReset();
     log.info.mockReset();
     log.error.mockReset();
   });
@@ -47,22 +47,25 @@ describe("startDeleteOldHistoryJob", () => {
   });
 
   it("should delete history rows older than 6 months and log the count", async () => {
-    execute.mockResolvedValue({ rowCount: 42 });
+    executeJob.mockResolvedValue({ rowCount: 42 });
     startDeleteOldHistoryJob();
     const callback = scheduleDailyAt.mock.calls[0][1];
 
     await callback();
 
-    expect(execute).toHaveBeenCalledWith(
+    expect(executeJob).toHaveBeenCalledWith(
       "DELETE FROM log.history WHERE tstamp < $1",
       [expect.any(Date)],
-      null,
     );
+    const [cutoff] = executeJob.mock.calls[0][1];
+    const daysAgo = (Date.now() - cutoff.getTime()) / (24 * 60 * 60 * 1000);
+    expect(daysAgo).toBeGreaterThan(170);
+    expect(daysAgo).toBeLessThan(190);
     expect(log.info).toHaveBeenCalledWith(expect.stringContaining("42"));
   });
 
   it("should default to 0 deleted when rowCount is falsy", async () => {
-    execute.mockResolvedValue({ rowCount: 0 });
+    executeJob.mockResolvedValue({ rowCount: 0 });
     startDeleteOldHistoryJob();
     const callback = scheduleDailyAt.mock.calls[0][1];
 
@@ -72,9 +75,7 @@ describe("startDeleteOldHistoryJob", () => {
   });
 
   it("should propagate a query failure to the scheduler, which logs it", async () => {
-    // The scheduler owns the try/catch so that a failed run also clears its
-    // in-progress flag; duplicating it here would swallow the rejection first.
-    execute.mockRejectedValue(new Error("db down"));
+    executeJob.mockRejectedValue(new Error("db down"));
     startDeleteOldHistoryJob();
     const callback = scheduleDailyAt.mock.calls[0][1];
 

@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         SELECT NEW.id, o
         FROM unnest(NEW."operationId") AS o;
 
-        PERFORM log_history('public', 'route_operation', 'INSERT',
+        PERFORM public.log_history('public', 'route_operation', 'INSERT',
           jsonb_build_object('id', NEW.id, 'operationId', NEW."operationId",
                               'creatorId', NEW."creatorId", 'creatorName', NEW."creatorName")::json);
       END IF;
@@ -33,7 +33,7 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         SELECT NEW.id, m
         FROM unnest(NEW."methodIds") AS m;
 
-        PERFORM log_history('public', 'route_method', 'INSERT',
+        PERFORM public.log_history('public', 'route_method', 'INSERT',
           jsonb_build_object('id', NEW.id, 'methodIds', NEW."methodIds",
                               'creatorId', NEW."creatorId", 'creatorName', NEW."creatorName")::json);
       END IF;
@@ -59,7 +59,7 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         SELECT NEW.id, o
         FROM unnest(NEW."operationId") AS o;
 
-        PERFORM log_history('public', 'route_operation', 'UPDATE',
+        PERFORM public.log_history('public', 'route_operation', 'UPDATE',
           jsonb_build_object('id', NEW.id, 'operationId', NEW."operationId",
                               'updaterId', NEW."updaterId", 'updaterName', NEW."updaterName")::json);
       END IF;
@@ -70,7 +70,7 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
         SELECT NEW.id, m
         FROM unnest(NEW."methodIds") AS m;
 
-        PERFORM log_history('public', 'route_method', 'UPDATE',
+        PERFORM public.log_history('public', 'route_method', 'UPDATE',
           jsonb_build_object('id', NEW.id, 'methodIds', NEW."methodIds",
                               'updaterId', NEW."updaterId", 'updaterName', NEW."updaterName")::json);
       END IF;
@@ -81,4 +81,27 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
 
     END IF;
   END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;
+
+-- Core routes keep their JWT posture and URL. Fires on view writes and on
+-- set_archived() / direct UPDATE of the base table.
+CREATE OR REPLACE FUNCTION before_update_route() RETURNS trigger AS $$
+  BEGIN
+    IF NOT OLD.core THEN
+      RETURN NEW;
+    END IF;
+    NEW.core = OLD.core;
+    IF NEW.protected IS DISTINCT FROM OLD.protected THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot change protected.', OLD.id;
+    END IF;
+    IF NEW.pattern IS DISTINCT FROM OLD.pattern THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot change pattern.', OLD.id;
+    END IF;
+    IF NEW.archived THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot be archived.', OLD.id;
+    END IF;
+    RETURN NEW;
+  END;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;

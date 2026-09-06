@@ -7,7 +7,6 @@ import { fileURLToPath } from "node:url";
 import { jest } from "@jest/globals";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const roleEntPath = path.join(__dirname, "../../src/entities/role.js");
 const roleCacheEntPath = path.join(
   __dirname,
   "../../src/entities/role-cache.js",
@@ -16,11 +15,8 @@ const roleCacheEntPath = path.join(
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
-const deleteArchive = jest.fn();
-jest.unstable_mockModule(roleEntPath, () => ({
-  __esModule: true,
-  default: { query: { deleteArchive } },
-}));
+const executeJob = jest.fn();
+jest.unstable_mockModule("../../src/jobs/job-pool.js", () => ({ executeJob }));
 
 const getCache = jest.fn();
 jest.unstable_mockModule(roleCacheEntPath, () => ({
@@ -38,8 +34,8 @@ describe("role service", () => {
 
   beforeEach(() => {
     execute.mockReset();
+    executeJob.mockReset();
     getCache.mockReset();
-    deleteArchive.mockReset();
   });
 
   async function initWithRows(rows) {
@@ -48,11 +44,14 @@ describe("role service", () => {
   }
 
   describe("init", () => {
-    it("should load roles via getCache from the role_cache view", async () => {
-      await initWithRows([{ id: 1, name: "admin", permissions: [] }]);
+    it("should keep the locked flag from the cache row", async () => {
+      await initWithRows([
+        { id: 1, name: "super", locked: true, permissions: [] },
+        { id: 9, name: "custom", locked: false, permissions: [] },
+      ]);
 
-      expect(getCache).toHaveBeenCalledWith();
-      expect(roleSvc.getOne(1)).toMatchObject({ id: 1, name: "admin" });
+      expect(roleSvc.getOne(1).locked).toBe(true);
+      expect(roleSvc.getOne(9).locked).toBe(false);
     });
 
     it("should index permissions by route id with a fields Set when fields are present", async () => {
@@ -99,6 +98,21 @@ describe("role service", () => {
 
       expect(roleSvc.getOne(2).permissions.size).toBe(0);
     });
+
+    it("should omit archived roles so leftover consumer role ids grant nothing", async () => {
+      await initWithRows([
+        {
+          id: 4,
+          name: "editor",
+          archived: true,
+          permissions: [{ route: 10, operation: 1, fields: null }],
+        },
+        { id: 5, name: "viewer", archived: false, permissions: [] },
+      ]);
+
+      expect(roleSvc.getOne(4)).toBeUndefined();
+      expect(roleSvc.getOne(5)).toBeDefined();
+    });
   });
 
   describe("getOne", () => {
@@ -110,20 +124,21 @@ describe("role service", () => {
   });
 
   describe("deleteArchived", () => {
-    it("should delete roles (not role_cache) archived before the given date and return the row count", async () => {
-      deleteArchive.mockReturnValue("DELETE FROM roles");
-      execute.mockResolvedValue({ rowCount: 1 });
+    it("should hard-delete archived roles via the job pool", async () => {
+      executeJob.mockResolvedValue({ rows: [{ count: 1 }] });
       const date = new Date("2026-01-01");
 
       const count = await roleSvc.deleteArchived(date);
 
-      expect(execute).toHaveBeenCalledWith("DELETE FROM roles", [date], null);
+      expect(executeJob).toHaveBeenCalledWith(
+        "SELECT delete($1, $2, $3) AS count",
+        ["public", "role", date],
+      );
       expect(count).toBe(1);
     });
 
     it("should return 0 when no rows are deleted", async () => {
-      deleteArchive.mockReturnValue("DELETE FROM roles");
-      execute.mockResolvedValue({ rowCount: 0 });
+      executeJob.mockResolvedValue({ rows: [{ count: 0 }] });
 
       expect(await roleSvc.deleteArchived(new Date())).toBe(0);
     });

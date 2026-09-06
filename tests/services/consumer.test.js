@@ -7,16 +7,21 @@ import { fileURLToPath } from "node:url";
 import { jest } from "@jest/globals";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const consumerEntPath = path.join(__dirname, "../../src/entities/consumer.js");
+const consumerEntPath = path.join(
+  __dirname,
+  "../../src/entities/consumer-cache.js",
+);
 
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
 
+const executeJob = jest.fn();
+jest.unstable_mockModule("../../src/jobs/job-pool.js", () => ({ executeJob }));
+
 const getCache = jest.fn();
-const deleteArchive = jest.fn();
 jest.unstable_mockModule(consumerEntPath, () => ({
   __esModule: true,
-  default: { getCache, query: { deleteArchive } },
+  default: { getCache },
 }));
 
 describe("consumer service", () => {
@@ -29,8 +34,8 @@ describe("consumer service", () => {
 
   beforeEach(() => {
     execute.mockReset();
+    executeJob.mockReset();
     getCache.mockReset();
-    deleteArchive.mockReset();
   });
 
   async function initWithRows(rows) {
@@ -149,24 +154,21 @@ describe("consumer service", () => {
   });
 
   describe("deleteArchived", () => {
-    it("should delete consumers archived before the given date and return the row count", async () => {
-      deleteArchive.mockReturnValue("DELETE FROM consumer");
-      execute.mockResolvedValue({ rowCount: 4 });
+    it("should hard-delete archived consumers via the job pool", async () => {
+      executeJob.mockResolvedValue({ rows: [{ count: 4 }] });
       const date = new Date("2026-01-01");
 
       const count = await consumerSvc.deleteArchived(date);
 
-      expect(execute).toHaveBeenCalledWith(
-        "DELETE FROM consumer",
-        [date],
-        null,
+      expect(executeJob).toHaveBeenCalledWith(
+        "SELECT delete($1, $2, $3) AS count",
+        ["public", "consumer", date],
       );
       expect(count).toBe(4);
     });
 
     it("should return 0 when no rows are deleted", async () => {
-      deleteArchive.mockReturnValue("DELETE FROM consumer");
-      execute.mockResolvedValue({ rowCount: 0 });
+      executeJob.mockResolvedValue({ rows: [{ count: 0 }] });
 
       expect(await consumerSvc.deleteArchived(new Date())).toBe(0);
     });

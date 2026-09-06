@@ -8,4 +8,4 @@ EXECUTE PROCEDURE before_update_method();
 CREATE TRIGGER method_history_trigger
 AFTER INSERT OR UPDATE OR DELETE ON method
 FOR EACH ROW
-EXECUTE PROCEDURE change_trigger();
+EXECUTE PROCEDURE iud_history();
