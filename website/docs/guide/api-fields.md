@@ -93,4 +93,4 @@ Authorization: Bearer <access_token>
 
 **Response (204 No Content)**
 
-Archived fields older than 2 months are permanently deleted by the daily retention job (after conditions that reference them).
+Seeded Gatelin catalog fields (those marked `core`) cannot be archived. Conditions reference fields with `ON DELETE RESTRICT`, and permission `fields` arrays match these names. Custom fields still archive and are purged after 2 months (after conditions that reference them).

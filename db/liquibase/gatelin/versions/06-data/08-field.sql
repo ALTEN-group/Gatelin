@@ -44,7 +44,7 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (5,  'core',        true, -1, 'system'),
   (5,  'archived',    true, -1, 'system'),
   (5,  'archivedAt',  true, -1, 'system'),
-  -- operations (6)  ids: 42-51
+  -- operations (6)  ids: 42-52
   (6,  'id',          true, -1, 'system'),
   (6,  'name',        true, -1, 'system'),
   (6,  'description', true, -1, 'system'),
@@ -53,15 +53,16 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (6,  'creatorName', true, -1, 'system'),
   (6,  'updatedAt',   true, -1, 'system'),
   (6,  'updaterName', true, -1, 'system'),
+  (6,  'core',        true, -1, 'system'),
   (6,  'archived',    true, -1, 'system'),
   (6,  'archivedAt',  true, -1, 'system'),
-  -- cors (7)  ids: 52-56
+  -- cors (7)  ids: 53-57
   (7,  'id',          true, -1, 'system'),
   (7,  'name',        true, -1, 'system'),
   (7,  'description', true, -1, 'system'),
   (7,  'archived',    true, -1, 'system'),
   (7,  'archivedAt',  true, -1, 'system'),
-  -- scopes (9)  ids: 57-63
+  -- scopes (9)  ids: 58-64
   (9,  'id',           true, -1, 'system'),
   (9,  'routeId',      true, -1, 'system'),
   (9,  'routeName',    true, -1, 'system'),
@@ -69,7 +70,7 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (9,  'name',         true, -1, 'system'),
   (9,  'archived',     true, -1, 'system'),
   (9,  'archivedAt',   true, -1, 'system'),
-  -- roles (10)  ids: 64-75
+  -- roles (10)  ids: 65-76
   (10, 'id',          true, -1, 'system'),
   (10, 'appId',       true, -1, 'system'),
   (10, 'appName',     true, -1, 'system'),
@@ -82,29 +83,30 @@ INSERT INTO fields ("resourceId", name, core, "creatorId", "creatorName") VALUES
   (10, 'creatorName', true, -1, 'system'),
   (10, 'updatedAt',   true, -1, 'system'),
   (10, 'updaterName', true, -1, 'system'),
-  -- methods (12)  ids: 76-80
+  -- methods (12)  ids: 77-81
   (12, 'id',          true, -1, 'system'),
   (12, 'name',        true, -1, 'system'),
   (12, 'color',       true, -1, 'system'),
   (12, 'archived',    true, -1, 'system'),
   (12, 'archivedAt',  true, -1, 'system'),
-  -- applications (13)  ids: 81-86
+  -- applications (13)  ids: 82-87
   (13, 'id',          true, -1, 'system'),
   (13, 'name',        true, -1, 'system'),
   (13, 'description', true, -1, 'system'),
   (13, 'core',        true, -1, 'system'),
   (13, 'archived',    true, -1, 'system'),
   (13, 'archivedAt',  true, -1, 'system'),
-  -- conditions (14)  ids: 87-94
+  -- conditions (14)  ids: 88-96
   (14, 'id',          true, -1, 'system'),
   (14, 'name',        true, -1, 'system'),
   (14, 'fieldId',     true, -1, 'system'),
   (14, 'fieldName',   true, -1, 'system'),
   (14, 'op',          true, -1, 'system'),
   (14, 'value',       true, -1, 'system'),
+  (14, 'core',        true, -1, 'system'),
   (14, 'archived',    true, -1, 'system'),
   (14, 'archivedAt',  true, -1, 'system'),
-  -- preferences (15)  ids: 95-100
+  -- preferences (15)  ids: 97-102
   (15, 'id',         true, -1, 'system'),
   (15, 'consumerId', true, -1, 'system'),
   (15, 'resource',   false, -1, 'system'),

@@ -35,3 +35,15 @@ CREATE OR REPLACE FUNCTION iud_role() RETURNS trigger AS $$
     END IF;
   END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Blocks archiving locked system roles, including set_archived() on the base table.
+-- Also keeps locked immutable so it cannot be cleared in the same UPDATE.
+CREATE OR REPLACE FUNCTION before_update_role() RETURNS trigger AS $$
+  BEGIN
+    IF OLD.locked AND NEW.archived THEN
+      RAISE EXCEPTION 'A locked system role (id=%) cannot be archived.', OLD.id;
+    END IF;
+    NEW.locked = OLD.locked;
+    RETURN NEW;
+  END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

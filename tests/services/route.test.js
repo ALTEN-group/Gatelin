@@ -173,6 +173,28 @@ describe("route service", () => {
       expect(routeSvc.getOne("/users/123", "GET")).toBeDefined();
       expect(routeSvc.getOne("/users/123/extra", "GET")).toBeUndefined();
     });
+
+    it("should match the resolved path, not a traversal prefix on a wildcard route", async () => {
+      await initWithRows([
+        { url: "/files/.*", methodNames: ["GET"], serviceName: "files" },
+        { url: "/admin", methodNames: ["GET"], serviceName: "admin" },
+      ]);
+
+      expect(routeSvc.getOne("/files/../admin", "GET")).toMatchObject({
+        url: "/admin",
+      });
+      expect(routeSvc.getOne("/files/%2e%2e/admin", "GET")).toMatchObject({
+        url: "/admin",
+      });
+    });
+
+    it("should still match a permitted path after an equivalent traversal", async () => {
+      await initWithRows([
+        { url: "/users/[0-9]+", methodNames: ["GET"], serviceName: "user" },
+      ]);
+
+      expect(routeSvc.getOne("/users/../users/123", "GET")).toBeDefined();
+    });
   });
 
   describe("getServiceBaseUrl", () => {

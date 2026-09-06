@@ -5,6 +5,7 @@ import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
+import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
 import {
@@ -123,6 +124,7 @@ export const CONDITION_COLUMNS: (
           customCellRenderer: buildColorCellRenderer(sanitizer),
         },
       },
+      CORE_CONFIG,
       ...buildArchivedConfig(),
       ...buildAuditConfig(),
     ] as StrictCrudItemOptions<Condition>[],

@@ -185,6 +185,8 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 
 Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
 
+The VitePress site (GitHub Pages) deploys on the **same event** (`.github/workflows/deploy-docs.yml`), from the tagged commit. A push to `main` does not publish docs. Use **Actions → Deploy Docs to GitHub Pages → Run workflow** for a manual rebuild.
+
 ### Maintainer weekly audit
 
 The public weekly workflow always runs `npm audit`, Biome, outdated, and TODO scans and opens an audit issue.

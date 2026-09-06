@@ -16,6 +16,8 @@ Content-Type: application/json
 }
 ```
 
+`Content-Type` must be `application/json` (**415** otherwise). That blocks a cross-site HTML form from logging the browser into another account. The same rule applies to [Resume](#resume).
+
 **Response (200 OK)** — password accepted and no mid-login challenge required:
 
 ```json
@@ -104,6 +106,42 @@ All three are POST endpoints and all three may be empty. Gatelin still boots and
 #### Trusted-device cookie
 
 To let a returning browser skip 2FA, your challenge pages may set a trusted-device cookie named **`trusted_device`** (scoped `Path=/` so it reaches `/gatelin/sessions`). On the next login Gatelin forwards its value to `PWD_TRUSTED_DEVICES_URL`; a `{ trusted: true }` response suppresses the 2FA challenge. If you don't implement trusted devices, simply never set the cookie — every 2FA login then challenges.
+
+#### After a password reset or change
+
+Gatelin does not learn that a password changed. `PUT /gatelin/sessions` only refreshes tokens for a still-live consumer; the user row stays active, so a stolen refresh token keeps working until that consumer is archived.
+
+The password service must therefore kill sessions with the existing consumer APIs, using a **system account** whose roles include `getConsumers` and `archiveConsumers` (Admin already has both). If that account cannot archive, **do not reset the password** — stop with an error.
+
+1. Confirm the account can archive (a 403 on the next step is a hard failure).
+2. Search live sessions for the user:
+
+```http
+POST /gatelin/consumers/search
+Authorization: Bearer <system-account-access-token>
+Content-Type: application/json
+
+{
+  "pagination": false,
+  "filters": {
+    "userId": { "value": 42, "matchMode": "equals" },
+    "archived": { "value": false, "matchMode": "equals" }
+  }
+}
+```
+
+3. Commit the password change.
+4. Archive every returned id:
+
+```http
+POST /gatelin/consumers/archive
+Authorization: Bearer <system-account-access-token>
+Content-Type: application/json
+
+{ "rows": [{ "id": 10 }, { "id": 11 }] }
+```
+
+If search returns no rows, there is nothing to kill. If archive fails after the password already changed, retry until it succeeds — otherwise stolen refresh tokens remain valid. Access tokens already minted still work until they expire.
 
 ### Sequence diagram
 
@@ -309,30 +347,26 @@ Gatelin redeems the ticket against the password service (`POST PWD_LOGIN_TICKET_
 | `400` | Missing, invalid, or already-consumed ticket |
 | `422` | Ticket redeemed but the user lookup failed |
 
-Tickets are one-shot and short-lived. The admin UI reads `?ticket=` on the login page and calls this endpoint automatically.
+Tickets are one-shot and short-lived. The admin UI reads `?ticket=` on the login page and calls this endpoint automatically. `Content-Type` must be `application/json` (**415** otherwise), same as [Login](#login).
 
 ## Refresh Tokens
 
 ```
 PUT /gatelin/sessions
 Content-Type: application/json
-Authorization: Bearer <access_token>
 X-CSRF-Token: <csrf_cookie_value>
-Cookie: csrfToken=<csrf_cookie_value>; refreshToken=<optional>
+Cookie: csrfToken=<csrf_cookie_value>; refreshToken=<httpOnly>
 
-{
-  "refreshToken": "eyJhbGc..."
-}
+{}
 ```
 
-The access token may already be expired — refresh ignores expiration after CSRF and refresh-token checks pass. The refresh token may be supplied in the JSON body and/or the refresh-token cookie.
+The access token may already be expired — refresh ignores expiration after CSRF and refresh-token checks pass. Browsers should send an empty body and rely on the httpOnly refresh cookie (`credentials: include`). Non-browser clients may put `refreshToken` in the JSON body instead of a cookie.
 
 **Response (200 OK):**
 ```json
 {
   "nickname": "jane",
   "accessToken": "new_access_token",
-  "refreshToken": "new_refresh_token",
   "roles": [1, 2],
   "permissions": [
     { "route": 4, "operations": [1, 2], "fields": [], "scopes": [] }
@@ -340,7 +374,7 @@ The access token may already be expired — refresh ignores expiration after CSR
 }
 ```
 
-A fresh CSRF cookie is issued with the new tokens.
+The refresh token is `isPrivate` and is not returned in JSON. A fresh CSRF cookie and (when enabled) refresh cookie are set on the response.
 
 ## Logout
 

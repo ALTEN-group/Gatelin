@@ -2,7 +2,7 @@
 
 import rEnt from "../entities/route.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
-import { stripTrailingSlash } from "../utils/url.js";
+import { resolvedPathname } from "../utils/url.js";
 
 /**
  * @typedef {Object} RouteConfig
@@ -65,7 +65,8 @@ function init() {
  * Finds a route configuration that matches the given URL and HTTP method.
  * Routes are matched using regex patterns - if a route pattern starts with '~',
  * it's treated as a regex pattern (with the '~' stripped), otherwise it's used as-is.
- * The URL is normalized by removing trailing slashes before matching.
+ * The URL is resolved (dot segments, trailing slash) before matching so ACL
+ * uses the same path the proxy will forward.
  *
  * @param {string} requestUrl - The incoming request URL to match against route patterns
  * @param {string} requestMethod - The HTTP method (GET, POST, PUT, DELETE, etc.)
@@ -78,10 +79,8 @@ function init() {
 function getOne(requestUrl, requestMethod) {
   const candidates = routesByMethod.get(requestMethod);
   if (!candidates) return undefined;
-  // Strip query string and normalize URL by removing trailing slash for consistent matching
-  const pathOnly = requestUrl.split("?")[0];
-  const actualUrl = stripTrailingSlash(pathOnly);
-  // Find the first route that matches the URL within the method bucket
+  const actualUrl = resolvedPathname(requestUrl);
+  if (actualUrl == null) return undefined;
   return candidates.find((r) => r._regex.test(actualUrl));
 }
 

@@ -26,22 +26,24 @@ let roles = new Map();
 function init() {
   return rcEnt.getCache().then((rows) => {
     roles = new Map(
-      rows.map((role) => [
-        role.id,
-        {
-          ...role,
-          // Index permissions by routeId for O(1) lookup in checkAcl
-          permissions: new Map(
-            (role.permissions ?? []).map((p) => [
-              p.route,
-              {
-                ...p,
-                _fieldsSet: p.fields == null ? null : new Set(p.fields),
-              },
-            ]),
-          ),
-        },
-      ]),
+      rows
+        .filter((role) => role.archived !== true)
+        .map((role) => [
+          role.id,
+          {
+            ...role,
+            // Index permissions by routeId for O(1) lookup in checkAcl
+            permissions: new Map(
+              (role.permissions ?? []).map((p) => [
+                p.route,
+                {
+                  ...p,
+                  _fieldsSet: p.fields == null ? null : new Set(p.fields),
+                },
+              ]),
+            ),
+          },
+        ]),
     );
   });
 }

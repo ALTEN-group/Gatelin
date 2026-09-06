@@ -64,7 +64,7 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (11, '/history/route/(?<routeId>\d+)',            'getPermissionHistory',  'Get permission history by route',                    true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (11, '',                                         'addPermissions',        'Add permissions',                                    true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (11, '',                                         'updatePermissions',     'Update permissions',                                 true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
-  (11, '/archive',                                 'deletePermissions',     'Delete permissions',                                 true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (11, '',                                         'deletePermissions',     'Delete permissions',                                 true,  true, ARRAY[11],   ARRAY[5],  -1, 'system'),
   -- methods (12)
   (12, '/search',                                  'searchMethods',         'Search methods',                                     true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (12, '',                                         'updateMethods',         'Update methods',                                     true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),

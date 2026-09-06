@@ -44,11 +44,14 @@ describe("role service", () => {
   }
 
   describe("init", () => {
-    it("should load roles via getCache from the role_cache view", async () => {
-      await initWithRows([{ id: 1, name: "admin", permissions: [] }]);
+    it("should keep the locked flag from the cache row", async () => {
+      await initWithRows([
+        { id: 1, name: "super", locked: true, permissions: [] },
+        { id: 9, name: "custom", locked: false, permissions: [] },
+      ]);
 
-      expect(getCache).toHaveBeenCalledWith();
-      expect(roleSvc.getOne(1)).toMatchObject({ id: 1, name: "admin" });
+      expect(roleSvc.getOne(1).locked).toBe(true);
+      expect(roleSvc.getOne(9).locked).toBe(false);
     });
 
     it("should index permissions by route id with a fields Set when fields are present", async () => {
@@ -94,6 +97,21 @@ describe("role service", () => {
       await initWithRows([{ id: 2, name: "guest" }]);
 
       expect(roleSvc.getOne(2).permissions.size).toBe(0);
+    });
+
+    it("should omit archived roles so leftover consumer role ids grant nothing", async () => {
+      await initWithRows([
+        {
+          id: 4,
+          name: "editor",
+          archived: true,
+          permissions: [{ route: 10, operation: 1, fields: null }],
+        },
+        { id: 5, name: "viewer", archived: false, permissions: [] },
+      ]);
+
+      expect(roleSvc.getOne(4)).toBeUndefined();
+      expect(roleSvc.getOne(5)).toBeDefined();
     });
   });
 

@@ -12,7 +12,7 @@ Each permission links a role to a route and an operation. Optionally it may also
 
 When a request arrives, Gatelin looks up whether any of the consumer's roles has a matching permission for the route and operation. Permissions are loaded into memory at startup and updated when changes occur.
 
-Permissions are hard-deleted (not archived) and are not purged by the archived-entities retention job.
+Permissions are hard-deleted (not archived) and are not purged by the archived-entities retention job. There is no `POST /gatelin/permissions/archive`. Turning a grant off in the admin is `PUT` with `active: false`; removing the row is `DELETE /gatelin/permissions`.
 
 ## Gatelin vs upstream enforcement
 
@@ -83,6 +83,10 @@ Authorization: Bearer <access_token>
 
 **Response (201 Created)**
 
+The caller may only grant a route, operation, and `fields`/`scopes` set they already hold. `fields: null` (unrestricted) cannot be granted by a role that is itself field-restricted on that route. The whole batch is rejected with **403** if any row exceeds that ceiling.
+
+Writes that target a **locked** system role (Super-admin, Admin, User, Guest) are also rejected with **403**, even when the grant is one the caller already holds. Super-admin is the exception and may still maintain those seed roles. Custom (unlocked) roles are unchanged.
+
 ## Update Permissions
 
 ```
@@ -102,6 +106,8 @@ Authorization: Bearer <access_token>
 
 **Response (200 OK)**
 
+The same ceiling applies. Changing `routeId` or `operationId` on an existing row is judged as the resulting grant, so a caller cannot retarget a permission onto a privileged route they do not already hold, nor carry unrestricted `fields` onto a route where they are field-restricted.
+
 ## Delete Permissions
 
 ```
@@ -118,4 +124,8 @@ Authorization: Bearer <access_token>
 }
 ```
 
-**Response (204 No Content)**
+**Response (200 OK)**
+
+The locked-role ceiling applies here too: deleting a permission row attached to Super-admin, Admin, or another locked role is **403** unless the caller is Super-admin.
+
+If the database write succeeds but the in-memory role cache cannot reload, the response is **500** (`Changes were saved but the role cache could not be reloaded`). Retry the same call or restart the process; Gatelin does not roll the write back.

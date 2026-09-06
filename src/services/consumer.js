@@ -1,5 +1,5 @@
 // @ts-check
-import cEnt from "../entities/consumer.js";
+import ccEnt from "../entities/consumer-cache.js";
 import { makeDeleteArchived } from "../utils/delete-archived.js";
 
 /**
@@ -34,7 +34,7 @@ let consumersByRefreshToken = new Map();
  * console.log('Consumer cache initialized');
  */
 function init() {
-  return cEnt.getCache().then((rows) => {
+  return ccEnt.getCache().then((rows) => {
     consumers = new Map(rows.map((c) => [c.accessToken, c]));
     consumerIdIndex = new Map(rows.map((c) => [c.id, c.accessToken]));
     consumersByRefreshToken = new Map(rows.map((c) => [c.refreshToken, c]));

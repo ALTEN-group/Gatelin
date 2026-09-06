@@ -54,30 +54,6 @@ export const CONSUMER_COLUMNS: (
         },
       },
       {
-        key: "accessToken",
-        label: "Access Token",
-        controlType: CONTROL_TYPES.INPUT,
-        columnOptions: {
-          defaultWidth: "100px",
-        },
-        type: INPUT_TYPES.TEXT,
-        controlOptions: {
-          validators: [required, minlength(28), maxlength(8000)],
-        },
-      },
-      {
-        key: "refreshToken",
-        label: "Refresh Token",
-        controlType: CONTROL_TYPES.INPUT,
-        columnOptions: {
-          defaultWidth: "100px",
-        },
-        type: INPUT_TYPES.TEXT,
-        controlOptions: {
-          validators: [required, minlength(28), maxlength(8000)],
-        },
-      },
-      {
         key: "roles",
         label: "Roles",
         controlType: CONTROL_TYPES.MULTISELECT,

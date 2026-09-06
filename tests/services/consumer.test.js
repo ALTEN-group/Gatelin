@@ -7,7 +7,10 @@ import { fileURLToPath } from "node:url";
 import { jest } from "@jest/globals";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const consumerEntPath = path.join(__dirname, "../../src/entities/consumer.js");
+const consumerEntPath = path.join(
+  __dirname,
+  "../../src/entities/consumer-cache.js",
+);
 
 const execute = jest.fn();
 jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));

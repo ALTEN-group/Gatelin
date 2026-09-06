@@ -41,7 +41,7 @@ Consumers are loaded into an **in-memory cache** at startup and kept up to date 
 
 ### Roles
 
-A **role** is a named group of permissions, scoped to an application. Consumers are assigned one or more roles, and those roles define what they are allowed to access. Roles can be archived, and carry a name, description, and display color for administration purposes.
+A **role** is a named group of permissions, scoped to an application. Consumers are assigned one or more roles, and those roles define what they are allowed to access. Custom roles can be archived; locked seed roles (Super-admin is id 1) cannot. Roles carry a name, description, and display color for administration.
 
 ### Permissions
 

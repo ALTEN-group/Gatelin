@@ -68,7 +68,7 @@ export const ENTITY_ROUTE_MAPPING: EntityRouteMapping = {
     getHistory: 47, // getPermissionHistory
     create: 48, // addPermissions
     update: 49, // updatePermissions
-    archive: 50, // deletePermissions
+    archive: 50, // deletePermissions (DELETE /gatelin/permissions)
   },
   methods: {
     get: 51, // searchMethods

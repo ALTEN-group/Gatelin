@@ -83,3 +83,25 @@ CREATE OR REPLACE FUNCTION iud_route() RETURNS trigger AS $$
   END;
 $$ LANGUAGE plpgsql SECURITY DEFINER
 SET search_path TO pg_catalog, public;
+
+-- Core routes keep their JWT posture and URL. Fires on view writes and on
+-- set_archived() / direct UPDATE of the base table.
+CREATE OR REPLACE FUNCTION before_update_route() RETURNS trigger AS $$
+  BEGIN
+    IF NOT OLD.core THEN
+      RETURN NEW;
+    END IF;
+    NEW.core = OLD.core;
+    IF NEW.protected IS DISTINCT FROM OLD.protected THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot change protected.', OLD.id;
+    END IF;
+    IF NEW.pattern IS DISTINCT FROM OLD.pattern THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot change pattern.', OLD.id;
+    END IF;
+    IF NEW.archived THEN
+      RAISE EXCEPTION 'A core route (id=%) cannot be archived.', OLD.id;
+    END IF;
+    RETURN NEW;
+  END;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;
