@@ -1,0 +1,32 @@
+name: ${APP_NAME}-perf
+
+# Runs k6 (https://k6.io) load-test scenarios against the Gatelin API through
+# Traefik. Joins the network created by docker-compose.yml, so the main dev
+# stack (traefik, gatelin, postgres, migrations, mocks) must already be up
+# and healthy — see scripts/run-perf.sh.
+services:
+
+  k6:
+    image: grafana/k6:0.54.0
+    container_name: ${APP_NAME}-k6-${ENV_NAME}
+    hostname: ${APP_NAME}-k6-${ENV_NAME}
+    entrypoint: ["k6"]
+    working_dir: /scripts
+    environment:
+      K6_TARGET_HOST: ${TRAEFIK_HOST}
+      K6_TARGET_PORT: "80"
+      K6_BASE_PATH: /api
+      K6_VUS: ${K6_VUS:-10}
+      K6_DURATION: ${K6_DURATION:-30s}
+      K6_EMAIL: ${K6_EMAIL:-admin@example.com}
+      K6_PWD: ${K6_PWD:-}
+    volumes:
+      - ${PWD}/tests/perf/scripts:/scripts:ro
+      - ${PWD}/tests/perf/results:/results
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: ${APP_NAME}-internal-${ENV_NAME}
+    external: true

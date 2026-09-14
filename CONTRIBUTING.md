@@ -140,6 +140,24 @@ npm run e2e:ui            # Playwright's interactive UI mode
 
 Prefer this when iterating on a specific test — the UI mode and Playwright inspector need a display, which the containerized flow doesn't provide.
 
+## Performance Tests (k6)
+
+[k6](https://k6.io) load-tests the API through Traefik with three scenarios: `health` (unauthenticated baseline), `login` (auth + RBAC resolution + session cache), and `resource-crud` (authenticated search/schema on `/gatelin/resources`).
+
+run `./scripts/setup-env.sh` first if you haven't (`run-perf.sh` starts/stops the stack itself).
+
+```sh
+./scripts/run-perf.sh                      # health scenario (default)
+./scripts/run-perf.sh login                # login/logout flow
+./scripts/run-perf.sh resource-crud        # authenticated CRUD flow
+./scripts/run-perf.sh health --keep        # leave the dependency stack running afterwards
+K6_VUS=50 K6_DURATION=1m ./scripts/run-perf.sh login  # override load shape
+```
+
+This starts the dependency stack, seeds Foxnox mock passwords, waits for gatelin to become healthy, then runs k6 in a container attached to the same docker network. Results (k6 `--summary-export` JSON) are written to `tests/perf/results/`.
+
+The run fails if a scenario's `thresholds` are breached (p95 latency, error rate — see `tests/perf/scripts/*.js`). See `.github/workflows/perf.yml` for the CI job (nightly on `main`, skipped if there have been no new commits since the last successful run, or on-demand via `workflow_dispatch`); it also publishes a p95/error-rate history chart to the `gh-pages` branch via `benchmark-action/github-action-benchmark`.
+
 ## API Fuzzing (RESTler)
 
 [RESTler](https://github.com/microsoft/restler-fuzzer) compiles the Gatelin OpenAPI spec into a test grammar, logs in as one of the mock personas (see `swagger/src/gatelin.openapi.json` examples), and exercises every endpoint through Traefik.
