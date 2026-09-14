@@ -3,12 +3,16 @@
 # requested task (test | fuzz-lean | fuzz) against Gatelin through Traefik,
 # authenticating via docker/restler/auth/refresh-token.sh.
 #
+# The image has no `restler` on PATH — the compiled binary lives at
+# /RESTler/restler/Restler (see https://github.com/microsoft/restler-fuzzer).
+#
 # NOTE: the bug-bucket check below is well-established RESTler output
-# (bug_buckets/bug_buckets.txt). RESTLER_MIN_COVERAGE is logged for visibility
-# but not yet enforced as a hard gate — RESTler's coverage summary file layout
-# should be confirmed against a real v9.2.4 run before wiring a strict check.
+# (bug_buckets/bug_buckets.txt, only produced by fuzz/fuzz-lean, not test).
+# RESTLER_MIN_COVERAGE is logged for visibility but not yet enforced — verify
+# testing_summary.json's exact schema against a real run before gating on it.
 set -e
 
+RESTLER_BIN="/RESTler/restler/Restler"
 MODE="${RESTLER_MODE:-test}"
 SPEC="/opt/restler/spec/gatelin.openapi.json"
 WORK_DIR="/work"
@@ -23,20 +27,22 @@ esac
 cd "$WORK_DIR"
 
 echo "== RESTler compile =="
-restler compile --api_spec "$SPEC"
+"$RESTLER_BIN" compile --api_spec "$SPEC"
 
-SETTINGS_FILE="${COMPILE_DIR}/engine_settings.json"
+# compile only writes Compile/engine_settings.json when settings were fed
+# into it; a custom override (if provided) is the only settings file we pass.
+SETTINGS_ARGS=""
 if [ -f "$CUSTOM_SETTINGS" ]; then
   echo "== Using custom engine settings from docker/restler/config/engine_settings.json =="
-  SETTINGS_FILE="$CUSTOM_SETTINGS"
+  SETTINGS_ARGS="--settings $CUSTOM_SETTINGS"
 fi
 
 echo "== RESTler ${MODE} =="
 set +e
-restler "$MODE" \
+"$RESTLER_BIN" "$MODE" \
   --grammar_file "${COMPILE_DIR}/grammar.py" \
   --dictionary_file "${COMPILE_DIR}/dict.json" \
-  --settings "$SETTINGS_FILE" \
+  $SETTINGS_ARGS \
   --target_ip "$RESTLER_TARGET_HOST" \
   --target_port "${RESTLER_TARGET_PORT:-80}" \
   --no_ssl \

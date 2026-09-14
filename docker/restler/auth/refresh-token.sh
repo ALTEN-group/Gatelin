@@ -39,4 +39,7 @@ if [ -z "$TOKEN" ]; then
   exit 1
 fi
 
+# RESTler's token_refresh_cmd contract: a metadata line (any dict literal,
+# unused here) followed by one "<header-name>: <value>" line per app.
+echo "{}"
 echo "Authorization: Bearer ${TOKEN}"
