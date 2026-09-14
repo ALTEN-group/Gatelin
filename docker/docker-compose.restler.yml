@@ -24,6 +24,7 @@ services:
       RESTLER_FAIL_ON_BUGS: ${RESTLER_FAIL_ON_BUGS:-true}
       # avoids a SIGSEGV in dotnet's W^X JIT under amd64 emulation (e.g. QEMU on Apple Silicon)
       DOTNET_EnableWriteXorExecute: "0"
+      COMPlus_EnableWriteXorExecute: "0"
     volumes:
       - ${PWD}/docker/restler/auth:/opt/restler/auth:ro
       - ${PWD}/docker/restler/config:/opt/restler/config:ro

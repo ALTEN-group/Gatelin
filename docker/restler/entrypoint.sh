@@ -26,20 +26,29 @@ case "$MODE" in
   *) echo "Unknown RESTLER_MODE: $MODE (expected test|fuzz-lean|fuzz)" >&2; exit 1 ;;
 esac
 
-# Prefer a native executable literally named [Rr]estler, then any other
-# executable file directly under a */restler/ directory (excluding our own
-# mounts under /opt/restler), then a Restler*.dll invoked via `dotnet`.
+# Prefer a native executable literally named [Rr]estler on PATH or in the
+# filesystem, then any executable under a */restler/ directory (excluding our
+# own mounts under /opt/restler), then the driver Restler.dll invoked via `dotnet`.
+# Note: we search specifically for `restler.dll` (not `restler*.dll`) to avoid
+# selecting Restler.CompilerExe.dll or Restler.Compiler.dll.
 RESTLER_CMD=""
-BIN=$(find / -maxdepth 4 -type f \( -iname 'restler' -o -iname 'restler.exe' \) -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
-if [ -z "$BIN" ]; then
-  BIN=$(find / -maxdepth 4 -path '*/restler/*' -type f -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
-fi
-if [ -n "$BIN" ]; then
-  RESTLER_CMD="$BIN"
+if command -v restler >/dev/null 2>&1; then
+  RESTLER_CMD="restler"
 else
-  DLL=$(find / -maxdepth 4 -type f -iname 'restler*.dll' 2>/dev/null | grep -v '^/opt/restler' | head -1)
-  if [ -n "$DLL" ]; then
-    RESTLER_CMD="dotnet $DLL"
+  BIN=$(find / -maxdepth 4 -type f \( -iname 'restler' -o -iname 'restler.exe' \) -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
+  if [ -z "$BIN" ]; then
+    BIN=$(find / -maxdepth 4 -path '*/restler/*' -type f -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
+  fi
+  if [ -n "$BIN" ]; then
+    RESTLER_CMD="$BIN"
+  else
+    DLL=$(find / -maxdepth 4 -path '*/restler/*' -type f -iname 'restler.dll' 2>/dev/null | grep -v '^/opt/restler' | head -1)
+    if [ -z "$DLL" ]; then
+      DLL=$(find / -maxdepth 4 -type f -iname 'restler.dll' 2>/dev/null | grep -v '^/opt/restler' | head -1)
+    fi
+    if [ -n "$DLL" ]; then
+      RESTLER_CMD="dotnet $DLL"
+    fi
   fi
 fi
 
@@ -55,12 +64,14 @@ cd "$WORK_DIR"
 echo "== RESTler compile =="
 $RESTLER_CMD compile --api_spec "$SPEC"
 
-# compile only writes Compile/engine_settings.json when settings were fed
-# into it; a custom override (if provided) is the only settings file we pass.
+# Custom override (if provided) takes precedence; otherwise use the compiled
+# default (Compile/engine_settings.json) if present.
 SETTINGS_ARGS=""
 if [ -f "$CUSTOM_SETTINGS" ]; then
   echo "== Using custom engine settings from docker/restler/config/engine_settings.json =="
   SETTINGS_ARGS="--settings $CUSTOM_SETTINGS"
+elif [ -f "${COMPILE_DIR}/engine_settings.json" ]; then
+  SETTINGS_ARGS="--settings ${COMPILE_DIR}/engine_settings.json"
 fi
 
 echo "== RESTler ${MODE} =="
