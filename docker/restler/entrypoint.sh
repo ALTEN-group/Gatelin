@@ -27,17 +27,17 @@ case "$MODE" in
 esac
 
 # Prefer a native executable literally named [Rr]estler, then any other
-# executable file directly under a */restler/ directory, then a Restler*.dll
-# invoked via `dotnet`.
+# executable file directly under a */restler/ directory (excluding our own
+# mounts under /opt/restler), then a Restler*.dll invoked via `dotnet`.
 RESTLER_CMD=""
-BIN=$(find / -maxdepth 4 -type f \( -iname 'restler' -o -iname 'restler.exe' \) -perm -u+x 2>/dev/null | head -1)
+BIN=$(find / -maxdepth 4 -type f \( -iname 'restler' -o -iname 'restler.exe' \) -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
 if [ -z "$BIN" ]; then
-  BIN=$(find / -maxdepth 4 -path '*/restler/*' -type f -perm -u+x 2>/dev/null | head -1)
+  BIN=$(find / -maxdepth 4 -path '*/restler/*' -type f -perm -u+x 2>/dev/null | grep -v '^/opt/restler' | head -1)
 fi
 if [ -n "$BIN" ]; then
   RESTLER_CMD="$BIN"
 else
-  DLL=$(find / -maxdepth 4 -type f -iname 'restler*.dll' 2>/dev/null | head -1)
+  DLL=$(find / -maxdepth 4 -type f -iname 'restler*.dll' 2>/dev/null | grep -v '^/opt/restler' | head -1)
   if [ -n "$DLL" ]; then
     RESTLER_CMD="dotnet $DLL"
   fi
