@@ -3,8 +3,11 @@
 # requested task (test | fuzz-lean | fuzz) against Gatelin through Traefik,
 # authenticating via docker/restler/auth/refresh-token.sh.
 #
-# The image has no `restler` on PATH — the compiled binary lives at
-# /RESTler/restler/Restler (see https://github.com/microsoft/restler-fuzzer).
+# The image has no `restler` on PATH. Its exact binary name/location has
+# shifted across RESTler releases (docs say /RESTler/restler/Restler, but
+# that wasn't found in the pinned v9.2.4 image) — so it's located at runtime
+# instead of hardcoded. If discovery fails, the /RESTler tree is dumped so
+# the real layout can be read straight from the CI log.
 #
 # NOTE: the bug-bucket check below is well-established RESTler output
 # (bug_buckets/bug_buckets.txt, only produced by fuzz/fuzz-lean, not test).
@@ -12,7 +15,6 @@
 # testing_summary.json's exact schema against a real run before gating on it.
 set -e
 
-RESTLER_BIN="/RESTler/restler/Restler"
 MODE="${RESTLER_MODE:-test}"
 SPEC="/opt/restler/spec/gatelin.openapi.json"
 WORK_DIR="/work"
@@ -24,10 +26,34 @@ case "$MODE" in
   *) echo "Unknown RESTLER_MODE: $MODE (expected test|fuzz-lean|fuzz)" >&2; exit 1 ;;
 esac
 
+# Prefer a native executable literally named [Rr]estler, then any other
+# executable file directly under a */restler/ directory, then a Restler*.dll
+# invoked via `dotnet`.
+RESTLER_CMD=""
+BIN=$(find / -maxdepth 4 -type f \( -iname 'restler' -o -iname 'restler.exe' \) -perm -u+x 2>/dev/null | head -1)
+if [ -z "$BIN" ]; then
+  BIN=$(find / -maxdepth 4 -path '*/restler/*' -type f -perm -u+x 2>/dev/null | head -1)
+fi
+if [ -n "$BIN" ]; then
+  RESTLER_CMD="$BIN"
+else
+  DLL=$(find / -maxdepth 4 -type f -iname 'restler*.dll' 2>/dev/null | head -1)
+  if [ -n "$DLL" ]; then
+    RESTLER_CMD="dotnet $DLL"
+  fi
+fi
+
+if [ -z "$RESTLER_CMD" ]; then
+  echo "Could not locate the RESTler binary. Dumping known install roots:" >&2
+  find /RESTler /restler /opt/restler_bin -maxdepth 4 2>/dev/null >&2
+  exit 1
+fi
+echo "Using RESTler binary: ${RESTLER_CMD}"
+
 cd "$WORK_DIR"
 
 echo "== RESTler compile =="
-"$RESTLER_BIN" compile --api_spec "$SPEC"
+$RESTLER_CMD compile --api_spec "$SPEC"
 
 # compile only writes Compile/engine_settings.json when settings were fed
 # into it; a custom override (if provided) is the only settings file we pass.
@@ -39,7 +65,7 @@ fi
 
 echo "== RESTler ${MODE} =="
 set +e
-"$RESTLER_BIN" "$MODE" \
+$RESTLER_CMD "$MODE" \
   --grammar_file "${COMPILE_DIR}/grammar.py" \
   --dictionary_file "${COMPILE_DIR}/dict.json" \
   $SETTINGS_ARGS \
