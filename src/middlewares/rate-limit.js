@@ -64,10 +64,29 @@ export function identityKey(req, res) {
 }
 
 /**
+ * Checks whether a rate limiter is explicitly disabled via env.
+ * Accepts "<NAME>_MAX=0", "<NAME>_MAX=disabled", "<NAME>_MAX=off",
+ * or "<NAME>_DISABLED=true".
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+export function isLimiterDisabled(name) {
+  const val = process.env[name] ?? process.env[`${name}_MAX`];
+  return (
+    val === "0" ||
+    val === "disabled" ||
+    val === "off" ||
+    process.env[`${name}_DISABLED`] === "true"
+  );
+}
+
+/**
  * @param {number} max
  * @returns {import('express').RequestHandler}
  */
 export function createIdentityLimiter(max) {
+  if (max <= 0) return (_req, _res, next) => next();
   return rateLimit({
     windowMs: MINUTE_MS,
     max,
@@ -88,6 +107,7 @@ export function createIdentityLimiter(max) {
  * @returns {import('express').RequestHandler}
  */
 export function createSessionLimiter(max) {
+  if (max <= 0) return (_req, _res, next) => next();
   return rateLimit({
     windowMs: SESSION_WINDOW_MS,
     max,
@@ -99,13 +119,14 @@ export function createSessionLimiter(max) {
   });
 }
 
-export const sessionLimiter = createSessionLimiter(
-  envMax("SESSION_RATE_LIMIT_MAX", 20),
-);
+export const sessionLimiter = isLimiterDisabled("SESSION_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createSessionLimiter(envMax("SESSION_RATE_LIMIT_MAX", 20));
 
-export const adminLimiter = createIdentityLimiter(
-  envMax("ADMIN_RATE_LIMIT_MAX", 300),
-);
-export const proxyLimiter = createIdentityLimiter(
-  envMax("PROXY_RATE_LIMIT_MAX", 200),
-);
+export const adminLimiter = isLimiterDisabled("ADMIN_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createIdentityLimiter(envMax("ADMIN_RATE_LIMIT_MAX", 300));
+
+export const proxyLimiter = isLimiterDisabled("PROXY_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createIdentityLimiter(envMax("PROXY_RATE_LIMIT_MAX", 200));

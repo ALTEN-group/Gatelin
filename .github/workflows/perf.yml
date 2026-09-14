@@ -64,11 +64,14 @@ jobs:
           sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
           sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
 
+      - name: Start docker stack
+        run: ./scripts/start-dev.sh
+
       - name: Run health baseline
-        run: ./scripts/run-perf.sh health --keep
+        run: ./scripts/run-perf.sh health
 
       - name: Run login flow
-        run: ./scripts/run-perf.sh login --keep
+        run: ./scripts/run-perf.sh login
 
       - name: Run authenticated resource CRUD flow
         run: ./scripts/run-perf.sh resource-crud

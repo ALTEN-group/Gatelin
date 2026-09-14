@@ -11,6 +11,7 @@ import {
   createSessionLimiter,
   envMax,
   identityKey,
+  isLimiterDisabled,
 } from "../../src/middlewares/rate-limit.js";
 
 describe("identityKey", () => {
@@ -215,5 +216,47 @@ describe("createSessionLimiter", () => {
       .set("X-Forwarded-For", "203.0.113.5")
       .set("x-consumer-id", "1")
       .expect(204);
+  });
+
+  it("should bypass rate limiting completely when max <= 0", async () => {
+    const disabledApp = express();
+    disabledApp.use(createSessionLimiter(0));
+    disabledApp.get("/ping", (_req, res) => res.status(204).end());
+
+    for (let i = 0; i < 5; i++) {
+      await request(disabledApp).get("/ping").expect(204);
+    }
+  });
+});
+
+describe("isLimiterDisabled", () => {
+  const key = "TEST_RATE_LIMIT";
+  const maxKey = "TEST_RATE_LIMIT_MAX";
+  const disabledKey = "TEST_RATE_LIMIT_DISABLED";
+
+  afterEach(() => {
+    delete process.env[key];
+    delete process.env[maxKey];
+    delete process.env[disabledKey];
+  });
+
+  it("should return false when nothing is set", () => {
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(false);
+  });
+
+  it("should return true when <NAME>_MAX is '0', 'disabled', or 'off'", () => {
+    process.env[maxKey] = "0";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+
+    process.env[maxKey] = "disabled";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+
+    process.env[maxKey] = "off";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+  });
+
+  it("should return true when <NAME>_DISABLED is 'true'", () => {
+    process.env[disabledKey] = "true";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
   });
 });

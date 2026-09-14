@@ -7,8 +7,13 @@ name: ${APP_NAME}-restler
 services:
 
   restler:
-    image: mcr.microsoft.com/restlerfuzzer/restler:v9.2.4
-    platform: linux/amd64
+    build:
+      context: ../
+      dockerfile: docker/restler/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: ${APP_NAME}-restler:${ENV_NAME}
     container_name: ${APP_NAME}-restler-${ENV_NAME}
     hostname: ${APP_NAME}-restler-${ENV_NAME}
     user: "${UID}:${GID}"
@@ -22,9 +27,6 @@ services:
       RESTLER_TIME_BUDGET: ${RESTLER_TIME_BUDGET:-1}
       RESTLER_MIN_COVERAGE: ${RESTLER_MIN_COVERAGE:-50}
       RESTLER_FAIL_ON_BUGS: ${RESTLER_FAIL_ON_BUGS:-true}
-      # avoids a SIGSEGV in dotnet's W^X JIT under amd64 emulation (e.g. QEMU on Apple Silicon)
-      DOTNET_EnableWriteXorExecute: "0"
-      COMPlus_EnableWriteXorExecute: "0"
     volumes:
       - ${PWD}/docker/restler/auth:/opt/restler/auth:ro
       - ${PWD}/docker/restler/config:/opt/restler/config:ro

@@ -17,6 +17,7 @@ services:
       K6_TARGET_PORT: "80"
       K6_BASE_PATH: /api
       K6_VUS: ${K6_VUS:-10}
+      K6_LOGIN_VUS: ${K6_LOGIN_VUS:-1}
       K6_DURATION: ${K6_DURATION:-30s}
       K6_EMAIL: ${K6_EMAIL:-admin@example.com}
       K6_PWD: ${K6_PWD:-}

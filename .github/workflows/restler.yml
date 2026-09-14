@@ -54,6 +54,9 @@ jobs:
           sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
           sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
 
+      - name: Start docker stack
+        run: ./scripts/start-dev.sh
+
       - name: Run RESTler
         run: ./scripts/run-restler.sh ${{ steps.mode.outputs.mode }}
 
@@ -64,3 +67,13 @@ jobs:
           name: restler-results-${{ steps.mode.outputs.mode }}
           path: tests/restler/results/
           retention-days: 30
+
+      - name: Dump docker logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=300
+
+      - name: Stop docker stack
+        if: always()
+        run: ./scripts/stop-dev.sh || true

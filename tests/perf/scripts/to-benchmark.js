@@ -19,21 +19,24 @@ for (const scenario of SCENARIOS) {
     continue;
   }
 
-  const duration = summary.metrics?.http_req_duration?.values;
-  const failed = summary.metrics?.http_req_failed?.values;
+  const duration = summary.metrics?.http_req_duration?.values || summary.metrics?.http_req_duration;
+  const failed = summary.metrics?.http_req_failed?.values || summary.metrics?.http_req_failed;
 
-  if (duration?.["p(95)"] !== undefined) {
+  const p95 = duration?.["p(95)"];
+  const failRate = failed?.rate !== undefined ? failed.rate : failed?.value;
+
+  if (p95 !== undefined) {
     entries.push({
       name: `${scenario}: http_req_duration p95`,
       unit: "ms",
-      value: Math.round(duration["p(95)"] * 100) / 100,
+      value: Math.round(p95 * 100) / 100,
     });
   }
-  if (failed?.rate !== undefined) {
+  if (failRate !== undefined) {
     entries.push({
       name: `${scenario}: http_req_failed rate`,
       unit: "%",
-      value: Math.round(failed.rate * 10000) / 100,
+      value: Math.round(failRate * 10000) / 100,
     });
   }
 }
