@@ -1,7 +1,7 @@
 // @ts-check
 
-import { executeJob } from "./job-pool.js";
 import { log } from "@dwtechs/winstan";
+import { executeJob } from "./job-pool.js";
 import { scheduleDailyAt } from "./scheduler.js";
 
 const HISTORY_RETENTION_MONTHS = 6;

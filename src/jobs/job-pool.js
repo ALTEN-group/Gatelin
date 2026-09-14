@@ -1,7 +1,8 @@
 // @ts-check
-import { execute } from "@dwtechs/antity-pgsql";
+
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { execute } from "@dwtechs/antity-pgsql";
 
 const requirePg = createRequire(
   fileURLToPath(import.meta.resolve("@dwtechs/antity-pgsql")),
