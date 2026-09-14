@@ -25,6 +25,7 @@ const ready = ref(false);
 let animation = null;
 let observer = null;
 let disposed = false;
+let elapsedSeconds = 0;
 
 onBeforeUnmount(() => {
   disposed = true;
@@ -39,7 +40,7 @@ onMounted(async () => {
     // reach for. onMounted never runs during that pass.
     const [{ Player }, { FullscreenQuad, Mesh, PerspectiveCamera, Renderer, Scene }] =
       await Promise.all([
-        import("@lcluber/frameratjs"),
+        import("@1pizzateam/loopr"),
         import("@lcluber/roostrjs"),
       ]);
     if (disposed) return;
@@ -66,9 +67,10 @@ onMounted(async () => {
     scene.addMesh(quad);
     quad.addProgram(vertexShader, fragmentShader, null);
 
-    animation = new Player(() => {
+    animation = new Player((delta = 0) => {
+      elapsedSeconds += delta;
       renderer.clearFrame();
-      scene.render(camera, animation.getTime());
+      scene.render(camera, elapsedSeconds);
     });
     animation.capFPS(FPS_CAP);
     animation.start();
