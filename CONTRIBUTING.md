@@ -30,7 +30,7 @@ so each mock user covers one login path:
 | --- | --- |
 | `admin@example.com` | straight to a session (used by the e2e suite) |
 | `standard@example.com` | straight to a session |
-| `coco@example.com` | 2FA challenge, then the trusted-device prompt |
+| `coco@example.com` | 2FA challenge (code `123456` in dev, or TOTP secret `JBSWY3DPEHPK3PXP`), then trusted-device prompt |
 | `guest@example.com` | expired-password rotation |
 | `ebuser@example.com` | rejected, account locked |
 
