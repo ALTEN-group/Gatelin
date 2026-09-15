@@ -36,13 +36,15 @@ dependencies:
     - ALTEN-group/coding-pal/instructions/vitepress-docs.instructions.md
     - ALTEN-group/coding-pal/instructions/k6-performance-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/restler-fuzzing-tests.instructions.md
-    # Skills (direct folders — each contains SKILL.md + references/ + scripts/)
-    - ALTEN-group/coding-pal/skills/node-express-examples
-    - ALTEN-group/coding-pal/skills/postgres-liquibase-examples
-    - ALTEN-group/coding-pal/skills/docker-examples
-    - ALTEN-group/coding-pal/skills/angular-admin-examples
-    - ALTEN-group/coding-pal/skills/vitepress-docs-examples
-    - ALTEN-group/coding-pal/skills/k6-performance-examples
-    - ALTEN-group/coding-pal/skills/restler-fuzzing-examples
-    - ALTEN-group/coding-pal/skills/audit-reporting
+    # Skills (folder bundles — SKILL.md + references/ + scripts/)
+    - git: ALTEN-group/coding-pal
+      skills:
+        - node-express-examples
+        - postgres-liquibase-examples
+        - docker-examples
+        - angular-admin-examples
+        - vitepress-docs-examples
+        - k6-performance-examples
+        - restler-fuzzing-examples
+        - audit-reporting
   mcp: {}
