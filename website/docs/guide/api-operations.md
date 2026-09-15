@@ -4,7 +4,7 @@ Operations represent action types (e.g. `read`, `write`, `delete`) used in the p
 
 ## How It Works
 
-Operations define the type of action a permission grants on a resource. They are paired with a resource in a scope to express "this route allows performing operation X on resource Y". Create operations before creating scopes.
+Operations define the type of action a permission grants on a resource. They are paired with a resource in a scope to express "this route allows performing operation X on resource Y". Create operations before creating scopes. Seeded operations are `core` and cannot be archived.
 
 ## Search Operations
 
@@ -93,3 +93,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+The 13 seeded catalog operations (`read`, `list`, `create`, and the rest marked `core`) cannot be archived. Permissions and `route_operation` CASCADE from `operation`, so a later retention hard-delete would wipe system grants. Custom operations still archive and are purged after 2 months.

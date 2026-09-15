@@ -10,6 +10,8 @@ dependencies:
     # Agents
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
     - ALTEN-group/coding-pal/agents/vitepress-docs.agent.md
+    - ALTEN-group/coding-pal/agents/k6-performance-tests.agent.md
+    - ALTEN-group/coding-pal/agents/restler-fuzzing-tests.agent.md
     # Pipelines Agents
     - ALTEN-group/coding-pal/agents/node-express-back-end-code-audit.agent.md
     - ALTEN-group/coding-pal/agents/node-express-audit-fix.agent.md
@@ -19,6 +21,8 @@ dependencies:
     - ALTEN-group/coding-pal/prompts/angular-e2e-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/vitepress-docs.prompt.md
+    - ALTEN-group/coding-pal/prompts/k6-performance-tests.prompt.md
+    - ALTEN-group/coding-pal/prompts/restler-fuzzing-tests.prompt.md
     # Instructions
     - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
     - ALTEN-group/coding-pal/instructions/node-express.instructions.md
@@ -30,6 +34,8 @@ dependencies:
     - ALTEN-group/coding-pal/instructions/angular-unit-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/angular-e2e-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/vitepress-docs.instructions.md
+    - ALTEN-group/coding-pal/instructions/k6-performance-tests.instructions.md
+    - ALTEN-group/coding-pal/instructions/restler-fuzzing-tests.instructions.md
     # Skills (folder bundles — SKILL.md + references/ + scripts/)
     - git: ALTEN-group/coding-pal
       skills:
@@ -38,5 +44,7 @@ dependencies:
         - docker-examples
         - angular-admin-examples
         - vitepress-docs-examples
+        - k6-performance-examples
+        - restler-fuzzing-examples
         - audit-reporting
   mcp: {}

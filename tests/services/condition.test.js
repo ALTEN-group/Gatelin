@@ -2,24 +2,10 @@
  * @jest-environment node
  */
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { jest } from "@jest/globals";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const conditionEntPath = path.join(
-  __dirname,
-  "../../src/entities/condition.js",
-);
-
-const execute = jest.fn();
-jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
-
-const deleteArchive = jest.fn();
-jest.unstable_mockModule(conditionEntPath, () => ({
-  __esModule: true,
-  default: { query: { deleteArchive } },
-}));
+const executeJob = jest.fn();
+jest.unstable_mockModule("../../src/jobs/job-pool.js", () => ({ executeJob }));
 
 describe("condition service", () => {
   let conditionSvc;
@@ -29,30 +15,18 @@ describe("condition service", () => {
     conditionSvc = module.default;
   });
 
-  beforeEach(() => {
-    execute.mockReset();
-    deleteArchive.mockReset();
-  });
+  beforeEach(() => executeJob.mockReset());
 
-  it("should delete conditions archived before the given date and return the row count", async () => {
-    deleteArchive.mockReturnValue("DELETE FROM conditions");
-    execute.mockResolvedValue({ rowCount: 6 });
+  it("should hard-delete archived conditions via the job pool", async () => {
+    executeJob.mockResolvedValue({ rows: [{ count: 3 }] });
     const date = new Date("2026-01-01");
 
     const count = await conditionSvc.deleteArchived(date);
 
-    expect(execute).toHaveBeenCalledWith(
-      "DELETE FROM conditions",
-      [date],
-      null,
+    expect(executeJob).toHaveBeenCalledWith(
+      "SELECT delete($1, $2, $3) AS count",
+      ["public", "condition", date],
     );
-    expect(count).toBe(6);
-  });
-
-  it("should return 0 when no rows are deleted", async () => {
-    deleteArchive.mockReturnValue("DELETE FROM conditions");
-    execute.mockResolvedValue({ rowCount: 0 });
-
-    expect(await conditionSvc.deleteArchived(new Date())).toBe(0);
+    expect(count).toBe(3);
   });
 });

@@ -1,11 +1,13 @@
 {
   "name": "gatelin-docs",
-  "version": "0.1.0-alpha.9",
+  "version": "0.1.0-alpha.10",
   "description": "Documentation for Gatelin, a Backend for Frontend (BFF) that sits behind a reverse proxy.",
   "private": true,
   "scripts": {
     "dev": "vitepress dev docs --host",
+    "prebuild": "npm run sync:shaders",
     "build": "vitepress build docs",
+    "sync:shaders": "node scripts/sync-shaders.mjs",
     "preview": "vitepress preview docs"
   },
   "author": "ALTEN",
@@ -23,7 +25,7 @@
     "vitepress": "1.6.4"
   },
   "dependencies": {
-    "@lcluber/frameratjs": "1.1.0",
+    "@1pizzateam/loopr": "2.0.0",
     "@lcluber/roostrjs": "0.6.0",
     "mermaid": "11.17.0",
     "vitepress-plugin-mermaid": "2.0.17"

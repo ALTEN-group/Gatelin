@@ -74,14 +74,17 @@ describe("getUserByEmail middleware", () => {
     expect(next).toHaveBeenCalledWith();
   });
 
-  it("should set active: false for inactive user", async () => {
+  it("should call next(403) when the returned user is not active", async () => {
     const user = { id: 2, nickname: "bob", roles: [4], active: false };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserByEmail(req, res, next);
 
-    expect(res.locals.user).toEqual({ id: 2, active: false });
-    expect(next).toHaveBeenCalledWith();
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 403,
+      message: "Account not activated",
+    });
+    expect(req.body.rows).toBeUndefined();
   });
 
   it("should forward req.body.filters as-is set by an upstream middleware", async () => {
@@ -195,7 +198,7 @@ describe("getUserById middleware", () => {
   });
 
   it("should merge nickname/roles into the existing req.body.rows[0] on success", async () => {
-    const user = { id: 1, nickname: "alice", roles: [1, 2] };
+    const user = { id: 1, nickname: "alice", roles: [1, 2], active: true };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserById(req, res, next);
@@ -216,7 +219,7 @@ describe("getUserById middleware", () => {
   });
 
   it("should call next(422) when the returned user has an invalid/missing nickname", async () => {
-    const user = { id: 1, nickname: null, roles: [1] };
+    const user = { id: 1, nickname: null, roles: [1], active: true };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserById(req, res, next);
@@ -228,7 +231,7 @@ describe("getUserById middleware", () => {
   });
 
   it("should call next(422) when the returned user has invalid/missing roles", async () => {
-    const user = { id: 1, nickname: "alice", roles: null };
+    const user = { id: 1, nickname: "alice", roles: null, active: true };
     mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
 
     await getUserById(req, res, next);
@@ -247,5 +250,30 @@ describe("getUserById middleware", () => {
     await Promise.resolve();
 
     expect(next).toHaveBeenCalledWith(error);
+  });
+
+  it("should call next(403) when the returned user is not active", async () => {
+    const user = { id: 1, nickname: "alice", roles: [1], active: false };
+    mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
+
+    await getUserById(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 403,
+      message: "Account not activated",
+    });
+    expect(req.body.rows[0]).toEqual({ userId: 1 });
+  });
+
+  it("should call next(403) when the returned user omits active", async () => {
+    const user = { id: 1, nickname: "alice", roles: [1] };
+    mockQuery.mockResolvedValueOnce({ data: { rows: [user] } });
+
+    await getUserById(req, res, next);
+
+    expect(next).toHaveBeenCalledWith({
+      statusCode: 403,
+      message: "Account not activated",
+    });
   });
 });

@@ -1,16 +1,20 @@
 // @ts-check
-import { execute } from "@dwtechs/antity-pgsql";
+import { executeJob } from "../jobs/job-pool.js";
 
 /**
- * Creates a deleteArchived function bound to an entity's deleteArchive query.
- * Used by the scheduled job to permanently remove records archived before `date`.
+ * Creates a deleteArchived function bound to a physical table name.
+ * Runs as the job DB role via `delete()`, which the app role cannot EXECUTE.
+ * Pass the base table (`route`, `role`, …), not the writable view (`routes`, `roles`).
  *
- * @param {{ query: { deleteArchive: () => string } }} entity
+ * @param {string} table
  * @returns {(date: Date) => Promise<number>} deleted row count
  */
-export function makeDeleteArchived(entity) {
+export function makeDeleteArchived(table) {
   return function deleteArchived(date) {
-    const q = entity.query.deleteArchive();
-    return execute(q, [date], null).then((r) => r.rowCount || 0);
+    return executeJob("SELECT delete($1, $2, $3) AS count", [
+      "public",
+      table,
+      date,
+    ]).then((r) => Number(r.rows?.[0]?.count ?? 0));
   };
 }

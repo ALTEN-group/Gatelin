@@ -107,7 +107,9 @@ Authorization: Bearer <access_token>
 
 **Response (204 No Content)**
 
-Archived roles older than 2 months are permanently deleted by the daily retention job.
+Archiving a role drops it from the in-memory ACL cache on reload: leftover `roleId`s on consumers no longer grant access. Archived roles older than 2 months are permanently deleted by the daily retention job.
+
+**Locked** seed roles (Super-admin, Admin, User, Guest) cannot be archived, and `locked` cannot be cleared. Super-admin is role **id 1**. Custom (unlocked) roles still archive.
 
 ### Role Fields
 
@@ -117,4 +119,5 @@ Archived roles older than 2 months are permanently deleted by the daily retentio
 | `name` | Unique role name |
 | `description` | Human-readable description |
 | `color` | Hex color code assigned to the role (e.g. `#FF8000`) |
+| `locked` | `true` for seeded system roles |
 | `archived` | Whether the role is archived |

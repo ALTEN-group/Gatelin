@@ -100,3 +100,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+Seeded Gatelin catalog scopes (those marked `core`) cannot be archived. Preference ACL matches these names against the URL segment after the resource. Custom scopes still archive and are purged after 2 months.

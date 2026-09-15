@@ -75,6 +75,7 @@ Authorization: Bearer <access_token>
 | `fieldId` | ID of the field to filter on |
 | `op` | Comparison operator (`=`, `!=`, `<`, `>`, `<=`, `>=`) |
 | `value` | Value to compare the field against |
+| `core` | `true` for the seeded Admin search filters (not archivable) |
 
 ## Update Condition
 
@@ -116,4 +117,4 @@ Authorization: Bearer <access_token>
 
 **Response (204 No Content)**
 
-Archived conditions older than 2 months are permanently deleted by the daily retention job (before fields, because `condition.fieldId` is `ON DELETE RESTRICT`).
+The seeded **Non-archived only** and **Non-core only** conditions are `core`. They cannot be archived: `permission_condition` CASCADE from `condition`, so a later retention hard-delete would strip those Admin search filters. Custom conditions still archive and are purged after 2 months (before fields, because `condition.fieldId` is `ON DELETE RESTRICT`).

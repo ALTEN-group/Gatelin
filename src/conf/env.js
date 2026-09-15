@@ -15,6 +15,8 @@ const REQUIRED = [
   ["ENV_NAME", "used to build downstream service URLs"],
   ["PWD_CHECK_URL", "Password service credential check endpoint"],
   ["USER_SEARCH_URL", "User service lookup endpoint"],
+  ["DB_JOB_USER", "PostgreSQL role used by archive/history cron jobs"],
+  ["DB_JOB_PWD", "Password for the cron PostgreSQL role"],
 ];
 
 /**

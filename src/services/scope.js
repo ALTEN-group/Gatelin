@@ -40,5 +40,5 @@ function getValues(ids) {
 export default {
   init,
   getValues,
-  deleteArchived: makeDeleteArchived(sEnt),
+  deleteArchived: makeDeleteArchived("scope"),
 };

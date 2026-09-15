@@ -5,6 +5,8 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 
 const SESSION_WINDOW_MS = 15 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
+/** Same hop count as `app.set("trust proxy", 1)` in src/app.js (Traefik). */
+const TRUSTED_PROXY_HOPS = 1;
 
 /**
  * @param {string} name
@@ -14,6 +16,37 @@ const MINUTE_MS = 60 * 1000;
 export function envMax(name, fallback) {
   const n = Number(process.env[name]);
   return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+/**
+ * Client address for rate-limit keys. Express HTTP already sets `req.ip`
+ * via `trust proxy`. WebSocket upgrades are raw `IncomingMessage`s, so
+ * without this they all look like Traefik (`socket.remoteAddress`).
+ *
+ * Trusts one hop: the peer is the proxy; the client is the previous
+ * `X-Forwarded-For` value (Traefik appends the real client). A spoofed
+ * leftmost XFF is ignored, same as Express.
+ *
+ * @param {import('express').Request|{ ip?: string, headers?: import('node:http').IncomingHttpHeaders, socket?: { remoteAddress?: string } }} req
+ * @returns {string}
+ */
+export function clientIp(req) {
+  if (typeof req.ip === "string" && req.ip) return req.ip;
+  const peer =
+    req.socket?.remoteAddress ??
+    // @ts-expect-error Node IncomingMessage
+    req.connection?.remoteAddress ??
+    "127.0.0.1";
+  const raw = req.headers?.["x-forwarded-for"];
+  const forwarded = Array.isArray(raw) ? raw.join(",") : raw;
+  if (typeof forwarded !== "string" || !forwarded.trim()) return peer;
+  const chain = forwarded
+    .split(",")
+    .map((hop) => hop.trim())
+    .filter(Boolean);
+  chain.push(peer);
+  const index = Math.max(0, chain.length - 1 - TRUSTED_PROXY_HOPS);
+  return chain[index] || peer;
 }
 
 /**
@@ -27,7 +60,25 @@ export function envMax(name, fallback) {
 export function identityKey(req, res) {
   const id = res.locals.consumer?.id;
   if (isInteger(id)) return `c:${id}`;
-  return ipKeyGenerator(req.ip ?? req.socket?.remoteAddress ?? "127.0.0.1");
+  return ipKeyGenerator(clientIp(req));
+}
+
+/**
+ * Checks whether a rate limiter is explicitly disabled via env.
+ * Accepts "<NAME>_MAX=0", "<NAME>_MAX=disabled", "<NAME>_MAX=off",
+ * or "<NAME>_DISABLED=true".
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+export function isLimiterDisabled(name) {
+  const val = process.env[name] ?? process.env[`${name}_MAX`];
+  return (
+    val === "0" ||
+    val === "disabled" ||
+    val === "off" ||
+    process.env[`${name}_DISABLED`] === "true"
+  );
 }
 
 /**
@@ -35,6 +86,7 @@ export function identityKey(req, res) {
  * @returns {import('express').RequestHandler}
  */
 export function createIdentityLimiter(max) {
+  if (max <= 0) return (_req, _res, next) => next();
   return rateLimit({
     windowMs: MINUTE_MS,
     max,
@@ -55,6 +107,7 @@ export function createIdentityLimiter(max) {
  * @returns {import('express').RequestHandler}
  */
 export function createSessionLimiter(max) {
+  if (max <= 0) return (_req, _res, next) => next();
   return rateLimit({
     windowMs: SESSION_WINDOW_MS,
     max,
@@ -66,13 +119,14 @@ export function createSessionLimiter(max) {
   });
 }
 
-export const sessionLimiter = createSessionLimiter(
-  envMax("SESSION_RATE_LIMIT_MAX", 20),
-);
+export const sessionLimiter = isLimiterDisabled("SESSION_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createSessionLimiter(envMax("SESSION_RATE_LIMIT_MAX", 20));
 
-export const adminLimiter = createIdentityLimiter(
-  envMax("ADMIN_RATE_LIMIT_MAX", 300),
-);
-export const proxyLimiter = createIdentityLimiter(
-  envMax("PROXY_RATE_LIMIT_MAX", 200),
-);
+export const adminLimiter = isLimiterDisabled("ADMIN_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createIdentityLimiter(envMax("ADMIN_RATE_LIMIT_MAX", 300));
+
+export const proxyLimiter = isLimiterDisabled("PROXY_RATE_LIMIT")
+  ? (_req, _res, next) => next()
+  : createIdentityLimiter(envMax("PROXY_RATE_LIMIT_MAX", 200));

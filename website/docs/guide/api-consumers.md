@@ -2,7 +2,7 @@
 
 Admin endpoints for inspecting and managing active consumer sessions stored in the database.
 
-A consumer record is created on login and archived on logout. These endpoints allow administrators to search active sessions and force-archive (force-logout) one or more consumers.
+A consumer record is created on login and archived on logout. These endpoints allow administrators to search active sessions and force-archive (force-logout) one or more consumers. Search never returns live access or refresh tokens; archive the consumer to invalidate the session.
 
 ## Search Consumers
 
@@ -65,3 +65,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+A password reset does not use this from the browser. The password service (or a system account) searches by `userId` then posts the matching ids here so stolen refresh tokens cannot be reused. See [After a password reset or change](./api-sessions.md#after-a-password-reset-or-change).

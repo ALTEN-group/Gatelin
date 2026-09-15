@@ -7,6 +7,7 @@ CREATE OR REPLACE VIEW conditions AS
     c.op,
     c.value,
     c.color,
+    c.core,
     c.archived,
     c."archivedAt",
     c."updatedAt",

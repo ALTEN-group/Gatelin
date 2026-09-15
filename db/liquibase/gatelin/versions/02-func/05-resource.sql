@@ -34,3 +34,21 @@ CREATE OR REPLACE FUNCTION iud_resource() RETURNS trigger AS $$
     END IF;
   END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Blocks archiving core catalog resources (routes, permissions, …), including
+-- set_archived() and direct UPDATE of the base table. Routes and fields
+-- CASCADE from resource, so a core archive would let retention wipe system
+-- routes. Also keeps core immutable so it cannot be cleared in the same UPDATE.
+CREATE OR REPLACE FUNCTION before_update_resource() RETURNS trigger AS $$
+  BEGIN
+    IF NOT OLD.core THEN
+      RETURN NEW;
+    END IF;
+    NEW.core = OLD.core;
+    IF NEW.archived THEN
+      RAISE EXCEPTION 'A core resource (id=%) cannot be archived.', OLD.id;
+    END IF;
+    RETURN NEW;
+  END;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO pg_catalog, public;

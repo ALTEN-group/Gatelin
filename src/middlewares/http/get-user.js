@@ -8,6 +8,20 @@ const { USER_SEARCH_URL } = process.env;
 const url = USER_SEARCH_URL;
 
 /**
+ * User-service search filters are a request, not a guarantee. Reject if the
+ * returned row is missing or not strictly active.
+ *
+ * @param {unknown} active
+ * @param {import('express').NextFunction} next
+ * @return {boolean} true when next(err) was already called
+ */
+function rejectIfInactive(active, next) {
+  if (active === true) return false;
+  next({ statusCode: 403, message: "Account not activated" });
+  return true;
+}
+
+/**
  * Fetches user details from ms_user service by email
  *
  * @param {Object} req - Express request
@@ -29,6 +43,7 @@ export function getUserByEmail(req, res, next) {
         return next({ statusCode: 422, message: "Invalid user nickname" });
       if (!isArray(roles, "!0"))
         return next({ statusCode: 422, message: "Invalid user roles" });
+      if (rejectIfInactive(active, next)) return;
       log.debug(
         () =>
           `ms_user response: id=${id}, nickname=${nickname}, email=${email}, roles=${roles}, active=${active}`,
@@ -63,11 +78,12 @@ export function getUserById(req, _res, next) {
     .then((r) => {
       const u = r.data.rows[0]; // Expecting single user object
       // if (!isObject(u)) return next({ statusCode: 404, message: "User not found" });
-      const { nickname, roles } = u ?? {};
+      const { nickname, roles, active } = u ?? {};
       if (!isString(nickname, "!0"))
         return next({ statusCode: 422, message: "Invalid user nickname" });
       if (!isArray(roles, "!0"))
         return next({ statusCode: 422, message: "Invalid user roles" });
+      if (rejectIfInactive(active, next)) return;
       log.debug(() => `ms_user response: nickname=${nickname}, roles=${roles}`);
       // Attach user data to request body for db update in downstream middleware
       Object.assign(req.body.rows[0], { nickname, roles });

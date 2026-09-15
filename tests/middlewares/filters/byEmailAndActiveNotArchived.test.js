@@ -3,9 +3,9 @@
  */
 
 import { jest } from "@jest/globals";
-import { filterByEmailNotArchived } from "../../../src/middlewares/filters/byEmailNotArchived.js";
+import { filterByEmailAndActiveNotArchived } from "../../../src/middlewares/filters/byEmailAndActiveNotArchived.js";
 
-describe("filterByEmailNotArchived middleware", () => {
+describe("filterByEmailAndActiveNotArchived middleware", () => {
   let req, res, next;
 
   beforeEach(() => {
@@ -15,10 +15,11 @@ describe("filterByEmailNotArchived middleware", () => {
   });
 
   it("should set req.body.filters from req.body.email and call next()", () => {
-    filterByEmailNotArchived(req, res, next);
+    filterByEmailAndActiveNotArchived(req, res, next);
 
     expect(req.body.filters).toEqual({
       email: { value: "test@example.com", matchMode: "equals" },
+      active: { value: true, matchMode: "IS" },
       archived: { value: false, matchMode: "IS" },
     });
     expect(next).toHaveBeenCalledWith();
@@ -27,7 +28,7 @@ describe("filterByEmailNotArchived middleware", () => {
   it("should set filters.email.value to undefined when req.body.email is missing", () => {
     req.body = {};
 
-    filterByEmailNotArchived(req, res, next);
+    filterByEmailAndActiveNotArchived(req, res, next);
 
     expect(req.body.filters.email.value).toBeUndefined();
     expect(next).toHaveBeenCalledWith();

@@ -35,6 +35,8 @@ Traefik **sticky sessions are not a substitute**. Token refresh, rolling deploys
 
 Scale the edge proxy and the upstream microservices instead. A shared session store (and shared rate-limit counters) is required before Gatelin itself can run more than one replica.
 
+Gatelin sets `trust proxy` to **1 hop**. Rate-limit IPs use the address Traefik appends to `X-Forwarded-For`. Bind Node only behind that proxy.
+
 ## docker-compose.yml template
 
 Drop this file into your project and replace the placeholder values. No Gatelin source code required — all images are pulled from GHCR.
@@ -123,7 +125,7 @@ services:
       PWD_CHECK_URL: http://my-project-foxnox-local:3000/foxnox/compare
       # Only needed when the credential check reports lockout, password expiry or 2FA
       PWD_CHALLENGES_URL: http://my-project-foxnox-local:3000/foxnox/challenges
-      PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/trusted-devices/verify
+      PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/devices/verify
       PWD_LOGIN_TICKET_URL: http://my-project-foxnox-local:3000/foxnox/login-tickets/redeem
       USER_SEARCH_URL: http://my-project-msuser-local:3000/users/search
       DB_HOST: my-project-postgres-local

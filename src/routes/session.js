@@ -18,12 +18,12 @@ import {
   deleteFromCache,
   updateCache,
 } from "../middlewares/cache/consumer.js";
-import { filterByEmailNotArchived } from "../middlewares/filters/byEmailNotArchived.js";
+import { filterByEmailAndActiveNotArchived } from "../middlewares/filters/byEmailAndActiveNotArchived.js";
 import { filterByIdAndActiveNotArchived } from "../middlewares/filters/byIdAndActiveNotArchived.js";
-import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { challengeLogin } from "../middlewares/http/challenge-login.js";
-import { redeemLoginTicket } from "../middlewares/http/redeem-login-ticket.js";
+import { checkPwd } from "../middlewares/http/check-pwd.js";
 import { getUserByEmail, getUserById } from "../middlewares/http/get-user.js";
+import { redeemLoginTicket } from "../middlewares/http/redeem-login-ticket.js";
 import { attachUserId } from "../middlewares/mappers/consumer/attachUserId.js";
 import { createRow } from "../middlewares/mappers/consumer/createRow.js";
 import { resolvePermissions } from "../middlewares/mappers/resolve-permissions.js";
@@ -37,11 +37,12 @@ import checkConsumerByRefreshToken from "../middlewares/validators/check-consume
 import { checkCsrf } from "../middlewares/validators/check-csrf.js";
 import { checkRefreshToken } from "../middlewares/validators/check-refreshToken.js";
 import { checkRequest } from "../middlewares/validators/check-request.js"; // Authenticate request and load consumer session
+import { requireJson } from "../middlewares/validators/require-json.js";
 
 const checkEmail = [
   uEnt.normalizeOne,
   uEnt.validateOne,
-  filterByEmailNotArchived,
+  filterByEmailAndActiveNotArchived,
   getUserByEmail,
 ];
 // const activate = [ activateUser, uEnt.update ];
@@ -64,6 +65,7 @@ const addSession = [
   sendSession,
 ];
 const resumeSession = [
+  requireJson,
   redeemLoginTicket,
   createTokens,
   sEnt.add,
@@ -91,6 +93,7 @@ const deleteSession = [
 ];
 
 const add = [
+  requireJson,
   checkEmail,
   // when(en local res => !res.locals.active, activate),
   addSession,
@@ -108,7 +111,7 @@ const del = [getSession, checkCsrf, deleteSession];
 // add a session. e.g. Log a user
 router.post("/", add);
 
-// Finish login after Foxnox mid-login challenges (2FA / expired password / trusted device)
+// Finish login after Pwd service mid-login challenges (2FA / expired password / trusted device)
 router.post("/resume", resumeSession);
 
 // Update a session with new tokens

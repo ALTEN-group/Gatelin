@@ -1,0 +1,4 @@
+# Drop a custom `engine_settings.json` here to override the settings RESTler
+# generates during `compile` (e.g. checker toggles, max_combinations). Picked
+# up automatically by entrypoint.sh when present; otherwise the compiled
+# default (Compile/engine_settings.json) is used as-is.

@@ -2,6 +2,8 @@
 
 The browser talks to **Gatelin** (usually via Traefik at `/api/…`). Gatelin is the BFF: it issues JWTs, refreshes sessions, and forwards authorized calls to your microservices. This page covers tokens and mid-login challenges when the password service requires 2FA or password rotation.
 
+Store **only the access token** in `localStorage`. The refresh token is an httpOnly cookie (`REFRESH_TOKEN_COOKIE`). Do not copy it into JavaScript. The Gatelin admin UI follows this path (`AuthenticationService` / `TokenService`).
+
 ## 1. Login
 
 ```typescript
@@ -24,12 +26,8 @@ if (!response.ok) {
   throw new Error('Login failed');
 }
 
-const { accessToken, refreshToken } = await response.json();
-
+const { accessToken } = await response.json();
 localStorage.setItem('accessToken', accessToken);
-// Prefer the httpOnly refresh cookie when REFRESH_TOKEN_COOKIE is enabled;
-// keep a body copy only if your stack still needs it for PUT refresh.
-if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
 ```
 
 ### Resume after a challenge
@@ -48,9 +46,8 @@ if (ticket) {
 
   if (!response.ok) throw new Error('Resume failed');
 
-  const { accessToken, refreshToken } = await response.json();
+  const { accessToken } = await response.json();
   localStorage.setItem('accessToken', accessToken);
-  if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
 
   // Drop ?ticket= from the URL and enter the app
   history.replaceState({}, '', window.location.pathname);
@@ -75,7 +72,7 @@ fetch('/api/protected-resource', {
 
 ## 3. Handling Token Expiry (401)
 
-Refresh and logout require the CSRF double-submit cookie. Read `csrfToken` (or `CSRF_COOKIE_NAME`) and echo it in `X-CSRF-Token`.
+Refresh and logout require the CSRF double-submit cookie. Read `csrfToken` (or `CSRF_COOKIE_NAME`) and echo it in `X-CSRF-Token`. Send an empty JSON body: the browser attaches the httpOnly refresh cookie.
 
 ```typescript
 function getCookie(name: string): string | undefined {
@@ -86,8 +83,6 @@ function getCookie(name: string): string | undefined {
 }
 
 if (response.status === 401) {
-  const accessToken = localStorage.getItem('accessToken');
-  const refreshToken = localStorage.getItem('refreshToken');
   const csrfToken = getCookie('csrfToken');
 
   const refreshResponse = await fetch('/gatelin/sessions', {
@@ -95,16 +90,19 @@ if (response.status === 401) {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
       'X-CSRF-Token': csrfToken ?? ''
     },
-    body: JSON.stringify({ refreshToken })
+    body: JSON.stringify({})
   });
 
-  const { accessToken: newAccess, refreshToken: newRefresh } = await refreshResponse.json();
+  if (!refreshResponse.ok) {
+    // Session gone — send the user to login
+    localStorage.removeItem('accessToken');
+    throw new Error('Refresh failed');
+  }
 
+  const { accessToken: newAccess } = await refreshResponse.json();
   localStorage.setItem('accessToken', newAccess);
-  if (newRefresh) localStorage.setItem('refreshToken', newRefresh);
 
   // Retry original request
   return fetch('/api/protected-resource', {
@@ -113,6 +111,8 @@ if (response.status === 401) {
   });
 }
 ```
+
+The access token on the original request may already be expired. Refresh does not need it; CSRF plus the refresh cookie are enough.
 
 ## 4. Logout
 
@@ -130,17 +130,18 @@ await fetch('/gatelin/sessions', {
 });
 
 localStorage.removeItem('accessToken');
-localStorage.removeItem('refreshToken');
 ```
 
 ## Token Storage Considerations
 
 | Method | Notes |
 |---|---|
-| `localStorage` | Simple for the access token, but vulnerable to XSS |
-| `httpOnly cookies` | Preferred for the refresh token when `REFRESH_TOKEN_COOKIE` is enabled |
-| CSRF cookie | Not httpOnly — the client must read it and send `X-CSRF-Token` |
+| `localStorage` | Access token only. Readable by XSS — keep it short-lived |
+| `httpOnly cookie` | Refresh token when `REFRESH_TOKEN_COOKIE` is enabled. The browser sends it; JS cannot read it |
+| CSRF cookie | Not httpOnly — the client must read it and send `X-CSRF-Token`. `SameSite` and `Secure` follow `REFRESH_TOKEN_COOKIE_SAMESITE` / `REFRESH_TOKEN_COOKIE_HTTPS_ONLY` |
 | Trusted-device cookie (`trusted_device`) | Optional. If your password service issues it from its challenge pages (`Path=/`), Gatelin forwards its value on the next login to skip 2FA. Omit it and every 2FA login is challenged |
 | `sessionStorage` | Cleared when the tab closes |
 
-> Always send `credentials: 'include'` on session calls so CSRF, refresh, and trusted-device cookies are included. Never send the refresh token except to `PUT /gatelin/sessions`.
+> Always send `credentials: 'include'` on session calls so CSRF, refresh, and trusted-device cookies are included. Never put the refresh token in `localStorage` or in a browser `PUT` body.
+
+Non-browser clients that cannot store cookies may still send `refreshToken` in the JSON body of `PUT /gatelin/sessions`. That is not a browser pattern.

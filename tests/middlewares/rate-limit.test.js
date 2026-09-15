@@ -6,10 +6,12 @@ import express from "express";
 import { ipKeyGenerator } from "express-rate-limit";
 import request from "supertest";
 import {
+  clientIp,
   createIdentityLimiter,
   createSessionLimiter,
   envMax,
   identityKey,
+  isLimiterDisabled,
 } from "../../src/middlewares/rate-limit.js";
 
 describe("identityKey", () => {
@@ -23,6 +25,54 @@ describe("identityKey", () => {
     const req = { ip: "10.0.0.8" };
     const res = { locals: {} };
     expect(identityKey(req, res)).toBe(ipKeyGenerator("10.0.0.8"));
+  });
+
+  it("should use X-Forwarded-For on a raw upgrade request with no req.ip", () => {
+    const req = {
+      headers: { "x-forwarded-for": "203.0.113.10" },
+      socket: { remoteAddress: "10.0.0.2" },
+    };
+    const res = { locals: {} };
+    expect(identityKey(req, res)).toBe(ipKeyGenerator("203.0.113.10"));
+  });
+});
+
+describe("clientIp", () => {
+  it("should prefer Express req.ip when it is already set", () => {
+    expect(
+      clientIp({
+        ip: "198.51.100.1",
+        headers: { "x-forwarded-for": "203.0.113.9" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("198.51.100.1");
+  });
+
+  it("should use the socket address when no forwarded header is present", () => {
+    expect(
+      clientIp({
+        headers: {},
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("10.0.0.2");
+  });
+
+  it("should take the hop before the trusted proxy from X-Forwarded-For", () => {
+    expect(
+      clientIp({
+        headers: { "x-forwarded-for": "198.51.100.7, 203.0.113.10" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("203.0.113.10");
+  });
+
+  it("should ignore a spoofed leftmost X-Forwarded-For when Traefik appended the client", () => {
+    expect(
+      clientIp({
+        headers: { "x-forwarded-for": "192.0.2.1, 203.0.113.10" },
+        socket: { remoteAddress: "10.0.0.2" },
+      }),
+    ).toBe("203.0.113.10");
   });
 });
 
@@ -166,5 +216,47 @@ describe("createSessionLimiter", () => {
       .set("X-Forwarded-For", "203.0.113.5")
       .set("x-consumer-id", "1")
       .expect(204);
+  });
+
+  it("should bypass rate limiting completely when max <= 0", async () => {
+    const disabledApp = express();
+    disabledApp.use(createSessionLimiter(0));
+    disabledApp.get("/ping", (_req, res) => res.status(204).end());
+
+    for (let i = 0; i < 5; i++) {
+      await request(disabledApp).get("/ping").expect(204);
+    }
+  });
+});
+
+describe("isLimiterDisabled", () => {
+  const key = "TEST_RATE_LIMIT";
+  const maxKey = "TEST_RATE_LIMIT_MAX";
+  const disabledKey = "TEST_RATE_LIMIT_DISABLED";
+
+  afterEach(() => {
+    delete process.env[key];
+    delete process.env[maxKey];
+    delete process.env[disabledKey];
+  });
+
+  it("should return false when nothing is set", () => {
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(false);
+  });
+
+  it("should return true when <NAME>_MAX is '0', 'disabled', or 'off'", () => {
+    process.env[maxKey] = "0";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+
+    process.env[maxKey] = "disabled";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+
+    process.env[maxKey] = "off";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
+  });
+
+  it("should return true when <NAME>_DISABLED is 'true'", () => {
+    process.env[disabledKey] = "true";
+    expect(isLimiterDisabled("TEST_RATE_LIMIT")).toBe(true);
   });
 });

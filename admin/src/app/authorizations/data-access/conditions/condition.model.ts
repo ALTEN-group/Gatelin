@@ -8,6 +8,7 @@ export interface Condition extends ArchiveInfo {
   op: string;
   value: string;
   color: string | null;
+  core: boolean;
 }
 
 export const conditionFactory = (): Condition => ({
@@ -18,5 +19,6 @@ export const conditionFactory = (): Condition => ({
   op: "",
   value: "",
   color: null,
+  core: false,
   ...new ArchiveInfo(),
 });

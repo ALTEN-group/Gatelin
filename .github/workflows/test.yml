@@ -65,16 +65,6 @@ jobs:
       - name: Run PostgreSQL contract tests
         run: bash scripts/test-db.sh
 
-  shaders:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check the admin and website shader copies match
-        run: bash scripts/check-shader-sync.sh
-
   admin:
     runs-on: ubuntu-latest
     permissions:

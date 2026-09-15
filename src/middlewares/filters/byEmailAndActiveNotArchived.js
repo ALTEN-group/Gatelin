@@ -5,10 +5,11 @@
  * @param {import('express').Response} _res
  * @param {import('express').NextFunction} next
  */
-export function filterByEmailNotArchived(req, _res, next) {
+export function filterByEmailAndActiveNotArchived(req, _res, next) {
   const email = req.body.email; // email from request body
   req.body.filters = {
     email: { value: email, matchMode: "equals" },
+    active: { value: true, matchMode: "IS" },
     archived: { value: false, matchMode: "IS" },
   };
   next();

@@ -23,7 +23,7 @@ Start the stack:
 `start-dev.sh` pulls the Foxnox image (`ghcr.io/alten-group/foxnox:0.1.0-alpha.1`), waits until it is healthy, then seeds mock passwords via `POST /foxnox/` into `swagger/src/gatelin.openapi.json`. Re-run `./scripts/setup-mocks.sh` later if you want to rotate them.
 
 Foxnox also stands in for the mid-login challenges (`POST /foxnox/challenges`,
-`/foxnox/trusted-devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
+`/foxnox/devices/verify`, `/foxnox/login-tickets/redeem` plus the matching SSR pages),
 so each mock user covers one login path:
 
 | User | Login outcome |
@@ -140,22 +140,82 @@ npm run e2e:ui            # Playwright's interactive UI mode
 
 Prefer this when iterating on a specific test — the UI mode and Playwright inspector need a display, which the containerized flow doesn't provide.
 
+## Performance Tests (k6)
+
+[k6](https://k6.io) load-tests the API through Traefik with three scenarios: `health` (unauthenticated baseline), `login` (auth + RBAC resolution + session cache), and `resource-crud` (authenticated search/schema on `/gatelin/resources`).
+
+Requires the development stack to be running (`./scripts/start-dev.sh`).
+
+```sh
+./scripts/run-perf.sh                      # health scenario (default)
+./scripts/run-perf.sh login                # login/logout flow (auto-resets db on local)
+./scripts/run-perf.sh resource-crud        # authenticated CRUD flow (auto-resets db on local)
+./scripts/run-perf.sh all                  # runs all three scenarios sequentially
+./scripts/run-perf.sh login --no-reset     # skip automatic local database reset
+K6_VUS=50 K6_DURATION=1m ./scripts/run-perf.sh login  # override load shape
+```
+
+This runs k6 in a dedicated container attached to the internal docker network against the running stack (same way `scripts/e2e.sh` drives end-to-end tests):
+- **Locally**: scenarios that write transient session data (`login`, `resource-crud`, `all`) automatically call `scripts/reset-db.sh` when done, leaving the database fresh and the stack running. Pass `--no-reset` to skip this, or `--reset-db` to force a reset on read-only scenarios.
+- **In CI**: `.github/workflows/perf.yml` skips the intermediate database resets, and automatically stops and cleans up the stack at the end of the workflow via `scripts/stop-dev.sh`.
+
+### Performance Test Reports & Results
+
+All artifacts land on the host in `tests/perf/results/`:
+
+- **Interactive HTML Report (`tests/perf/results/<scenario>.report.html`)**:
+  A self-contained web report generated via k6's native dashboard. Includes interactive charts for request rates, p90/p95 response times, HTTP status codes, and check pass/fail ratios. Open directly in any browser:
+  ```sh
+  open tests/perf/results/health.report.html
+  open tests/perf/results/login.report.html
+  open tests/perf/results/resource-crud.report.html
+  ```
+- **Raw JSON Summary (`tests/perf/results/<scenario>.summary.json`)**:
+  Raw metrics exported via `--summary-export` containing exact timing distributions (`p(90)`, `p(95)`, `min`, `max`, `avg`, `http_req_failed`).
+- **Aggregated Benchmark Dataset (`tests/perf/results/benchmark.json`)**:
+  Extracted latency and error-rate benchmarks across scenarios, formatted for continuous tracking.
+- **Live Web Dashboard (`http://127.0.0.1:5665`)**:
+  While a test is executing, k6 spins up a live browser dashboard on port 5665.
+
+The run fails if a scenario's `thresholds` are breached (p95 latency, error rate — see `tests/perf/scripts/*.js`). In CI (`.github/workflows/perf.yml`), the suite runs nightly or on demand, and updates historical trend charts on the `gh-pages` branch via `benchmark-action/github-action-benchmark`.
+
 ## API Fuzzing (RESTler)
 
 [RESTler](https://github.com/microsoft/restler-fuzzer) compiles the Gatelin OpenAPI spec into a test grammar, logs in as one of the mock personas (see `swagger/src/gatelin.openapi.json` examples), and exercises every endpoint through Traefik.
 
-run `./scripts/setup-env.sh` and `./scripts/start-dev.sh` first if you haven't.
+Requires the development stack to be running (`./scripts/start-dev.sh`), matching the e2e and perf test flows.
 
 ```sh
 ./scripts/run-restler.sh            # test mode (smoketest, default)
 ./scripts/run-restler.sh fuzz-lean  # fuzz each endpoint once with default checkers
 ./scripts/run-restler.sh fuzz       # full fuzzing run ($RESTLER_TIME_BUDGET hours, default 1)
-./scripts/run-restler.sh test --keep  # leave the dependency stack running afterwards
+./scripts/run-restler.sh test --no-reset  # skip automatic local database reset
 ```
 
-This starts and waits for gatelin to become healthy, then runs RESTler in a container attached to the same docker network. Results are written to `tests/restler/results/`.
+This runs RESTler in a dedicated container attached to the internal docker network against the running stack:
+- **Locally**: RESTler's fuzzing sends mutations and garbage data to endpoints, so the script automatically calls `scripts/reset-db.sh` when done to leave the database clean while keeping the stack running. Pass `--no-reset` to inspect the database after a run.
+- **In CI**: `.github/workflows/restler.yml` skips the intermediate database reset, and automatically stops and cleans up the stack at the end of the workflow via `scripts/stop-dev.sh`.
+
+Results are written to `tests/restler/results/`.
 
 The run fails if spec coverage drops below `RESTLER_MIN_COVERAGE` (default 50%) or if RESTler reports bugs (5xx responses or checker violations) — set `RESTLER_FAIL_ON_BUGS=false` to only report them. See `docker/restler/` for the auth module, engine settings, and pass/fail gate, and `.github/workflows/restler.yml` for the CI job (smoketest on PRs touching the spec, weekly `fuzz-lean` on schedule, or on-demand via `workflow_dispatch`).
+
+### RESTler Reports & Results
+
+All artifacts land on the host in `tests/restler/results/` (and are published as GitHub Actions artifacts `restler-results-<mode>` in CI):
+
+- **Run Summary (`tests/restler/results/<Mode>/ResponseBuckets/runSummary.json`)**:
+  High-level JSON report aggregating executed requests, HTTP status code breakdown (`200`, `400`, `500`), error buckets, and total `bugCount`.
+- **OpenAPI Spec Coverage (`tests/restler/results/<Mode>/RestlerResults/experiment*/logs/speccov.json`)**:
+  Detailed specification coverage showing which API paths, HTTP methods, parameters, and response status codes were exercised. High-level numbers are also summarized in `testing_summary.json`.
+- **Coverage Failures & Blocked Requests (`tests/restler/results/<Mode>/coverage_failures_to_investigate.txt`)**:
+  Actionable breakdown of failing requests, sorted by the number of dependent API requests they blocked. Includes full request payloads and response bodies to help identify missing schema definitions or invalid parameter combinations in the OpenAPI spec.
+- **Bug Buckets (`tests/restler/results/<Mode>/RestlerResults/experiment*/logs/bug_buckets.txt`)**:
+  Generated whenever RESTler detects 5xx server errors or checker violations. Groups distinct bugs by hash, with reproduction request sequences. (File is absent or empty if 0 bugs were found).
+- **Raw Network HTTP Traces (`tests/restler/results/<Mode>/RestlerResults/experiment*/logs/network.testing.*.txt`)**:
+  Full chronological log of every raw HTTP request and response exchanged between RESTler, Traefik, and Gatelin.
+- **Compiled Grammar & Dictionary (`tests/restler/results/Compile/`)**:
+  Contains `grammar.py` (compiled Python test grammar), `dict.json` (fuzzer payload mutations), and `dependencies.json` (endpoint producer-consumer dependency graph).
 
 ## Production
 
@@ -184,6 +244,8 @@ Builds production images from their respective `dockerfile.prod` files. Each ima
 ### Publish to GHCR
 
 Images are published automatically via the `.github/workflows/publish.yml` workflow when a GitHub Release is created. Publishing is scoped to the `ALTEN-group` org — `GITHUB_TOKEN` is sufficient, no PAT is needed.
+
+The VitePress site (GitHub Pages) deploys on the **same event** (`.github/workflows/deploy-docs.yml`), from the tagged commit. A push to `main` does not publish docs. Use **Actions → Deploy Docs to GitHub Pages → Run workflow** for a manual rebuild.
 
 ### Maintainer weekly audit
 

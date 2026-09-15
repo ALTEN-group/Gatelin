@@ -18,12 +18,12 @@ Client Request
 [checkRoute] - Match request against registered DB routes
     ↓
     ├── Public login: POST /gatelin/sessions
-    │     sessionLimiter (IP) → getUserByEmail → checkPwd → challengeLogin
+    │     sessionLimiter (IP) → requireJson → getUserByEmail → checkPwd → challengeLogin
     │       ├── 202 { challengeRequired, kind, url }  (2FA / expired password)
     │       └── createTokens → session cache → 200
     │
     ├── Public resume: POST /gatelin/sessions/resume
-    │     redeemLoginTicket → createTokens → session cache → 200
+    │     requireJson → redeemLoginTicket → createTokens → session cache → 200
     │
     ├── Session refresh / logout: PUT|DELETE /gatelin/sessions
     │     JWT (+ CSRF / refresh checks) → update or archive session
@@ -46,7 +46,7 @@ corsMiddleware → checkRequest → proxyLimiter → additionalHeaders → socke
 parseBearer → decodeAccess → checkConsumer → checkAcl → applyAclConditions
 ```
 
-Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) skip `checkRequest`. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router. Proxy request and response bodies remain streams; only `/gatelin/*` control-plane requests are parsed into `req.body`. WebSocket upgrades are authorized on the HTTP `upgrade` event and then piped; they never enter Express.
+Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) skip `checkRequest` and CSRF (no session yet). Both require `Content-Type: application/json` so a cross-site HTML form cannot plant a refresh cookie. Every other matched request — including refresh — goes through JWT validation. Proxy-only steps (`additionalHeaders`, `forwardToService`) run only on the catch-all proxy router. Proxy request and response bodies remain streams; only `/gatelin/*` control-plane requests are parsed into `req.body`. WebSocket upgrades are authorized on the HTTP `upgrade` event and then piped; they never enter Express.
 
 `challengeLogin` reads the pwd row returned by `PWD_CHECK_URL`, enforces lockout, and may mint a challenge against the password service instead of creating a session. See [Sessions](./api-sessions#login).
 
@@ -66,7 +66,7 @@ Login and resume (`POST /gatelin/sessions`, `POST /gatelin/sessions/resume`) ski
 | `additionalHeaders` | Adds `x-consumer-user-id` / `x-consumer-name` / `x-acl-conditions` / `x-acl-fields` before forwarding |
 | `checkCsrf` | Double-submit CSRF check on session refresh and logout |
 | `sessionLimiter` | Caps login/refresh by IP (`SESSION_RATE_LIMIT_MAX` / 15 min) |
-| `adminLimiter` / `proxyLimiter` | Caps control-plane and proxy/WS handshakes by consumer id after auth, else IP |
+| `adminLimiter` / `proxyLimiter` | Caps control-plane and proxy/WS handshakes by consumer id after auth, else client IP (`X-Forwarded-For` with one trusted hop on raw upgrades) |
 
 ## Proxy ACL boundary
 

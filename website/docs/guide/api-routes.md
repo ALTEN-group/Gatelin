@@ -66,6 +66,7 @@ Authorization: Bearer <access_token>
 | `pattern` | URL pattern to match (regex supported) |
 | `methodIds` | Array of HTTP method IDs allowed on this route |
 | `protected` | Whether JWT authentication is required (`true`/`false`) |
+| `core` | Seeded catalog route; `protected` and `pattern` cannot change, and the row cannot be archived |
 
 ## Update Route
 
@@ -109,3 +110,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content):** Routes are removed from cache immediately.
+
+Seeded Gatelin catalog routes (`core`) cannot be archived, and cannot change `protected` or `pattern`. That keeps JWT required on control-plane URLs and stops a later retention hard-delete from wiping system routes. Custom routes still allow those updates, still archive, and are purged after 2 months.

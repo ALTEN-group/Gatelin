@@ -95,7 +95,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1, 47,  2, NULL, NULL, -1, 'system'),  -- getPermissionHistory → list
 (1, 48,  7, NULL, NULL, -1, 'system'),  -- addPermissions      → bulk create
 (1, 49,  5, NULL, NULL, -1, 'system'),  -- updatePermissions   → bulk update
-(1, 50,  9, NULL, NULL, -1, 'system'),  -- deletePermissions   → bulk archive
+(1, 50, 11, NULL, NULL, -1, 'system'),  -- deletePermissions   → bulk delete
 (1, 51,  2, NULL, NULL, -1, 'system'),  -- searchMethods       → list
 (1, 51,  3, NULL, NULL, -1, 'system'),  -- searchMethods       → export
 (1, 52,  5, NULL, NULL, -1, 'system'),  -- updateMethods       → bulk update
@@ -181,7 +181,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 47,  2, NULL, NULL, -1, 'system'),  -- getPermissionHistory
 (2, 48,  7, NULL, NULL, -1, 'system'),  -- addPermissions
 (2, 49,  5, NULL, NULL, -1, 'system'),  -- updatePermissions
-(2, 50,  9, NULL, NULL, -1, 'system'),  -- deletePermissions
+(2, 50, 11, NULL, NULL, -1, 'system'),  -- deletePermissions
 (2, 51,  2, NULL, (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchMethods → list
 (2, 51,  3, NULL, (ARRAY[(SELECT id FROM condition WHERE name = 'Non-archived only')]), -1, 'system'),  -- searchMethods → export
 (2, 52,  5, ARRAY['name'], NULL, -1, 'system'),  -- updateMethods

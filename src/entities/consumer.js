@@ -4,6 +4,11 @@ import { SQLEntity } from "@dwtechs/antity-pgsql";
 /**
  * Consumer entity configuration for database operations.
  * Defines validation rules, types, and constraints for consumer data.
+ *
+ * Serves the admin search endpoint only, so `accessToken` and `refreshToken` are
+ * absent: antity builds its SELECT list from `operations`, and roles with no
+ * field ACL (Super admin, Admin) would otherwise read live JWTs for every
+ * session. The cache warm-up reads them through `consumer-cache.js`.
  */
 const consumerEntity = new SQLEntity("consumer", [
   {
@@ -44,34 +49,6 @@ const consumerEntity = new SQLEntity("consumer", [
     requiredFor: [],
     operations: ["SELECT"],
     isPrivate: false,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
-  {
-    key: "accessToken",
-    type: "jwt",
-    min: 28,
-    max: 8000,
-    isTypeChecked: true,
-    isFilterable: true,
-    requiredFor: [],
-    operations: ["SELECT"],
-    isPrivate: true,
-    sanitizer: null,
-    normalizer: null,
-    validator: null,
-  },
-  {
-    key: "refreshToken",
-    type: "jwt",
-    min: 28,
-    max: 8000,
-    isTypeChecked: true,
-    isFilterable: true,
-    requiredFor: [],
-    operations: ["SELECT"],
-    isPrivate: true,
     sanitizer: null,
     normalizer: null,
     validator: null,

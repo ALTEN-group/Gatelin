@@ -1,0 +1,79 @@
+name: RESTler API Fuzzing
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: RESTler task to run
+        type: choice
+        options: [test, fuzz-lean, fuzz]
+        default: test
+  pull_request:
+    branches: [main]
+    paths:
+      - 'swagger/**'
+      - 'src/routes/**'
+      - 'src/entities/**'
+      - 'docker/docker-compose.restler.yml'
+      - 'docker/restler/**'
+      - '.github/workflows/restler.yml'
+  schedule:
+    # Weekly fuzz-lean, distinct from perf.yml's nightly (02:00) and
+    # audit.yml's Monday (06:18) crons.
+    - cron: '0 4 * * 1'
+
+concurrency:
+  group: restler-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  restler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "mode=fuzz-lean" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=test" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure env
+        run: |
+          ./scripts/setup-env.sh
+          # Align container UID/GID with the runner user — see admin-e2e.yml for why.
+          sed -i "s|^UID=.*|UID=$(id -u)|" docker/conf/.env.dev
+          sed -i "s|^GID=.*|GID=$(id -g)|" docker/conf/.env.dev
+
+      - name: Start docker stack
+        run: ./scripts/start-dev.sh
+
+      - name: Run RESTler
+        run: ./scripts/run-restler.sh ${{ steps.mode.outputs.mode }}
+
+      - name: Upload RESTler results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: restler-results-${{ steps.mode.outputs.mode }}
+          path: tests/restler/results/
+          retention-days: 30
+
+      - name: Dump docker logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev ps
+          docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev logs --tail=300
+
+      - name: Stop docker stack
+        if: always()
+        run: ./scripts/stop-dev.sh || true

@@ -297,7 +297,10 @@ describe("PUT /gatelin/cors (update)", () => {
     expect(res.status).toBe(200);
     expect(updateArraySubstack).toHaveBeenCalledTimes(1);
     expect(updateCache).toHaveBeenCalledTimes(1);
-    expect(res.body).toEqual({ rows, total: 1 });
+    expect(res.body).toEqual({
+      rows: [{ id: 1, name: "https://updated.com", credentials: false }],
+      total: 1,
+    });
   });
 });
 

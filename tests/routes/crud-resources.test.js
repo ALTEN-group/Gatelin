@@ -548,3 +548,33 @@ describe("DELETE /gatelin/permissions", () => {
     expect(entityDeletes.permission).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("POST /gatelin/permissions/archive", () => {
+  let app;
+  let routeSvc;
+  let consumerSvc;
+
+  beforeAll(async () => {
+    ({ default: routeSvc } = await import("../../src/services/route.js"));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset();
+    consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
+    entityDeletes.permission.mockClear();
+  });
+
+  it("should 404 when no deletePermissions archive route is registered", async () => {
+    routeSvc.getOne.mockReturnValue(undefined);
+
+    const res = await supertest(app)
+      .post("/gatelin/permissions/archive")
+      .set("Authorization", "Bearer valid-token")
+      .send({ rows: [{ id: 1 }] });
+
+    expect(res.status).toBe(404);
+    expect(entityDeletes.permission).not.toHaveBeenCalled();
+  });
+});

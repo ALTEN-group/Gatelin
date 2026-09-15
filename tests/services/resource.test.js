@@ -2,21 +2,10 @@
  * @jest-environment node
  */
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { jest } from "@jest/globals";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const resourceEntPath = path.join(__dirname, "../../src/entities/resource.js");
-
-const execute = jest.fn();
-jest.unstable_mockModule("@dwtechs/antity-pgsql", () => ({ execute }));
-
-const deleteArchive = jest.fn();
-jest.unstable_mockModule(resourceEntPath, () => ({
-  __esModule: true,
-  default: { query: { deleteArchive } },
-}));
+const executeJob = jest.fn();
+jest.unstable_mockModule("../../src/jobs/job-pool.js", () => ({ executeJob }));
 
 describe("resource service", () => {
   let resourceSvc;
@@ -26,26 +15,18 @@ describe("resource service", () => {
     resourceSvc = module.default;
   });
 
-  beforeEach(() => {
-    execute.mockReset();
-    deleteArchive.mockReset();
-  });
+  beforeEach(() => executeJob.mockReset());
 
-  it("should delete resources archived before the given date and return the row count", async () => {
-    deleteArchive.mockReturnValue("DELETE FROM resources");
-    execute.mockResolvedValue({ rowCount: 7 });
+  it("should hard-delete archived resources via the job pool", async () => {
+    executeJob.mockResolvedValue({ rows: [{ count: 4 }] });
     const date = new Date("2026-01-01");
 
     const count = await resourceSvc.deleteArchived(date);
 
-    expect(execute).toHaveBeenCalledWith("DELETE FROM resources", [date], null);
-    expect(count).toBe(7);
-  });
-
-  it("should return 0 when no rows are deleted", async () => {
-    deleteArchive.mockReturnValue("DELETE FROM resources");
-    execute.mockResolvedValue({ rowCount: 0 });
-
-    expect(await resourceSvc.deleteArchived(new Date())).toBe(0);
+    expect(executeJob).toHaveBeenCalledWith(
+      "SELECT delete($1, $2, $3) AS count",
+      ["public", "resource", date],
+    );
+    expect(count).toBe(4);
   });
 });

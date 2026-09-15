@@ -95,3 +95,5 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (204 No Content)**
+
+Seeded Gatelin catalog resources (`routes`, `permissions`, `sessions`, and the rest marked `core`) cannot be archived. Routes and fields CASCADE from `resource`, so a later retention hard-delete would wipe system routes. Custom resources still archive and are purged after 2 months.

@@ -75,7 +75,9 @@ export default withMermaid(defineConfig({
         ],
       },
     ],
-    socialLinks: [],
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/ALTEN-group/Gatelin' },
+    ],
     footer: {
       message: 'Published and maintained by ALTEN',
     },

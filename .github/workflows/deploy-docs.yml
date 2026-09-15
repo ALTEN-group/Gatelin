@@ -1,11 +1,10 @@
 name: Deploy Docs to GitHub Pages
 
+# Same trigger as image publish: docs go live with a GitHub Release, not on
+# every push to main. workflow_dispatch remains for a manual rebuild.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'website/**'
-      - '.github/workflows/deploy-docs.yml'
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:

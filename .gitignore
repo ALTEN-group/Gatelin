@@ -9,6 +9,7 @@ docker/conf/.env.dev
 docker/conf/.env.prod
 website/docs/.vitepress/cache
 website/docs/.vitepress/dist
+website/docs/public/shader/*
 swagger/src/gatelin.openapi.json
 apm_modules/
 tests/restler/results/*
