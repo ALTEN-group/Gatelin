@@ -155,10 +155,12 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
 ' <<< "$BODY_JSON")
 
 # Challenge personas: 2FA (coco), expired password (guest), locked (ebuser).
+# coco uses base32 secret JBSWY3DPEHPK3PXP (in dev mode, code 123456 is accepted).
 echo -e "${YELLOW}🧪 Applying mid-login challenge states...${NC}"
 docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   psql -U "$POSTGRES_ROOT_USER" -d "$FOXNOX_DB_NAME" -v ON_ERROR_STOP=1 -c \
   "UPDATE pwd SET \"twoFactorEnabled\" = true,
+     \"twoFactorSecret\" = 'JBSWY3DPEHPK3PXP',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 3;
    UPDATE pwd SET \"pwdExpiry\" = '2020-01-01T00:00:00Z',
