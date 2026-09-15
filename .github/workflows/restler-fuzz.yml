@@ -9,16 +9,49 @@ on:
         options: [fuzz-lean, fuzz]
         default: fuzz
   schedule:
-    # Weekly deep fuzz, distinct from perf.yml's nightly (02:00) and
-    # audit.yml's Monday (06:18) crons.
-    - cron: '0 4 * * 1'
+    # Nightly, offset from perf.yml's nightly (02:00) and audit.yml's
+    # Monday (06:18) crons, scoped to main via check-changes below.
+    - cron: '0 4 * * *'
 
 concurrency:
-  group: restler-fuzz-${{ github.ref }}
-  cancel-in-progress: true
+  group: restler-fuzz-main
+  cancel-in-progress: false
 
 jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check for commits on main since the last successful fuzz run
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'restler-fuzz.yml',
+              branch: 'main',
+              status: 'success',
+              per_page: 1,
+            });
+            const lastSha = data.workflow_runs[0]?.head_sha;
+            const currentSha = context.sha;
+            if (!lastSha) {
+              core.info('No previous successful fuzz run found — running.');
+              core.setOutput('should_run', 'true');
+              return;
+            }
+            core.info(`last fuzz run sha: ${lastSha}`);
+            core.info(`current main sha:  ${currentSha}`);
+            core.setOutput('should_run', lastSha === currentSha ? 'false' : 'true');
+
   restler:
+    needs: check-changes
+    if: github.event_name != 'schedule' || needs.check-changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
@@ -26,6 +59,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Determine mode
         id: mode
