@@ -1,13 +1,7 @@
-name: RESTler API Fuzzing
+name: RESTler API Fuzzing (PR)
 
 on:
   workflow_dispatch:
-    inputs:
-      mode:
-        description: RESTler task to run
-        type: choice
-        options: [test, fuzz-lean, fuzz]
-        default: test
   pull_request:
     branches: [main]
     paths:
@@ -16,36 +10,21 @@ on:
       - 'src/entities/**'
       - 'docker/docker-compose.restler.yml'
       - 'docker/restler/**'
-      - '.github/workflows/restler.yml'
-  schedule:
-    # Weekly fuzz-lean, distinct from perf.yml's nightly (02:00) and
-    # audit.yml's Monday (06:18) crons.
-    - cron: '0 4 * * 1'
+      - '.github/workflows/restler-pr.yml'
 
 concurrency:
-  group: restler-${{ github.workflow }}-${{ github.ref }}
+  group: restler-pr-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   restler:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
     permissions:
       contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Determine mode
-        id: mode
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "mode=fuzz-lean" >> "$GITHUB_OUTPUT"
-          else
-            echo "mode=test" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Configure env
         run: |
@@ -57,14 +36,14 @@ jobs:
       - name: Start docker stack
         run: ./scripts/start-dev.sh
 
-      - name: Run RESTler
-        run: ./scripts/run-restler.sh ${{ steps.mode.outputs.mode }}
+      - name: Run RESTler (test)
+        run: ./scripts/run-restler.sh test
 
       - name: Upload RESTler results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: restler-results-${{ steps.mode.outputs.mode }}
+          name: restler-results-test
           path: tests/restler/results/
           retention-days: 30
 

@@ -1,0 +1,23 @@
+name: Tests / Database
+
+on:
+  push:
+    branches: [main]
+    paths: &db-paths
+      - "db/**"
+      - "scripts/test-db.sh"
+      - ".github/workflows/test-db.yml"
+  pull_request:
+    branches: [main]
+    paths: *db-paths
+
+jobs:
+  database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run PostgreSQL contract tests
+        run: bash scripts/test-db.sh

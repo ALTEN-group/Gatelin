@@ -3,8 +3,21 @@ name: Tests
 on:
   push:
     branches: [main]
+    paths: &test-paths
+      - "src/**"
+      - "tests/**"
+      - "admin/**"
+      - "db/**"
+      - "scripts/test-db.sh"
+      - "package.json"
+      - "package-lock.json"
+      - "jest.config.js"
+      - "babel.config.json"
+      - ".github/scripts/badge.sh"
+      - ".github/workflows/test.yml"
   pull_request:
     branches: [main]
+    paths: *test-paths
 
 jobs:
   bff:
