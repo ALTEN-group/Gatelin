@@ -1,4 +1,4 @@
-name: RESTler API Fuzzing
+name: RESTler Deep Fuzz
 
 on:
   workflow_dispatch:
@@ -6,24 +6,15 @@ on:
       mode:
         description: RESTler task to run
         type: choice
-        options: [test, fuzz-lean, fuzz]
-        default: test
-  pull_request:
-    branches: [main]
-    paths:
-      - 'swagger/**'
-      - 'src/routes/**'
-      - 'src/entities/**'
-      - 'docker/docker-compose.restler.yml'
-      - 'docker/restler/**'
-      - '.github/workflows/restler.yml'
+        options: [fuzz-lean, fuzz]
+        default: fuzz
   schedule:
-    # Weekly fuzz-lean, distinct from perf.yml's nightly (02:00) and
+    # Weekly deep fuzz, distinct from perf.yml's nightly (02:00) and
     # audit.yml's Monday (06:18) crons.
     - cron: '0 4 * * 1'
 
 concurrency:
-  group: restler-${{ github.workflow }}-${{ github.ref }}
+  group: restler-fuzz-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -41,10 +32,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "mode=fuzz-lean" >> "$GITHUB_OUTPUT"
           else
-            echo "mode=test" >> "$GITHUB_OUTPUT"
+            echo "mode=fuzz" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Configure env
