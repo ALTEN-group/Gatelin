@@ -55,7 +55,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
+          # Scheduled runs always test main; manual dispatch can target any branch.
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'main' }}
 
       - name: Configure env
         run: |
