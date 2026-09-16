@@ -10,19 +10,19 @@ dependencies:
     # Agents
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
     - ALTEN-group/coding-pal/agents/vitepress-docs.agent.md
-    - ALTEN-group/coding-pal/agents/k6-performance-tests.agent.md
-    - ALTEN-group/coding-pal/agents/restler-fuzzing-tests.agent.md
+    - ALTEN-group/coding-pal/agents/performance-tests.agent.md
+    - ALTEN-group/coding-pal/agents/fuzz-tests.agent.md
     # Pipelines Agents
-    - ALTEN-group/coding-pal/agents/node-express-back-end-code-audit.agent.md
-    - ALTEN-group/coding-pal/agents/node-express-audit-fix.agent.md
+    - ALTEN-group/coding-pal/agents/code-audit.agent.md
+    - ALTEN-group/coding-pal/agents/audit-fix.agent.md
     # Prompts
     - ALTEN-group/coding-pal/prompts/node-unit-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/angular-unit-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/angular-e2e-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/vitepress-docs.prompt.md
-    - ALTEN-group/coding-pal/prompts/k6-performance-tests.prompt.md
-    - ALTEN-group/coding-pal/prompts/restler-fuzzing-tests.prompt.md
+    - ALTEN-group/coding-pal/prompts/performance-tests.prompt.md
+    - ALTEN-group/coding-pal/prompts/fuzz-tests.prompt.md
     # Instructions
     - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
     - ALTEN-group/coding-pal/instructions/node-express.instructions.md
