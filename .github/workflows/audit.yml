@@ -1,4 +1,4 @@
-# Maintainer CI: static checks always run. Copilot/APM steps run only on the
+# Maintainer CI: static checks always run. Copilot steps run only on the
 # canonical ALTEN-group repo when COPILOT_GITHUB_TOKEN is configured.
 name: Weekly Audit
 
@@ -51,19 +51,6 @@ jobs:
       - name: Install Copilot CLI
         if: ${{ steps.private.outputs.enabled == 'true' }}
         run: npm install -g @github/copilot
-
-      - name: Install APM CLI
-        if: ${{ steps.private.outputs.enabled == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # Pinned to the apm_version recorded in apm.lock.yaml to keep lockfile content hashes reproducible.
-        run: curl -sSL https://aka.ms/apm-unix | sh -s -- @v0.29.0
-
-      - name: Install APM packages
-        if: ${{ steps.private.outputs.enabled == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: apm install
 
       - name: Run static checks
         run: |
