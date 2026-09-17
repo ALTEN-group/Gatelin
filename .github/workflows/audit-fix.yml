@@ -153,17 +153,6 @@ jobs:
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
 
-      - name: Install APM CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # Pinned to the apm_version recorded in apm.lock.yaml to keep lockfile content hashes reproducible.
-        run: curl -sSL https://aka.ms/apm-unix | sh -s -- @v0.29.0
-
-      - name: Install APM packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: apm install
-
       - name: Prepare workspace and agent prompt
         run: |
           mkdir -p audit-fix-artifacts
@@ -178,7 +167,7 @@ jobs:
           COPILOT_AUDITS_MODEL: ${{ vars.COPILOT_AUDITS_MODEL }}
         run: |
           copilot_args=(
-            --agent node-express-audit-fix
+            --agent "Audit Finding Fixer"
             --silent
             --no-color
             --log-level error

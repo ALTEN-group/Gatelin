@@ -107,7 +107,7 @@ jobs:
           COPILOT_AUDITS_MODEL: ${{ vars.COPILOT_AUDITS_MODEL }}
         run: |
           copilot_args=(
-            --agent node-express-back-end-code-audit
+            --agent "Code Auditor"
             --silent
             --no-color
             --log-level error
