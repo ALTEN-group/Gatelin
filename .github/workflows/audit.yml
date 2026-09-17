@@ -56,7 +56,8 @@ jobs:
         if: ${{ steps.private.outputs.enabled == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: curl -sSL https://aka.ms/apm-unix | sh
+        # Pinned to the apm_version recorded in apm.lock.yaml to keep lockfile content hashes reproducible.
+        run: curl -sSL https://aka.ms/apm-unix | sh -s -- @v0.29.0
 
       - name: Install APM packages
         if: ${{ steps.private.outputs.enabled == 'true' }}
