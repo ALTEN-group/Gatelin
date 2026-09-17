@@ -121,14 +121,28 @@ jobs:
           stdout="audit-artifacts/copilot.stdout.txt"
           stderr="audit-artifacts/copilot.stderr.txt"
 
+          run_audit() {
+            timeout 15m copilot "${copilot_args[@]}" --prompt "$1" > "$stdout" 2> "$stderr"
+          }
+
+          is_valid_report() {
+            [ "$1" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
+              [ "$(wc -c < "$stdout")" -le 30000 ]
+          }
+
           set +e
-          timeout 15m copilot "${copilot_args[@]}" --prompt "Run the audit." > "$stdout" 2> "$stderr"
+          run_audit "Run the audit."
           status="$?"
+
+          if ! is_valid_report "$status"; then
+            # The agent sometimes validates the report but narrates instead of emitting it; one reinforced retry recovers most of these.
+            run_audit "Run the audit. Your entire final response must be the validated report verbatim, starting with <!-- AUDIT-REPORT:START -->. Do not summarize or describe it."
+            status="$?"
+          fi
           set -e
 
           audit_ok=false
-          if [ "$status" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
-            [ "$(wc -c < "$stdout")" -le 30000 ]; then
+          if is_valid_report "$status"; then
             audit_ok=true
           fi
 
