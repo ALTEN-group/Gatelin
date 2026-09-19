@@ -9,6 +9,7 @@ dependencies:
   apm:
     # Agents
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
+    - ALTEN-group/coding-pal/agents/e2e-test.agent.md
     - ALTEN-group/coding-pal/agents/vitepress-docs.agent.md
     - ALTEN-group/coding-pal/agents/performance-tests.agent.md
     - ALTEN-group/coding-pal/agents/fuzz-tests.agent.md
