@@ -55,7 +55,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
+          # Scheduled runs always test main; manual dispatch can target any branch.
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'main' }}
 
       - name: Configure env
         run: |
@@ -85,6 +86,7 @@ jobs:
           retention-days: 30
 
       - name: Convert k6 summaries to benchmark format
+        id: convert-benchmark
         if: always()
         run: node tests/perf/scripts/to-benchmark.js
 
@@ -93,7 +95,7 @@ jobs:
       # the tracked issue/PR and fails the job if a metric regresses beyond
       # alert-threshold vs. the stored baseline.
       - name: Store benchmark result and alert on regression
-        if: always()
+        if: always() && steps.convert-benchmark.outcome == 'success'
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: customSmallerIsBetter

@@ -43,3 +43,8 @@ for (const scenario of SCENARIOS) {
 
 writeFileSync(OUT_FILE, JSON.stringify(entries, null, 2));
 console.log(`wrote ${entries.length} benchmark entries to ${OUT_FILE}`);
+
+if (entries.length === 0) {
+  console.error("no benchmark entries were extracted from k6 summary files");
+  process.exitCode = 1;
+}

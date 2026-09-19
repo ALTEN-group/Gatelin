@@ -10,6 +10,8 @@ services:
     image: grafana/k6:0.54.0
     container_name: ${APP_NAME}-k6-${ENV_NAME}
     hostname: ${APP_NAME}-k6-${ENV_NAME}
+    # Match the host UID/GID so writes to the bind-mounted results dir succeed.
+    user: "${UID}:${GID}"
     entrypoint: ["k6"]
     working_dir: /scripts
     environment:

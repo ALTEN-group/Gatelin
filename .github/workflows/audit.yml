@@ -1,4 +1,4 @@
-# Maintainer CI: static checks always run. Copilot/APM steps run only on the
+# Maintainer CI: static checks always run. Copilot steps run only on the
 # canonical ALTEN-group repo when COPILOT_GITHUB_TOKEN is configured.
 name: Weekly Audit
 
@@ -51,18 +51,6 @@ jobs:
       - name: Install Copilot CLI
         if: ${{ steps.private.outputs.enabled == 'true' }}
         run: npm install -g @github/copilot
-
-      - name: Install APM CLI
-        if: ${{ steps.private.outputs.enabled == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: curl -sSL https://aka.ms/apm-unix | sh
-
-      - name: Install APM packages
-        if: ${{ steps.private.outputs.enabled == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: apm install
 
       - name: Run static checks
         run: |
@@ -119,7 +107,7 @@ jobs:
           COPILOT_AUDITS_MODEL: ${{ vars.COPILOT_AUDITS_MODEL }}
         run: |
           copilot_args=(
-            --agent node-express-back-end-code-audit
+            --agent "Code Auditor"
             --silent
             --no-color
             --log-level error
@@ -133,14 +121,28 @@ jobs:
           stdout="audit-artifacts/copilot.stdout.txt"
           stderr="audit-artifacts/copilot.stderr.txt"
 
+          run_audit() {
+            timeout 15m copilot "${copilot_args[@]}" --prompt "$1" > "$stdout" 2> "$stderr"
+          }
+
+          is_valid_report() {
+            [ "$1" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
+              [ "$(wc -c < "$stdout")" -le 30000 ]
+          }
+
           set +e
-          timeout 15m copilot "${copilot_args[@]}" --prompt "Run the audit." > "$stdout" 2> "$stderr"
+          run_audit "Run the audit."
           status="$?"
+
+          if ! is_valid_report "$status"; then
+            # The agent sometimes validates the report but narrates instead of emitting it; one reinforced retry recovers most of these.
+            run_audit "Run the audit. Your entire final response must be the validated report verbatim, starting with <!-- AUDIT-REPORT:START -->. Do not summarize or describe it."
+            status="$?"
+          fi
           set -e
 
           audit_ok=false
-          if [ "$status" -eq 0 ] && grep -q '<!-- AUDIT-REPORT:START -->' "$stdout" && \
-            [ "$(wc -c < "$stdout")" -le 30000 ]; then
+          if is_valid_report "$status"; then
             audit_ok=true
           fi
 
