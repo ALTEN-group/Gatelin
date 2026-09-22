@@ -29,6 +29,9 @@ features:
   - icon: 🛡️
     title: Authorization
     details: Role-based access control (RBAC/ACL) validation per route, per property, per condition.
+  - icon: 🔑
+    title: Roles & Permissions
+    details: Granular role-based permissions with field allow-lists, URL scopes, and condition filters.
   - icon: 🌐
     title: CORS Management
     details: Configure and enforce Cross-Origin Resource Sharing policies dynamically without restart.
