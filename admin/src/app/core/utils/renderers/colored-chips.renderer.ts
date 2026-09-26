@@ -1,4 +1,5 @@
 import { DomSanitizer } from "@angular/platform-browser";
+import { isArray, isBoolean, isNumber, isString } from "@dwtechs/checkard";
 
 const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{3,8}$/;
 const FALLBACK_COLOR = "#6B7280";
@@ -9,11 +10,7 @@ export interface ColoredChipItem {
 }
 
 function safeString(v: unknown): string {
-  return typeof v === "string" ||
-    typeof v === "number" ||
-    typeof v === "boolean"
-    ? String(v)
-    : "";
+  return isString(v) || isNumber(v) || isBoolean(v) ? String(v) : "";
 }
 
 /**
@@ -28,7 +25,7 @@ export function buildColoredChipsCellRenderer(
   lookup: (name: string) => ColoredChipItem | undefined,
 ): (cellValue: unknown) => string {
   return (cellValue: unknown): string => {
-    const names: string[] = Array.isArray(cellValue)
+    const names: string[] = isArray(cellValue)
       ? cellValue.map(safeString).filter(Boolean)
       : safeString(cellValue)
           .split(",")

@@ -455,6 +455,7 @@ services:
       mailpit:
         condition: service_started
     environment:
+      NODE_ENV: ${NODE_ENV:-development}
       PORT: ${DEFAULT_PORT}
       TZ: ${TZ}
       DB_HOST: ${POSTGRES_HOST}
@@ -546,11 +547,6 @@ volumes:
       o: bind
       device: ${PWD}/node_modules
   admin_node_modules:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/admin/node_modules
   swagger_node_modules:
   website_node_modules:
   ms_user_mock_node_modules:

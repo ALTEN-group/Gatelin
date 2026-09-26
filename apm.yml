@@ -9,6 +9,7 @@ dependencies:
   apm:
     # Agents
     - ALTEN-group/coding-pal/agents/unit-test.agent.md
+    - ALTEN-group/coding-pal/agents/api-test.agent.md
     - ALTEN-group/coding-pal/agents/e2e-test.agent.md
     - ALTEN-group/coding-pal/agents/vitepress-docs.agent.md
     - ALTEN-group/coding-pal/agents/performance-tests.agent.md
@@ -16,8 +17,10 @@ dependencies:
     # Pipelines Agents
     - ALTEN-group/coding-pal/agents/code-audit.agent.md
     - ALTEN-group/coding-pal/agents/audit-fix.agent.md
+    - ALTEN-group/coding-pal/agents/think-plan.agent.md
     # Prompts
     - ALTEN-group/coding-pal/prompts/node-unit-tests.prompt.md
+    - ALTEN-group/coding-pal/prompts/node-api-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/angular-unit-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/angular-e2e-tests.prompt.md
     - ALTEN-group/coding-pal/prompts/postgres-liquibase-tests.prompt.md
@@ -28,6 +31,7 @@ dependencies:
     - ALTEN-group/coding-pal/instructions/sharp-agent.instructions.md
     - ALTEN-group/coding-pal/instructions/node-express.instructions.md
     - ALTEN-group/coding-pal/instructions/node-unit-tests.instructions.md
+    - ALTEN-group/coding-pal/instructions/node-api-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/postgres-liquibase.instructions.md
     - ALTEN-group/coding-pal/instructions/postgres-liquibase-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/docker.instructions.md
@@ -37,6 +41,7 @@ dependencies:
     - ALTEN-group/coding-pal/instructions/vitepress-docs.instructions.md
     - ALTEN-group/coding-pal/instructions/k6-performance-tests.instructions.md
     - ALTEN-group/coding-pal/instructions/restler-fuzzing-tests.instructions.md
+    - ALTEN-group/coding-pal/instructions/think-plan.instructions.md
     # Skills (folder bundles — SKILL.md + references/ + scripts/)
     - git: ALTEN-group/coding-pal
       skills:
@@ -48,4 +53,12 @@ dependencies:
         - k6-performance-examples
         - restler-fuzzing-examples
         - audit-reporting
+        - think-plan
+        - scope-guard
+        - dependency-guard
+        - secret-guard
+        - task-gate
+        - contract-validator
+        - test-probe
+        - rollback-probe
   mcp: {}

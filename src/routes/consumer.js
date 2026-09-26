@@ -10,7 +10,7 @@ import { send204 } from "../middlewares/res/send-204.js";
 import schema from "../middlewares/schema.js";
 
 // middleware sub-stacks
-const getMany = [cEnt.get, send];
+const getMany = [cEnt.get, send(cEnt)];
 const del = [cEnt.archive, deleteFromCache, send204];
 
 // Get routes
@@ -18,6 +18,6 @@ router.post("/search", getMany);
 // Bulk archive
 router.post("/archive", del);
 // Get entity schema
-router.get("/schema", schema.get(cEnt), send);
+router.get("/schema", schema.get(cEnt), send(cEnt));
 
 export default router;

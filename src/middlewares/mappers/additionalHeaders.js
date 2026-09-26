@@ -1,4 +1,5 @@
 // @ts-check
+import { isSet } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
 
 export default function updateHeaderWithConsumer(req, res, next) {
@@ -19,7 +20,7 @@ export default function updateHeaderWithConsumer(req, res, next) {
   // Present iff checkAcl set a field allow-list (including empty = id only).
   // Omitted when unrestricted (aclFields is null/undefined).
   const aclFields = res.locals.aclFields;
-  if (aclFields instanceof Set)
+  if (isSet(aclFields))
     req.additionalHeaders["x-acl-fields"] = [...aclFields].join(",");
 
   log.debug(() => `updateHeaders(${JSON.stringify(req.additionalHeaders)})`);

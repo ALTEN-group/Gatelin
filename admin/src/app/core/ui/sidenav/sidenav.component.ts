@@ -14,6 +14,7 @@ import { SidenavService } from "@core/ui/sidenav/sidenav.service";
 import { MenuItem } from "@openng/optimus-ui/api";
 import { PanelModule } from "@openng/optimus-ui/panel";
 import { PanelMenu, PanelMenuModule } from "@openng/optimus-ui/panelmenu";
+import { isSet } from "@dwtechs/checkard";
 import { filter, map, startWith } from "rxjs";
 
 @Component({
@@ -94,7 +95,8 @@ export class SidenavComponent {
     const visible = forceHidden
       ? false
       : this.hasAccess(item.data?.functionality) && item.visible !== false;
-    const hasAlert = item.id ? alertKeys.has(item.id) : false;
+    const hasAlert =
+      item.id && isSet(alertKeys, ">", 0) ? alertKeys.has(item.id) : false;
     return {
       expanded,
       visible,
