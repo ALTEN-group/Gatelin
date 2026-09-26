@@ -1,4 +1,4 @@
-import { isArray, isObject, isProperty } from "@dwtechs/checkard";
+import { isArray, isObject, isProperty, isSet } from "@dwtechs/checkard";
 import { log } from "@dwtechs/winstan";
 import roleService from "../../services/role.js";
 import scopeService from "../../services/scope.js";
@@ -106,7 +106,7 @@ export default function checkAcl(req, res, next) {
   const allowed = perm._fieldsSet;
 
   // Filter request body fields on write operations
-  if (allowed && req.body) {
+  if (isSet(allowed) && req.body) {
     const rows = req.body.rows;
     if (isArray(rows))
       req.body.rows = rows.map((item) => filterFields(item, allowed));

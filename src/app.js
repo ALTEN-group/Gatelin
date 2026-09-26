@@ -15,6 +15,19 @@ app.use(security);
 app.use(corsMiddleware);
 app.disable("x-powered-by");
 
+import applicationEnt from "./entities/application.js";
+import conditionEnt from "./entities/condition.js";
+import corsEnt from "./entities/cors.js";
+import fieldEnt from "./entities/field.js";
+import methodEnt from "./entities/method.js";
+import operationEnt from "./entities/operation.js";
+import permissionEnt from "./entities/permission.js";
+import preferenceEnt from "./entities/preference.js";
+import resourceEnt from "./entities/resource.js";
+import roleEnt from "./entities/role.js";
+import routeEnt from "./entities/route.js";
+import scopeEnt from "./entities/scope.js";
+import serviceEnt from "./entities/service.js";
 import {
   adminLimiter,
   proxyLimiter,
@@ -71,19 +84,37 @@ app.use(checkRoute);
 // Routes
 app.use(`${s}sessions`, sessionLimiter, session);
 app.use(`${s}consumers`, ...cr, adminLimiter, consumer);
-app.use(`${s}routes`, ...cr, adminLimiter, route, send);
-app.use(`${s}services`, ...cr, adminLimiter, service, send);
-app.use(`${s}resources`, ...cr, adminLimiter, resource, send);
-app.use(`${s}operations`, ...cr, adminLimiter, operation, send);
-app.use(`${s}cors`, ...cr, adminLimiter, cors, send);
-app.use(`${s}fields`, ...cr, adminLimiter, field, send);
-app.use(`${s}scopes`, ...cr, adminLimiter, scope, send);
-app.use(`${s}preferences/`, ...cr, adminLimiter, preference, send);
-app.use(`${s}roles`, ...cr, adminLimiter, role, send);
-app.use(`${s}permissions`, ...cr, adminLimiter, permission, send);
-app.use(`${s}methods`, ...cr, adminLimiter, method, send);
-app.use(`${s}applications`, ...cr, adminLimiter, application, send);
-app.use(`${s}conditions`, ...cr, adminLimiter, condition, send);
+app.use(`${s}routes`, ...cr, adminLimiter, route, send(routeEnt));
+app.use(`${s}services`, ...cr, adminLimiter, service, send(serviceEnt));
+app.use(`${s}resources`, ...cr, adminLimiter, resource, send(resourceEnt));
+app.use(`${s}operations`, ...cr, adminLimiter, operation, send(operationEnt));
+app.use(`${s}cors`, ...cr, adminLimiter, cors, send(corsEnt));
+app.use(`${s}fields`, ...cr, adminLimiter, field, send(fieldEnt));
+app.use(`${s}scopes`, ...cr, adminLimiter, scope, send(scopeEnt));
+app.use(
+  `${s}preferences/`,
+  ...cr,
+  adminLimiter,
+  preference,
+  send(preferenceEnt),
+);
+app.use(`${s}roles`, ...cr, adminLimiter, role, send(roleEnt));
+app.use(
+  `${s}permissions`,
+  ...cr,
+  adminLimiter,
+  permission,
+  send(permissionEnt),
+);
+app.use(`${s}methods`, ...cr, adminLimiter, method, send(methodEnt));
+app.use(
+  `${s}applications`,
+  ...cr,
+  adminLimiter,
+  application,
+  send(applicationEnt),
+);
+app.use(`${s}conditions`, ...cr, adminLimiter, condition, send(conditionEnt));
 app.use("/", ...cr, proxyLimiter, proxy);
 
 // Error handling

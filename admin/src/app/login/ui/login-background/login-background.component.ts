@@ -1,5 +1,5 @@
+import { Player } from "@1pizzateam/loopr";
 import { Component, NgZone, OnDestroy, OnInit } from "@angular/core";
-import { Player } from "@lcluber/frameratjs";
 import {
   FullscreenQuad,
   Material,
@@ -8,8 +8,10 @@ import {
   Renderer,
   Scene,
 } from "@lcluber/roostrjs";
-import { Vector3 } from "@lcluber/type6js";
-import { LOGIN_SHADER_FPS_CAP } from "app/login/utils/login-shader-fps";
+import {
+  LOGIN_SHADER_DELTA_CAP,
+  LOGIN_SHADER_FPS_CAP,
+} from "app/login/utils/login-shader-fps";
 import { ShaderService } from "app/login/utils/shader.service";
 
 @Component({
@@ -22,7 +24,6 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
   scene!: Scene;
   camera!: PerspectiveCamera;
   quad!: Mesh;
-  cameraPosition!: Vector3;
   animation!: Player;
 
   constructor(
@@ -46,6 +47,7 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
       this.animation = new Player(this.render);
       this.animation.setScope(this);
       this.animation.capFPS(LOGIN_SHADER_FPS_CAP);
+      this.animation.capDelta(LOGIN_SHADER_DELTA_CAP);
       this.shaderService.load().then((response: boolean) => {
         if (response) this.start();
       });
@@ -53,7 +55,7 @@ export class LoginBackgroundComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.animation?.stop();
+    if (this.animation?.isActive()) this.animation.stop();
   }
 
   private start() {

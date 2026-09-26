@@ -1,12 +1,12 @@
 lockfile_version: '1'
-generated_at: '2026-09-19T14:14:08.468343+00:00'
+generated_at: '2026-09-26T21:47:47.466047+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   package_type: skill_bundle
   deployed_files:
@@ -18,6 +18,16 @@ dependencies:
   - .agents/skills/audit-reporting/references/report-contract.md
   - .agents/skills/audit-reporting/scripts/audit-report.mjs
   - .agents/skills/audit-reporting/scripts/audit-report.test.mjs
+  - .agents/skills/contract-validator
+  - .agents/skills/contract-validator/SKILL.md
+  - .agents/skills/contract-validator/references/contract-schema.md
+  - .agents/skills/contract-validator/scripts/validate-contract.mjs
+  - .agents/skills/contract-validator/scripts/validate-contract.test.mjs
+  - .agents/skills/dependency-guard
+  - .agents/skills/dependency-guard/SKILL.md
+  - .agents/skills/dependency-guard/references/dependency-contract.md
+  - .agents/skills/dependency-guard/scripts/dependency-guard.mjs
+  - .agents/skills/dependency-guard/scripts/dependency-guard.test.mjs
   - .agents/skills/docker-examples
   - .agents/skills/docker-examples/SKILL.md
   - .agents/skills/docker-examples/references/examples.md
@@ -33,6 +43,36 @@ dependencies:
   - .agents/skills/restler-fuzzing-examples
   - .agents/skills/restler-fuzzing-examples/SKILL.md
   - .agents/skills/restler-fuzzing-examples/references/implementation-patterns.md
+  - .agents/skills/rollback-probe
+  - .agents/skills/rollback-probe/SKILL.md
+  - .agents/skills/rollback-probe/references/rollback-contract.md
+  - .agents/skills/rollback-probe/scripts/rollback-probe.mjs
+  - .agents/skills/rollback-probe/scripts/rollback-probe.test.mjs
+  - .agents/skills/scope-guard
+  - .agents/skills/scope-guard/SKILL.md
+  - .agents/skills/scope-guard/references/guard-contract.md
+  - .agents/skills/scope-guard/scripts/scope-guard.mjs
+  - .agents/skills/scope-guard/scripts/scope-guard.test.mjs
+  - .agents/skills/secret-guard
+  - .agents/skills/secret-guard/SKILL.md
+  - .agents/skills/secret-guard/references/secret-contract.md
+  - .agents/skills/secret-guard/scripts/secret-guard.mjs
+  - .agents/skills/secret-guard/scripts/secret-guard.test.mjs
+  - .agents/skills/task-gate
+  - .agents/skills/task-gate/SKILL.md
+  - .agents/skills/task-gate/references/gate-contract.md
+  - .agents/skills/task-gate/scripts/task-gate.mjs
+  - .agents/skills/task-gate/scripts/task-gate.test.mjs
+  - .agents/skills/test-probe
+  - .agents/skills/test-probe/SKILL.md
+  - .agents/skills/test-probe/references/probe-contract.md
+  - .agents/skills/test-probe/scripts/test-probe.mjs
+  - .agents/skills/test-probe/scripts/test-probe.test.mjs
+  - .agents/skills/think-plan
+  - .agents/skills/think-plan/SKILL.md
+  - .agents/skills/think-plan/references/think-plan-contract.md
+  - .agents/skills/think-plan/scripts/validate-specs.mjs
+  - .agents/skills/think-plan/scripts/validate-specs.test.mjs
   - .agents/skills/vitepress-docs-examples
   - .agents/skills/vitepress-docs-examples/SKILL.md
   - .agents/skills/vitepress-docs-examples/references/examples.md
@@ -44,6 +84,16 @@ dependencies:
   - .claude/skills/audit-reporting/references/report-contract.md
   - .claude/skills/audit-reporting/scripts/audit-report.mjs
   - .claude/skills/audit-reporting/scripts/audit-report.test.mjs
+  - .claude/skills/contract-validator
+  - .claude/skills/contract-validator/SKILL.md
+  - .claude/skills/contract-validator/references/contract-schema.md
+  - .claude/skills/contract-validator/scripts/validate-contract.mjs
+  - .claude/skills/contract-validator/scripts/validate-contract.test.mjs
+  - .claude/skills/dependency-guard
+  - .claude/skills/dependency-guard/SKILL.md
+  - .claude/skills/dependency-guard/references/dependency-contract.md
+  - .claude/skills/dependency-guard/scripts/dependency-guard.mjs
+  - .claude/skills/dependency-guard/scripts/dependency-guard.test.mjs
   - .claude/skills/docker-examples
   - .claude/skills/docker-examples/SKILL.md
   - .claude/skills/docker-examples/references/examples.md
@@ -59,6 +109,36 @@ dependencies:
   - .claude/skills/restler-fuzzing-examples
   - .claude/skills/restler-fuzzing-examples/SKILL.md
   - .claude/skills/restler-fuzzing-examples/references/implementation-patterns.md
+  - .claude/skills/rollback-probe
+  - .claude/skills/rollback-probe/SKILL.md
+  - .claude/skills/rollback-probe/references/rollback-contract.md
+  - .claude/skills/rollback-probe/scripts/rollback-probe.mjs
+  - .claude/skills/rollback-probe/scripts/rollback-probe.test.mjs
+  - .claude/skills/scope-guard
+  - .claude/skills/scope-guard/SKILL.md
+  - .claude/skills/scope-guard/references/guard-contract.md
+  - .claude/skills/scope-guard/scripts/scope-guard.mjs
+  - .claude/skills/scope-guard/scripts/scope-guard.test.mjs
+  - .claude/skills/secret-guard
+  - .claude/skills/secret-guard/SKILL.md
+  - .claude/skills/secret-guard/references/secret-contract.md
+  - .claude/skills/secret-guard/scripts/secret-guard.mjs
+  - .claude/skills/secret-guard/scripts/secret-guard.test.mjs
+  - .claude/skills/task-gate
+  - .claude/skills/task-gate/SKILL.md
+  - .claude/skills/task-gate/references/gate-contract.md
+  - .claude/skills/task-gate/scripts/task-gate.mjs
+  - .claude/skills/task-gate/scripts/task-gate.test.mjs
+  - .claude/skills/test-probe
+  - .claude/skills/test-probe/SKILL.md
+  - .claude/skills/test-probe/references/probe-contract.md
+  - .claude/skills/test-probe/scripts/test-probe.mjs
+  - .claude/skills/test-probe/scripts/test-probe.test.mjs
+  - .claude/skills/think-plan
+  - .claude/skills/think-plan/SKILL.md
+  - .claude/skills/think-plan/references/think-plan-contract.md
+  - .claude/skills/think-plan/scripts/validate-specs.mjs
+  - .claude/skills/think-plan/scripts/validate-specs.test.mjs
   - .claude/skills/vitepress-docs-examples
   - .claude/skills/vitepress-docs-examples/SKILL.md
   - .claude/skills/vitepress-docs-examples/references/examples.md
@@ -69,6 +149,14 @@ dependencies:
     .agents/skills/audit-reporting/references/report-contract.md: sha256:acaca07764179dbfa0ddb91a34fa2babc5fca93d5d19df171f8f42675a39df63
     .agents/skills/audit-reporting/scripts/audit-report.mjs: sha256:e3c9655f42665a8341e53b04d0326eedba89f641ccd8f8d5b04c50d904793177
     .agents/skills/audit-reporting/scripts/audit-report.test.mjs: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+    .agents/skills/contract-validator/SKILL.md: sha256:21036f7f416380d0cb43ebda32f1ad52c895f23b4bb51d956aec6ebe1b074b92
+    .agents/skills/contract-validator/references/contract-schema.md: sha256:5124d322a6814af50b12e864bb7fc3ecaa2acc80e8dd3c3f1fc877650a48cc41
+    .agents/skills/contract-validator/scripts/validate-contract.mjs: sha256:b00cc5e8d29a5161172877ad89fabcd72229f947e5c6844bf08ae83d4cbcb3b3
+    .agents/skills/contract-validator/scripts/validate-contract.test.mjs: sha256:1d736ae1623154248c855fd1c7d88b3e0fbf7f43ceebb52cfe68cca724bf65a9
+    .agents/skills/dependency-guard/SKILL.md: sha256:9c13b409c9540f0b21368efa5b80686e169832b930630517691254f927393708
+    .agents/skills/dependency-guard/references/dependency-contract.md: sha256:8dab8b5df31d4c6a7e7e33af3c9b1fcbb3963bc449785ee72eaf5b2a3ff49699
+    .agents/skills/dependency-guard/scripts/dependency-guard.mjs: sha256:d9a2314606bd33336b82827888e83c1b203c316ea807d19108b3ef44bdbe5e59
+    .agents/skills/dependency-guard/scripts/dependency-guard.test.mjs: sha256:92e6b64c8c175ea547f589b76b5f7ee19058c1ed067a078246e4575bb2aa1c69
     .agents/skills/docker-examples/SKILL.md: sha256:b2543e17256e09b10f3da7c9b7883a8422fa75cb1df5b624de5e020cc13b5542
     .agents/skills/docker-examples/references/examples.md: sha256:807321157344f2ee17b89c5c72190af38951432b728abbafcb34a90a49ba2a67
     .agents/skills/k6-performance-examples/SKILL.md: sha256:e49a7110db7c874a239474cb6378cb292b912f7794bcc145cbad16389ebbaded
@@ -79,6 +167,30 @@ dependencies:
     .agents/skills/postgres-liquibase-examples/references/examples.md: sha256:c011f80154b036d4031916c55dd0ab2102c433be11c609f67d35c0798f4e014e
     .agents/skills/restler-fuzzing-examples/SKILL.md: sha256:8528d6a633a65f649c8a251432be74a26873744e79f86913cbfcacf129ad72bf
     .agents/skills/restler-fuzzing-examples/references/implementation-patterns.md: sha256:67d5b02045023629b061e9c2593654ca929e9840e83a051a093250054f85004d
+    .agents/skills/rollback-probe/SKILL.md: sha256:8d4b90dd2ac77a152347f48bf2d66405711a2f86bf278bf2bd3f8707c5daaa5a
+    .agents/skills/rollback-probe/references/rollback-contract.md: sha256:7db346d4b8c68e992c8a918b97a2e9df30ee1bb320e717f53e344fb338c868f4
+    .agents/skills/rollback-probe/scripts/rollback-probe.mjs: sha256:8e5a1a90f3c3bbb66d75f6e2166697d0321cbb450f210038976659566b79e6fb
+    .agents/skills/rollback-probe/scripts/rollback-probe.test.mjs: sha256:a19783b29691c5932a94b80efbbb0f456572823973f09c17c91ba0e303acadbb
+    .agents/skills/scope-guard/SKILL.md: sha256:3fe338c731528bf8256f4a6531c51a68f563c8b67a9e96f46677cb5cb301ce56
+    .agents/skills/scope-guard/references/guard-contract.md: sha256:983babf367dd624639d00503534131cb0031dbf80a6b4d3c12513a3a9375bec7
+    .agents/skills/scope-guard/scripts/scope-guard.mjs: sha256:a81d42452fd04de1df128707894345f209b5d9b7ac709caecec6a5a488d49642
+    .agents/skills/scope-guard/scripts/scope-guard.test.mjs: sha256:36efe4383451db9ddb0c6c35f65d4e70eb601b14a1aaf80f159d7fcb9b534415
+    .agents/skills/secret-guard/SKILL.md: sha256:14c58e40a7edf62480e412a7893650b4a4adec5e1c3cb897aa063071982a482c
+    .agents/skills/secret-guard/references/secret-contract.md: sha256:3ef8c400070e827aed9ed4d3cb282759f431431823ced48a0286787dd301eb2b
+    .agents/skills/secret-guard/scripts/secret-guard.mjs: sha256:616fa92f6024eadfbf88e63b84166241ac188e6448528a24230deacad46e186e
+    .agents/skills/secret-guard/scripts/secret-guard.test.mjs: sha256:ba7520586d858898a8d819f742406e685306e272e050835c2e0fa9f3723627da
+    .agents/skills/task-gate/SKILL.md: sha256:3da9cd7367242dcc9b696697e36bdbde194e63eed07ec5ca447b6d58efd7f31e
+    .agents/skills/task-gate/references/gate-contract.md: sha256:3ab339c11c5067aff9d1a3bcf4d1ec29cea32e5048f556e251b2b46fda9253ce
+    .agents/skills/task-gate/scripts/task-gate.mjs: sha256:9d82eb94db1c45a371fb83259540286e42da686998640092503fae8e5b5545d9
+    .agents/skills/task-gate/scripts/task-gate.test.mjs: sha256:d36eab4a3d34122d633d31e7609bd10e47417ba402db98673b12a6803b512b67
+    .agents/skills/test-probe/SKILL.md: sha256:2e33dc16002cf009fdbe629b8f4751ee32e762034f1765054a5f048d0c6feecf
+    .agents/skills/test-probe/references/probe-contract.md: sha256:3ed6b34c6e8eae37345b4b1e1354517a3890908ed672b8d1ce31dc8ebe8a6e19
+    .agents/skills/test-probe/scripts/test-probe.mjs: sha256:eb21911018685065032ad72e15fba3e017dfe49f50f6cacf3538554461159d8c
+    .agents/skills/test-probe/scripts/test-probe.test.mjs: sha256:3c09d82d86ce6bb50ae31a12deb33f427c4117ea80279e879398e834aa6cfa36
+    .agents/skills/think-plan/SKILL.md: sha256:0cbe3c2407b891bf6d1f1eac57384ca27c6984aef7ca0cf80ae1af476bab2c2a
+    .agents/skills/think-plan/references/think-plan-contract.md: sha256:b59e5ee8517572d51e681d5910bb6e364bb33b068cc4f83fa689ac5bd0a0ca86
+    .agents/skills/think-plan/scripts/validate-specs.mjs: sha256:9c068187fab3a07cab7ee3263ee5ba7c7edbab7f43c340367a3a06d6ca692a0b
+    .agents/skills/think-plan/scripts/validate-specs.test.mjs: sha256:604fb19c68476a67cabb0bd44de5eba4332dd687fb5292ed517928d1fd45b823
     .agents/skills/vitepress-docs-examples/SKILL.md: sha256:a7f933fdd89b82ea23221da846c713594a074b18ddf6fb1ea38ec4be21a0d92c
     .agents/skills/vitepress-docs-examples/references/examples.md: sha256:f74ea0920b62f974237abe75984230e46a084aba0774a4d4d37fd89c489008bc
     .claude/skills/angular-admin-examples/SKILL.md: sha256:dd8bb6923a9340149a0fe0bdb9cc08cc1027d0e03e10f952f12e5fc12f5061d7
@@ -87,6 +199,14 @@ dependencies:
     .claude/skills/audit-reporting/references/report-contract.md: sha256:acaca07764179dbfa0ddb91a34fa2babc5fca93d5d19df171f8f42675a39df63
     .claude/skills/audit-reporting/scripts/audit-report.mjs: sha256:e3c9655f42665a8341e53b04d0326eedba89f641ccd8f8d5b04c50d904793177
     .claude/skills/audit-reporting/scripts/audit-report.test.mjs: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+    .claude/skills/contract-validator/SKILL.md: sha256:21036f7f416380d0cb43ebda32f1ad52c895f23b4bb51d956aec6ebe1b074b92
+    .claude/skills/contract-validator/references/contract-schema.md: sha256:5124d322a6814af50b12e864bb7fc3ecaa2acc80e8dd3c3f1fc877650a48cc41
+    .claude/skills/contract-validator/scripts/validate-contract.mjs: sha256:b00cc5e8d29a5161172877ad89fabcd72229f947e5c6844bf08ae83d4cbcb3b3
+    .claude/skills/contract-validator/scripts/validate-contract.test.mjs: sha256:1d736ae1623154248c855fd1c7d88b3e0fbf7f43ceebb52cfe68cca724bf65a9
+    .claude/skills/dependency-guard/SKILL.md: sha256:9c13b409c9540f0b21368efa5b80686e169832b930630517691254f927393708
+    .claude/skills/dependency-guard/references/dependency-contract.md: sha256:8dab8b5df31d4c6a7e7e33af3c9b1fcbb3963bc449785ee72eaf5b2a3ff49699
+    .claude/skills/dependency-guard/scripts/dependency-guard.mjs: sha256:d9a2314606bd33336b82827888e83c1b203c316ea807d19108b3ef44bdbe5e59
+    .claude/skills/dependency-guard/scripts/dependency-guard.test.mjs: sha256:92e6b64c8c175ea547f589b76b5f7ee19058c1ed067a078246e4575bb2aa1c69
     .claude/skills/docker-examples/SKILL.md: sha256:b2543e17256e09b10f3da7c9b7883a8422fa75cb1df5b624de5e020cc13b5542
     .claude/skills/docker-examples/references/examples.md: sha256:807321157344f2ee17b89c5c72190af38951432b728abbafcb34a90a49ba2a67
     .claude/skills/k6-performance-examples/SKILL.md: sha256:e49a7110db7c874a239474cb6378cb292b912f7794bcc145cbad16389ebbaded
@@ -97,23 +217,72 @@ dependencies:
     .claude/skills/postgres-liquibase-examples/references/examples.md: sha256:c011f80154b036d4031916c55dd0ab2102c433be11c609f67d35c0798f4e014e
     .claude/skills/restler-fuzzing-examples/SKILL.md: sha256:8528d6a633a65f649c8a251432be74a26873744e79f86913cbfcacf129ad72bf
     .claude/skills/restler-fuzzing-examples/references/implementation-patterns.md: sha256:67d5b02045023629b061e9c2593654ca929e9840e83a051a093250054f85004d
+    .claude/skills/rollback-probe/SKILL.md: sha256:8d4b90dd2ac77a152347f48bf2d66405711a2f86bf278bf2bd3f8707c5daaa5a
+    .claude/skills/rollback-probe/references/rollback-contract.md: sha256:7db346d4b8c68e992c8a918b97a2e9df30ee1bb320e717f53e344fb338c868f4
+    .claude/skills/rollback-probe/scripts/rollback-probe.mjs: sha256:8e5a1a90f3c3bbb66d75f6e2166697d0321cbb450f210038976659566b79e6fb
+    .claude/skills/rollback-probe/scripts/rollback-probe.test.mjs: sha256:a19783b29691c5932a94b80efbbb0f456572823973f09c17c91ba0e303acadbb
+    .claude/skills/scope-guard/SKILL.md: sha256:3fe338c731528bf8256f4a6531c51a68f563c8b67a9e96f46677cb5cb301ce56
+    .claude/skills/scope-guard/references/guard-contract.md: sha256:983babf367dd624639d00503534131cb0031dbf80a6b4d3c12513a3a9375bec7
+    .claude/skills/scope-guard/scripts/scope-guard.mjs: sha256:a81d42452fd04de1df128707894345f209b5d9b7ac709caecec6a5a488d49642
+    .claude/skills/scope-guard/scripts/scope-guard.test.mjs: sha256:36efe4383451db9ddb0c6c35f65d4e70eb601b14a1aaf80f159d7fcb9b534415
+    .claude/skills/secret-guard/SKILL.md: sha256:14c58e40a7edf62480e412a7893650b4a4adec5e1c3cb897aa063071982a482c
+    .claude/skills/secret-guard/references/secret-contract.md: sha256:3ef8c400070e827aed9ed4d3cb282759f431431823ced48a0286787dd301eb2b
+    .claude/skills/secret-guard/scripts/secret-guard.mjs: sha256:616fa92f6024eadfbf88e63b84166241ac188e6448528a24230deacad46e186e
+    .claude/skills/secret-guard/scripts/secret-guard.test.mjs: sha256:ba7520586d858898a8d819f742406e685306e272e050835c2e0fa9f3723627da
+    .claude/skills/task-gate/SKILL.md: sha256:3da9cd7367242dcc9b696697e36bdbde194e63eed07ec5ca447b6d58efd7f31e
+    .claude/skills/task-gate/references/gate-contract.md: sha256:3ab339c11c5067aff9d1a3bcf4d1ec29cea32e5048f556e251b2b46fda9253ce
+    .claude/skills/task-gate/scripts/task-gate.mjs: sha256:9d82eb94db1c45a371fb83259540286e42da686998640092503fae8e5b5545d9
+    .claude/skills/task-gate/scripts/task-gate.test.mjs: sha256:d36eab4a3d34122d633d31e7609bd10e47417ba402db98673b12a6803b512b67
+    .claude/skills/test-probe/SKILL.md: sha256:2e33dc16002cf009fdbe629b8f4751ee32e762034f1765054a5f048d0c6feecf
+    .claude/skills/test-probe/references/probe-contract.md: sha256:3ed6b34c6e8eae37345b4b1e1354517a3890908ed672b8d1ce31dc8ebe8a6e19
+    .claude/skills/test-probe/scripts/test-probe.mjs: sha256:eb21911018685065032ad72e15fba3e017dfe49f50f6cacf3538554461159d8c
+    .claude/skills/test-probe/scripts/test-probe.test.mjs: sha256:3c09d82d86ce6bb50ae31a12deb33f427c4117ea80279e879398e834aa6cfa36
+    .claude/skills/think-plan/SKILL.md: sha256:0cbe3c2407b891bf6d1f1eac57384ca27c6984aef7ca0cf80ae1af476bab2c2a
+    .claude/skills/think-plan/references/think-plan-contract.md: sha256:b59e5ee8517572d51e681d5910bb6e364bb33b068cc4f83fa689ac5bd0a0ca86
+    .claude/skills/think-plan/scripts/validate-specs.mjs: sha256:9c068187fab3a07cab7ee3263ee5ba7c7edbab7f43c340367a3a06d6ca692a0b
+    .claude/skills/think-plan/scripts/validate-specs.test.mjs: sha256:604fb19c68476a67cabb0bd44de5eba4332dd687fb5292ed517928d1fd45b823
     .claude/skills/vitepress-docs-examples/SKILL.md: sha256:a7f933fdd89b82ea23221da846c713594a074b18ddf6fb1ea38ec4be21a0d92c
     .claude/skills/vitepress-docs-examples/references/examples.md: sha256:f74ea0920b62f974237abe75984230e46a084aba0774a4d4d37fd89c489008bc
-  content_hash: sha256:8f58bd0f4ba454ee614494411699ce906627ecab2a06de380bfd43b8375d2891
+  content_hash: sha256:2ebe5a902a20d2a831355b4bc25cb4c064090e17eaf805163501e49da70eaaf7
   skill_subset:
   - angular-admin-examples
   - audit-reporting
+  - contract-validator
+  - dependency-guard
   - docker-examples
   - k6-performance-examples
   - node-express-examples
   - postgres-liquibase-examples
   - restler-fuzzing-examples
+  - rollback-probe
+  - scope-guard
+  - secret-guard
+  - task-gate
+  - test-probe
+  - think-plan
   - vitepress-docs-examples
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-api-test
+  host: github.com
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
+  version: 1.0.0
+  virtual_path: agents/api-test.agent.md
+  is_virtual: true
+  deployed_files:
+  - .claude/agents/api-test.md
+  - .cursor/agents/api-test.md
+  - .github/agents/api-test.agent.md
+  deployed_file_hashes:
+    .claude/agents/api-test.md: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+    .cursor/agents/api-test.md: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+    .github/agents/api-test.agent.md: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+  content_hash: sha256:33c80d4ad321d2ce7cd0e23ab6a7a7ced7a5f63da69fb8bb6d3ac6b36d0e72dd
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-audit-fix
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/audit-fix.agent.md
   is_virtual: true
@@ -122,15 +291,15 @@ dependencies:
   - .cursor/agents/audit-fix.md
   - .github/agents/audit-fix.agent.md
   deployed_file_hashes:
-    .claude/agents/audit-fix.md: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
-    .cursor/agents/audit-fix.md: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
-    .github/agents/audit-fix.agent.md: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
-  content_hash: sha256:d259523c516f74c236f7fd71451b63425502cc4a58942f6e3ce1b54a5f062f8d
+    .claude/agents/audit-fix.md: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
+    .cursor/agents/audit-fix.md: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
+    .github/agents/audit-fix.agent.md: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
+  content_hash: sha256:42af941a9582cb6d86dc328e253451e8acaad0e9fcd1cf3f01bad10edff6072c
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-code-audit
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/code-audit.agent.md
   is_virtual: true
@@ -147,7 +316,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-e2e-test
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/e2e-test.agent.md
   is_virtual: true
@@ -164,25 +333,34 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-fuzz-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/fuzz-tests.agent.md
   is_virtual: true
-  content_hash: sha256:4214e761fc5e7456a1a2ff0e8b4b3b386112cbe29dda87bf51caf00dbd8f1080
+  content_hash: sha256:da6c43d4dc265f30626ad4e1d2ecb268fce01798ec202d9387448339ce8150fb
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-performance-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/performance-tests.agent.md
   is_virtual: true
-  content_hash: sha256:13af7f0b153b2c1242283dbd5e46d16616fcfe6d75722d584f76f1020651842a
+  content_hash: sha256:2793d79eb7f8f14ca748bfc1fce1244043d1dda857f063f46f508155f606ad2d
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-think-plan
+  host: github.com
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
+  version: 1.0.0
+  virtual_path: agents/think-plan.agent.md
+  is_virtual: true
+  content_hash: sha256:4099edc43c1c56d7a30c2461b1a013af56d4f8af042a1fd24600f601f1cc2655
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-unit-test
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/unit-test.agent.md
   is_virtual: true
@@ -191,24 +369,24 @@ dependencies:
   - .cursor/agents/unit-test.md
   - .github/agents/unit-test.agent.md
   deployed_file_hashes:
-    .claude/agents/unit-test.md: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
-    .cursor/agents/unit-test.md: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
-    .github/agents/unit-test.agent.md: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
-  content_hash: sha256:911a8761bcff78c4847b2af9a2dbe1be275970a80234afa97b1c6da466ee5496
+    .claude/agents/unit-test.md: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
+    .cursor/agents/unit-test.md: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
+    .github/agents/unit-test.agent.md: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
+  content_hash: sha256:4d9120987859b2d465d0b354c6b33d6d9a5cf217067cb2b7b9779e750beacefc
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-vitepress-docs
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: agents/vitepress-docs.agent.md
   is_virtual: true
-  content_hash: sha256:129d56546697d4e6ef66089290267ee7bbd525ef8295731ee4ecbbad6669cbaf
+  content_hash: sha256:5143d2bfa8cd92505b58a0f9c219fb975b632f0632ac9e5f417e848cb6421dd2
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-admin
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/angular-admin.instructions.md
   is_virtual: true
@@ -225,25 +403,25 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-e2e-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/angular-e2e-tests.instructions.md
   is_virtual: true
-  content_hash: sha256:a6d07a336d1661a22ba5c5e2cc7b556329c52fc63a8d46f453a054e486df9024
+  content_hash: sha256:19d8248e27b64213273066851e64fbcf7b8b4e14499fde131afffbac299060d7
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-unit-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/angular-unit-tests.instructions.md
   is_virtual: true
-  content_hash: sha256:e7302be9b8c4e5715d3570ffcd645071bf5fd8f5f2c7a7e236bbd15f699ab50f
+  content_hash: sha256:1928692caa78ec37fcfa371dbe3555a922ffe0ab97b697eaec9f79fbfc1116cb
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-docker
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/docker.instructions.md
   is_virtual: true
@@ -260,7 +438,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-k6-performance-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/k6-performance-tests.instructions.md
   is_virtual: true
@@ -275,9 +453,18 @@ dependencies:
   content_hash: sha256:478674ae53bd022bda046507d6dbfca803eb2c652dde6802d0989c99a6e4fa10
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-api-tests
+  host: github.com
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
+  version: 1.0.0
+  virtual_path: instructions/node-api-tests.instructions.md
+  is_virtual: true
+  content_hash: sha256:9b17932301f26e0a485ebe12c67a2b7819124e9456bba907871f990d453babcd
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-express
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/node-express.instructions.md
   is_virtual: true
@@ -294,25 +481,25 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-unit-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/node-unit-tests.instructions.md
   is_virtual: true
-  content_hash: sha256:be91b41506694c48f43b7862b5f2133ee4b81b7d63541485175acc856e1ec652
+  content_hash: sha256:cbd71a55db81c39883d960a67b1bac651098d183cb1a54f018f3dd71f34f59af
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-postgres-liquibase-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/postgres-liquibase-tests.instructions.md
   is_virtual: true
-  content_hash: sha256:fbfbf6dd6e1012947ea0391a006b8a72fc910d8e256f5b68f3bfbbefc533b567
+  content_hash: sha256:2a4c2bd604c1755aa0ab2b5fa87cdcaa27694b7ac8e92f40c88139670154c876
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-postgres-liquibase
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/postgres-liquibase.instructions.md
   is_virtual: true
@@ -329,7 +516,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-restler-fuzzing-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/restler-fuzzing-tests.instructions.md
   is_virtual: true
@@ -346,7 +533,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-sharp-agent
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/sharp-agent.instructions.md
   is_virtual: true
@@ -355,24 +542,47 @@ dependencies:
   - .cursor/rules/sharp-agent.mdc
   - .github/instructions/sharp-agent.instructions.md
   deployed_file_hashes:
-    .claude/rules/sharp-agent.md: sha256:1539f2ce78ab01c0723b7a88e8de7cb21a57b13e2bfe64072ab46fe8769645bc
-    .cursor/rules/sharp-agent.mdc: sha256:95cf8602076c7826995a24366bad63c15d566c54187403625d1e95f117272654
-    .github/instructions/sharp-agent.instructions.md: sha256:93d883b43984a04bf5eab5b9de1272ea7ba31d3f0998ffe95c6167774f3cec13
-  content_hash: sha256:48b607ac0f3e8dee51dbb60e930a76f2b3cb2a1c7445471d248e607c8a7de14b
+    .claude/rules/sharp-agent.md: sha256:a6751bdb9d26ce796752917bcb685656c0a578e584382057ee58f733b4bf76fa
+    .cursor/rules/sharp-agent.mdc: sha256:e8490758b683721288b34ea68763d06065910563bcab5736dd9034270ceefb8e
+    .github/instructions/sharp-agent.instructions.md: sha256:065fc0b82c2a6ffd9c68f65e6f56cb9d96dec7d31c00791151611c2d77827ad5
+  content_hash: sha256:cf961ff9bd29c1baf3bc77c61f6ca30e4d7981019a8f02845e91b379586f24de
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-think-plan
+  host: github.com
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
+  version: 1.0.0
+  virtual_path: instructions/think-plan.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .claude/agents/think-plan.md
+  - .claude/rules/think-plan.md
+  - .cursor/agents/think-plan.md
+  - .cursor/rules/think-plan.mdc
+  - .github/agents/think-plan.agent.md
+  - .github/instructions/think-plan.instructions.md
+  deployed_file_hashes:
+    .claude/agents/think-plan.md: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+    .claude/rules/think-plan.md: sha256:d4b58bb5fd69e603d19df485374cabecef255adfa3376324677a4ea11d42731a
+    .cursor/agents/think-plan.md: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+    .cursor/rules/think-plan.mdc: sha256:91e5b13fc4a5c94259b7b28459608fd45faba3426fbf1af1f2e1df57fe1ef067
+    .github/agents/think-plan.agent.md: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+    .github/instructions/think-plan.instructions.md: sha256:c8f6603acf0351e0d32b40d4ff2729baf34ba2d441cdd3aaabd00c119ddb654a
+  content_hash: sha256:4099edc43c1c56d7a30c2461b1a013af56d4f8af042a1fd24600f601f1cc2655
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-vitepress-docs
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: instructions/vitepress-docs.instructions.md
   is_virtual: true
-  content_hash: sha256:129d56546697d4e6ef66089290267ee7bbd525ef8295731ee4ecbbad6669cbaf
+  content_hash: sha256:5143d2bfa8cd92505b58a0f9c219fb975b632f0632ac9e5f417e848cb6421dd2
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-e2e-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/angular-e2e-tests.prompt.md
   is_virtual: true
@@ -395,7 +605,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-angular-unit-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/angular-unit-tests.prompt.md
   is_virtual: true
@@ -418,7 +628,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-fuzz-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/fuzz-tests.prompt.md
   is_virtual: true
@@ -439,9 +649,32 @@ dependencies:
   content_hash: sha256:da6c43d4dc265f30626ad4e1d2ecb268fce01798ec202d9387448339ce8150fb
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
+  name: coding-pal-node-api-tests
+  host: github.com
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
+  version: 1.0.0
+  virtual_path: prompts/node-api-tests.prompt.md
+  is_virtual: true
+  deployed_files:
+  - .claude/commands/node-api-tests.md
+  - .claude/rules/node-api-tests.md
+  - .cursor/commands/node-api-tests.md
+  - .cursor/rules/node-api-tests.mdc
+  - .github/instructions/node-api-tests.instructions.md
+  - .github/prompts/node-api-tests.prompt.md
+  deployed_file_hashes:
+    .claude/commands/node-api-tests.md: sha256:49af77661d45fb1762dd571772af35b7e13152ca231c986c7be7540db628be9d
+    .claude/rules/node-api-tests.md: sha256:a772d0d85ebdb2f9b1d0d0ee52707d395a295087161a9f8fc18ce5a0f8cf0989
+    .cursor/commands/node-api-tests.md: sha256:49af77661d45fb1762dd571772af35b7e13152ca231c986c7be7540db628be9d
+    .cursor/rules/node-api-tests.mdc: sha256:843fc915e85a42b108c5347382c8f2d9b38b10f66e6424c770e7ede75fedf9fe
+    .github/instructions/node-api-tests.instructions.md: sha256:2d6788a22b1df1688668fcdfc2422088d875bde346a440f833dd8d0d1d9854bc
+    .github/prompts/node-api-tests.prompt.md: sha256:37daacbddf7dfde31a4ba67f44b50a383df9f62bbf2a0d54538a260bd6911c41
+  content_hash: sha256:9b17932301f26e0a485ebe12c67a2b7819124e9456bba907871f990d453babcd
+- repo_url: alten-group/coding-pal
+  materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-node-unit-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/node-unit-tests.prompt.md
   is_virtual: true
@@ -453,18 +686,18 @@ dependencies:
   - .github/instructions/node-unit-tests.instructions.md
   - .github/prompts/node-unit-tests.prompt.md
   deployed_file_hashes:
-    .claude/commands/node-unit-tests.md: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
-    .claude/rules/node-unit-tests.md: sha256:b6df1a85b164b48690c6e278711c8c992fa12f2ffb0e1fa3e8904142b0e80b5c
-    .cursor/commands/node-unit-tests.md: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
-    .cursor/rules/node-unit-tests.mdc: sha256:768c9fc97253b6bbf4fc534f5e1b086bb869734d02a596de1cc076e75ee31de0
-    .github/instructions/node-unit-tests.instructions.md: sha256:2368ac02cbcc0a09e8f8e8e85d39fb48d6b866eaac8d3576ed79503c657b30b2
-    .github/prompts/node-unit-tests.prompt.md: sha256:574a5b81510487b41c86d06b7e5b15b654399b2159274dc3e924ed0dbdc67ab6
-  content_hash: sha256:43abdd3836794c63e8862bfb846d197116755968f259b1ae3d380bb3012617a6
+    .claude/commands/node-unit-tests.md: sha256:93d3ce2851dfd14178ca6fbed03ba281bf2f8776600b6dcc140d35f81c2b3abc
+    .claude/rules/node-unit-tests.md: sha256:95cc2149a9f509b939dfee6204ffcc04430d0cd91207eaf07a5a492fb209cb02
+    .cursor/commands/node-unit-tests.md: sha256:93d3ce2851dfd14178ca6fbed03ba281bf2f8776600b6dcc140d35f81c2b3abc
+    .cursor/rules/node-unit-tests.mdc: sha256:438416ced8febe38cb443d197d41dc607f70d400653f325d79d531177ed2d379
+    .github/instructions/node-unit-tests.instructions.md: sha256:80929da52ca86b854164ec8167b944757c995a2d976b1076a1f30b63008678aa
+    .github/prompts/node-unit-tests.prompt.md: sha256:fb6ddf7163da83a217928a1032ebecaed38bb3eb096aad4017f30fc0733584a3
+  content_hash: sha256:cbd71a55db81c39883d960a67b1bac651098d183cb1a54f018f3dd71f34f59af
 - repo_url: alten-group/coding-pal
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-performance-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/performance-tests.prompt.md
   is_virtual: true
@@ -487,7 +720,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-postgres-liquibase-tests
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/postgres-liquibase-tests.prompt.md
   is_virtual: true
@@ -510,7 +743,7 @@ dependencies:
   materialization_repo_url: ALTEN-group/coding-pal
   name: coding-pal-vitepress-docs
   host: github.com
-  resolved_commit: 9d204500d6fc887d5795b347907b90ea7514792b
+  resolved_commit: d5d771d3a34ad7d9905d243c5ef404ffe662e133
   version: 1.0.0
   virtual_path: prompts/vitepress-docs.prompt.md
   is_virtual: true
@@ -538,13 +771,22 @@ dependencies:
 deployments:
 - kind: project-relative
   target: claude
+  value: .claude/agents/api-test.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/agents/api-test.agent.md
+  active_owner: alten-group/coding-pal/agents/api-test.agent.md
+  content_hash: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+- kind: project-relative
+  target: claude
   value: .claude/agents/audit-fix.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/audit-fix.agent.md
   active_owner: alten-group/coding-pal/agents/audit-fix.agent.md
-  content_hash: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
+  content_hash: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
 - kind: project-relative
   target: claude
   value: .claude/agents/code-audit.md
@@ -583,13 +825,22 @@ deployments:
   content_hash: sha256:4ede4f1d65459ba859772416a7d135353a10ddddeded4fc231f7e8d2c2179135
 - kind: project-relative
   target: claude
+  value: .claude/agents/think-plan.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+- kind: project-relative
+  target: claude
   value: .claude/agents/unit-test.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/unit-test.agent.md
   active_owner: alten-group/coding-pal/agents/unit-test.agent.md
-  content_hash: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+  content_hash: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
 - kind: project-relative
   target: claude
   value: .claude/agents/vitepress-docs.md
@@ -628,13 +879,22 @@ deployments:
   content_hash: sha256:c9c25d98f4b05a02edd97b4579bbb574c399c5d36e554fc44659f97db09af41d
 - kind: project-relative
   target: claude
+  value: .claude/commands/node-api-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:49af77661d45fb1762dd571772af35b7e13152ca231c986c7be7540db628be9d
+- kind: project-relative
+  target: claude
   value: .claude/commands/node-unit-tests.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
+  content_hash: sha256:93d3ce2851dfd14178ca6fbed03ba281bf2f8776600b6dcc140d35f81c2b3abc
 - kind: project-relative
   target: claude
   value: .claude/commands/performance-tests.md
@@ -709,6 +969,15 @@ deployments:
   content_hash: sha256:539ecf2ed0a3d89d86e916de4da39fa6c60748f8b79d7b66989e869d488aec0e
 - kind: project-relative
   target: claude
+  value: .claude/rules/node-api-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:a772d0d85ebdb2f9b1d0d0ee52707d395a295087161a9f8fc18ce5a0f8cf0989
+- kind: project-relative
+  target: claude
   value: .claude/rules/node-express.md
   runtime: null
   scope: project
@@ -724,7 +993,7 @@ deployments:
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:b6df1a85b164b48690c6e278711c8c992fa12f2ffb0e1fa3e8904142b0e80b5c
+  content_hash: sha256:95cc2149a9f509b939dfee6204ffcc04430d0cd91207eaf07a5a492fb209cb02
 - kind: project-relative
   target: claude
   value: .claude/rules/postgres-liquibase-tests.md
@@ -760,7 +1029,16 @@ deployments:
   owners:
   - alten-group/coding-pal/instructions/sharp-agent.instructions.md
   active_owner: alten-group/coding-pal/instructions/sharp-agent.instructions.md
-  content_hash: sha256:1539f2ce78ab01c0723b7a88e8de7cb21a57b13e2bfe64072ab46fe8769645bc
+  content_hash: sha256:a6751bdb9d26ce796752917bcb685656c0a578e584382057ee58f733b4bf76fa
+- kind: project-relative
+  target: claude
+  value: .claude/rules/think-plan.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:d4b58bb5fd69e603d19df485374cabecef255adfa3376324677a4ea11d42731a
 - kind: project-relative
   target: claude
   value: .claude/rules/vitepress-docs.md
@@ -842,6 +1120,96 @@ deployments:
   - alten-group/coding-pal
   active_owner: alten-group/coding-pal
   content_hash: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+- kind: project-relative
+  target: claude
+  value: .claude/skills/contract-validator
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/contract-validator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:21036f7f416380d0cb43ebda32f1ad52c895f23b4bb51d956aec6ebe1b074b92
+- kind: project-relative
+  target: claude
+  value: .claude/skills/contract-validator/references/contract-schema.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:5124d322a6814af50b12e864bb7fc3ecaa2acc80e8dd3c3f1fc877650a48cc41
+- kind: project-relative
+  target: claude
+  value: .claude/skills/contract-validator/scripts/validate-contract.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:b00cc5e8d29a5161172877ad89fabcd72229f947e5c6844bf08ae83d4cbcb3b3
+- kind: project-relative
+  target: claude
+  value: .claude/skills/contract-validator/scripts/validate-contract.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:1d736ae1623154248c855fd1c7d88b3e0fbf7f43ceebb52cfe68cca724bf65a9
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dependency-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dependency-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9c13b409c9540f0b21368efa5b80686e169832b930630517691254f927393708
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dependency-guard/references/dependency-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8dab8b5df31d4c6a7e7e33af3c9b1fcbb3963bc449785ee72eaf5b2a3ff49699
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dependency-guard/scripts/dependency-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:d9a2314606bd33336b82827888e83c1b203c316ea807d19108b3ef44bdbe5e59
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dependency-guard/scripts/dependency-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:92e6b64c8c175ea547f589b76b5f7ee19058c1ed067a078246e4575bb2aa1c69
 - kind: project-relative
   target: claude
   value: .claude/skills/docker-examples
@@ -979,6 +1347,276 @@ deployments:
   content_hash: sha256:67d5b02045023629b061e9c2593654ca929e9840e83a051a093250054f85004d
 - kind: project-relative
   target: claude
+  value: .claude/skills/rollback-probe
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rollback-probe/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8d4b90dd2ac77a152347f48bf2d66405711a2f86bf278bf2bd3f8707c5daaa5a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rollback-probe/references/rollback-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:7db346d4b8c68e992c8a918b97a2e9df30ee1bb320e717f53e344fb338c868f4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rollback-probe/scripts/rollback-probe.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8e5a1a90f3c3bbb66d75f6e2166697d0321cbb450f210038976659566b79e6fb
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rollback-probe/scripts/rollback-probe.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:a19783b29691c5932a94b80efbbb0f456572823973f09c17c91ba0e303acadbb
+- kind: project-relative
+  target: claude
+  value: .claude/skills/scope-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/scope-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3fe338c731528bf8256f4a6531c51a68f563c8b67a9e96f46677cb5cb301ce56
+- kind: project-relative
+  target: claude
+  value: .claude/skills/scope-guard/references/guard-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:983babf367dd624639d00503534131cb0031dbf80a6b4d3c12513a3a9375bec7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/scope-guard/scripts/scope-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:a81d42452fd04de1df128707894345f209b5d9b7ac709caecec6a5a488d49642
+- kind: project-relative
+  target: claude
+  value: .claude/skills/scope-guard/scripts/scope-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:36efe4383451db9ddb0c6c35f65d4e70eb601b14a1aaf80f159d7fcb9b534415
+- kind: project-relative
+  target: claude
+  value: .claude/skills/secret-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/secret-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:14c58e40a7edf62480e412a7893650b4a4adec5e1c3cb897aa063071982a482c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/secret-guard/references/secret-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ef8c400070e827aed9ed4d3cb282759f431431823ced48a0286787dd301eb2b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/secret-guard/scripts/secret-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:616fa92f6024eadfbf88e63b84166241ac188e6448528a24230deacad46e186e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/secret-guard/scripts/secret-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:ba7520586d858898a8d819f742406e685306e272e050835c2e0fa9f3723627da
+- kind: project-relative
+  target: claude
+  value: .claude/skills/task-gate
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/task-gate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3da9cd7367242dcc9b696697e36bdbde194e63eed07ec5ca447b6d58efd7f31e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/task-gate/references/gate-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ab339c11c5067aff9d1a3bcf4d1ec29cea32e5048f556e251b2b46fda9253ce
+- kind: project-relative
+  target: claude
+  value: .claude/skills/task-gate/scripts/task-gate.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9d82eb94db1c45a371fb83259540286e42da686998640092503fae8e5b5545d9
+- kind: project-relative
+  target: claude
+  value: .claude/skills/task-gate/scripts/task-gate.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:d36eab4a3d34122d633d31e7609bd10e47417ba402db98673b12a6803b512b67
+- kind: project-relative
+  target: claude
+  value: .claude/skills/test-probe
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/test-probe/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:2e33dc16002cf009fdbe629b8f4751ee32e762034f1765054a5f048d0c6feecf
+- kind: project-relative
+  target: claude
+  value: .claude/skills/test-probe/references/probe-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ed6b34c6e8eae37345b4b1e1354517a3890908ed672b8d1ce31dc8ebe8a6e19
+- kind: project-relative
+  target: claude
+  value: .claude/skills/test-probe/scripts/test-probe.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:eb21911018685065032ad72e15fba3e017dfe49f50f6cacf3538554461159d8c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/test-probe/scripts/test-probe.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3c09d82d86ce6bb50ae31a12deb33f427c4117ea80279e879398e834aa6cfa36
+- kind: project-relative
+  target: claude
+  value: .claude/skills/think-plan
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/think-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:0cbe3c2407b891bf6d1f1eac57384ca27c6984aef7ca0cf80ae1af476bab2c2a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/think-plan/references/think-plan-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:b59e5ee8517572d51e681d5910bb6e364bb33b068cc4f83fa689ac5bd0a0ca86
+- kind: project-relative
+  target: claude
+  value: .claude/skills/think-plan/scripts/validate-specs.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9c068187fab3a07cab7ee3263ee5ba7c7edbab7f43c340367a3a06d6ca692a0b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/think-plan/scripts/validate-specs.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:604fb19c68476a67cabb0bd44de5eba4332dd687fb5292ed517928d1fd45b823
+- kind: project-relative
+  target: claude
   value: .claude/skills/vitepress-docs-examples
   runtime: null
   scope: project
@@ -1076,6 +1714,96 @@ deployments:
   - alten-group/coding-pal
   active_owner: alten-group/coding-pal
   content_hash: sha256:73a94ad225eddba03b8bd1ca931cc408d0c289037319a5ceada12fea73656ef9
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/contract-validator
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/contract-validator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:21036f7f416380d0cb43ebda32f1ad52c895f23b4bb51d956aec6ebe1b074b92
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/contract-validator/references/contract-schema.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:5124d322a6814af50b12e864bb7fc3ecaa2acc80e8dd3c3f1fc877650a48cc41
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/contract-validator/scripts/validate-contract.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:b00cc5e8d29a5161172877ad89fabcd72229f947e5c6844bf08ae83d4cbcb3b3
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/contract-validator/scripts/validate-contract.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:1d736ae1623154248c855fd1c7d88b3e0fbf7f43ceebb52cfe68cca724bf65a9
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dependency-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dependency-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9c13b409c9540f0b21368efa5b80686e169832b930630517691254f927393708
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dependency-guard/references/dependency-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8dab8b5df31d4c6a7e7e33af3c9b1fcbb3963bc449785ee72eaf5b2a3ff49699
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dependency-guard/scripts/dependency-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:d9a2314606bd33336b82827888e83c1b203c316ea807d19108b3ef44bdbe5e59
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dependency-guard/scripts/dependency-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:92e6b64c8c175ea547f589b76b5f7ee19058c1ed067a078246e4575bb2aa1c69
 - kind: project-relative
   target: copilot
   value: .agents/skills/docker-examples
@@ -1213,6 +1941,276 @@ deployments:
   content_hash: sha256:67d5b02045023629b061e9c2593654ca929e9840e83a051a093250054f85004d
 - kind: project-relative
   target: copilot
+  value: .agents/skills/rollback-probe
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/rollback-probe/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8d4b90dd2ac77a152347f48bf2d66405711a2f86bf278bf2bd3f8707c5daaa5a
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/rollback-probe/references/rollback-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:7db346d4b8c68e992c8a918b97a2e9df30ee1bb320e717f53e344fb338c868f4
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/rollback-probe/scripts/rollback-probe.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:8e5a1a90f3c3bbb66d75f6e2166697d0321cbb450f210038976659566b79e6fb
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/rollback-probe/scripts/rollback-probe.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:a19783b29691c5932a94b80efbbb0f456572823973f09c17c91ba0e303acadbb
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/scope-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/scope-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3fe338c731528bf8256f4a6531c51a68f563c8b67a9e96f46677cb5cb301ce56
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/scope-guard/references/guard-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:983babf367dd624639d00503534131cb0031dbf80a6b4d3c12513a3a9375bec7
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/scope-guard/scripts/scope-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:a81d42452fd04de1df128707894345f209b5d9b7ac709caecec6a5a488d49642
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/scope-guard/scripts/scope-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:36efe4383451db9ddb0c6c35f65d4e70eb601b14a1aaf80f159d7fcb9b534415
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/secret-guard
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/secret-guard/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:14c58e40a7edf62480e412a7893650b4a4adec5e1c3cb897aa063071982a482c
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/secret-guard/references/secret-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ef8c400070e827aed9ed4d3cb282759f431431823ced48a0286787dd301eb2b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/secret-guard/scripts/secret-guard.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:616fa92f6024eadfbf88e63b84166241ac188e6448528a24230deacad46e186e
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/secret-guard/scripts/secret-guard.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:ba7520586d858898a8d819f742406e685306e272e050835c2e0fa9f3723627da
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/task-gate
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/task-gate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3da9cd7367242dcc9b696697e36bdbde194e63eed07ec5ca447b6d58efd7f31e
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/task-gate/references/gate-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ab339c11c5067aff9d1a3bcf4d1ec29cea32e5048f556e251b2b46fda9253ce
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/task-gate/scripts/task-gate.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9d82eb94db1c45a371fb83259540286e42da686998640092503fae8e5b5545d9
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/task-gate/scripts/task-gate.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:d36eab4a3d34122d633d31e7609bd10e47417ba402db98673b12a6803b512b67
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/test-probe
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/test-probe/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:2e33dc16002cf009fdbe629b8f4751ee32e762034f1765054a5f048d0c6feecf
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/test-probe/references/probe-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3ed6b34c6e8eae37345b4b1e1354517a3890908ed672b8d1ce31dc8ebe8a6e19
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/test-probe/scripts/test-probe.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:eb21911018685065032ad72e15fba3e017dfe49f50f6cacf3538554461159d8c
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/test-probe/scripts/test-probe.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:3c09d82d86ce6bb50ae31a12deb33f427c4117ea80279e879398e834aa6cfa36
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/think-plan
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/think-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:0cbe3c2407b891bf6d1f1eac57384ca27c6984aef7ca0cf80ae1af476bab2c2a
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/think-plan/references/think-plan-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:b59e5ee8517572d51e681d5910bb6e364bb33b068cc4f83fa689ac5bd0a0ca86
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/think-plan/scripts/validate-specs.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:9c068187fab3a07cab7ee3263ee5ba7c7edbab7f43c340367a3a06d6ca692a0b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/think-plan/scripts/validate-specs.test.mjs
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal
+  active_owner: alten-group/coding-pal
+  content_hash: sha256:604fb19c68476a67cabb0bd44de5eba4332dd687fb5292ed517928d1fd45b823
+- kind: project-relative
+  target: copilot
   value: .agents/skills/vitepress-docs-examples
   runtime: null
   scope: project
@@ -1240,13 +2238,22 @@ deployments:
   content_hash: sha256:f74ea0920b62f974237abe75984230e46a084aba0774a4d4d37fd89c489008bc
 - kind: project-relative
   target: copilot
+  value: .github/agents/api-test.agent.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/agents/api-test.agent.md
+  active_owner: alten-group/coding-pal/agents/api-test.agent.md
+  content_hash: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+- kind: project-relative
+  target: copilot
   value: .github/agents/audit-fix.agent.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/audit-fix.agent.md
   active_owner: alten-group/coding-pal/agents/audit-fix.agent.md
-  content_hash: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
+  content_hash: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
 - kind: project-relative
   target: copilot
   value: .github/agents/code-audit.agent.md
@@ -1285,13 +2292,22 @@ deployments:
   content_hash: sha256:4ede4f1d65459ba859772416a7d135353a10ddddeded4fc231f7e8d2c2179135
 - kind: project-relative
   target: copilot
+  value: .github/agents/think-plan.agent.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+- kind: project-relative
+  target: copilot
   value: .github/agents/unit-test.agent.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/unit-test.agent.md
   active_owner: alten-group/coding-pal/agents/unit-test.agent.md
-  content_hash: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+  content_hash: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
 - kind: project-relative
   target: copilot
   value: .github/agents/vitepress-docs.agent.md
@@ -1348,6 +2364,15 @@ deployments:
   content_hash: sha256:6b0c95bac4de9c6f78e8874dee59ce9c85526e30bf4c98d6306d9adca42326aa
 - kind: project-relative
   target: copilot
+  value: .github/instructions/node-api-tests.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:2d6788a22b1df1688668fcdfc2422088d875bde346a440f833dd8d0d1d9854bc
+- kind: project-relative
+  target: copilot
   value: .github/instructions/node-express.instructions.md
   runtime: null
   scope: project
@@ -1363,7 +2388,7 @@ deployments:
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:2368ac02cbcc0a09e8f8e8e85d39fb48d6b866eaac8d3576ed79503c657b30b2
+  content_hash: sha256:80929da52ca86b854164ec8167b944757c995a2d976b1076a1f30b63008678aa
 - kind: project-relative
   target: copilot
   value: .github/instructions/postgres-liquibase-tests.instructions.md
@@ -1399,7 +2424,16 @@ deployments:
   owners:
   - alten-group/coding-pal/instructions/sharp-agent.instructions.md
   active_owner: alten-group/coding-pal/instructions/sharp-agent.instructions.md
-  content_hash: sha256:93d883b43984a04bf5eab5b9de1272ea7ba31d3f0998ffe95c6167774f3cec13
+  content_hash: sha256:065fc0b82c2a6ffd9c68f65e6f56cb9d96dec7d31c00791151611c2d77827ad5
+- kind: project-relative
+  target: copilot
+  value: .github/instructions/think-plan.instructions.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:c8f6603acf0351e0d32b40d4ff2729baf34ba2d441cdd3aaabd00c119ddb654a
 - kind: project-relative
   target: copilot
   value: .github/instructions/vitepress-docs.instructions.md
@@ -1438,13 +2472,22 @@ deployments:
   content_hash: sha256:612e0d432ea77c42be5e90da5c183b9d9f63d6f2a78675bfa5a46dfc558e3a31
 - kind: project-relative
   target: copilot
+  value: .github/prompts/node-api-tests.prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:37daacbddf7dfde31a4ba67f44b50a383df9f62bbf2a0d54538a260bd6911c41
+- kind: project-relative
+  target: copilot
   value: .github/prompts/node-unit-tests.prompt.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:574a5b81510487b41c86d06b7e5b15b654399b2159274dc3e924ed0dbdc67ab6
+  content_hash: sha256:fb6ddf7163da83a217928a1032ebecaed38bb3eb096aad4017f30fc0733584a3
 - kind: project-relative
   target: copilot
   value: .github/prompts/performance-tests.prompt.md
@@ -1474,13 +2517,22 @@ deployments:
   content_hash: sha256:1d62acfe74572506e9d612e17d2c4f591ca7c764f6c9c631b7fcaa7b0cec581e
 - kind: project-relative
   target: cursor
+  value: .cursor/agents/api-test.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/agents/api-test.agent.md
+  active_owner: alten-group/coding-pal/agents/api-test.agent.md
+  content_hash: sha256:c8fb7043970a09a2ad413f3d1485b053d28818174a6937f47897aee4bad321b3
+- kind: project-relative
+  target: cursor
   value: .cursor/agents/audit-fix.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/audit-fix.agent.md
   active_owner: alten-group/coding-pal/agents/audit-fix.agent.md
-  content_hash: sha256:9b53e00b35ec2e920db38d839ef5bfc9b34f4a094893d1a5f6f7b44621c1643b
+  content_hash: sha256:cd5df7cf8bcfe2cb904f34765926ee880f7f1f1f0369a2e023ee55e6409dd465
 - kind: project-relative
   target: cursor
   value: .cursor/agents/code-audit.md
@@ -1519,13 +2571,22 @@ deployments:
   content_hash: sha256:4ede4f1d65459ba859772416a7d135353a10ddddeded4fc231f7e8d2c2179135
 - kind: project-relative
   target: cursor
+  value: .cursor/agents/think-plan.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:032e0ee06bf0a8a12ed12472807852aee91e2788962dba80e3e9e401603b769e
+- kind: project-relative
+  target: cursor
   value: .cursor/agents/unit-test.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/agents/unit-test.agent.md
   active_owner: alten-group/coding-pal/agents/unit-test.agent.md
-  content_hash: sha256:f1cf5b864be25bfe1b26d5d22b99ae7a3bc4b0404bfb8a9bc0ff3a7b3e5f7631
+  content_hash: sha256:74fb5d0b5e21bf79fcada8f045821b21775c4d7eebf0087b40dbb06822b43db5
 - kind: project-relative
   target: cursor
   value: .cursor/agents/vitepress-docs.md
@@ -1564,13 +2625,22 @@ deployments:
   content_hash: sha256:c9c25d98f4b05a02edd97b4579bbb574c399c5d36e554fc44659f97db09af41d
 - kind: project-relative
   target: cursor
+  value: .cursor/commands/node-api-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:49af77661d45fb1762dd571772af35b7e13152ca231c986c7be7540db628be9d
+- kind: project-relative
+  target: cursor
   value: .cursor/commands/node-unit-tests.md
   runtime: null
   scope: project
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:4407068a470a0f46804d83e5764d63a49e9c9c7ce5d287a895f69a6ea48a2f90
+  content_hash: sha256:93d3ce2851dfd14178ca6fbed03ba281bf2f8776600b6dcc140d35f81c2b3abc
 - kind: project-relative
   target: cursor
   value: .cursor/commands/performance-tests.md
@@ -1645,6 +2715,15 @@ deployments:
   content_hash: sha256:3f710e58cd4c170c352400b8ab4088c9d76278101dcdba8dd145b36631bc10d7
 - kind: project-relative
   target: cursor
+  value: .cursor/rules/node-api-tests.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  active_owner: alten-group/coding-pal/prompts/node-api-tests.prompt.md
+  content_hash: sha256:843fc915e85a42b108c5347382c8f2d9b38b10f66e6424c770e7ede75fedf9fe
+- kind: project-relative
+  target: cursor
   value: .cursor/rules/node-express.mdc
   runtime: null
   scope: project
@@ -1660,7 +2739,7 @@ deployments:
   owners:
   - alten-group/coding-pal/prompts/node-unit-tests.prompt.md
   active_owner: alten-group/coding-pal/prompts/node-unit-tests.prompt.md
-  content_hash: sha256:768c9fc97253b6bbf4fc534f5e1b086bb869734d02a596de1cc076e75ee31de0
+  content_hash: sha256:438416ced8febe38cb443d197d41dc607f70d400653f325d79d531177ed2d379
 - kind: project-relative
   target: cursor
   value: .cursor/rules/postgres-liquibase-tests.mdc
@@ -1696,7 +2775,16 @@ deployments:
   owners:
   - alten-group/coding-pal/instructions/sharp-agent.instructions.md
   active_owner: alten-group/coding-pal/instructions/sharp-agent.instructions.md
-  content_hash: sha256:95cf8602076c7826995a24366bad63c15d566c54187403625d1e95f117272654
+  content_hash: sha256:e8490758b683721288b34ea68763d06065910563bcab5736dd9034270ceefb8e
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/think-plan.mdc
+  runtime: null
+  scope: project
+  owners:
+  - alten-group/coding-pal/instructions/think-plan.instructions.md
+  active_owner: alten-group/coding-pal/instructions/think-plan.instructions.md
+  content_hash: sha256:91e5b13fc4a5c94259b7b28459608fd45faba3426fbf1af1f2e1df57fe1ef067
 - kind: project-relative
   target: cursor
   value: .cursor/rules/vitepress-docs.mdc

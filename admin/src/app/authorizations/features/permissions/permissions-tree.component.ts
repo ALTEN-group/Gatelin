@@ -10,6 +10,7 @@ import {
 import { rxResource, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { isArray } from "@dwtechs/checkard";
 import { AclService } from "@core/acl/acl.service";
 import {
     CONTROL_TYPES,
@@ -376,7 +377,7 @@ export class PermissionsTreeComponent {
       const routeEntry =
         permMap.get(p.routeId) ?? new Map<number, Permission>();
       permMap.set(p.routeId, routeEntry);
-      const opIds = Array.isArray(p.operationId)
+      const opIds = isArray(p.operationId)
         ? p.operationId
         : [Number(p.operationId)];
       for (const opId of opIds) {

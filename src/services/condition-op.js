@@ -1,4 +1,5 @@
 // @ts-check
+import { isString } from "@dwtechs/checkard";
 
 /**
  * SQL operators accepted for `condition.op` in ACL / permission conditions.
@@ -55,7 +56,7 @@ const ALLOWED_OPS = new Set(["=", "!=", "<", ">", "<=", ">="]);
  * @returns {boolean}
  */
 function isAllowed(op) {
-  return typeof op === "string" && ALLOWED_OPS.has(op);
+  return isString(op) && ALLOWED_OPS.has(op);
 }
 
 /**
