@@ -34,7 +34,6 @@ src/
 │   ├── mappers/            ← Data-transformation middlewares (shape/enrich req or res data)
 │   ├── res/                ← Terminal response middlewares (send JSON, 204, cookies, …)
 │   ├── validators/         ← Guards for data validation
-│   ├── history.js          ← GET /:id/history factory (`history.get("resourceName")`)
 │   └── schema.js           ← GET /schema factory (`schema.get(rEnt)`)
 ├── routes/                 ← One express.Router() per resource — wiring only, no logic
 ├── services/               ← In-memory caches and database helpers using @dwtechs/antity-pgsql
@@ -58,7 +57,7 @@ Split assembly from bootstrap.
 - `POST /search` for queries (not `GET` with query params).
 - `POST /archive` for soft-delete (never `DELETE` on the collection).
 - Hard-delete: `router.delete("/", rEnt.delete)` only for CRON tasks.
-- `GET /:id/history` via `history.get("resourceName")` for every audited resource.
+- `GET /:id/history` via `rEnt.getHistory` for every audited resource whose entity reads its own table. Entities backed by a view (roles, routes, resources, ...) must read the base table(s) instead, because `log.history` records those: `rEnt.history({ tables: ["role"] })`, plus junction tables or `field` for parent-id lookups. The logic lives in `@dwtechs/antity-pgsql`.
 - `GET /schema` via `schema.get(rEnt)`.
 - After mutations that must refresh cache, build a local sub-stack in `middlewares/cache/<resource>.js` and wire it on the route.
 

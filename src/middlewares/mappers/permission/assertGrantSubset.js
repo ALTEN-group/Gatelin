@@ -47,7 +47,7 @@ function isGrantSubset(granted, allowed) {
  * POST rows are judged as sent. PUT and DELETE may carry only an `id`, so the
  * stored row is read first and the payload merged over it — otherwise an
  * id-only body would widen `fields` with nothing to compare against. A missing
- * id rejects the whole batch, matching `assertRowsOwnedAndUnlocked`: the write
+ * id rejects the whole batch, matching `assertRowsOwnedOrTemplate`: the write
  * layer batches on `id`, so partial authorization is not representable.
  *
  * Locked system roles (Super-admin, Admin, User, Guest) are a second ceiling:

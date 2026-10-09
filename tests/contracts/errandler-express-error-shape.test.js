@@ -7,8 +7,8 @@
  * error-emitting middleware.
  *
  * Why this test exists:
- *   The 2026-08 audit surfaced 7 call sites (in src/middlewares/history.js
- *   and src/middlewares/cache/consumer.js) that used `{ status, msg }`.
+ *   The 2026-08 audit surfaced 7 call sites (in the former src/middlewares/history.js,
+ *   now SQLEntity.history() in @dwtechs/antity-pgsql, and src/middlewares/cache/consumer.js) that used `{ status, msg }`.
  *   That shape:
  *     - `status`  → works (errandler falls back to it, see below)
  *     - `msg`     → SILENTLY DROPPED — errandler reads `.message` only, so
@@ -167,9 +167,8 @@ describe("@dwtechs/errandler-express error-shape contract", () => {
       //   src/middlewares/validators/check-route.js
       //   src/middlewares/validators/check-acl.js
       //   src/middlewares/http/get-user.js
-      //   src/middlewares/history.js
       //   src/middlewares/cache/consumer.js
-      //   src/middlewares/mappers/preference/assertRowsOwnedAndUnlocked.js
+      //   src/middlewares/mappers/preference/assertRowsOwnedOrTemplate.js
       //   src/controllers/forward.js
       //   src/conf/cors.js
       clientErrorHandler(

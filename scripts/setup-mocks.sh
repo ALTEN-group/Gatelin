@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Seeds mock user passwords by calling Foxnox's POST /foxnox/ endpoint (generate +
+# Seeds mock user passwords by calling Foxnox's POST /foxnox/pwd endpoint (generate +
 # hash server-side), then substitutes the returned plaintexts into
 # swagger/src/gatelin.openapi.json.
 #
@@ -119,7 +119,7 @@ docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   "DELETE FROM pwd WHERE \"userId\" IN (${IDS_CSV})" >/dev/null
 
 BODY_JSON="{\"rows\":[$(printf '{"userId":%s},' "${MOCK_USER_IDS[@]}" | sed 's/,$//')]}"
-echo -e "${YELLOW}🔐 Generating passwords via POST /foxnox/ ...${NC}"
+echo -e "${YELLOW}🔐 Generating passwords via POST /foxnox/pwd ...${NC}"
 RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
   let body = "";
   process.stdin.on("data", (c) => body += c);
@@ -128,7 +128,7 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
     const req = http.request({
       host: "localhost",
       port: process.env.PORT || 3000,
-      path: "/foxnox/",
+      path: "/foxnox/pwd",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,7 +143,7 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
       res.on("data", (c) => out += c);
       res.on("end", () => {
         if (res.statusCode >= 400) {
-          process.stderr.write(`POST /foxnox/ failed (${res.statusCode}): ${out}\n`);
+          process.stderr.write(`POST /foxnox/pwd failed (${res.statusCode}): ${out}\n`);
           process.exit(1);
         }
         process.stdout.write(out);

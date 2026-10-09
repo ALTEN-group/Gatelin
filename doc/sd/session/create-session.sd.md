@@ -127,7 +127,7 @@ sequenceDiagram
     note over msg,pdb: Password Validation Block
     activate msg
     msg--)msg: Attach userId from res.locals.user.id to req.body
-    msg->>msp: post(/foxnox/compare) { userId, pwd }
+    msg->>msp: post(/foxnox/pwd/compare) { userId, pwd }
     deactivate msg
     activate msp
     rect rgb(100, 200, 100, 0.2)

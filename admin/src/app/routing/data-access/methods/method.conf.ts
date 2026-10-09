@@ -3,10 +3,10 @@ import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { disabledCellRenderer } from "@core/utils/renderers/disabled.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
   CONTROL_TYPES,
   hexColor,
-  ID_CONFIG,
   INPUT_TYPES,
   StrictCrudItemOptions,
 } from "@dwtechs/ngx-crud-builder";
@@ -31,7 +31,7 @@ export function buildMethodColumns(
 ): StrictCrudItemOptions<Method>[] {
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "name",
         label: "Name",

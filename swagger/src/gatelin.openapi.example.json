@@ -1154,15 +1154,15 @@
             "description": "Database user who performed the operation",
             "example": "ms_gatelin_user"
           },
-          "consumerId": {
+          "userId": {
             "type": "integer",
             "format": "int32",
-            "description": "ID of the consumer who made the change",
+            "description": "ID of the user who made the change",
             "example": 123
           },
-          "consumerName": {
+          "userName": {
             "type": "string",
-            "description": "Name of the consumer who made the change",
+            "description": "Name of the user who made the change",
             "example": "admin_user"
           },
           "record": {
@@ -1180,8 +1180,8 @@
           "schemaName",
           "tableName",
           "operation",
-          "consumerId",
-          "consumerName",
+          "userId",
+          "userName",
           "record"
         ]
       },

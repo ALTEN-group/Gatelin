@@ -9,9 +9,9 @@ import {
 } from "@core/utils/field-config/on-select-action.config";
 import { toSelectItems } from "@core/utils/optimus/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
     CONTROL_TYPES,
-    ID_CONFIG,
     INPUT_TYPES,
     required,
     StrictCrudItemOptions,
@@ -41,7 +41,7 @@ export const PERMISSION_COLUMNS: (
 
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "serviceId",
         label: "Service",

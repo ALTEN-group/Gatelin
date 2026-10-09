@@ -3,7 +3,7 @@ import { checkUrl } from "../../conf/pwd.js";
 import http from "../../utils/http.js";
 
 /**
- * Validates user credentials against the password service (Foxnox `/foxnox/compare`).
+ * Validates user credentials against the password service (Foxnox `/foxnox/pwd/compare`).
  * On success, stores the public pwd row on `res.locals.pwdRow` for login gating.
  *
  * @param {import('express').Request} req

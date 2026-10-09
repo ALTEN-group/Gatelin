@@ -10,10 +10,10 @@ import {
     toSelectItems,
 } from "@core/utils/optimus/to-select-items";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
     CONTROL_TYPES,
     hexColor,
-    ID_CONFIG,
     INPUT_TYPES,
     maxlength,
     minlength,
@@ -30,7 +30,7 @@ export const buildRoleColumns = (
 ): StrictCrudItemOptions<GatelinRole>[] =>
   withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "appId",
         label: $localize`:@@Roles_Application:Application`,

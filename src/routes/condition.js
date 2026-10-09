@@ -5,13 +5,12 @@ const router = express.Router();
 
 import cEnt from "../entities/condition.js";
 import { reloadRoles } from "../middlewares/cache/reload.js";
-import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 
 // Search conditions
 router.post("/search", cEnt.get);
 // Get version history of a specific condition
-router.get("/:id/history", history.get("condition"));
+router.get("/:id/history", cEnt.history({ tables: ["condition"] }));
 // Add conditions
 router.post("/", cEnt.addArraySubstack, reloadRoles);
 // Update conditions

@@ -5,9 +5,9 @@ import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
   CONTROL_TYPES,
-  ID_CONFIG,
   INPUT_TYPES,
   maxlength,
   min,
@@ -28,7 +28,7 @@ export const CONSUMER_COLUMNS: (
   );
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "userId",
         label: "User ID",

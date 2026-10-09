@@ -52,7 +52,7 @@ Authorization: Bearer <access_token>
 }
 ```
 
-Only rows owned by the caller, unlocked, and belonging to `:resource` can be updated. Locked system templates cannot be overwritten. **Response (200 OK)**
+Only rows belonging to `:resource` that are owned by the caller or are system templates are accepted; any other id rejects the whole batch with `403`. System templates are never overwritten: sending `isActive: true` selects the template for the caller, and a changed `name` or `conf` (for example a column resize) forks a personal copy (`<name> (copy)`) and selects it. **Response (200 OK)**
 
 ## Delete Preference
 

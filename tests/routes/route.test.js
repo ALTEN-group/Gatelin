@@ -11,7 +11,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
 const consumerSvcPath = path.join(__dirname, "../../src/services/consumer.js");
 const routeEntityPath = path.join(__dirname, "../../src/entities/route.js");
-const historyPath = path.join(__dirname, "../../src/middlewares/history.js");
 
 jest.unstable_mockModule("@dwtechs/winstan", () => ({
   log: {
@@ -76,6 +75,11 @@ jest.unstable_mockModule(routeEntityPath, () => ({
     addArraySubstack,
     updateArraySubstack,
     archive,
+    // SQLEntity.history(options) comes from @dwtechs/antity-pgsql
+    history: (options) => {
+      historyCalls.route = options;
+      return historyMiddleware;
+    },
     properties: [
       {
         key: "id",
@@ -108,12 +112,9 @@ const historyMiddleware = jest.fn((_req, res, next) => {
   res.locals.total = 1;
   next();
 });
-const historyGet = jest.fn(() => historyMiddleware);
-const historyGetByField = jest.fn(() => jest.fn((_req, _res, next) => next()));
-jest.unstable_mockModule(historyPath, () => ({
-  __esModule: true,
-  default: { get: historyGet, getByField: historyGetByField },
-}));
+// Plain object on purpose: jest's clearMocks would wipe the arguments of a jest.fn
+// recorded at router module-load time, before the tests run.
+const historyCalls = {};
 
 describe("POST /gatelin/routes/search", () => {
   let app;
@@ -195,6 +196,12 @@ describe("GET /gatelin/routes/:id/history", () => {
     routeSvc.getOne.mockReset().mockReturnValue(mockRoute);
     consumerSvc.getOne.mockReset();
     historyMiddleware.mockClear();
+  });
+
+  it("reads the history of the base tables (the entity reads the routes view; log.history records the tables)", () => {
+    expect(historyCalls.route).toEqual({
+      tables: ["route", "route_operation", "route_method"],
+    });
   });
 
   it("rejects a request with no Authorization header", async () => {

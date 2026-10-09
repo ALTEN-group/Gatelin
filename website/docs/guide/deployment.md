@@ -122,7 +122,7 @@ services:
         condition: service_completed_successfully
     environment:
       TZ: Europe/Paris
-      PWD_CHECK_URL: http://my-project-foxnox-local:3000/foxnox/compare
+      PWD_CHECK_URL: http://my-project-foxnox-local:3000/foxnox/pwd/compare
       # Only needed when the credential check reports lockout, password expiry or 2FA
       PWD_CHALLENGES_URL: http://my-project-foxnox-local:3000/foxnox/challenges
       PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/devices/verify

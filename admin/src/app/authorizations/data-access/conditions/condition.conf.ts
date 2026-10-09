@@ -8,10 +8,10 @@ import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildIdNameAction } from "@core/utils/field-config/on-select-action.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
     CONTROL_TYPES,
     hexColor,
-    ID_CONFIG,
     INPUT_TYPES,
     maxlength,
     minlength,
@@ -38,7 +38,7 @@ export const CONDITION_COLUMNS: (
   const sanitizer = inject(DomSanitizer);
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "name",
         label: "Name",

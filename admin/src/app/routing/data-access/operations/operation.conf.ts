@@ -5,10 +5,10 @@ import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
 import { buildColorCellRenderer } from "@core/utils/renderers/color.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
   CONTROL_TYPES,
   hexColor,
-  ID_CONFIG,
   INPUT_TYPES,
   maxlength,
   minlength,
@@ -23,7 +23,7 @@ export function buildOperationColumns(
 ): StrictCrudItemOptions<Operation>[] {
   return withAclConditions<Operation>(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "name",
         label: "Name",

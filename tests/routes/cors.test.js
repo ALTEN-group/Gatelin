@@ -16,7 +16,6 @@ const cacheCorsPath = path.join(
   __dirname,
   "../../src/middlewares/cache/cors.js",
 );
-const historyPath = path.join(__dirname, "../../src/middlewares/history.js");
 
 jest.unstable_mockModule("@dwtechs/winstan", () => ({
   log: {
@@ -82,6 +81,8 @@ jest.unstable_mockModule(corsEntityPath, () => ({
     addArraySubstack,
     updateArraySubstack,
     archive,
+    // SQLEntity.getHistory comes from @dwtechs/antity-pgsql
+    getHistory: (req, res, next) => historyMiddleware(req, res, next),
     properties: [
       {
         key: "id",
@@ -147,12 +148,6 @@ const historyMiddleware = jest.fn((_req, res, next) => {
   res.locals.total = 1;
   next();
 });
-const historyGet = jest.fn(() => historyMiddleware);
-const historyGetByField = jest.fn(() => jest.fn((_req, _res, next) => next()));
-jest.unstable_mockModule(historyPath, () => ({
-  __esModule: true,
-  default: { get: historyGet, getByField: historyGetByField },
-}));
 
 describe("/gatelin/cors", () => {
   let app;

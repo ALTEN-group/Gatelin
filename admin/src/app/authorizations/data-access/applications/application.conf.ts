@@ -3,9 +3,9 @@ import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils
 import { buildArchivedConfig } from "@core/utils/field-config/archived.config";
 import { buildAuditConfig } from "@core/utils/field-config/audit.config";
 import { CORE_CONFIG } from "@core/utils/field-config/core.config";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
   CONTROL_TYPES,
-  ID_CONFIG,
   INPUT_TYPES,
   maxlength,
   minlength,
@@ -19,7 +19,7 @@ export function buildApplicationColumns(
 ): StrictCrudItemOptions<GatelinApplication>[] {
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       CORE_CONFIG,
       {
         key: "name",

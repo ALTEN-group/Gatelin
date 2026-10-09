@@ -17,7 +17,6 @@ const routeSvcPath = path.join(__dirname, "../../src/services/route.js");
 const consumerSvcPath = path.join(__dirname, "../../src/services/consumer.js");
 const roleSvcPath = path.join(__dirname, "../../src/services/role.js");
 const scopeSvcPath = path.join(__dirname, "../../src/services/scope.js");
-const historyPath = path.join(__dirname, "../../src/middlewares/history.js");
 
 // { mount segment used in app.js, entity file name under src/entities/ }
 const RESOURCES = [
@@ -95,6 +94,11 @@ const entityAdds = {};
 const entityUpdates = {};
 const entityArchives = {};
 const entityDeletes = {};
+// history middleware per entity, and the options each router passed to entity.history(...).
+// Plain object on purpose: jest's clearMocks would wipe the arguments of a jest.fn
+// recorded at router module-load time, before the tests run.
+const historyMiddlewares = {};
+const historyCalls = {};
 for (const { entity } of RESOURCES) {
   const get = jest.fn((_req, res, next) => {
     res.locals.rows = [{ id: 1, entity }];
@@ -121,6 +125,15 @@ for (const { entity } of RESOURCES) {
     res.locals.total = res.locals.rows.length;
     next();
   });
+  // SQLEntity.getHistory / history(options) come from @dwtechs/antity-pgsql
+  const getHistory = jest.fn((_req, res, next) => {
+    res.locals.rows = [
+      { id: 1, operation: "UPDATE", record: { id: 1, entity } },
+    ];
+    res.locals.total = 1;
+    next();
+  });
+  historyMiddlewares[entity] = getHistory;
   entityGets[entity] = get;
   entityAdds[entity] = addArraySubstack;
   entityUpdates[entity] = updateArraySubstack;
@@ -136,6 +149,11 @@ for (const { entity } of RESOURCES) {
         updateArraySubstack,
         archive,
         delete: del,
+        getHistory,
+        history: (options) => {
+          historyCalls[entity] = options;
+          return getHistory;
+        },
         properties: [
           {
             key: entity,
@@ -162,32 +180,6 @@ for (const { entity } of RESOURCES) {
     }),
   );
 }
-
-// history.get(tableName) is called at router module-load time, so the middleware must be created eagerly per call.
-const historyMiddlewares = {};
-const historyGet = jest.fn((tableName) => {
-  const mw = jest.fn((_req, res, next) => {
-    res.locals.rows = [
-      { id: 1, operation: "UPDATE", record: { id: 1, entity: tableName } },
-    ];
-    res.locals.total = 1;
-    next();
-  });
-  historyMiddlewares[tableName] = mw;
-  return mw;
-});
-const permissionHistoryMiddleware = jest.fn((_req, res, next) => {
-  res.locals.rows = [
-    { id: 1, operation: "UPDATE", record: { id: 1, entity: "permission" } },
-  ];
-  res.locals.total = 1;
-  next();
-});
-const historyGetByField = jest.fn(() => permissionHistoryMiddleware);
-jest.unstable_mockModule(historyPath, () => ({
-  __esModule: true,
-  default: { get: historyGet, getByField: historyGetByField },
-}));
 
 describe.each(RESOURCES)("POST /gatelin/$name/search", ({ name, entity }) => {
   let app;
@@ -460,7 +452,7 @@ describe.each(RESOURCES)("GET /gatelin/$name/schema", ({ name, entity }) => {
   });
 });
 
-// permission.js has its own history shape: GET /history/route/:routeId (history.getByField), not /:id/history.
+// permission.js has its own history shape: GET /history/route/:routeId (permission history matched on routeId), not /:id/history.
 describe("GET /gatelin/permissions/history/route/:routeId", () => {
   let app;
   let routeSvc;
@@ -479,7 +471,7 @@ describe("GET /gatelin/permissions/history/route/:routeId", () => {
       protected: false,
     });
     consumerSvc.getOne.mockReset();
-    permissionHistoryMiddleware.mockClear();
+    historyMiddlewares.permission.mockClear();
   });
 
   it("rejects an unauthenticated request", async () => {
@@ -488,7 +480,7 @@ describe("GET /gatelin/permissions/history/route/:routeId", () => {
     );
 
     expect(res.status).toBe(401);
-    expect(permissionHistoryMiddleware).not.toHaveBeenCalled();
+    expect(historyMiddlewares.permission).not.toHaveBeenCalled();
   });
 
   it("returns grouped history rows once authenticated", async () => {
@@ -500,7 +492,7 @@ describe("GET /gatelin/permissions/history/route/:routeId", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.rows[0].record.entity).toBe("permission");
-    expect(permissionHistoryMiddleware).toHaveBeenCalledTimes(1);
+    expect(historyMiddlewares.permission).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -576,5 +568,31 @@ describe("POST /gatelin/permissions/archive", () => {
 
     expect(res.status).toBe(404);
     expect(entityDeletes.permission).not.toHaveBeenCalled();
+  });
+});
+
+// The entities of these resources read a view (roles, resources, ...), but the history
+// trigger sits on the base table, so log.history records e.g. "role" - not "roles".
+// Reading history for the entity's own table would silently return nothing.
+describe("history tables", () => {
+  beforeAll(async () => {
+    await import("../../src/app.js");
+  });
+
+  it.each([
+    ["role", ["role"]],
+    ["resource", ["resource"]],
+    ["scope", ["scope"]],
+    ["field", ["field"]],
+    ["condition", ["condition"]],
+  ])("%s reads the history of its base table", (entity, tables) => {
+    expect(historyCalls[entity]).toEqual({ tables });
+  });
+
+  it("permission reads permission and its condition assignments, matched on routeId", () => {
+    expect(historyCalls.permission).toEqual({
+      tables: ["permission", "permission_condition"],
+      field: "routeId",
+    });
   });
 });

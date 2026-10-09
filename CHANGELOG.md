@@ -1,6 +1,12 @@
 
 # Unreleased
 
+  - Admin: every grid now sorts by `id` ascending by default instead of relying on database row order. Clicking a column header still overrides it
+  - `PUT /preferences/:resource` now accepts system templates (as well as the caller's own rows) instead of answering `403`: selecting a template records the caller's choice and editing one (e.g. resizing a column) forks a personal copy. Another user's rows or another resource's ids are still rejected with `403`
+  - Fixed `PUT`/`POST /preferences/:resource` failing with `Invalid "conf" ... Expected object, but received string`: `conf` is stringified before validation, so it is now typed `json`
+  - Updated `@dwtechs/antity-pgsql` to `0.25.0`
+  - Mark audit dates (`archivedAt`, `createdAt`, `updatedAt`) as `readOnly` so a full-row PUT from the admin no longer sends them to validation
+
 # 0.1.0-alpha.10 (Sep 14th 2026)
 
   - Added history logging functions, triggers, and indexes for audit trail tracking across resources

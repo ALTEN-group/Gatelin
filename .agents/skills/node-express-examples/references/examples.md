@@ -10,11 +10,11 @@ import express from "express";
 const router = express.Router();
 
 import rEnt from "../entities/resource.js";
-import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 
 router.post("/search", rEnt.get);
-router.get("/:id/history", history.get("resource"));
+// resources is a view: history is recorded on the base table
+router.get("/:id/history", rEnt.history({ tables: ["resource"] }));
 router.post("/", rEnt.addArraySubstack);
 router.put("/", rEnt.updateArraySubstack);
 router.post("/archive", rEnt.archive);

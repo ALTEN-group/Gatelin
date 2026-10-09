@@ -4,13 +4,12 @@ import express from "express";
 const router = express.Router();
 
 import rEnt from "../entities/resource.js";
-import history from "../middlewares/history.js";
 import schema from "../middlewares/schema.js";
 
 // Get routes
 router.post("/search", rEnt.get);
 // Get version history of a specific resource
-router.get("/:id/history", history.get("resource"));
+router.get("/:id/history", rEnt.history({ tables: ["resource"] }));
 // add a resource.
 router.post("/", rEnt.addArraySubstack);
 // Update a resource.

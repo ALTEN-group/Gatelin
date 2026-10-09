@@ -74,7 +74,7 @@ export default new SQLEntity("preferences", [
   },
   {
     key: "conf",
-    type: "object",
+    type: "json",
     min: null,
     max: null,
     isTypeChecked: true,

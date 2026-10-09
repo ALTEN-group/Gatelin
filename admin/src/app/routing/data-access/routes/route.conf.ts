@@ -15,9 +15,9 @@ import {
     toSelectItems,
 } from "@core/utils/optimus/to-select-items";
 import { buildColoredChipsCellRenderer } from "@core/utils/renderers/colored-chips.renderer";
+import { ID_SORTED_CONFIG } from "@core/utils/field-config/id-sorted.config";
 import {
     CONTROL_TYPES,
-    ID_CONFIG,
     INPUT_TYPES,
     maxlength,
     minlength,
@@ -37,7 +37,7 @@ export const ROUTE_COLUMNS: (
 ) => StrictCrudItemOptions<Route>[] = ({ data }, sanitizer, acls) => {
   return withAclConditions(
     [
-      ID_CONFIG,
+      ID_SORTED_CONFIG,
       {
         key: "serviceId",
         label: "Service",

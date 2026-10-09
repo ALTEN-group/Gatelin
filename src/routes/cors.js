@@ -9,7 +9,6 @@ import {
   deleteFromCache,
   updateCache,
 } from "../middlewares/cache/cors.js";
-import history from "../middlewares/history.js";
 import { dropInheritedCredentials } from "../middlewares/mappers/cors/dropInheritedCredentials.js";
 import schema from "../middlewares/schema.js";
 
@@ -24,7 +23,7 @@ const del = [cEnt.archive, deleteFromCache];
 // Get routes
 router.post("/search", cEnt.get);
 // Get version history of a specific CORS entry
-router.get("/:id/history", history.get("cors"));
+router.get("/:id/history", cEnt.getHistory);
 // add a CORS entry.
 router.post("/", add);
 // Update a CORS entry.
