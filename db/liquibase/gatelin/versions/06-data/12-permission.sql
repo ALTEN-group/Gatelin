@@ -23,6 +23,7 @@
 --   79=getConditionSchema
 --   80=getBasicUserInfo
 --   81=resumeSignIn (public; no permission row — appended after the original seed)
+--   82=searchAudit
 --
 -- Operation IDs (from 01-base.sql insertion order):
 --   1=read  2=list  3=export  4=update  5=bulk update  6=create
@@ -129,6 +130,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (1, 78,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
 (1, 79,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
 (1, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo     → read
+(1, 82,  2, NULL, NULL, -1, 'system'),  -- searchAudit          → list
 
 -- ============================================================
 -- Admin (2): no locked field on write operations
@@ -215,6 +217,7 @@ INSERT INTO permissions ("roleId", "routeId", "operationId", fields, "conditionI
 (2, 78,  2, NULL, NULL, -1, 'system'),  -- getApplicationSchema → list
 (2, 79,  2, NULL, NULL, -1, 'system'),  -- getConditionSchema   → list
 (2, 80,  1, NULL, NULL, -1, 'system'),  -- getBasicUserInfo
+(2, 82,  2, NULL, NULL, -1, 'system'),  -- searchAudit
 
 -- ============================================================
 -- User (3): read-only, public fields only

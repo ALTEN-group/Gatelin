@@ -185,4 +185,17 @@ export const TABLES: Record<AdminEntity, TableInfo> = {
     excelExportMode: "local",
     additionalReadonlyProperties: { core: true },
   },
+  audit: {
+    label: $localize`:@@TableLabels_AuditLog:Audit log entry`,
+    title: $localize`:@@TableLabels_AuditLogs:Audit log`,
+    entityId: "audit",
+    editionDialogSize: "m",
+    filterLevel: "advanced",
+    isPreferencesModeEnabled: true,
+    shouldSyncIdWithUrl: true,
+    shouldSyncPageWithUrl: true,
+    isExcelExportEnabled: true,
+    excelExportMode: "local",
+    additionalReadonlyProperties: {},
+  },
 } as const;

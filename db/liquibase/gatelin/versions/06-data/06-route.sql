@@ -102,7 +102,9 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   -- users (16)
   (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system'),
   -- Appended after the original seed so existing permission/scope routeIds stay stable.
-  (1,  '/resume',                                  'resumeSignIn',          'Finish login after a mid-login challenge ticket',   false, true, ARRAY[6],    ARRAY[2],  -1, 'system')
+  (1,  '/resume',                                  'resumeSignIn',          'Finish login after a mid-login challenge ticket',   false, true, ARRAY[6],    ARRAY[2],  -1, 'system'),
+  -- audit (17)
+  (17, '/search',                                  'searchAudit',           'Search the audit log',                               true,  true, ARRAY[2],    ARRAY[2],  -1, 'system')
 ON CONFLICT DO NOTHING;
 
 ANALYZE;

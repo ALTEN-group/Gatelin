@@ -196,6 +196,10 @@
     <comment>Preferences view with resource name</comment>
     <sqlFile path="versions/04-view/10-preference.sql" splitStatements="false"/>
   </changeSet>
+  <changeSet id="04-view-11" author="lcluber">
+    <comment>Audit-log read model over log.history (previous snapshot, changed keys)</comment>
+    <sqlFile path="versions/04-view/11-audit.sql" splitStatements="false"/>
+  </changeSet>
 
   <!-- triggers -->
   <changeSet id="05-trig-01" author="lcluber">

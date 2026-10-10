@@ -17,6 +17,7 @@ export const ADMIN_ENTITIES = [
   "permissions",
   "applications",
   "conditions",
+  "audit",
 ] as const;
 
 export type AdminEntity = (typeof ADMIN_ENTITIES)[number];

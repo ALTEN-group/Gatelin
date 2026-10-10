@@ -88,4 +88,7 @@ export const ENTITY_ROUTE_MAPPING: EntityRouteMapping = {
     create: 61, // addConditions
     archive: 62, // archiveConditions
   },
+  audit: {
+    get: 82, // searchAudit
+  },
 };

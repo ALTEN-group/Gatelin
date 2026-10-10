@@ -156,6 +156,8 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
 
 # Challenge personas: 2FA (coco), expired password (guest), locked (ebuser).
 # coco uses base32 secret JBSWY3DPEHPK3PXP (in dev mode, code 123456 is accepted).
+# pwd_expiry_guard_trigger enforces pwdExpiry >= tomorrow UTC, so disable it during
+# the update for mock user 4 to seed an already-expired password.
 echo -e "${YELLOW}🧪 Applying mid-login challenge states...${NC}"
 docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   psql -U "$POSTGRES_ROOT_USER" -d "$FOXNOX_DB_NAME" -v ON_ERROR_STOP=1 -c \
@@ -163,9 +165,11 @@ docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
      \"twoFactorSecret\" = 'JBSWY3DPEHPK3PXP',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 3;
+   ALTER TABLE pwd DISABLE TRIGGER pwd_expiry_guard_trigger;
    UPDATE pwd SET \"pwdExpiry\" = '2020-01-01T00:00:00Z',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 4;
+   ALTER TABLE pwd ENABLE TRIGGER pwd_expiry_guard_trigger;
    UPDATE pwd SET \"failedAttempts\" = 3, \"lockedUntil\" = '2099-01-01T00:00:00Z',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 5;" >/dev/null

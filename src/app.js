@@ -16,6 +16,7 @@ app.use(corsMiddleware);
 app.disable("x-powered-by");
 
 import applicationEnt from "./entities/application.js";
+import auditEnt from "./entities/audit.js";
 import conditionEnt from "./entities/condition.js";
 import corsEnt from "./entities/cors.js";
 import fieldEnt from "./entities/field.js";
@@ -38,6 +39,7 @@ import { send } from "./middlewares/res/send.js";
 import { checkRequest as cr } from "./middlewares/validators/check-request.js"; // Authenticate request and load consumer session
 import checkRoute from "./middlewares/validators/check-route.js";
 import application from "./routes/application.js";
+import audit from "./routes/audit.js";
 import condition from "./routes/condition.js";
 import consumer from "./routes/consumer.js";
 import cors from "./routes/cors.js";
@@ -115,6 +117,7 @@ app.use(
   send(applicationEnt),
 );
 app.use(`${s}conditions`, ...cr, adminLimiter, condition, send(conditionEnt));
+app.use(`${s}audit`, ...cr, adminLimiter, audit, send(auditEnt));
 app.use("/", ...cr, proxyLimiter, proxy);
 
 // Error handling
