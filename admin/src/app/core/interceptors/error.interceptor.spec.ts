@@ -115,6 +115,25 @@ describe("errorInterceptor", () => {
     expect(auth.refreshToken).not.toHaveBeenCalled();
   });
 
+  it("does not refresh nor redirect when login (POST sessions) returns 401", () => {
+    let error: HttpErrorResponse | undefined;
+    http.post("/api/sessions", {}).subscribe({
+      error: (err) => {
+        error = err;
+      },
+    });
+
+    httpMock.expectOne("/api/sessions").flush("nope", {
+      status: 401,
+      statusText: "Unauthorized",
+    });
+
+    expect(error?.status).toBe(401);
+    expect(auth.refreshToken).not.toHaveBeenCalled();
+    expect(auth.redirectToLogin).not.toHaveBeenCalled();
+    expect(snackbar.displayError).not.toHaveBeenCalled();
+  });
+
   it("shows a snackbar for other HTTP errors", () => {
     http.get("/api/broken").subscribe({ error: () => undefined });
 
