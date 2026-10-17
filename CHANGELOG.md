@@ -2,7 +2,6 @@
 # Unreleased
 
   - Added per-service `forwardedCookies` so the proxy forwards only registered cookies on HTTP and WebSocket requests (Gatelin session cookies are never forwarded)
-  - Fixed the user mock startup with `@dwtechs/healix-express` 0.2.0
 
 # 0.1.0-alpha.10 (Sep 14th 2026)
 
