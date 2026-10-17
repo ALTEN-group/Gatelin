@@ -41,7 +41,8 @@ Authorization: Bearer <access_token>
   "rows": [
     {
       "name": "user",
-      "pattern": "my-api"
+      "pattern": "my-api",
+      "forwardedCookies": ["app_csrf"]
     }
   ]
 }
@@ -63,6 +64,14 @@ Authorization: Bearer <access_token>
   ]
 }
 ```
+
+## Forwarded Cookies
+
+By default Gatelin strips the client `Cookie` header before proxying. `forwardedCookies` lists the cookie names a service is allowed to receive; only those cookies are forwarded, the others are dropped.
+
+- Each name must be a valid cookie token (no space, `;` or `=`), at most 64 characters, unique, with at most 20 names per service.
+- Gatelin session cookies (`refreshToken` and `csrfToken`, or the names set by `REFRESH_TOKEN_COOKIE_NAME` and `CSRF_COOKIE_NAME`) are never forwarded, even if listed.
+- An empty or unset list forwards no cookie.
 
 ## Archive Services
 

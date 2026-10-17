@@ -8,6 +8,7 @@ import {
   isEventStream,
   PRIVATE_REQUEST_HEADERS,
   resolveUpstreamUrl,
+  upstreamCookies,
   upstreamTimeoutMs,
 } from "../utils/proxy-headers.js";
 import { agentFor } from "../utils/upstream-agent.js";
@@ -34,6 +35,11 @@ export function forwardToService(req, res, next) {
     extraBlocked: PRIVATE_REQUEST_HEADERS,
   });
   headers.host = target.host;
+  const cookie = upstreamCookies(
+    req.headers.cookie,
+    res.locals.route.forwardedCookies,
+  );
+  if (cookie) headers.cookie = cookie;
   Object.assign(headers, req.additionalHeaders ?? {});
 
   const transport = target.protocol === "https:" ? nodeHttps : nodeHttp;

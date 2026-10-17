@@ -301,6 +301,20 @@
             "description": "URL pattern prefix for routing to this service",
             "example": "/api/users"
           },
+          "forwardedCookies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[!#$%&'*+\\-.^_`|~0-9A-Za-z]+$"
+            },
+            "maxItems": 20,
+            "uniqueItems": true,
+            "description": "Names of the client cookies forwarded to this service. Gatelin session cookies (refresh token and CSRF) are never forwarded.",
+            "example": [
+              "app_csrf"
+            ]
+          },
           "core": {
             "type": "boolean",
             "description": "Whether this is a core system service"

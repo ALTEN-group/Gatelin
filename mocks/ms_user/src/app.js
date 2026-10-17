@@ -1,6 +1,6 @@
 import express from "express";
 import helmet from "helmet";
-import { healix } from "@dwtechs/healix-express";
+import healixRouter from "@dwtechs/healix-express";
 import { listen } from "@dwtechs/servpico-express";
 import { log } from "@dwtechs/winstan";
 import { errorHandler } from "@dwtechs/errandler-express";
@@ -10,8 +10,7 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-// In-memory mock — no dependencies to probe; readiness still exposes /ready.
-app.use("/users/health", healix());
+app.use("/users/health", healixRouter);
 
 // POST /users/search - Get user by filter (used by Gatelin getUserByEmail middleware)
 app.post("/users/users/search/", (req, res) => {

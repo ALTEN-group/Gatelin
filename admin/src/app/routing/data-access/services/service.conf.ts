@@ -1,3 +1,4 @@
+import { Validators } from "@angular/forms";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { Acls } from "@core/acl/acls.model";
 import { withAclConditions } from "@core/utils/field-config/acl-conditions.utils";
@@ -38,6 +39,27 @@ export const buildServiceColumns = (
         type: INPUT_TYPES.TEXT,
         controlOptions: {
           validators: [minlength(1), maxlength(20)],
+        },
+      },
+      {
+        key: "forwardedCookies",
+        label: $localize`:@@Services_ForwardedCookies:Forwarded cookies`,
+        controlType: CONTROL_TYPES.INPUT,
+        type: INPUT_TYPES.TEXT,
+        controlOptions: {
+          isFormArray: true,
+          controlArrayConfig: { maxItems: 20 },
+          helpText: $localize`:@@Services_ForwardedCookies_Help:Cookies forwarded to this service. Gatelin session cookies are never forwarded.`,
+          validators: [
+            required,
+            maxlength(64),
+            Validators.pattern(/^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/),
+          ],
+          width: "100%",
+        },
+        columnOptions: {
+          valueAsChip: true,
+          defaultWidth: "200px",
         },
       },
       CORE_CONFIG,

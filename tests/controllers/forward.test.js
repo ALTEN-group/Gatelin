@@ -18,6 +18,7 @@ describe("forwardToService", () => {
   let upstream;
   let upstreamUrl;
   let proxyApp;
+  let forwardedCookies;
 
   beforeAll(async () => {
     const module = await import("../../src/controllers/forward.js");
@@ -69,7 +70,7 @@ describe("forwardToService", () => {
 
     proxyApp = express();
     proxyApp.use((req, res, next) => {
-      res.locals.route = { serviceName: "user" };
+      res.locals.route = { serviceName: "user", forwardedCookies };
       req.additionalHeaders = {
         "x-consumer-name": "alice",
         "x-consumer-user-id": "1",
@@ -84,6 +85,7 @@ describe("forwardToService", () => {
   afterAll(() => new Promise((resolve) => upstream.close(resolve)));
 
   beforeEach(() => {
+    forwardedCookies = undefined;
     getServiceBaseUrl.mockReset();
     getServiceBaseUrl.mockReturnValue(upstreamUrl);
   });
@@ -114,6 +116,16 @@ describe("forwardToService", () => {
     expect(response.body.headers.cookie).toBeUndefined();
     expect(response.body.headers["x-csrf-token"]).toBeUndefined();
     expect(response.body.headers.connection).toBe("keep-alive");
+  });
+
+  it("forwards only the cookies the service registered", async () => {
+    forwardedCookies = ["foxnox_csrf", "refreshToken"];
+    const response = await request(proxyApp)
+      .get("/echo")
+      .set("cookie", "foxnox_csrf=t; refreshToken=secret; other=1")
+      .expect(201);
+
+    expect(response.body.headers.cookie).toBe("foxnox_csrf=t");
   });
 
   it("passes multipart bodies through byte-for-byte", async () => {
