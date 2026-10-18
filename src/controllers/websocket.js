@@ -11,6 +11,7 @@ import {
   copyHeaders,
   PRIVATE_REQUEST_HEADERS,
   resolveUpstreamUrl,
+  upstreamCookies,
   upstreamTimeoutMs,
 } from "../utils/proxy-headers.js";
 import { runStack } from "../utils/run-stack.js";
@@ -146,6 +147,11 @@ export async function handleUpgrade(req, socket, head) {
   headers.host = target.host;
   headers.connection = "Upgrade";
   headers.upgrade = "websocket";
+  const cookie = upstreamCookies(
+    req.headers.cookie,
+    res.locals.route.forwardedCookies,
+  );
+  if (cookie) headers.cookie = cookie;
   Object.assign(headers, req.additionalHeaders ?? {});
 
   const transport = target.protocol === "https:" ? nodeHttps : nodeHttp;

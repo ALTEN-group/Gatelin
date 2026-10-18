@@ -1,5 +1,6 @@
 // @ts-check
 import { SQLEntity } from "@dwtechs/antity-pgsql";
+import { validateCookieNames } from "../utils/validate-cookie-names.js";
 
 export default new SQLEntity("service", [
   {
@@ -57,6 +58,20 @@ export default new SQLEntity("service", [
     sanitizer: null,
     normalizer: null,
     validator: null,
+  },
+  {
+    key: "forwardedCookies",
+    type: "array",
+    min: null,
+    max: null,
+    isTypeChecked: false,
+    isFilterable: false,
+    requiredFor: [],
+    operations: ["SELECT", "INSERT", "UPDATE"],
+    isPrivate: false,
+    sanitizer: null,
+    normalizer: null,
+    validator: validateCookieNames,
   },
   {
     key: "archived",

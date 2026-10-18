@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "service" (
   description VARCHAR(100) NULL,
   pattern TEXT,
   core BOOLEAN DEFAULT FALSE,
+  "forwardedCookies" TEXT[] DEFAULT '{}',
   archived BOOLEAN DEFAULT FALSE,
   "archivedAt" TIMESTAMP,
   "createdAt" TIMESTAMP DEFAULT NOW(),

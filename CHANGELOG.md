@@ -1,6 +1,8 @@
 
 # Unreleased
 
+  - Added per-service `forwardedCookies` so the proxy forwards only registered cookies on HTTP and WebSocket requests (Gatelin session cookies are never forwarded)
+
 # 0.1.0-alpha.10 (Sep 14th 2026)
 
   - Added history logging functions, triggers, and indexes for audit trail tracking across resources

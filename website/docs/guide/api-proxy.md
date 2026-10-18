@@ -27,7 +27,7 @@ With Traefik stripping the `/api` prefix, Gatelin sees `/users/123` (or whatever
 
 Proxy bodies are not parsed or re-serialized by Gatelin. JSON, form data, multipart uploads, binary payloads, and streaming responses pass through as bytes. Upstream response headers such as `Content-Type`, `Location`, and `Set-Cookie` are preserved.
 
-Hop-by-hop headers are removed in both directions. The client `Authorization`, `Cookie`, and `X-CSRF-Token` request headers are also removed because they authenticate the client to Gatelin, not to an internal service. Protected services receive trusted identity and ACL context through the injected `x-consumer-*` and `x-acl-*` headers.
+Hop-by-hop headers are removed in both directions. The client `Authorization` and `X-CSRF-Token` request headers are also removed because they authenticate the client to Gatelin, not to an internal service. The `Cookie` header is removed too, except for the cookie names registered in the service's [`forwardedCookies`](./api-services.md#forwarded-cookies); Gatelin session cookies are never forwarded. Protected services receive trusted identity and ACL context through the injected `x-consumer-*` and `x-acl-*` headers.
 
 Because proxy bodies remain streams, Gatelin does not rewrite JSON fields or filters for proxied routes. Services must enforce the `x-acl-fields` and `x-acl-conditions` context they receive on reads, writes, history, and schema output. Gatelin's own `/gatelin/*` APIs continue to parse JSON and apply field and condition filtering internally. See [Integrating Gatelin — Enforcing ACL headers](./integration#enforcing-acl-headers-in-a-service) for the required upstream contract.
 
@@ -56,7 +56,7 @@ WebSocket `Upgrade` never enters Express. The HTTP server handles `upgrade` besi
 5. Inject `x-consumer-*` / `x-acl-*` on the handshake only
 6. Pipe sockets after `101 Switching Protocols`
 
-Browser `WebSocket` cannot set `Authorization`. Protected routes may pass the access token as `?access_token=` or `?token=`; Gatelin uses it for the handshake and **strips it** before contacting the upstream. Node and other clients may send `Authorization: Bearer`. Cookies and CSRF headers are not forwarded.
+Browser `WebSocket` cannot set `Authorization`. Protected routes may pass the access token as `?access_token=` or `?token=`; Gatelin uses it for the handshake and **strips it** before contacting the upstream. Node and other clients may send `Authorization: Bearer`. CSRF headers are not forwarded; cookies follow the same [`forwardedCookies`](./api-services.md#forwarded-cookies) rule as HTTP.
 
 After `101`, frames are opaque. There is no per-message ACL.
 

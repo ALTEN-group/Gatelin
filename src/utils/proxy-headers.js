@@ -33,6 +33,31 @@ export function headerValue(value) {
 }
 
 /**
+ * Builds the `Cookie` header a service is entitled to: only the cookies it
+ * registered for, never Gatelin's own session cookies.
+ *
+ * @param {string|string[]|undefined} cookieHeader - Incoming `Cookie` header
+ * @param {string[]|null|undefined} allowed - Cookie names registered on the service
+ * @returns {string|undefined} Filtered header, or undefined when nothing is forwarded
+ */
+export function upstreamCookies(cookieHeader, allowed) {
+  if (!cookieHeader || !allowed?.length) return undefined;
+  const reserved = new Set([
+    process.env.CSRF_COOKIE_NAME || "csrfToken",
+    process.env.REFRESH_TOKEN_COOKIE_NAME || "refreshToken",
+  ]);
+  const names = new Set(allowed.filter((name) => !reserved.has(name)));
+  const kept = headerValue(cookieHeader)
+    .split(";")
+    .map((pair) => pair.trim())
+    .filter((pair) => {
+      const eq = pair.indexOf("=");
+      return eq > 0 && names.has(pair.slice(0, eq));
+    });
+  return kept.length ? kept.join("; ") : undefined;
+}
+
+/**
  * @param {import('node:http').IncomingHttpHeaders} source
  * @param {{ extraBlocked?: Set<string>, keep?: string[] }} [opts]
  * @returns {import('node:http').OutgoingHttpHeaders}

@@ -24,7 +24,8 @@ create or replace view routes AS
   r."updaterName",
   r."createdAt",
   r."creatorId",
-  r."creatorName"
+  r."creatorName",
+  s."forwardedCookies"
   FROM "route" AS r
   LEFT OUTER JOIN "resource" as b ON r."resourceId" = b.id
   LEFT OUTER JOIN "service" as s ON b."serviceId" = s.id
@@ -32,6 +33,6 @@ create or replace view routes AS
   LEFT JOIN operation o ON o.id = ro."operationId"
   LEFT JOIN route_method rm ON rm."routeId" = r.id
   LEFT JOIN method mc ON mc.id = rm."methodId"
-  GROUP BY r.id, b."serviceId", s.name, b.name, s.pattern, r."resourceId"
+  GROUP BY r.id, b."serviceId", s.name, b.name, s.pattern, s."forwardedCookies", r."resourceId"
   ORDER BY r.id ASC
 ;
