@@ -1,6 +1,7 @@
 
 # Unreleased
 
+# 0.1.0-alpha.11 (Oct 18th 2026)
   - Added per-service `forwardedCookies` so the proxy forwards only registered cookies on HTTP and WebSocket requests (Gatelin session cookies are never forwarded)
 
 # 0.1.0-alpha.10 (Sep 14th 2026)
