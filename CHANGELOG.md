@@ -1,9 +1,3 @@
-
-# Unreleased
-
-# 0.1.0-alpha.11 (Oct 18th 2026)
-  - Added per-service `forwardedCookies` so the proxy forwards only registered cookies on HTTP and WebSocket requests (Gatelin session cookies are never forwarded)
-
 # 0.1.0-alpha.10 (Sep 14th 2026)
 
   - Added history logging functions, triggers, and indexes for audit trail tracking across resources
@@ -14,6 +8,7 @@
   - Added configurable rate limiting bypass (`SESSION_RATE_LIMIT_MAX=0` or `disabled`) for load testing
   - Fixed trusted-device check pointing at `/foxnox/devices/verify` instead of `/foxnox/trusted-devices/verify`
   - Updated `scripts/setup-mocks.sh` to provide consumer audit identity on mock seed writes
+  - Added per-service `forwardedCookies` so the proxy forwards only registered cookies on HTTP and WebSocket requests (Gatelin session cookies are never forwarded)
 
 # 0.1.0-alpha.9 (Aug 29th 2026)
 
