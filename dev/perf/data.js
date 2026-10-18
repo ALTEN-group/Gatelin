@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790582290642,
+  "lastUpdate": 1792306208298,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -202,6 +202,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 5.63,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "3dbb484f9b4f686d02c45a3068f715bfd2c0a5fb",
+          "message": "Add per-service cookie forwarding for HTTP and WebSocket proxies (#152)\n\n* fix(proxy): support per-service cookie forwarding\n\n* tech: update changelog\n\n* fix: rollback mock healix fix\n\n* refactor(cookie): move cookie validation to utility function\n\n---------\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>",
+          "timestamp": "2026-10-18T06:30:22Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/3dbb484f9b4f686d02c45a3068f715bfd2c0a5fb"
+        },
+        "date": 1792306206634,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.92,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 155.51,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 7.46,
             "unit": "ms"
           },
           {
