@@ -1,7 +1,6 @@
 # 0.1.0-alpha.11 (Oct 19th 2026)
 
   - Fixed `POST /sessions` rejecting valid passwords shorter than 9 or longer than 20 characters: login now only bounds `pwd` to 1-255 characters and leaves the password policy to the password service
-  - Removed the unused `PWD_*_POLICY` / `GATELIN_PWD_*_LEGACY` environment variables from the compose files and env examples
 
 # 0.1.0-alpha.10 (Sep 14th 2026)
 
