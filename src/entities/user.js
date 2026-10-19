@@ -19,9 +19,9 @@ export default new SQLEntity("user", [
   },
   {
     key: "pwd",
-    type: "password",
-    min: null,
-    max: null,
+    type: "string", // the password service owns the policy; login only bounds the size
+    min: 1,
+    max: 255,
     isTypeChecked: true,
     isFilterable: true,
     requiredFor: ["POST"],
