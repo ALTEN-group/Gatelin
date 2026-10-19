@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792306208298,
+  "lastUpdate": 1792393722912,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -254,6 +254,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 7.46,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "495dac30b9810a9b2a6c15559033ca308071291e",
+          "message": "tech: prepare for 0.1.0-alpha.10 (#154)\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>",
+          "timestamp": "2026-10-18T11:01:05Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/495dac30b9810a9b2a6c15559033ca308071291e"
+        },
+        "date": 1792393721642,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.72,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 222.31,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 6.88,
             "unit": "ms"
           },
           {
