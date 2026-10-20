@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792393722912,
+  "lastUpdate": 1792479221644,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -306,6 +306,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 6.88,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "da0f5111b3dbe32632191163b6ab284443344113",
+          "message": "tech: remove unwanted information from changelog (#156)\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>",
+          "timestamp": "2026-10-19T14:27:21Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/da0f5111b3dbe32632191163b6ab284443344113"
+        },
+        "date": 1792479220340,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.96,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 227.96,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 7.46,
             "unit": "ms"
           },
           {
