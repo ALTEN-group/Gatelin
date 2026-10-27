@@ -1,5 +1,12 @@
-@if (!isRedirecting) {
+<div class="login-page">
 <adm-login-background class="animated-background" />
+@if (greeting(); as greeting) {
+<div class="welcome" role="status" aria-live="polite">
+  <adm-login-frog class="welcome-frog" />
+  <h1 class="welcome-title">{{ greeting }}</h1>
+  <p class="welcome-subtitle" i18n="@@Login_PreparingWorkspace">Préparation de votre espace…</p>
+</div>
+} @else if (!isResuming) {
 <div class="login-panel">
 <p-card class="login-card">
   <ng-template pTemplate="header">
@@ -116,4 +123,5 @@
 </p-card>
 </div>
 }
+</div>
 
