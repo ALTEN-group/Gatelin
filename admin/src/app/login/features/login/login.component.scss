@@ -1,3 +1,11 @@
+// Covers the app shell (navbar z-index 3, sidenav 4), which renders as soon as
+// the session is authenticated, while the post-login navigation completes.
+.login-page {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+}
+
 .animated-background {
   width: 100%;
   height: calc(100vh - 3px);
@@ -5,6 +13,73 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.welcome {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: welcome-in 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  .welcome-frog {
+    display: block;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgb(0 0 0 / 25%);
+
+    canvas {
+      border-radius: 50%;
+    }
+  }
+
+  .welcome-title {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--p-text-color);
+  }
+
+  .welcome-subtitle {
+    margin: 0;
+    color: var(--p-text-muted-color);
+    animation: welcome-subtitle-in 600ms 300ms ease-out both;
+  }
+}
+
+@keyframes welcome-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes welcome-subtitle-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome,
+  .welcome .welcome-subtitle {
+    animation: none;
+  }
 }
 
 .login-panel {
