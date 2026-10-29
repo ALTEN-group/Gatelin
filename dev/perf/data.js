@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792479221644,
+  "lastUpdate": 1793260180510,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -358,6 +358,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 7.46,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "38eb6368f4248b8d8a206613fc629952efbeb70f",
+          "message": "feat(admin/login): greet the user after login (#158)\n\nReplace the \"Bienvenue\" snackbar with a full-screen \"Bonjour/Bonsoir, <firstName>\"\nscreen shown while the post-login navigation completes (at least 1s, via a\ncanDeactivate guard). The login page now covers the app shell, which used to\nrender over it as soon as the session was authenticated.\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+          "timestamp": "2026-10-28T13:51:38Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/38eb6368f4248b8d8a206613fc629952efbeb70f"
+        },
+        "date": 1793260179809,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 5.25,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 226.6,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 8.01,
             "unit": "ms"
           },
           {
