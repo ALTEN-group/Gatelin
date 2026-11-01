@@ -2,6 +2,15 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.1.
 
+## Dependency compatibility
+
+`@openng/optimus-ui@2.0.2` requires Angular packages, including CDK, at
+`^22.1.4`. Angular dependencies and tooling are pinned to `22.1.4` to satisfy
+these peer dependencies alongside `@dwtechs/ngx-crud-builder@0.3.5`.
+When updating these libraries, check their peer dependencies and update
+`package.json` and `package-lock.json` together rather than bypassing npm
+validation with `--force` or `--legacy-peer-deps`.
+
 ## Development server
 
 To start a local development server, run:
