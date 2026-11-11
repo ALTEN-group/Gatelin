@@ -54,7 +54,7 @@ export const CONFIG: AppConfig = {
   storageKeys: AppStorageKey,
   sidenavItems: SIDENAV,
   gatelinApi: environment.gatelinApi,
-  apiUsers: environment.apiUsers,
+  apiUsers: runtime.apiUsers?.trim() || environment.apiUsers,
   passwordRecoveryUrl,
   env: environment,
 };

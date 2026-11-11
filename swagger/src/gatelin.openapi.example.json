@@ -153,7 +153,7 @@
             "type": "string",
             "maxLength": 10,
             "description": "Name of the service",
-            "example": "ms-user"
+            "example": "users"
           },
           "resourceId": {
             "type": "integer",
@@ -200,7 +200,7 @@
             "type": "string",
             "maxLength": 100,
             "description": "Resolved upstream service URL",
-            "example": "http://ms-user:3000/api/users"
+            "example": "http://users:3000/api/users"
           },
           "name": {
             "type": "string",
@@ -293,7 +293,7 @@
             "type": "string",
             "maxLength": 10,
             "description": "Service name identifier",
-            "example": "ms-user"
+            "example": "users"
           },
           "pattern": {
             "type": "string",
@@ -429,7 +429,7 @@
             "type": "string",
             "maxLength": 20,
             "description": "Name of the service",
-            "example": "ms-user"
+            "example": "users"
           },
           "name": {
             "type": "string",
@@ -641,7 +641,7 @@
           "serviceName": {
             "type": "string",
             "description": "Name of the service",
-            "example": "ms-user"
+            "example": "users"
           },
           "resourceId": {
             "type": "integer",
@@ -813,7 +813,7 @@
           "serviceName": {
             "type": "string",
             "description": "Name of the service",
-            "example": "ms-user"
+            "example": "users"
           },
           "name": {
             "type": "string",

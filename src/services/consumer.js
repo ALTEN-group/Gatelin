@@ -5,7 +5,7 @@ import { makeDeleteArchived } from "../utils/delete-archived.js";
 /**
  * @typedef {Object} ConsumerCache
  * @property {number} id - Consumer ID
- * @property {number} userId - User ID from ms_user service
+ * @property {number} userId - User ID from user service
  * @property {string} accessToken - JWT access token
  * @property {string} refreshToken - JWT refresh token
  * @property {string} nickname - Consumer nickname

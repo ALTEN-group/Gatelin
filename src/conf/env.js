@@ -29,7 +29,7 @@ export function collectEnvErrors() {
 
   for (const [name, usage] of REQUIRED) {
     // Trimmed first: isString(" ", "!0") is true, but a whitespace-only value
-    // would build URLs like "http://   -ms_user-   :3000".
+    // would build URLs like "http://   -users-   :3000".
     const value = process.env[name]?.trim();
     if (!isString(value, "!0")) errors.push(`${name} is missing — ${usage}`);
     else if (name.endsWith("_URL") && !URL.canParse(value))

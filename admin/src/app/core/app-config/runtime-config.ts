@@ -8,6 +8,7 @@ import { isObject } from "@dwtechs/checkard";
 export interface GatelinAdminRuntime {
   passwordRecoveryUrl?: string;
   ssoTokenKey?: string;
+  apiUsers?: string;
 }
 
 declare global {

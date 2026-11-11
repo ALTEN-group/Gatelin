@@ -29,5 +29,9 @@
     <comment>Dev/e2e CORS Origins for Traefik-published admin (localhost:8100, traefik)</comment>
     <sqlFile path="07-insert-dev-e2e-cors-origins.sql"/>
   </changeSet>
+  <changeSet id="data-08" author="lcluber">
+    <comment>Dev/e2e user service (Megadex /me) registration</comment>
+    <sqlFile path="08-insert-dev-e2e-user-service.sql"/>
+  </changeSet>
 
 </databaseChangeLog>

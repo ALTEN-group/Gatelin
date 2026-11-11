@@ -125,11 +125,11 @@ erDiagram
 ```mermaid
 erDiagram
   role }o--o{ consumer : "roles int[] (denormalized)"
-  consumer }o--|| user : "(external / ms_user)"
-  preference }o--|| user : "(external / ms_user)"
+  consumer }o--|| user : "(external / user service)"
+  preference }o--|| user : "(external / user service)"
   resource ||--o{ preference : "stores template/personal config"
   preference ||--o{ preference_selection : "current selection"
-  preference_selection }o--|| user : "(external / ms_user)"
+  preference_selection }o--|| user : "(external / user service)"
   resource ||--o{ preference_selection : "selected on"
 
   cors {
@@ -141,7 +141,7 @@ erDiagram
 
   consumer {
     int id PK
-    int userId FK "ms_user"
+    int userId FK "user service"
     varchar nickname
     varchar accessToken UK
     varchar refreshToken UK
@@ -150,14 +150,14 @@ erDiagram
 
   preference {
     int id PK
-    int userId FK "ms_user; null = template row"
+    int userId FK "user service; null = template row"
     int resourceId FK "-> resource.id"
     varchar name UK "resourceId + name; template rows use userId IS NULL"
     jsonb conf
   }
 
   preference_selection {
-    int userId PK, FK "ms_user"
+    int userId PK, FK "user service"
     int resourceId PK, FK "-> resource.id"
     int preferenceId FK "-> preference.id"
   }

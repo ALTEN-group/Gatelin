@@ -22,7 +22,7 @@ function rejectIfInactive(active, next) {
 }
 
 /**
- * Fetches user details from ms_user service by email
+ * Fetches user details from user service by email
  *
  * @param {Object} req - Express request
  * @param {Object} res - Express response
@@ -46,7 +46,7 @@ export function getUserByEmail(req, res, next) {
       if (rejectIfInactive(active, next)) return;
       log.debug(
         () =>
-          `ms_user response: id=${id}, nickname=${nickname}, email=${email}, roles=${roles}, active=${active}`,
+          `user service response: id=${id}, nickname=${nickname}, email=${email}, roles=${roles}, active=${active}`,
       );
       req.body.rows = [
         // Attach user data to request body for db update in downstream middleware
@@ -63,7 +63,7 @@ export function getUserByEmail(req, res, next) {
 }
 
 /**
- * Fetches user details from ms_user service by id
+ * Fetches user details from user service by id
  *
  * @param {Object} req - Express request
  * @param {Object} _res - Express response (unused)
@@ -84,7 +84,7 @@ export function getUserById(req, _res, next) {
       if (!isArray(roles, "!0"))
         return next({ statusCode: 422, message: "Invalid user roles" });
       if (rejectIfInactive(active, next)) return;
-      log.debug(() => `ms_user response: nickname=${nickname}, roles=${roles}`);
+      log.debug(() => `user service response: nickname=${nickname}, roles=${roles}`);
       // Attach user data to request body for db update in downstream middleware
       Object.assign(req.body.rows[0], { nickname, roles });
       next();

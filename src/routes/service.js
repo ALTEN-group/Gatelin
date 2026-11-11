@@ -18,6 +18,8 @@ router.post("/", sEnt.addArraySubstack, reloadRoutes);
 router.put("/", sEnt.updateArraySubstack, reloadRoutes);
 // Bulk archive
 router.post("/archive", sEnt.archive, reloadRoutes);
+// Bulk restore
+router.post("/restore", sEnt.restore, reloadRoutes);
 // Get entity schema
 router.get("/schema", schema.get(sEnt));
 

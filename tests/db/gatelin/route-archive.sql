@@ -40,6 +40,22 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'archiving through the routes view did not set archived and archivedAt';
   END IF;
+
+  UPDATE routes
+  SET archived = false,
+      "updaterId" = 9003,
+      "updaterName" = 'db-test-restore'
+  WHERE id = route_id;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM route
+    WHERE id = route_id
+      AND archived = false
+      AND "archivedAt" IS NULL
+  ) THEN
+    RAISE EXCEPTION 'restoring through the routes view did not clear archived and archivedAt';
+  END IF;
 END;
 $$;
 

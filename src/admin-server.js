@@ -11,6 +11,7 @@ const {
   ADMIN_BASE_PATH,
   ADMIN_PASSWORD_RECOVERY_URL,
   ADMIN_SSO_TOKEN_KEY,
+  ADMIN_API_USERS,
   PORT,
 } = process.env;
 // Path relative to src/ where the Angular dist is copied in the Docker image
@@ -23,9 +24,11 @@ const BASE_PATH = (ADMIN_BASE_PATH || "/admin").replace(/\/+$/, "");
 function runtimeConfigScript() {
   const url = (ADMIN_PASSWORD_RECOVERY_URL || "").trim();
   const ssoTokenKey = (ADMIN_SSO_TOKEN_KEY || "").trim();
+  const apiUsers = (ADMIN_API_USERS || "").trim();
   const payload = {
     ...(url ? { passwordRecoveryUrl: url } : {}),
     ...(ssoTokenKey ? { ssoTokenKey } : {}),
+    ...(apiUsers ? { apiUsers } : {}),
   };
   return `<script id="gatelin-admin-runtime">window.__GATELIN_ADMIN__=${JSON.stringify(payload)};</script>`;
 }

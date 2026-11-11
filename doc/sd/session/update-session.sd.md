@@ -71,7 +71,7 @@ sequenceDiagram
   end
   activate msg
 
-  msg--)msg: Get user by id from ms_user
+  msg--)msg: Get user by id from user service
   msg--)msg: Fetch updated user data: { nickname, roles }
   msg--)msg: Update req.body.rows[0] with nickname and roles
 
