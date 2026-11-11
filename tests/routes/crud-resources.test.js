@@ -94,6 +94,7 @@ const entityGets = {};
 const entityAdds = {};
 const entityUpdates = {};
 const entityArchives = {};
+const entityRestores = {};
 const entityDeletes = {};
 for (const { entity } of RESOURCES) {
   const get = jest.fn((_req, res, next) => {
@@ -116,6 +117,11 @@ for (const { entity } of RESOURCES) {
     res.locals.total = res.locals.rows.length;
     next();
   });
+  const restore = jest.fn((req, res, next) => {
+    res.locals.rows = req.body.rows ?? [];
+    res.locals.total = res.locals.rows.length;
+    next();
+  });
   const del = jest.fn((req, res, next) => {
     res.locals.rows = req.body.rows ?? [];
     res.locals.total = res.locals.rows.length;
@@ -125,6 +131,7 @@ for (const { entity } of RESOURCES) {
   entityAdds[entity] = addArraySubstack;
   entityUpdates[entity] = updateArraySubstack;
   entityArchives[entity] = archive;
+  entityRestores[entity] = restore;
   entityDeletes[entity] = del;
   jest.unstable_mockModule(
     path.join(__dirname, `../../src/entities/${entity}.js`),
@@ -135,6 +142,7 @@ for (const { entity } of RESOURCES) {
         addArraySubstack,
         updateArraySubstack,
         archive,
+        restore,
         delete: del,
         properties: [
           {
@@ -405,6 +413,55 @@ describe.each(STANDARD_CRUD)(
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ rows, total: 1 });
       expect(entityArchives[entity]).toHaveBeenCalledTimes(1);
+    });
+  },
+);
+
+describe.each(STANDARD_CRUD)(
+  "POST /gatelin/$name/restore",
+  ({ name, entity }) => {
+    let app;
+    let routeSvc;
+    let consumerSvc;
+
+    beforeAll(async () => {
+      ({ default: routeSvc } = await import("../../src/services/route.js"));
+      ({ default: consumerSvc } = await import(
+        "../../src/services/consumer.js"
+      ));
+      ({ default: app } = await import("../../src/app.js"));
+    });
+
+    beforeEach(() => {
+      routeSvc.getOne.mockReset().mockReturnValue({
+        id: 1,
+        url: `/gatelin/${name}/restore`,
+        protected: false,
+      });
+      consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
+      entityRestores[entity].mockClear();
+    });
+
+    it("rejects an unauthenticated request", async () => {
+      const res = await supertest(app)
+        .post(`/gatelin/${name}/restore`)
+        .send({ rows: [{ id: 1 }] });
+
+      expect(res.status).toBe(401);
+      expect(entityRestores[entity]).not.toHaveBeenCalled();
+    });
+
+    it("routes an authenticated request to its own entity", async () => {
+      const rows = [{ id: 1 }];
+
+      const res = await supertest(app)
+        .post(`/gatelin/${name}/restore`)
+        .set("Authorization", "Bearer valid-token")
+        .send({ rows });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ rows, total: 1 });
+      expect(entityRestores[entity]).toHaveBeenCalledTimes(1);
     });
   },
 );

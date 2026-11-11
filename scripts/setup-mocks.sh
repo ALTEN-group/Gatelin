@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Seeds mock user passwords by calling Foxnox's POST /foxnox/ endpoint (generate +
+# Seeds mock user passwords by calling Foxnox's POST /foxnox/pwd endpoint (generate +
 # hash server-side), then substitutes the returned plaintexts into
 # swagger/src/gatelin.openapi.json.
 #
@@ -25,7 +25,7 @@ ENV_FILE="docker/conf/.env.dev"
 SWAGGER_EXAMPLE="swagger/src/gatelin.openapi.example.json"
 SWAGGER_FILE="swagger/src/gatelin.openapi.json"
 
-# userId → swagger placeholder. Matches mocks/ms_user personas.
+# userId → swagger placeholder. Matches Megadex dev user personas.
 MOCK_PLACEHOLDERS=(
   "1:__PWD_GATELIN_ADMIN__"
   "2:__PWD_GATELIN_USER__"
@@ -74,30 +74,54 @@ set +a
 rm -f "$ENV_TMP"
 
 : "${FOXNOX_HOST:?FOXNOX_HOST missing from $ENV_FILE}"
+: "${MEGADEX_HOST:?MEGADEX_HOST missing from $ENV_FILE}"
 : "${POSTGRES_HOST:?POSTGRES_HOST missing from $ENV_FILE}"
 : "${POSTGRES_ROOT_USER:?POSTGRES_ROOT_USER missing from $ENV_FILE}"
 : "${POSTGRES_ROOT_PWD:?POSTGRES_ROOT_PWD missing from $ENV_FILE}"
 : "${FOXNOX_DB_NAME:?FOXNOX_DB_NAME missing from $ENV_FILE}"
+: "${MEGADEX_DB_NAME:?MEGADEX_DB_NAME missing from $ENV_FILE}"
 : "${DEFAULT_PORT:?DEFAULT_PORT missing from $ENV_FILE}"
 : "${SWAGGER_HOST:?SWAGGER_HOST missing from $ENV_FILE}"
 
-echo -e "${YELLOW}⏳ Waiting for ${FOXNOX_HOST} to be healthy...${NC}"
-for i in {1..30}; do
-  status=$(docker inspect -f '{{.State.Health.Status}}' "$FOXNOX_HOST" 2>/dev/null || echo "missing")
-  if [[ "$status" == "healthy" ]]; then
-    echo -e "${GREEN}✓${NC} ${FOXNOX_HOST} is healthy"
-    break
-  fi
-  if [[ "$status" == "missing" ]]; then
-    echo -e "${RED}Error:${NC} container ${FOXNOX_HOST} not found. Run scripts/start-dev.sh first." >&2
-    exit 1
-  fi
-  sleep 2
-  if [[ $i -eq 30 ]]; then
-    echo -e "${RED}Error:${NC} timed out waiting for ${FOXNOX_HOST} to become healthy (last status: $status)." >&2
-    exit 1
-  fi
+for host in "$FOXNOX_HOST" "$MEGADEX_HOST"; do
+  echo -e "${YELLOW}⏳ Waiting for ${host} to be healthy...${NC}"
+  for i in {1..30}; do
+    status=$(docker inspect -f '{{.State.Health.Status}}' "$host" 2>/dev/null || echo "missing")
+    if [[ "$status" == "healthy" ]]; then
+      echo -e "${GREEN}✓${NC} ${host} is healthy"
+      break
+    fi
+    if [[ "$status" == "missing" ]]; then
+      echo -e "${RED}Error:${NC} container ${host} not found. Run scripts/start-dev.sh first." >&2
+      exit 1
+    fi
+    sleep 2
+    if [[ $i -eq 30 ]]; then
+      echo -e "${RED}Error:${NC} timed out waiting for ${host} to become healthy (last status: $status)." >&2
+      exit 1
+    fi
+  done
 done
+
+echo -e "${YELLOW}🌱 Ensuring mock user personas exist in ${MEGADEX_DB_NAME}...${NC}"
+docker exec -i -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
+  psql -U "$POSTGRES_ROOT_USER" -d "$MEGADEX_DB_NAME" -v ON_ERROR_STOP=1 >/dev/null <<'SQL'
+INSERT INTO "user" (id, gender, civility, "firstName", "middleName", "lastName", nickname, email, address, "zipCode", city, country, phone, active, language, "creatorId", "creatorName") VALUES
+  (1, 'M', 'Mr.', 'Admin',     NULL,       'User',    'Admin',        'admin@example.com',        '123 Admin Street',    '75001', 'Paris', 'FRA', '+33123456789', TRUE, 'en', -1, 'system'),
+  (2, 'F', 'Ms.', 'Standard',  NULL,       'User',    'StandardUser', 'standard@example.com',     '456 Standard Avenue', '75002', 'Paris', 'FRA', '+33987654321', TRUE, 'en', -1, 'system'),
+  (3, 'M', 'Mr.', 'Coco',      'Cocouser', 'Lastico', 'CLastico',     'coco@example.com',         '789 Club Boulevard',  '75003', 'Paris', 'FRA', '+33112233445', TRUE, 'en', -1, 'system'),
+  (4, 'M', 'Mr.', 'Guest',     NULL,       'User',    'GuestUser',    'guest@example.com',        '1 Guest Lane',        '75004', 'Paris', 'FRA', '+33600000004', TRUE, 'en', -1, 'system'),
+  (5, 'F', 'Ms.', 'eBoutique', NULL,       'User',    'EbUser',       'ebuser@example.com',       '2 Shop Street',       '75005', 'Paris', 'FRA', '+33600000005', TRUE, 'en', -1, 'system'),
+  (6, 'M', 'Mr.', 'eBoutique', NULL,       'Super',   'EbSuperAdmin', 'ebsuperadmin@example.com', '3 Shop Street',       '75006', 'Paris', 'FRA', '+33600000006', TRUE, 'en', -1, 'system'),
+  (7, 'F', 'Ms.', 'eBoutique', NULL,       'Admin',   'EbAdmin',      'ebadmin@example.com',      '4 Shop Street',       '75007', 'Paris', 'FRA', '+33600000007', TRUE, 'en', -1, 'system')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO user_role ("userId", "roleId") VALUES
+  (1, 2), (2, 3), (3, 1), (4, 4), (5, 5), (6, 1), (7, 2)
+ON CONFLICT DO NOTHING;
+
+SELECT setval('user_id_seq', GREATEST((SELECT COALESCE(MAX(id), 1) FROM "user"), 1));
+SQL
 
 IDS_CSV=$(IFS=,; echo "${MOCK_USER_IDS[*]}")
 
@@ -119,7 +143,7 @@ docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   "DELETE FROM pwd WHERE \"userId\" IN (${IDS_CSV})" >/dev/null
 
 BODY_JSON="{\"rows\":[$(printf '{"userId":%s},' "${MOCK_USER_IDS[@]}" | sed 's/,$//')]}"
-echo -e "${YELLOW}🔐 Generating passwords via POST /foxnox/ ...${NC}"
+echo -e "${YELLOW}🔐 Generating passwords via POST /foxnox/pwd ...${NC}"
 RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
   let body = "";
   process.stdin.on("data", (c) => body += c);
@@ -128,7 +152,7 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
     const req = http.request({
       host: "localhost",
       port: process.env.PORT || 3000,
-      path: "/foxnox/",
+      path: "/foxnox/pwd",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,7 +167,7 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
       res.on("data", (c) => out += c);
       res.on("end", () => {
         if (res.statusCode >= 400) {
-          process.stderr.write(`POST /foxnox/ failed (${res.statusCode}): ${out}\n`);
+          process.stderr.write(`POST /foxnox/pwd failed (${res.statusCode}): ${out}\n`);
           process.exit(1);
         }
         process.stdout.write(out);
@@ -156,6 +180,8 @@ RESPONSE=$(docker exec -i "$FOXNOX_HOST" node -e '
 
 # Challenge personas: 2FA (coco), expired password (guest), locked (ebuser).
 # coco uses base32 secret JBSWY3DPEHPK3PXP (in dev mode, code 123456 is accepted).
+# pwd_expiry_guard_trigger enforces pwdExpiry >= tomorrow UTC, so disable it during
+# the update for mock user 4 to seed an already-expired password.
 echo -e "${YELLOW}🧪 Applying mid-login challenge states...${NC}"
 docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
   psql -U "$POSTGRES_ROOT_USER" -d "$FOXNOX_DB_NAME" -v ON_ERROR_STOP=1 -c \
@@ -163,9 +189,11 @@ docker exec -e PGPASSWORD="$POSTGRES_ROOT_PWD" "$POSTGRES_HOST" \
      \"twoFactorSecret\" = 'JBSWY3DPEHPK3PXP',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 3;
+   ALTER TABLE pwd DISABLE TRIGGER pwd_expiry_guard_trigger;
    UPDATE pwd SET \"pwdExpiry\" = '2020-01-01T00:00:00Z',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 4;
+   ALTER TABLE pwd ENABLE TRIGGER pwd_expiry_guard_trigger;
    UPDATE pwd SET \"failedAttempts\" = 3, \"lockedUntil\" = '2099-01-01T00:00:00Z',
      \"updaterId\" = -1, \"updaterName\" = 'system', \"updatedAt\" = NOW()
    WHERE \"userId\" = 5;" >/dev/null

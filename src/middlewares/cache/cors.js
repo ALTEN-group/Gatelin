@@ -1,5 +1,9 @@
 // @ts-check
 import corsSvc from "../../services/cors.js";
+import { reloadCache } from "./reload.js";
+
+/** Rebuilds the in-memory CORS cache from the database after a restore. */
+export const reloadCors = reloadCache("cors", corsSvc);
 
 /**
  * Middleware to add CORS origin(s) to the cache after database insertion.

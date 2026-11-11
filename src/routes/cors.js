@@ -7,6 +7,7 @@ import cEnt from "../entities/cors.js";
 import {
   addToCache,
   deleteFromCache,
+  reloadCors,
   updateCache,
 } from "../middlewares/cache/cors.js";
 import history from "../middlewares/history.js";
@@ -20,6 +21,7 @@ const update = [
   updateCache,
 ];
 const del = [cEnt.archive, deleteFromCache];
+const restore = [cEnt.restore, reloadCors];
 
 // Get routes
 router.post("/search", cEnt.get);
@@ -31,6 +33,8 @@ router.post("/", add);
 router.put("/", update);
 // Bulk archive
 router.post("/archive", del);
+// Bulk restore
+router.post("/restore", restore);
 // Get entity schema
 router.get("/schema", schema.get(cEnt));
 

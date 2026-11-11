@@ -8,7 +8,7 @@ sequenceDiagram
   actor u as User
   participant f as front
   participant msg as gatelin
-  participant msu as ms_user
+  participant msu as user_service
   participant msp as foxnox
   participant udb as user_db
   participant pdb as pwd_db
@@ -50,7 +50,7 @@ sequenceDiagram
   rect rgb(220, 220, 220, 0.1)
     note over msg,udb: User Lookup Block
     msg--)msg: Prepare filters : { email: { value, matchMode }, archived: { value: false, matchMode: 'is' } }
-    msg->>msu: post(/users/search) { filters }
+    msg->>msu: post(USER_SEARCH_URL) { filters }
     deactivate msg
     activate msu
     rect rgb(100, 200, 100, 0.2)

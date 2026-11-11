@@ -95,7 +95,7 @@ Coverage reports are generated in `tests/coverage/` directory and include:
 The following environment variables are mocked in tests:
 
 - `NODE_ENV=test`
-- `MSUSER_URL=http://user-service:3001`
+- `USER_SEARCH_URL=http://user-service:3001/users/search`
 - `MSMAIL_URL=http://mail-service:3002`
 - `MSNOTIF_URL=http://notif-service:3003`
 - `MSEVENT_URL=http://event-service:3004`

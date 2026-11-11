@@ -7,7 +7,6 @@ on:
     paths:
       - "admin/**"
       - "docker/**"
-      - "mocks/**"
       - "scripts/**"
       - "swagger/**"
       - ".github/workflows/admin-e2e.yml"

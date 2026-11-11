@@ -13,79 +13,89 @@ export const ENTITY_ROUTE_MAPPING: EntityRouteMapping = {
     update: 8,
     create: 9,
     archive: 10,
+    restore: 11,
   },
   services: {
-    get: 11, // searchServices
-    getHistory: 12,
-    update: 13,
-    create: 14,
-    archive: 15,
+    get: 12, // searchServices
+    getHistory: 13,
+    update: 14,
+    create: 15,
+    archive: 16,
+    restore: 17,
   },
   resources: {
-    get: 16, // searchResources
-    getHistory: 17,
-    update: 18,
-    create: 19,
-    archive: 20,
+    get: 18, // searchResources
+    getHistory: 19,
+    update: 20,
+    create: 21,
+    archive: 22,
+    restore: 23,
   },
   operations: {
-    get: 21, // searchOperations
-    getHistory: 22,
-    update: 23,
-    create: 24,
-    archive: 25,
+    get: 24, // searchOperations
+    getHistory: 25,
+    update: 26,
+    create: 27,
+    archive: 28,
+    restore: 29,
   },
   cors: {
-    get: 26, // searchCors
-    getHistory: 27,
-    update: 28,
-    create: 29,
-    archive: 30,
+    get: 30, // searchCors
+    getHistory: 31,
+    update: 32,
+    create: 33,
+    archive: 34,
+    restore: 35,
   },
   fields: {
-    get: 31, // searchFields
-    getHistory: 32,
-    update: 33,
-    create: 34,
-    archive: 35,
-  },
-  scopes: {
-    get: 36, // searchScopes
+    get: 36, // searchFields
     getHistory: 37,
     update: 38,
     create: 39,
     archive: 40,
+    restore: 41,
+  },
+  scopes: {
+    get: 42, // searchScopes
+    getHistory: 43,
+    update: 44,
+    create: 45,
+    archive: 46,
+    restore: 47,
   },
   roles: {
-    get: 41, // searchRoles
-    getHistory: 42,
-    create: 43,
-    update: 44,
-    archive: 45,
+    get: 48, // searchRoles
+    getHistory: 49,
+    create: 50,
+    update: 51,
+    archive: 52,
+    restore: 53,
   },
   permissions: {
-    get: 46, // searchPermissions
-    getHistory: 47, // getPermissionHistory
-    create: 48, // addPermissions
-    update: 49, // updatePermissions
-    archive: 50, // deletePermissions (DELETE /gatelin/permissions)
+    get: 54, // searchPermissions
+    getHistory: 55, // getPermissionHistory
+    create: 56, // addPermissions
+    update: 57, // updatePermissions
+    archive: 58, // deletePermissions (DELETE /gatelin/permissions)
   },
   methods: {
-    get: 51, // searchMethods
-    update: 52, // updateMethods
+    get: 59, // searchMethods
+    update: 60, // updateMethods
   },
   applications: {
-    get: 53, // searchApplications
-    getHistory: 54, // getApplicationHistory
-    create: 55, // addApplications
-    update: 56, // updateApplications
-    archive: 57, // archiveApplications
+    get: 61, // searchApplications
+    getHistory: 62, // getApplicationHistory
+    create: 63, // addApplications
+    update: 64, // updateApplications
+    archive: 65, // archiveApplications
+    restore: 66, // restoreApplications
   },
   conditions: {
-    get: 58, // searchConditions
-    getHistory: 59, // getConditionHistory
-    update: 60, // updateConditions
-    create: 61, // addConditions
-    archive: 62, // archiveConditions
+    get: 67, // searchConditions
+    getHistory: 68, // getConditionHistory
+    update: 69, // updateConditions
+    create: 70, // addConditions
+    archive: 71, // archiveConditions
+    restore: 72, // restoreConditions
   },
 };

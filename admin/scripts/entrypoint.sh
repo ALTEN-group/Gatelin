@@ -20,9 +20,11 @@ const fs = require("fs");
 const path = "src/index.html";
 const url = (process.env.ADMIN_PASSWORD_RECOVERY_URL || "").trim();
 const ssoTokenKey = (process.env.ADMIN_SSO_TOKEN_KEY || "").trim();
+const apiUsers = (process.env.ADMIN_API_USERS || "").trim();
 const payload = {
   ...(url ? { passwordRecoveryUrl: url } : {}),
   ...(ssoTokenKey ? { ssoTokenKey } : {}),
+  ...(apiUsers ? { apiUsers } : {}),
 };
 const script =
   "<script id=\"gatelin-admin-runtime\">window.__GATELIN_ADMIN__=" +

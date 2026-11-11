@@ -17,6 +17,8 @@ router.post("/", aEnt.addArraySubstack);
 router.put("/", aEnt.updateArraySubstack);
 // Archive applications
 router.post("/archive", aEnt.archive);
+// Restore applications
+router.post("/restore", aEnt.restore);
 // Get entity schema
 router.get("/schema", schema.get(aEnt));
 

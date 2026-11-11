@@ -13,6 +13,8 @@ BEGIN
     SET 
       "archivedAt" = CASE WHEN $2 = TRUE AND $3 = FALSE
                           THEN NOW()::timestamp
+                          WHEN $2 = FALSE
+                          THEN NULL
                      ELSE "archivedAt"
                      END,
       archived = COALESCE($2, archived)

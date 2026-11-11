@@ -75,6 +75,11 @@ const archive = jest.fn((req, res, next) => {
   res.locals.total = res.locals.rows.length;
   next();
 });
+const restore = jest.fn((req, res, next) => {
+  res.locals.rows = req.body.rows ?? [];
+  res.locals.total = res.locals.rows.length;
+  next();
+});
 jest.unstable_mockModule(corsEntityPath, () => ({
   __esModule: true,
   default: {
@@ -82,6 +87,7 @@ jest.unstable_mockModule(corsEntityPath, () => ({
     addArraySubstack,
     updateArraySubstack,
     archive,
+    restore,
     properties: [
       {
         key: "id",
@@ -130,10 +136,12 @@ jest.unstable_mockModule(corsEntityPath, () => ({
 const addToCache = jest.fn((_req, _res, next) => next());
 const updateCache = jest.fn((_req, _res, next) => next());
 const deleteFromCache = jest.fn((_req, _res, next) => next());
+const reloadCors = jest.fn((_req, _res, next) => next());
 jest.unstable_mockModule(cacheCorsPath, () => ({
   addToCache,
   updateCache,
   deleteFromCache,
+  reloadCors,
 }));
 
 const historyMiddleware = jest.fn((_req, res, next) => {
@@ -346,6 +354,52 @@ describe("POST /gatelin/cors/archive", () => {
     expect(res.status).toBe(200);
     expect(archive).toHaveBeenCalledTimes(1);
     expect(deleteFromCache).toHaveBeenCalledTimes(1);
+    expect(res.body).toEqual({ rows, total: 1 });
+  });
+});
+
+describe("POST /gatelin/cors/restore", () => {
+  let app;
+  let routeSvc;
+  let consumerSvc;
+
+  beforeAll(async () => {
+    ({ default: routeSvc } = await import("../../src/services/route.js"));
+    ({ default: consumerSvc } = await import("../../src/services/consumer.js"));
+    ({ default: app } = await import("../../src/app.js"));
+  });
+
+  beforeEach(() => {
+    routeSvc.getOne.mockReset().mockReturnValue({
+      id: 1,
+      url: "/gatelin/cors/restore",
+      protected: false,
+    });
+    consumerSvc.getOne.mockReset().mockReturnValue({ id: 1, roles: [1] });
+    restore.mockClear();
+    reloadCors.mockClear();
+  });
+
+  it("rejects an unauthenticated request", async () => {
+    const res = await supertest(app)
+      .post("/gatelin/cors/restore")
+      .send({ rows: [{ id: 1 }] });
+
+    expect(res.status).toBe(401);
+    expect(restore).not.toHaveBeenCalled();
+  });
+
+  it("restores, reloads the cache, then returns rows", async () => {
+    const rows = [{ id: 1 }];
+
+    const res = await supertest(app)
+      .post("/gatelin/cors/restore")
+      .set("Authorization", "Bearer valid-token")
+      .send({ rows });
+
+    expect(res.status).toBe(200);
+    expect(restore).toHaveBeenCalledTimes(1);
+    expect(reloadCors).toHaveBeenCalledTimes(1);
     expect(res.body).toEqual({ rows, total: 1 });
   });
 });

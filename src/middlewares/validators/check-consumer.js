@@ -5,7 +5,7 @@ import csmerSvc from "../../services/consumer.js";
 /**
  * @typedef {object} Consumer
  * @property {number} id - The unique identifier of the consumer
- * @property {number} userId - The user ID from ms_user service
+ * @property {number} userId - The user ID from user service
  * @property {string} accessToken - The consumer's access token
  * @property {string} refreshToken - The consumer's refresh token
  * @property {Array<string>} roles - Array of roles assigned to the consumer

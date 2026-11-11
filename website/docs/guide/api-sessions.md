@@ -156,7 +156,7 @@ sequenceDiagram
   participant f as front
   participant msg as gatelin
   participant gdb as gatelin_db
-  participant msu as ms_user
+  participant msu as user_service
   participant udb as user_db
   participant msp as foxnox
   participant pdb as pwd_db

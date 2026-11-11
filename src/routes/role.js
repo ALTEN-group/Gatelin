@@ -18,6 +18,8 @@ router.post("/", rEnt.addArraySubstack, reloadRoles);
 router.put("/", rEnt.updateArraySubstack, reloadRoles);
 // Archive roles
 router.post("/archive", rEnt.archive, reloadRoles);
+// Restore roles
+router.post("/restore", rEnt.restore, reloadRoles);
 // Get entity schema
 router.get("/schema", schema.get(rEnt));
 

@@ -30,9 +30,6 @@ export class ConsumersService {
 
   public readonly httpCalls: Calls<Consumer> = {
     get: this.crud.get,
-    archive: this.crud.archive,
-    restore: this.crud.restore,
-    getHistory: this.crud.getHistory,
   };
 
   public readonly config = (payload: ActivatedRouteSnapshot) =>

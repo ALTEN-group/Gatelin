@@ -1,5 +1,5 @@
 
--- operations: 1=read 2=list 3=export 4=update 5=bulk-update 6=create 7=bulk-create 8=archive 9=bulk-archive 10=delete 11=bulk-delete 12=bulk-sync 13=execute
+-- operations: 1=read 2=list 3=export 4=update 5=bulk-update 6=create 7=bulk-create 8=archive 9=bulk-archive 10=delete 11=bulk-delete 12=bulk-sync 13=execute 14=restore 15=bulk-restore
 -- methodIds:  1=GET  2=POST  3=PUT   4=PATCH  5=DELETE      6=HEAD  7=OPTIONS
 -- Note: OPTIONS is handled statically by corsMiddleware before checkRoute — not stored in methodIds
 
@@ -17,48 +17,56 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (3,  '',                                         'updateRoutes',          'Update routes',                                      true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (3,  '',                                         'addRoutes',             'Add routes',                                         true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (3,  '/archive',                                 'archiveRoutes',         'Archive routes',                                     true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (3,  '/restore',                                 'restoreRoutes',         'Restore routes',                                     true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- services (4)
   (4,  '/search',                                  'searchServices',        'Search services',                                    true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (4,  '/(?<id>\d+)/history',                      'getServiceHistory',     'Manage service history',                             true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (4,  '',                                         'updateServices',        'Update services',                                    true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (4,  '',                                         'addServices',           'Add services',                                       true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (4,  '/archive',                                 'archiveServices',       'Archive services',                                   true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (4,  '/restore',                                 'restoreServices',       'Restore services',                                   true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- resources (5)
   (5,  '/search',                                  'searchResources',       'Search resources',                                   true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (5,  '/(?<id>\d+)/history',                      'getResourceHistory',    'Manage resources history',                           true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (5,  '',                                         'updateResources',       'Update resources',                                   true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (5,  '',                                         'addResources',          'Add resources',                                      true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (5,  '/archive',                                 'archiveResources',      'Archive resources',                                  true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (5,  '/restore',                                 'restoreResources',      'Restore resources',                                  true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- operations (6)
   (6,  '/search',                                  'searchOperations',      'Search operations',                                  true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (6,  '/(?<id>\d+)/history',                      'getOperationHistory',   'Manage operations history',                          true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (6,  '',                                         'updateOperations',      'Update operations',                                  true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (6,  '',                                         'addOperations',         'Add operations',                                     true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (6,  '/archive',                                 'archiveOperations',     'Archive operations',                                 true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (6,  '/restore',                                 'restoreOperations',     'Restore operations',                                 true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- cors (7)
   (7,  '/search',                                  'searchCors',            'Search cors',                                        true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (7,  '/(?<id>\d+)/history',                      'getCorsHistory',        'Manage cors history',                                true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (7,  '',                                         'updateCors',            'Update cors',                                        true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (7,  '',                                         'addCors',               'Add cors',                                           true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (7,  '/archive',                                 'archiveCors',           'Archive cors',                                       true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (7,  '/restore',                                 'restoreCors',           'Restore cors',                                       true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- fields (8)
   (8,  '/search',                                  'searchFields',          'Search fields',                                      true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (8,  '/(?<id>\d+)/history',                      'getFieldHistory',       'Manage field history',                               true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (8,  '',                                         'updateFields',          'Update fields',                                      true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (8,  '',                                         'addFields',             'Add fields',                                         true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (8,  '/archive',                                 'archiveFields',         'Archive fields',                                     true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (8,  '/restore',                                 'restoreFields',         'Restore fields',                                     true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- scopes (9)
   (9,  '/search',                                  'searchScopes',          'Search scopes',                                      true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (9,  '/(?<id>\d+)/history',                      'getScopeHistory',       'Manage scope history',                               true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (9,  '',                                         'updateScopes',          'Update scopes',                                      true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (9,  '',                                         'addScopes',             'Add scopes',                                         true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (9,  '/archive',                                 'archiveScopes',         'Archive scopes',                                     true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (9,  '/restore',                                 'restoreScopes',         'Restore scopes',                                     true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- roles (10)
   (10, '/search',                                  'searchRoles',           'Search roles',                                       true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (10, '/(?<id>\d+)/history',                      'getRoleHistory',        'Manage role history',                                true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (10, '',                                         'addRoles',              'Add roles',                                          true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (10, '',                                         'updateRoles',           'Update roles',                                       true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (10, '/archive',                                 'archiveRoles',          'Archive roles',                                      true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (10, '/restore',                                 'restoreRoles',          'Restore roles',                                      true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- permissions (11)
   (11, '/search',                                  'searchPermissions',     'Search permissions',                                 true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (11, '/history/route/(?<routeId>\d+)',            'getPermissionHistory',  'Get permission history by route',                    true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
@@ -74,12 +82,14 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (13, '',                                         'addApplications',       'Add applications',                                   true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (13, '',                                         'updateApplications',    'Update applications',                                true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (13, '/archive',                                 'archiveApplications',   'Archive applications',                               true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (13, '/restore',                                 'restoreApplications',   'Restore applications',                               true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- conditions (14)
   (14, '/search',                                  'searchConditions',      'Search conditions',                                  true,  true, ARRAY[2,3],  ARRAY[2],  -1, 'system'),
   (14, '/(?<id>\d+)/history',                      'getConditionHistory',   'Manage condition history',                           true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (14, '',                                         'updateConditions',      'Update conditions',                                  true,  true, ARRAY[5],    ARRAY[3],  -1, 'system'),
   (14, '',                                         'addConditions',         'Add conditions',                                     true,  true, ARRAY[7],    ARRAY[2],  -1, 'system'),
   (14, '/archive',                                 'archiveConditions',     'Archive conditions',                                 true,  true, ARRAY[9],    ARRAY[2],  -1, 'system'),
+  (14, '/restore',                                 'restoreConditions',     'Restore conditions',                                 true,  true, ARRAY[15],   ARRAY[2],  -1, 'system'),
   -- preferences (15)
   (15, '/(?<resource>[\w\-]+)',                     'getPreferences',        'Get preferences for the authenticated consumer',     true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (15, '/(?<resource>[\w\-]+)',                     'addPreferences',        'Add preference for the authenticated consumer on a specific resource',     true,  true, ARRAY[6],    ARRAY[2],  -1, 'system'),
@@ -99,8 +109,6 @@ INSERT INTO routes ("resourceId", pattern, name, description, protected, core, "
   (12, '/schema',                                  'getMethodSchema',      'Get method entity schema',                           true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (13, '/schema',                                  'getApplicationSchema', 'Get application entity schema',                      true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
   (14, '/schema',                                  'getConditionSchema',   'Get condition entity schema',                        true,  true, ARRAY[2],    ARRAY[1],  -1, 'system'),
-  -- users (16)
-  (16, '/me',                                      'getBasicUserInfo',      'Get authenticated user basic info for the admin',    true,  true, ARRAY[1],    ARRAY[1],  -1, 'system'),
   -- Appended after the original seed so existing permission/scope routeIds stay stable.
   (1,  '/resume',                                  'resumeSignIn',          'Finish login after a mid-login challenge ticket',   false, true, ARRAY[6],    ARRAY[2],  -1, 'system')
 ON CONFLICT DO NOTHING;
