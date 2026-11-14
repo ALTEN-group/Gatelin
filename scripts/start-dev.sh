@@ -28,6 +28,12 @@ docker compose -f docker/docker-compose.yml --env-file docker/conf/.env.dev up -
 
 echo -e "${GREEN}✅ Development environment started!${NC}"
 
+# The images run `npm i` at build time and fix up a stale lock inside the image only.
+# Copy those locks back so package.json/package-lock.json drift is visible in git
+# before CI's `npm ci` rejects it.
+echo -e ""
+./scripts/sync-locks.sh || echo -e "${YELLOW}⚠ Lock sync failed (non-fatal).${NC}"
+
 # Mock passwords live in Foxnox's pwd table but are created at runtime by
 # setup-mocks.sh, not by Liquibase — so any run against a fresh postgres volume
 # (stop-dev.sh and reset-db.sh both remove it) comes up with no credentials, and
