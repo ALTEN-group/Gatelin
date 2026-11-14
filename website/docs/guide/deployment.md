@@ -9,7 +9,7 @@ In production the admin UI is built into the Gatelin image and enabled by settin
 
 See the [Integration](./integration) page for seed-data setup and [Environment Variables](./configuration) for the full variable reference.
 
-Use immutable release tags in production. The examples below use `0.1.0-alpha.11`; upgrade the API and migration images together when adopting a newer release.
+Use immutable release tags in production. The examples below use `0.1.0-alpha.12`; upgrade the API and migration images together when adopting a newer release.
 
 ## Architecture
 
@@ -90,7 +90,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   gatelin_migration:
-    image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.11
+    image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.12
     container_name: my-project-gatelin-migration-local
     hostname: my-project-gatelin-migration-local
     depends_on:
@@ -118,7 +118,7 @@ services:
       - ./docker/gatelin/data:/liquibase/data
 
   gatelin:
-    image: ghcr.io/alten-group/gatelin:0.1.0-alpha.11
+    image: ghcr.io/alten-group/gatelin:0.1.0-alpha.12
     container_name: my-project-gatelin-local
     hostname: my-project-gatelin-local
     depends_on:
@@ -242,7 +242,7 @@ The `gatelin_migration` container is controlled by environment variables:
 
 ```yaml
 gatelin_migration:
-  image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.11
+  image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.12
   volumes:
     - ./docker/gatelin/data:/liquibase/data
   environment:

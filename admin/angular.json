@@ -98,6 +98,10 @@
               "sourceMap": true
             },
             "serve": {
+              "index": {
+                "input": "src/index.dev.html",
+                "output": "index.html"
+              },
               "baseHref": "/gatelin/"
             }
           },
