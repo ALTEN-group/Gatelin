@@ -43,21 +43,33 @@ export class SidenavComponent {
     ),
   );
 
+  // Last model handed to the panel menu. The panel menu mutates `expanded` on
+  // these objects when the user toggles a group, so reading it back lets us keep
+  // manually opened groups open when the model is rebuilt on navigation.
+  private previousItems: MenuItem[] | undefined;
+
   public readonly sideNavItems = computed<MenuItem[]>(() => {
     const activeUrl = this.activeUrl();
     const alertKeys = this.sidenavService.alertKeys();
     const items = activeUrl
-      ? this.getSidenavItems(activeUrl, alertKeys)
+      ? this.getSidenavItems(activeUrl, alertKeys, this.previousItems)
       : this.baseSideNavItems;
+    this.previousItems = items;
     return items;
   });
 
   private getSidenavItems(
     activeUrl: string,
     alertKeys: Set<string>,
+    previousItems: MenuItem[] | undefined,
   ): MenuItem[] {
-    return this.baseSideNavItems.map((item) =>
-      this.recursivelyGetExpandedAndVisible(item, activeUrl, alertKeys),
+    return this.baseSideNavItems.map((item, i) =>
+      this.recursivelyGetExpandedAndVisible(
+        item,
+        activeUrl,
+        alertKeys,
+        previousItems?.[i],
+      ),
     );
   }
 
@@ -65,19 +77,26 @@ export class SidenavComponent {
     item: MenuItem,
     activeUrl: string,
     alertKeys: Set<string>,
+    previous?: MenuItem,
   ): MenuItem {
-    const children = item.items?.map((child) =>
-      this.recursivelyGetExpandedAndVisible(child, activeUrl, alertKeys),
+    const children = item.items?.map((child, i) =>
+      this.recursivelyGetExpandedAndVisible(
+        child,
+        activeUrl,
+        alertKeys,
+        previous?.items?.[i],
+      ),
     );
     const areAllChildrenHidden = children?.every((child) => !child.visible);
     const hasActiveDescendant =
       children?.some((child) => child.expanded) ?? false;
     const isActive = item.routerLink === activeUrl || hasActiveDescendant;
+    const keepOpen = isActive || (!!children?.length && !!previous?.expanded);
     return {
       ...item,
       ...this.getExpandedAndVisible(
         item,
-        isActive,
+        keepOpen,
         alertKeys,
         areAllChildrenHidden,
       ),
