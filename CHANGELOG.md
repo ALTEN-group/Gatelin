@@ -1,3 +1,10 @@
+# 0.1.0-alpha.12 (Nov 14th 2026)
+
+  - Added the `ADMIN_API_USERS` setting to configure the base path of the user service API that the admin UI calls to load the logged-in user (default `/api/users/`)
+  - Admin: sidenav groups can be open at the same time and keep their state while navigating; clicking a group header now only expands or collapses it
+  - Admin: replaced the "Bienvenue" snackbar with a full-screen greeting shown while the post-login navigation completes
+  - Documentation: added an architecture guide and expanded the setup and deployment guides
+
 # 0.1.0-alpha.11 (Oct 19th 2026)
 
   - Fixed `POST /sessions` rejecting valid passwords shorter than 9 or longer than 20 characters: login now only bounds `pwd` to 1-255 characters and leaves the password policy to the password service
