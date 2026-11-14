@@ -1,11 +1,15 @@
 # Deployment
 
-Gatelin is a BFF you run behind a reverse proxy like Traefik or any another one. It is distributed as GHCR images:
+Gatelin is a BFF you run behind a reverse proxy such as Traefik. It is distributed as Docker images on GitHub Container Registry:
 
-- **`ghcr.io/alten-group/gatelin`** — the BFF process, also serving the Angular admin UI under a configurable base path (`ADMIN_BASE_PATH`, default `/admin`)
-- **`ghcr.io/alten-group/gatelin-migration`** — the Liquibase migration container
+- **`ghcr.io/alten-group/gatelin`** — the BFF process and Angular admin UI
+- **`ghcr.io/alten-group/gatelin-migration`** — the Liquibase migration container, with the full schema baked in
 
-See the [Integration](./integration) page for seed-data setup, and [Environment Variables](./configuration) for the full variable reference.
+In production the admin UI is built into the Gatelin image and enabled by setting `ADMIN_PORT`; Traefik routes `ADMIN_BASE_PATH` (default `/admin`) to that internal port. Development keeps the admin in its own container for live reloading. The documentation site is published to GitHub Pages from `website/`.
+
+See the [Integration](./integration) page for seed-data setup and [Environment Variables](./configuration) for the full variable reference.
+
+Use immutable release tags in production. The examples below use `0.1.0-alpha.11`; upgrade the API and migration images together when adopting a newer release.
 
 ## Architecture
 
@@ -86,7 +90,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   gatelin_migration:
-    image: ghcr.io/alten-group/gatelin-migration:latest
+    image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.11
     container_name: my-project-gatelin-migration-local
     hostname: my-project-gatelin-migration-local
     depends_on:
@@ -101,6 +105,8 @@ services:
       DB_NAME: gatelin
       DB_USER: gatelin
       DB_PWD: gatelin_pwd_change_me
+      DB_JOB_USER: gatelin_job
+      DB_JOB_PWD: gatelin_job_pwd_change_me
       UPDATE: 1
       ROLLBACK: 0
       SNAPSHOT: snapshot/snapshot1
@@ -112,7 +118,7 @@ services:
       - ./docker/gatelin/data:/liquibase/data
 
   gatelin:
-    image: ghcr.io/alten-group/gatelin:latest
+    image: ghcr.io/alten-group/gatelin:0.1.0-alpha.11
     container_name: my-project-gatelin-local
     hostname: my-project-gatelin-local
     depends_on:
@@ -122,16 +128,18 @@ services:
         condition: service_completed_successfully
     environment:
       TZ: Europe/Paris
-      PWD_CHECK_URL: http://my-project-foxnox-local:3000/foxnox/compare
+      PWD_CHECK_URL: http://my-project-password-service-local:3000/pwd/compare
       # Only needed when the credential check reports lockout, password expiry or 2FA
-      PWD_CHALLENGES_URL: http://my-project-foxnox-local:3000/foxnox/challenges
-      PWD_TRUSTED_DEVICES_URL: http://my-project-foxnox-local:3000/foxnox/devices/verify
-      PWD_LOGIN_TICKET_URL: http://my-project-foxnox-local:3000/foxnox/login-tickets/redeem
+      PWD_CHALLENGES_URL: http://my-project-password-service-local:3000/challenges
+      PWD_TRUSTED_DEVICES_URL: http://my-project-password-service-local:3000/devices/verify
+      PWD_LOGIN_TICKET_URL: http://my-project-password-service-local:3000/login-tickets/redeem
       USER_SEARCH_URL: http://my-project-msuser-local:3000/users/search
       DB_HOST: my-project-postgres-local
       DB_NAME: gatelin
       DB_USER: gatelin
       DB_PWD: gatelin_pwd_change_me
+      DB_JOB_USER: gatelin_job
+      DB_JOB_PWD: gatelin_job_pwd_change_me
       TOKEN_SECRET: change_me_with_a_long_random_secret
       APP_NAME: my-project
       ENV_NAME: local
@@ -191,16 +199,53 @@ volumes:
     driver: local
 ```
 
+## Startup Order
+
+1. **postgres** must be healthy before migrations or the BFF connect.
+2. **gatelin_migration** must complete successfully so the schema, seed data, and database roles (`DB_USER`, `DB_JOB_USER`) exist before the first request.
+3. **gatelin** should be healthy before your microservices receive traffic through it, because routes, roles, and CORS origins are loaded from its database.
+
 ## Health Check
 
-Gatelin exposes a health endpoint:
+Gatelin exposes both a liveness and a readiness endpoint:
 
 ```
 GET /gatelin/health
+GET /gatelin/health/ready
+```
+
+`/gatelin/health` is dependency-free and only proves the process is up. `/gatelin/health/ready` additionally runs a `SELECT 1` against Postgres, so an instance that lost its database drops out of rotation instead of failing requests. Use the readiness endpoint in your container health check.
+
+From inside the network:
+
+```bash
+curl http://my-project-gatelin-local:3000/gatelin/health/ready
 ```
 
 Via Traefik (default port `8100`):
 
 ```bash
 curl http://localhost:8100/api/gatelin/health
+```
+
+## Database Migration
+
+The `gatelin_migration` container is controlled by environment variables:
+
+| Variable | Values | Description |
+|---|---|---|
+| `UPDATE` | `1` / `0` | When `1`: creates the database, applies all schema changesets and seed data, takes a snapshot when `LIQUIBASE_ENABLE_SNAPSHOT=1`, and provisions `DB_USER` and `DB_JOB_USER`. This is the normal deploy mode. When `0` (and `ROLLBACK=0`): diffs the live database against the reference snapshot and generates a changelog. Development tool only. |
+| `ROLLBACK` | integer > `1` | Rolls back the given number of changesets and takes a new snapshot when `LIQUIBASE_ENABLE_SNAPSHOT=1`. The current entrypoint does not enter rollback mode for `1`. |
+| `SNAPSHOT` | path | Reference snapshot path without the `.json` suffix, for example `snapshot/snapshot1`. |
+
+**Adding your own seed data:** mount a folder containing a `changelog.xml` at `/liquibase/data`. It is applied after the core schema, so you can register your own applications, services, routes, and roles without rebuilding the image. See [Integration](./integration).
+
+```yaml
+gatelin_migration:
+  image: ghcr.io/alten-group/gatelin-migration:0.1.0-alpha.11
+  volumes:
+    - ./docker/gatelin/data:/liquibase/data
+  environment:
+    UPDATE: 1
+    # ...
 ```
