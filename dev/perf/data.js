@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794125997288,
+  "lastUpdate": 1794732024120,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -462,6 +462,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 6.22,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Ludovic CLUBER",
+            "username": "LCluber",
+            "email": "LCluber@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "00e9fb572100d34108faae0fb3cd66b0711d7147",
+          "message": "Update Foxnox development image to alpha.6 (#166)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+          "timestamp": "2026-11-14T23:12:50Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/00e9fb572100d34108faae0fb3cd66b0711d7147"
+        },
+        "date": 1794732022663,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.59,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 229.52,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 7.17,
             "unit": "ms"
           },
           {
