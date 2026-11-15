@@ -38,10 +38,11 @@ onMounted(async () => {
     // Imported here rather than at the top of the module because VitePress
     // prerenders every page in Node, where these libraries have no document to
     // reach for. onMounted never runs during that pass.
-    const [{ Player }, { FullscreenQuad, Mesh, PerspectiveCamera, Renderer, Scene }] =
+    const [{ Player }, { FullscreenQuad, Mesh, PerspectiveCamera, Renderer, Scene }, { Vec2 }] =
       await Promise.all([
         import("@1pizzateam/loopr"),
-        import("@lcluber/roostrjs"),
+        import("@1pizzateam/roostr"),
+        import("@1pizzateam/spock"),
       ]);
     if (disposed) return;
 
@@ -59,10 +60,10 @@ onMounted(async () => {
     // one corner of the buffer, so the size has to be set back afterwards.
     renderer.canvas.width = BUFFER_SIZE;
     renderer.canvas.height = BUFFER_SIZE;
-    renderer.setViewport(BUFFER_SIZE, BUFFER_SIZE);
+    renderer.setViewport(new Vec2(BUFFER_SIZE, BUFFER_SIZE));
 
     const scene = new Scene(context);
-    const camera = new PerspectiveCamera(75, 0.1, 1000, context);
+    const camera = new PerspectiveCamera(75, new Vec2(0.1, 1000), context);
     const quad = new Mesh(new FullscreenQuad(), context);
     scene.addMesh(quad);
     quad.addProgram(vertexShader, fragmentShader, null);

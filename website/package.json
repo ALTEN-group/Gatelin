@@ -25,8 +25,9 @@
     "vitepress": "1.6.4"
   },
   "dependencies": {
-    "@1pizzateam/loopr": "2.0.0",
-    "@lcluber/roostrjs": "0.6.0",
+    "@1pizzateam/loopr": "2.2.0",
+    "@1pizzateam/roostr": "0.9.1",
+    "@1pizzateam/spock": "4.6.0",
     "mermaid": "11.17.0",
     "vitepress-plugin-mermaid": "2.0.17"
   }
