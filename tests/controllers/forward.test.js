@@ -2,7 +2,9 @@
  * @jest-environment node
  */
 
+import { once } from "node:events";
 import nodeHttp from "node:http";
+import { PassThrough } from "node:stream";
 import { jest } from "@jest/globals";
 import express from "express";
 import request from "supertest";
@@ -25,6 +27,8 @@ describe("forwardToService", () => {
     forwardToService = module.forwardToService;
 
     upstream = nodeHttp.createServer((req, res) => {
+      if (req.url === "/disconnect") return;
+
       if (req.url === "/sse") {
         res.writeHead(200, {
           "content-type": "text/event-stream",
@@ -214,6 +218,88 @@ describe("forwardToService", () => {
       expect(response.text).toContain("data: hello");
     } finally {
       process.env.UPSTREAM_TIMEOUT_MS = previous;
+    }
+  });
+
+  it.each(["uploading", "waiting for headers", "streaming"])(
+    "cancels upstream work when the client disconnects while %s",
+    async (phase) => {
+      const proxy = proxyApp.listen(0, "127.0.0.1");
+      await once(proxy, "listening");
+      const received = once(upstream, "request");
+      const client = nodeHttp.request(
+        `http://127.0.0.1:${proxy.address().port}/disconnect`,
+        { method: "POST" },
+      );
+      const clientError = jest.fn();
+      client.on("error", clientError);
+      if (phase === "uploading") client.write("partial body");
+      else client.end();
+      let upstreamRes;
+      try {
+        [, upstreamRes] = await received;
+        const closed = once(upstreamRes, "close", {
+          signal: AbortSignal.timeout(2000),
+        });
+        if (phase === "streaming") {
+          const response = once(client, "response");
+          upstreamRes.write("first chunk");
+          await response;
+        }
+
+        client.destroy();
+        await closed;
+
+        expect(upstreamRes.writableEnded).toBe(false);
+        await request(proxyApp).get("/echo").expect(201);
+      } finally {
+        client.destroy();
+        upstreamRes?.destroy();
+        proxy.closeAllConnections();
+        await new Promise((resolve) => proxy.close(resolve));
+      }
+    },
+  );
+
+  it("discards a late upstream response when the client is already gone", () => {
+    const upstreamReq = new PassThrough();
+    upstreamReq.setTimeout = jest.fn();
+    let respond;
+    const requestSpy = jest
+      .spyOn(nodeHttp, "request")
+      .mockImplementation((_target, _options, callback) => {
+        respond = callback;
+        return upstreamReq;
+      });
+    const req = Object.assign(new PassThrough(), {
+      url: "/echo",
+      method: "GET",
+      headers: {},
+    });
+    const res = Object.assign(new PassThrough(), {
+      locals: { route: { serviceName: "user" } },
+      setHeader: jest.fn(),
+    });
+    const upstreamRes = Object.assign(new PassThrough(), {
+      statusCode: 200,
+      headers: { "content-type": "text/plain" },
+    });
+    const next = jest.fn();
+    try {
+      forwardToService(req, res, next);
+      res.destroy();
+      upstreamReq.emit("error", new Error("socket hang up"));
+      respond(upstreamRes);
+
+      expect(upstreamRes.destroyed).toBe(true);
+      expect(res.setHeader).not.toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+    } finally {
+      requestSpy.mockRestore();
+      req.destroy();
+      res.destroy();
+      upstreamReq.destroy();
+      upstreamRes.destroy();
     }
   });
 });
