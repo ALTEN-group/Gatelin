@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "0.1.0-alpha.12",
+  "version": "0.1.0",
   "description": "Angular admin UI for the Gatelin BFF.",
   "private": true,
   "scripts": {
@@ -39,7 +39,7 @@
     "@angular/service-worker": "22.1.4",
     "@dwtechs/checkard": "3.7.0",
     "@dwtechs/ctrltab": "3.0.1",
-    "@dwtechs/ngx-crud-builder": "0.3.5",
+    "@dwtechs/ngx-crud-builder": "0.3.6",
     "@1pizzateam/loopr": "2.1.0",
     "@lcluber/mouettejs": "2.5.0",
     "@lcluber/roostrjs": "0.6.0",
