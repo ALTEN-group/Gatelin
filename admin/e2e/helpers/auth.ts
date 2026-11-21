@@ -73,8 +73,8 @@ export async function openEntity(page: Page, path: string): Promise<void> {
     if (!meta.parent) {
       throw new Error(`Sidenav link not visible for /${path}`);
     }
-    // Opening the parent navigates to its default child and expands the submenu.
-    await page.getByRole("link", { name: meta.parent }).first().click();
+    // Sidenav groups are toggle buttons: clicking one only expands its submenu.
+    await page.getByRole("button", { name: meta.parent }).first().click();
     await expect(link.first()).toBeVisible({ timeout: 10_000 });
   }
 
