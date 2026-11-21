@@ -105,7 +105,7 @@ The following environment variables are mocked in tests:
 ```powershell
 PS> npm test
 
-> gatelin@0.1.0-alpha.12 test
+> gatelin@0.1.0 test
 > jest
 
  PASS  tests/middlewares/login.test.js

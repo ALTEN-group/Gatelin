@@ -1,4 +1,4 @@
-# Unreleased
+# 0.1.0 (Nov 21st 2026)
 
   - Fixed client disconnects during HTTP forwarding crashing Gatelin when an upstream response arrives late; cancelled requests now release the upstream connection
 
@@ -35,6 +35,3 @@
   - Updated Angular and related frontend dependencies
   - Configured password endpoints through environment variables
 
-# 0.1.0 (Aug 12th 2026)
-
-  - Initial release
