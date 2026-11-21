@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794818943319,
+  "lastUpdate": 1795251654472,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -566,6 +566,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 5.52,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "6ffb6628d9b5cf469c9d1e2ca2d8ed49229c15f6",
+          "message": "fix(proxy): handle client disconnects during forwarding (#168)\n\nCancel upstream streams on premature client disconnect and discard late responses before starting a response pipeline. Add regression coverage for upload, response wait, streaming, and late-response cancellation.\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+          "timestamp": "2026-11-21T08:30:52Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/6ffb6628d9b5cf469c9d1e2ca2d8ed49229c15f6"
+        },
+        "date": 1795251653449,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.65,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 191.99,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 6.42,
             "unit": "ms"
           },
           {
