@@ -56,7 +56,8 @@ test.describe("Applications CRUD", () => {
     expect(archiveResponse.ok()).toBeTruthy();
 
     await page.getByRole("button", { name: "Refresh data" }).click();
-    await expect(page.getByRole("cell", { name })).toHaveCount(0, {
+    // Archived rows stay listed (dimmed) so they can be restored.
+    await expect(page.getByRole("row", { name })).toHaveCSS("opacity", "0.5", {
       timeout: 15_000,
     });
   });
