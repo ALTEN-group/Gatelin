@@ -45,12 +45,14 @@ export function forwardToService(req, res, next) {
   const transport = target.protocol === "https:" ? nodeHttps : nodeHttp;
   let responseStarted = false;
   let failed = false;
+  /** @type {import('node:http').IncomingMessage | undefined} */
+  let upstreamResponse;
 
   /**
    * @param {NodeJS.ErrnoException} err
    */
   const fail = (err) => {
-    if (failed) return;
+    if (failed || res.destroyed || res.writableEnded) return;
     failed = true;
     if (responseStarted || res.headersSent) {
       res.destroy(err);
@@ -76,6 +78,11 @@ export function forwardToService(req, res, next) {
     target,
     { method: req.method, headers, agent: agentFor(target) },
     (upstreamRes) => {
+      if (res.destroyed || res.writableEnded) {
+        upstreamRes.destroy();
+        return;
+      }
+      upstreamResponse = upstreamRes;
       responseStarted = true;
       // Long-lived event streams must not inherit the generic idle timeout.
       if (isEventStream(req, upstreamRes)) upstreamReq.setTimeout(0);
@@ -96,6 +103,12 @@ export function forwardToService(req, res, next) {
   if (!isEventStream(req))
     upstreamReq.setTimeout(upstreamTimeoutMs(), abortOnIdle);
   upstreamReq.on("error", fail);
+  res.once("close", () => {
+    if (!res.writableFinished) {
+      upstreamResponse?.destroy();
+      upstreamReq.destroy();
+    }
+  });
   pipeline(req, upstreamReq, (err) => {
     if (err) fail(/** @type {NodeJS.ErrnoException} */ (err));
   });

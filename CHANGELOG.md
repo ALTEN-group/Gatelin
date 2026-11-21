@@ -1,3 +1,7 @@
+# Unreleased
+
+  - Fixed client disconnects during HTTP forwarding crashing Gatelin when an upstream response arrives late; cancelled requests now release the upstream connection
+
 # 0.1.0-alpha.12 (Nov 14th 2026)
 
   - Added the `ADMIN_API_USERS` setting to configure the base path of the user service API that the admin UI calls to load the logged-in user (default `/api/users/`)
