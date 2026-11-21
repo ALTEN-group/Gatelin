@@ -460,7 +460,7 @@ services:
       retries: 5
 
   foxnox_migration:
-    image: ghcr.io/alten-group/foxnox-migration:${FOXNOX_VERSION:-0.1.0-alpha.5}
+    image: ghcr.io/alten-group/foxnox-migration:${FOXNOX_VERSION:-0.1.0}
     container_name: ${FOXNOX_MIGRATION_HOST}
     hostname: ${FOXNOX_MIGRATION_HOST}
     environment:
@@ -497,7 +497,7 @@ services:
     restart: unless-stopped
 
   foxnox:
-    image: ghcr.io/alten-group/foxnox:${FOXNOX_VERSION:-0.1.0-alpha.5}
+    image: ghcr.io/alten-group/foxnox:${FOXNOX_VERSION:-0.1.0}
     container_name: ${FOXNOX_HOST}
     hostname: ${FOXNOX_HOST}
     depends_on:
