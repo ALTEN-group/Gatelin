@@ -1,0 +1,96 @@
+# Managed by coding-pal (templates/callers/audits.yml). Re-generate with scripts/factory/bootstrap.sh instead of editing.
+name: Audit - Run audit
+
+on:
+  # The weekly schedule is enabled once the new audits have run manually and the legacy audit.yml is retired.
+  workflow_dispatch:
+    inputs:
+      audit:
+        description: 'Audit to run'
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - dependency-audit
+          - dead-code-audit
+          - test-gap-audit
+          - docs-sync-audit
+          - a11y-audit
+          - token-audit
+      scope:
+        description: 'Path to audit (empty = each audit uses its own default)'
+        type: string
+        default: ''
+      dependency:
+        description: 'Dependency filter for dependency-audit (or "all")'
+        type: string
+        default: 'all'
+
+permissions:
+  contents: read
+  issues: write
+
+# Each audit creates one GitHub Issue per consolidated finding (label audit:<agent>) on the Project board and never sets a
+# pipeline trigger label: triage first, then add 1-think / ready / 5-release yourself.
+jobs:
+  dependency-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'dependency-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 1')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: dependency-leverage
+      scope: ${{ inputs.scope || 'src/' }}
+      prompt: 'Dependency filter: ${{ inputs.dependency || ''all'' }}.'
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit
+
+  dead-code-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'dead-code-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 1')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: dead-code
+      scope: ${{ inputs.scope || 'src/' }}
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit
+
+  a11y-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'a11y-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 3')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: a11y-audit
+      scope: ${{ inputs.scope || 'admin/src/' }}
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit
+
+  test-gap-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'test-gap-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 5')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: test-gap
+      scope: ${{ inputs.scope || 'src/' }}
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit
+
+  docs-sync-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'docs-sync-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 5')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: docs-sync
+      scope: ${{ inputs.scope || 'src/' }}
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit
+
+  token-audit:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'token-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 3')
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    with:
+      agent: token-audit
+      scope: ${{ inputs.scope || '.' }}
+      project_title: Gatelin
+      engine_ref: v1
+    secrets: inherit

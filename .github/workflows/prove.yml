@@ -1,0 +1,47 @@
+# Managed by coding-pal (templates/callers/prove.yml). Re-generate with scripts/factory/bootstrap.sh instead of editing.
+name: Pipeline - Prove
+
+on:
+  workflow_dispatch:
+    inputs:
+      workflow_run_id:
+        description: 'Upstream run containing the specification artifact (pipeline handoff)'
+        required: false
+        type: string
+      pr_number:
+        description: 'Pull request number to validate (optional)'
+        required: false
+        type: string
+      issue_number:
+        description: 'Issue number whose open PR should be validated (optional)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: delivery-${{ github.repository }}
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  prove:
+    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-prove.yml@v1
+    with:
+      pr_number: ${{ inputs.pr_number || '' }}
+      issue_number: ${{ inputs.issue_number || '' }}
+      workflow_run_id: ${{ inputs.workflow_run_id || '' }}
+      project_title: Gatelin
+      engine_ref: v1
+      deployment_workflow: deploy-docs.yml
+      deployment_paths: |
+        website/
+        .github/workflows/deploy-docs.yml
+      deployment_event: release
+      publish_workflow: publish.yml
+      auto_release: true
+    secrets: inherit
