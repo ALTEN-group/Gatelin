@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795251654472,
+  "lastUpdate": 1795338227924,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -618,6 +618,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 6.42,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Estelle Picq",
+            "username": "estellepicq",
+            "email": "33844394+estellepicq@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "5b771b4f56d36983e99385c25ef08663356b52c2",
+          "message": "Prepare 0.1.0 release and bump ngx-crud-builder to 0.3.6 (#170)\n\n* Prepare 0.1.0 release and bump ngx-crud-builder to 0.3.6\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix(admin/e2e): open sidenav groups as buttons\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix(admin/e2e): expect archived applications to stay listed\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Estelle Picq <estelle.picq@alten.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+          "timestamp": "2026-11-21T14:20:41Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/5b771b4f56d36983e99385c25ef08663356b52c2"
+        },
+        "date": 1795338226639,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 2.83,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 203.05,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 4.75,
             "unit": "ms"
           },
           {
