@@ -27,10 +27,10 @@ jobs:
       (github.event_name == 'issues' &&
        github.event.issue.state == 'open' &&
        github.event.label.name == '2-plan')
-    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-plan.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-plan.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       issue_number: ${{ inputs.issue_number || github.event.issue.number || '' }}
       workflow_run_id: ${{ inputs.workflow_run_id || '' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit

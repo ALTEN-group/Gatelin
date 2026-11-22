@@ -36,22 +36,22 @@ jobs:
        (github.event.label.name == '3-code' ||
         github.event.label.name == '4-prove' ||
         github.event.label.name == '5-release'))
-    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-code.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-code.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       issue_number: ${{ inputs.issue_number || github.event.issue.number || '' }}
       workflow_run_id: ${{ inputs.workflow_run_id || '' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   prove:
     needs: code
     if: needs.code.outputs.continue_to_prove == 'true'
-    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-prove.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-prove.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       workflow_run_id: ${{ github.run_id }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
       deployment_workflow: deploy-docs.yml
       deployment_paths: |
         website/

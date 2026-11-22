@@ -78,7 +78,7 @@ permissions:
 
 jobs:
   release:
-    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-release.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/pipeline-release.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       issue_number: ${{ inputs.issue_number }}
       pr_number: ${{ inputs.pr_number }}

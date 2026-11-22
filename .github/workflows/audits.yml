@@ -36,61 +36,61 @@ permissions:
 jobs:
   dependency-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'dependency-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 1')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: dependency-leverage
       scope: ${{ inputs.scope || 'src/' }}
       prompt: 'Dependency filter: ${{ inputs.dependency || ''all'' }}.'
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   dead-code-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'dead-code-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 1')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: dead-code
       scope: ${{ inputs.scope || 'src/' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   a11y-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'a11y-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 3')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: a11y-audit
       scope: ${{ inputs.scope || 'admin/src/' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   test-gap-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'test-gap-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 5')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: test-gap
       scope: ${{ inputs.scope || 'src/' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   docs-sync-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'docs-sync-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 5')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: docs-sync
       scope: ${{ inputs.scope || 'src/' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
 
   token-audit:
     if: (github.event_name == 'workflow_dispatch' && (inputs.audit == 'all' || inputs.audit == 'token-audit')) || (github.event_name == 'schedule' && !github.event.repository.private && github.event.schedule == '18 6 * * 3')
-    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@v1
+    uses: ALTEN-group/coding-pal/.github/workflows/audit-runner.yml@33a3b849cd689700d9c3297bcbd784f9ca0ba212 # v1
     with:
       agent: token-audit
       scope: ${{ inputs.scope || '.' }}
       project_title: Gatelin
-      engine_ref: v1
+      engine_ref: 33a3b849cd689700d9c3297bcbd784f9ca0ba212
     secrets: inherit
