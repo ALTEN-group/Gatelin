@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795338227924,
+  "lastUpdate": 1795428105915,
   "repoUrl": "https://github.com/ALTEN-group/Gatelin",
   "entries": {
     "Benchmark": [
@@ -670,6 +670,58 @@ window.BENCHMARK_DATA = {
           {
             "name": "resource-crud: http_req_duration p95",
             "value": 4.75,
+            "unit": "ms"
+          },
+          {
+            "name": "resource-crud: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Ludovic CLUBER",
+            "username": "LCluber",
+            "email": "LCluber@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "214535d3504f3c07a5128a63cefcae4bbcac7cc6",
+          "message": "ci: add the coding-pal delivery pipeline callers (#172)\n\n* ci: add the coding-pal delivery pipeline callers\n\nThink, Plan, Code, Prove, Release and audits callers pinned to coding-pal v1. The audit schedule stays disabled until the legacy audit workflow is retired.\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n\n* ci: pin the delivery pipeline callers to the v1 commit\n\nReusable workflows and the engine checkout are pinned to the immutable commit behind coding-pal v1 instead of the movable tag, which also resolves the CodeQL unpinned-reference alerts.\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Sonnet 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-22T10:28:40Z",
+          "url": "https://github.com/ALTEN-group/Gatelin/commit/214535d3504f3c07a5128a63cefcae4bbcac7cc6"
+        },
+        "date": 1795428104961,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "health: http_req_duration p95",
+            "value": 3.9,
+            "unit": "ms"
+          },
+          {
+            "name": "health: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "login: http_req_duration p95",
+            "value": 227.96,
+            "unit": "ms"
+          },
+          {
+            "name": "login: http_req_failed rate",
+            "value": 0,
+            "unit": "%"
+          },
+          {
+            "name": "resource-crud: http_req_duration p95",
+            "value": 5.96,
             "unit": "ms"
           },
           {
